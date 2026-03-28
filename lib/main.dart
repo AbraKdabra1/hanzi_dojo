@@ -29,9 +29,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// =========================================================================
-// PANTALLA 1: EL HOME MINIMALISTA
-// =========================================================================
 class PantallaInicio extends StatelessWidget {
   const PantallaInicio({super.key});
 
@@ -51,7 +48,7 @@ class PantallaInicio extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const PantallaEstudio()),
+              MaterialPageRoute(builder: (context) => const PantallaSeleccion()),
             );
           },
           child: const Text(
@@ -64,11 +61,74 @@ class PantallaInicio extends StatelessWidget {
   }
 }
 
-// =========================================================================
-// PANTALLA 2: EL DOJO DE ESTUDIO
-// =========================================================================
+class PantallaSeleccion extends StatelessWidget {
+  const PantallaSeleccion({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Text('Biblioteca HSK', style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w600)),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black87, size: 20),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Buscar hanzi, pinyin o significado...',
+                hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 15),
+                prefixIcon: Icon(Icons.search, color: Colors.grey.shade500),
+                filled: true,
+                fillColor: Colors.grey.shade50, 
+                contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: ListView.separated(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              itemCount: 9, 
+              separatorBuilder: (context, index) => Divider(color: Colors.grey.shade100, height: 1),
+              itemBuilder: (context, index) {
+                final nivel = index + 1; 
+                return ListTile(
+                  contentPadding: const EdgeInsets.symmetric(vertical: 5.0),
+                  title: Text('Nivel HSK $nivel', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                  subtitle: Text('Estudiar y repasar tarjetas', style: TextStyle(color: Colors.grey.shade500, fontSize: 14)),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => PantallaEstudio(nivelHSK: nivel)),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class PantallaEstudio extends StatefulWidget {
-  const PantallaEstudio({super.key});
+  final int nivelHSK;
+  const PantallaEstudio({super.key, required this.nivelHSK});
 
   @override
   State<PantallaEstudio> createState() => _PantallaEstudioState();
@@ -76,9 +136,11 @@ class PantallaEstudio extends StatefulWidget {
 
 class _PantallaEstudioState extends State<PantallaEstudio> {
   Map<String, dynamic>? _hanziActual;
-  
-  // ¡CORRECCIÓN: Usamos PointVector en lugar de Point!
   final List<List<PointVector>> _trazosUsuario = []; 
+  
+  int _trazoCorrectoActual = 0;
+  bool _mostrarPistaError = false;
+  bool _hanziCompletado = false;
 
   @override
   void initState() {
@@ -87,10 +149,17 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
   }
 
   void _siguienteHanzi() async {
-    final hanzi = await DatabaseHelper.instance.obtenerSiguienteHanziParaEstudiar();
+    final hanzi = await DatabaseHelper.instance.obtenerSiguienteHanziParaEstudiar(widget.nivelHSK);
     setState(() {
       _hanziActual = hanzi;
       _trazosUsuario.clear(); 
+      _trazoCorrectoActual = 0;
+      _mostrarPistaError = false;
+      _hanziCompletado = false;
+      
+      if (_hanziActual != null && _hanziActual!['medianas'] == null) {
+        _hanziCompletado = true; 
+      }
     });
   }
 
@@ -107,7 +176,64 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
   void _limpiarLienzo() {
     setState(() {
       _trazosUsuario.clear();
+      _trazoCorrectoActual = 0;
+      _hanziCompletado = false;
     });
+  }
+
+  void _auditarTrazo(Size canvasSize) {
+    if (_hanziActual == null || _hanziActual!['medianas'] == null) return;
+
+    List<dynamic> medians = jsonDecode(_hanziActual!['medianas']);
+    
+    if (_trazoCorrectoActual >= medians.length) return;
+
+    List<dynamic> trazoEsperado = medians[_trazoCorrectoActual];
+    double startXOficial = trazoEsperado.first[0].toDouble();
+    double startYOficial = trazoEsperado.first[1].toDouble();
+    double endXOficial = trazoEsperado.last[0].toDouble();
+    double endYOficial = trazoEsperado.last[1].toDouble();
+
+    final double scaleX = (canvasSize.width * 0.9) / 1024; 
+    final double scaleY = (canvasSize.height * 0.9) / 1024;
+    final double offsetX = canvasSize.width * 0.05;
+    final double offsetY = canvasSize.height * 0.05;
+
+    Offset puntoInicioEsperado = Offset(offsetX + (startXOficial * scaleX), offsetY + ((1024 - startYOficial) * scaleY));
+    Offset puntoFinEsperado = Offset(offsetX + (endXOficial * scaleX), offsetY + ((1024 - endYOficial) * scaleY));
+
+    var ultimoTrazo = _trazosUsuario.last;
+    if (ultimoTrazo.length < 2) return; 
+
+    Offset puntoInicioDedo = Offset(ultimoTrazo.first.dx, ultimoTrazo.first.dy);
+    Offset puntoFinDedo = Offset(ultimoTrazo.last.dx, ultimoTrazo.last.dy);
+
+    double distanciaInicio = (puntoInicioDedo - puntoInicioEsperado).distance;
+    double distanciaFin = (puntoFinDedo - puntoFinEsperado).distance;
+
+    double tolerancia = canvasSize.width * 0.25; 
+
+    if (distanciaInicio <= tolerancia && distanciaFin <= tolerancia) {
+      setState(() {
+        _trazoCorrectoActual++;
+        if (_trazoCorrectoActual >= medians.length) {
+          _hanziCompletado = true; 
+        }
+      });
+    } else {
+      setState(() {
+        _trazosUsuario.removeLast(); 
+        _mostrarPistaError = true;   
+      });
+      
+      Future.delayed(const Duration(milliseconds: 800), () {
+        if (mounted) {
+          setState(() {
+            _mostrarPistaError = false;
+          });
+        }
+      });
+    }
   }
 
   @override
@@ -117,6 +243,8 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        title: Text('Estudiando HSK ${widget.nivelHSK}', style: const TextStyle(color: Colors.black87, fontSize: 16)),
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black87, size: 20),
           onPressed: () => Navigator.pop(context), 
@@ -125,7 +253,7 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
           IconButton(
             icon: const Icon(Icons.refresh, color: Colors.black54),
             onPressed: _limpiarLienzo,
-            tooltip: "Limpiar trazos",
+            tooltip: "Reiniciar trazos",
           )
         ],
       ),
@@ -142,8 +270,9 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          _hanziActual!['pinyin'],
-                          style: TextStyle(fontSize: 16, color: Colors.grey.shade500, letterSpacing: 1.2),
+                          // ¡AQUÍ ESTÁ LA MAGIA! Filtramos el Pinyin crudo por nuestro traductor
+                          PinyinHelper.formatear(_hanziActual!['pinyin']),
+                          style: TextStyle(fontSize: 22, color: Colors.grey.shade600, letterSpacing: 1.2, fontWeight: FontWeight.w500),
                         ),
                         const SizedBox(height: 5),
                         Text(
@@ -176,42 +305,59 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(13),
-                          child: Stack( 
-                            key: ValueKey(_hanziActual!['id']), 
-                            children: [
-                              Positioned.fill(child: CustomPaint(painter: GridPainter())),
-                              Positioned.fill(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20.0), 
-                                  child: _hanziActual!['trazos'] != null 
-                                    ? CustomPaint(painter: SvgHanziPainter(List<String>.from(jsonDecode(_hanziActual!['trazos']))))
-                                    : const SizedBox.shrink(),
-                                ),
-                              ),
-                              Positioned.fill(
-                                child: GestureDetector(
-                                  onPanStart: (details) {
-                                    setState(() {
-                                      // ¡CORRECCIÓN: Instanciamos PointVector!
-                                      _trazosUsuario.add([PointVector(details.localPosition.dx, details.localPosition.dy)]);
-                                    });
-                                  },
-                                  onPanUpdate: (details) {
-                                    setState(() {
-                                      // ¡CORRECCIÓN: Instanciamos PointVector!
-                                      _trazosUsuario.last.add(PointVector(details.localPosition.dx, details.localPosition.dy));
-                                    });
-                                  },
-                                  onPanEnd: (details) {
-                                    // Validación matemática pendiente
-                                  },
-                                  child: CustomPaint(
-                                    painter: PincelPainter(_trazosUsuario),
-                                    size: Size.infinite,
+                          child: LayoutBuilder(
+                            builder: (context, constraints) {
+                              final canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
+                              
+                              List<String> todosLosVectores = _hanziActual!['trazos'] != null 
+                                  ? List<String>.from(jsonDecode(_hanziActual!['trazos'])) 
+                                  : [];
+
+                              return Stack( 
+                                children: [
+                                  Positioned.fill(child: CustomPaint(painter: GridPainter())),
+                                  
+                                  if (todosLosVectores.isNotEmpty)
+                                    Positioned.fill(
+                                      child: CustomPaint(painter: SvgFondoPainter(todosLosVectores)),
+                                    ),
+
+                                  if (todosLosVectores.isNotEmpty && _trazoCorrectoActual < todosLosVectores.length)
+                                    Positioned.fill(
+                                      child: AnimatedOpacity(
+                                        opacity: _mostrarPistaError ? 1.0 : 0.0,
+                                        duration: const Duration(milliseconds: 300),
+                                        child: CustomPaint(painter: PistaRojaPainter(todosLosVectores[_trazoCorrectoActual])),
+                                      ),
+                                    ),
+                                  
+                                  Positioned.fill(
+                                    child: GestureDetector(
+                                      onPanStart: (details) {
+                                        if (_hanziCompletado) return; 
+                                        setState(() {
+                                          _trazosUsuario.add([PointVector(details.localPosition.dx, details.localPosition.dy)]);
+                                        });
+                                      },
+                                      onPanUpdate: (details) {
+                                        if (_hanziCompletado) return;
+                                        setState(() {
+                                          _trazosUsuario.last.add(PointVector(details.localPosition.dx, details.localPosition.dy));
+                                        });
+                                      },
+                                      onPanEnd: (details) {
+                                        if (_hanziCompletado) return;
+                                        _auditarTrazo(canvasSize); 
+                                      },
+                                      child: CustomPaint(
+                                        painter: PincelPainter(_trazosUsuario),
+                                        size: Size.infinite,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ],
+                                ],
+                              );
+                            }
                           ),
                         ),
                       ),
@@ -222,16 +368,25 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
                 Expanded(
                   flex: 2, 
                   child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _botonSRS('Difícil', Colors.red, 5),
-                          _botonSRS('Medio', Colors.orange, 3 * 24 * 60),
-                          _botonSRS('Fácil', Colors.green, 14 * 24 * 60),
-                        ],
-                      ),
+                    child: AnimatedOpacity(
+                      opacity: _hanziCompletado ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 500),
+                      child: _hanziCompletado 
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _botonSRS('Difícil', Colors.red, 5),
+                                _botonSRS('Medio', Colors.orange, 3 * 24 * 60),
+                                _botonSRS('Fácil', Colors.green, 14 * 24 * 60),
+                              ],
+                            ),
+                          )
+                        : Text(
+                            "Dibuja el carácter...", 
+                            style: TextStyle(color: Colors.grey.shade400, fontSize: 16, fontStyle: FontStyle.italic)
+                          ),
                     ),
                   ),
                 ),
@@ -254,7 +409,76 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
 }
 
 // =========================================================================
-// EL MOTOR DE RENDERIZADO DEL PINCEL (CALIBRADO PARA CALIGRAFÍA)
+// EL TRADUCTOR DE PINYIN NUMÉRICO A PINYIN NATIVO (NUEVO)
+// =========================================================================
+class PinyinHelper {
+  static String formatear(String texto) {
+    if (texto.isEmpty) return texto;
+
+    // Nuestro catálogo de acentos (Tono 1, 2, 3, 4)
+    final map = {
+      'a': ['ā', 'á', 'ǎ', 'à'],
+      'e': ['ē', 'é', 'ě', 'è'],
+      'i': ['ī', 'í', 'ǐ', 'ì'],
+      'o': ['ō', 'ó', 'ǒ', 'ò'],
+      'u': ['ū', 'ú', 'ǔ', 'ù'],
+      'v': ['ǖ', 'ǘ', 'ǚ', 'ǜ'],
+      'ü': ['ǖ', 'ǘ', 'ǚ', 'ǜ'],
+    };
+
+    // Dividimos por espacios (ej. "zhong1 wen2" -> ["zhong1", "wen2"])
+    List<String> palabras = texto.toLowerCase().split(RegExp(r'\s+'));
+    List<String> resultado = [];
+
+    for (String palabra in palabras) {
+      // Buscamos letras seguidas de un número (1 al 5)
+      RegExp regex = RegExp(r'([a-züv]+)(\d)');
+      Match? match = regex.firstMatch(palabra);
+
+      if (match == null) {
+        resultado.add(palabra.replaceAll('v', 'ü')); // Sin número, se queda igual
+        continue;
+      }
+
+      String silaba = match.group(1)!.replaceAll('v', 'ü');
+      int tono = int.parse(match.group(2)!);
+
+      // Si es tono 5 (neutro) o un número raro, solo quitamos el número
+      if (tono < 1 || tono > 4) {
+        String resto = palabra.substring(match.end);
+        resultado.add(silaba + resto);
+        continue;
+      }
+
+      int t = tono - 1; // Ajuste para buscar en nuestra lista (índices 0 a 3)
+
+      // Reglas jerárquicas del Pinyin:
+      if (silaba.contains('a')) {
+        silaba = silaba.replaceFirst('a', map['a']![t]);
+      } else if (silaba.contains('e')) {
+        silaba = silaba.replaceFirst('e', map['e']![t]);
+      } else if (silaba.contains('o')) {
+        silaba = silaba.replaceFirst('o', map['o']![t]);
+      } else {
+        // Si no hay a, e, o -> El acento va en la *última* vocal (para iu, ui)
+        for (int i = silaba.length - 1; i >= 0; i--) {
+          String letra = silaba[i];
+          if (map.containsKey(letra)) {
+            silaba = silaba.replaceRange(i, i + 1, map[letra]![t]);
+            break;
+          }
+        }
+      }
+      
+      String resto = palabra.substring(match.end);
+      resultado.add(silaba + resto);
+    }
+    return resultado.join(' ');
+  }
+}
+
+// =========================================================================
+// PINTORES DEL LIENZO GEOMÉTRICO
 // =========================================================================
 class PincelPainter extends CustomPainter {
   final List<List<PointVector>> trazos;
@@ -270,10 +494,10 @@ class PincelPainter extends CustomPainter {
       final outlinePoints = getStroke(
         trazo,
         options: StrokeOptions(
-          size: 8,          // Grosor base reducido a la mitad (aprox 0.6 cm)
-          thinning: 0.8,     // ¡Extremo! Si mueves el dedo rápido, terminará en punta muy fina
-          smoothing: 0.8,    // Máximo suavizado para curvas perfectas
-          streamline: 0.8,   // Mucha resistencia para eliminar el temblor de la mano
+          size: 8, 
+          thinning: 0.8, 
+          smoothing: 0.8, 
+          streamline: 0.8,
         ),
       );
 
@@ -293,9 +517,6 @@ class PincelPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
 
-// =========================================================================
-// EL PINTOR DE LA CUADRÍCULA "MI ZI GE"
-// =========================================================================
 class GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -343,30 +564,50 @@ class GridPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-class SvgHanziPainter extends CustomPainter {
+class SvgFondoPainter extends CustomPainter {
   final List<String> trazosSvg;
-  SvgHanziPainter(this.trazosSvg);
+  SvgFondoPainter(this.trazosSvg);
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       // ignore: deprecated_member_use
-      ..color = Colors.grey.withOpacity(0.15) 
+      ..color = Colors.grey.withOpacity(0.12) 
       ..style = PaintingStyle.fill;
 
     final double scaleX = (size.width * 0.9) / 1024; 
     final double scaleY = (size.height * 0.9) / 1024;
-    
     canvas.translate(size.width * 0.05, size.height * 0.05);
     canvas.scale(scaleX, -scaleY);
     canvas.translate(0, -1024);
 
     for (String trazo in trazosSvg) {
-      final path = parseSvgPathData(trazo);
-      canvas.drawPath(path, paint);
+      canvas.drawPath(parseSvgPathData(trazo), paint);
     }
   }
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+}
 
+class PistaRojaPainter extends CustomPainter {
+  final String trazoSvg;
+  PistaRojaPainter(this.trazoSvg);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      // ignore: deprecated_member_use
+      ..color = Colors.red.withOpacity(0.4) 
+      ..style = PaintingStyle.fill;
+
+    final double scaleX = (size.width * 0.9) / 1024; 
+    final double scaleY = (size.height * 0.9) / 1024;
+    canvas.translate(size.width * 0.05, size.height * 0.05);
+    canvas.scale(scaleX, -scaleY);
+    canvas.translate(0, -1024);
+
+    canvas.drawPath(parseSvgPathData(trazoSvg), paint);
+  }
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

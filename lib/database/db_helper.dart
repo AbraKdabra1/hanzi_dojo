@@ -23,7 +23,6 @@ class DatabaseHelper {
     return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
-  // 1. LOS ESTANTES (Con las columnas de SRS y Vectores)
   Future _createDB(Database db, int version) async {
     const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     const textType = 'TEXT NOT NULL';
@@ -45,7 +44,6 @@ class DatabaseHelper {
     ''');
   }
 
-  // 2. INYECCIÓN MASIVA
   Future<void> poblarBaseDeDatos() async {
     final db = await instance.database;
     var conteo = await db.rawQuery('SELECT COUNT(*) FROM caracteres');
@@ -62,10 +60,11 @@ class DatabaseHelper {
 
     for (var item in datos) {
       String significadosUnidos = item['significados'].join(', ');
-      
-      // Convertimos las listas matemáticas a texto para SQLite
       String trazosStr = jsonEncode(item['strokes']);
       String medianasStr = jsonEncode(item['medians']);
+
+      // Extraemos el nivel del JSON (si no existe la llave, le asignamos nivel 1 por defecto)
+      int nivelAsignado = item['hsk'] ?? item['nivel'] ?? 1;
 
       batch.insert('caracteres', {
         'simplificado': item['simplificado'],
@@ -74,6 +73,7 @@ class DatabaseHelper {
         'significados': significadosUnidos,
         'trazos': trazosStr,
         'medianas': medianasStr,
+        'nivel': nivelAsignado, // <-- ¡NUEVO! Ahora sí guardamos a qué nivel pertenece
       });
     }
 
@@ -81,14 +81,8 @@ class DatabaseHelper {
     debugPrint("¡Base de datos poblada con éxito!");
   }
 
-  // ----------------------------------------------------------------
-  // MOTOR SRS (LA INTELIGENCIA DE LA APP)
-  // ----------------------------------------------------------------
-
-  // 3. ACTUALIZAR TIEMPOS
   Future<void> actualizarProgresoSRS(int id, int minutosParaElSiguienteRepaso) async {
     final db = await instance.database;
-
     final DateTime ahora = DateTime.now();
     final DateTime tiempoProximo = ahora.add(Duration(minutes: minutosParaElSiguienteRepaso));
     final int timestampProximo = tiempoProximo.millisecondsSinceEpoch ~/ 1000;
@@ -97,41 +91,40 @@ class DatabaseHelper {
       'UPDATE caracteres SET veces_visto = veces_visto + 1, proximo_repaso = ? WHERE id = ?',
       [timestampProximo, id]
     );
-    
-    debugPrint("Hanzi ID $id actualizado. Volverá a aparecer en $minutosParaElSiguienteRepaso minutos.");
   }
 
-  // 4. EXTRAER TARJETA INTELIGENTE
-  Future<Map<String, dynamic>?> obtenerSiguienteHanziParaEstudiar() async {
+  // ¡LA AUDITORÍA INTELIGENTE! Ahora exige un nivel como parámetro
+  Future<Map<String, dynamic>?> obtenerSiguienteHanziParaEstudiar(int nivelHSK) async {
     final db = await instance.database;
     final int ahoraTimestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
+    // 1. Buscamos repasos vencidos estrictamente de ESE nivel
     final List<Map<String, dynamic>> repasosVencidos = await db.query(
       'caracteres',
-      where: 'proximo_repaso <= ? AND veces_visto > 0',
-      whereArgs: [ahoraTimestamp],
+      where: 'proximo_repaso <= ? AND veces_visto > 0 AND nivel = ?',
+      whereArgs: [ahoraTimestamp, nivelHSK],
       orderBy: 'proximo_repaso ASC',
       limit: 1,
     );
 
     if (repasosVencidos.isNotEmpty) {
-      debugPrint("Extrayendo tarjeta para REPASO.");
       return repasosVencidos.first;
     }
 
+    // 2. Si no hay repasos urgentes, buscamos tarjetas nuevas de ESE nivel
     final List<Map<String, dynamic>> tarjetasNuevas = await db.query(
       'caracteres',
-      where: 'veces_visto = 0',
+      where: 'veces_visto = 0 AND nivel = ?',
+      whereArgs: [nivelHSK],
       orderBy: 'RANDOM()', 
       limit: 1,
     );
 
     if (tarjetasNuevas.isNotEmpty) {
-      debugPrint("Extrayendo tarjeta NUEVA.");
       return tarjetasNuevas.first;
     }
 
-    return null; 
+    return null; // Si ya se aprendió todo ese nivel, devuelve null
   }
 
   Future close() async {
