@@ -39,12 +39,14 @@ class DatabaseHelper {
       simplificado $textType,
       tradicional $textType,
       pinyin $textType,
-      significados $textType,
       nivel $intType,
-      veces_visto $intType,
+      srs_interval $intType,
+      e_factor REAL DEFAULT 2.5,
       proximo_repaso $intType,
-      trazos $textType,
-      medianas $textType
+      veces_visto $intType,
+      aciertos_seguidos $intType,
+      audio_metodo TEXT,
+      audio_ruta TEXT
     )
     ''');
 
@@ -57,6 +59,31 @@ class DatabaseHelper {
       pinyin $textType,
       significado $textType,
       FOREIGN KEY (caracter_id) REFERENCES caracteres (id) ON DELETE CASCADE
+    )
+    ''');
+  // Tabla de Vocabulario Cruzado
+    await db.execute('''
+    CREATE TABLE vocabulario (
+      id $idType,
+      hanzi_simp $textType,
+      palabra $textType,
+      tradicional TEXT,
+      pinyin TEXT,
+      definicion TEXT,
+      FOREIGN KEY (hanzi_simp) REFERENCES caracteres (simplificado) ON DELETE CASCADE
+    )
+    ''');
+
+    // Tabla de Oraciones Reales
+    await db.execute('''
+    CREATE TABLE oraciones (
+      id $idType,
+      hanzi_simp $textType,
+      oracion_simp $textType,
+      oracion_trad TEXT,
+      pinyin TEXT,
+      traduccion TEXT,
+      FOREIGN KEY (hanzi_simp) REFERENCES caracteres (simplificado) ON DELETE CASCADE
     )
     ''');
   }
@@ -73,7 +100,7 @@ class DatabaseHelper {
     if (numeroDeCaracteres != null && numeroDeCaracteres > 0) return;
 
     debugPrint("Leyendo el archivo JSON supercargado desde los assets...");
-    final String respuesta = await rootBundle.loadString('assets/diccionario_supercargado.json');
+    final String respuesta = await rootBundle.loadString('assets/diccionario_supercargado_completo.json');
     final List<dynamic> datos = json.decode(respuesta);
 
     debugPrint("Iniciando la inyección masiva en SQLite...");
@@ -97,6 +124,31 @@ class DatabaseHelper {
         'nivel': nivelAsignado, 
       });
     }
+    // Tabla de Vocabulario Cruzado - NUEVO
+    await db.execute('''
+    CREATE TABLE vocabulario (
+      id $idType,
+      caracter_id INTEGER NOT NULL,
+      palabra $textType,
+      tradicional TEXT,
+      pinyin TEXT,
+      definicion TEXT,
+      FOREIGN KEY (caracter_id) REFERENCES caracteres (id) ON DELETE CASCADE
+    )
+    ''');
+
+    // Tabla de Oraciones Reales - NUEVO
+    await db.execute('''
+    CREATE TABLE oraciones (
+      id $idType,
+      caracter_id INTEGER NOT NULL,
+      oracion_simp $textType,
+      oracion_trad TEXT,
+      pinyin TEXT,
+      traduccion TEXT,
+      FOREIGN KEY (caracter_id) REFERENCES caracteres (id) ON DELETE CASCADE
+    )
+    ''');
 
     await batch.commit(noResult: true);
     debugPrint("¡Base de datos poblada con éxito!");
