@@ -3,8 +3,12 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:flutter/foundation.dart'; 
+import 'package:flutter/foundation.dart';
 
+// =========================================================================
+// 1. CONFIGURACIÓN E INICIALIZACIÓN (Singleton)
+// Maneja la creación de la base de datos y la estructura de las tablas.
+// =========================================================================
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
   static Database? _database;
@@ -26,8 +30,9 @@ class DatabaseHelper {
   Future _createDB(Database db, int version) async {
     const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     const textType = 'TEXT NOT NULL';
-    const intType = 'INTEGER DEFAULT 0'; 
+    const intType = 'INTEGER DEFAULT 0';
 
+    // Tabla Principal (Caracteres)
     await db.execute('''
     CREATE TABLE caracteres (
       id $idType,
@@ -42,13 +47,29 @@ class DatabaseHelper {
       medianas $textType
     )
     ''');
+
+    // Tabla de Ejemplos (Relacionada a la tabla caracteres)
+    await db.execute('''
+    CREATE TABLE ejemplos (
+      id $idType,
+      caracter_id INTEGER,
+      palabra $textType,
+      pinyin $textType,
+      significado $textType,
+      FOREIGN KEY (caracter_id) REFERENCES caracteres (id) ON DELETE CASCADE
+    )
+    ''');
   }
 
+// =========================================================================
+// 2. INYECCIÓN MASIVA DE DATOS (Población Inicial)
+// Lee el archivo JSON y carga los miles de caracteres en la primera apertura.
+// =========================================================================
   Future<void> poblarBaseDeDatos() async {
     final db = await instance.database;
     var conteo = await db.rawQuery('SELECT COUNT(*) FROM caracteres');
     int? numeroDeCaracteres = Sqflite.firstIntValue(conteo);
-
+    
     if (numeroDeCaracteres != null && numeroDeCaracteres > 0) return;
 
     debugPrint("Leyendo el archivo JSON supercargado desde los assets...");
@@ -63,8 +84,8 @@ class DatabaseHelper {
       String trazosStr = jsonEncode(item['strokes']);
       String medianasStr = jsonEncode(item['medians']);
 
-      // Extraemos el nivel del JSON (si no existe la llave, le asignamos nivel 1 por defecto)
-      int nivelAsignado = item['hsk'] ?? item['nivel'] ?? 1;
+      // El valor por defecto es 10 (No clasificado) para coincidir con el script
+      int nivelAsignado = item['nivel'] ?? item['hsk'] ?? 10;
 
       batch.insert('caracteres', {
         'simplificado': item['simplificado'],
@@ -73,7 +94,7 @@ class DatabaseHelper {
         'significados': significadosUnidos,
         'trazos': trazosStr,
         'medianas': medianasStr,
-        'nivel': nivelAsignado, // <-- ¡NUEVO! Ahora sí guardamos a qué nivel pertenece
+        'nivel': nivelAsignado, 
       });
     }
 
@@ -81,24 +102,31 @@ class DatabaseHelper {
     debugPrint("¡Base de datos poblada con éxito!");
   }
 
+// =========================================================================
+// 3. ACTUALIZACIÓN DE PROGRESO (Motor SRS)
+// Lógica que calcula y guarda los tiempos para el siguiente repaso.
+// =========================================================================
   Future<void> actualizarProgresoSRS(int id, int minutosParaElSiguienteRepaso) async {
     final db = await instance.database;
     final DateTime ahora = DateTime.now();
     final DateTime tiempoProximo = ahora.add(Duration(minutes: minutosParaElSiguienteRepaso));
     final int timestampProximo = tiempoProximo.millisecondsSinceEpoch ~/ 1000;
-
+    
     await db.rawUpdate(
       'UPDATE caracteres SET veces_visto = veces_visto + 1, proximo_repaso = ? WHERE id = ?',
       [timestampProximo, id]
     );
   }
 
-  // ¡LA AUDITORÍA INTELIGENTE! Ahora exige un nivel como parámetro
+// =========================================================================
+// 4. CONSULTAS DE ESTUDIO (Lectura)
+// Extrae el siguiente Hanzi a estudiar basado en urgencia y nivel.
+// =========================================================================
   Future<Map<String, dynamic>?> obtenerSiguienteHanziParaEstudiar(int nivelHSK) async {
     final db = await instance.database;
     final int ahoraTimestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
-    // 1. Buscamos repasos vencidos estrictamente de ESE nivel
+    // A. Buscamos repasos vencidos estrictamente de ESE nivel
     final List<Map<String, dynamic>> repasosVencidos = await db.query(
       'caracteres',
       where: 'proximo_repaso <= ? AND veces_visto > 0 AND nivel = ?',
@@ -106,12 +134,12 @@ class DatabaseHelper {
       orderBy: 'proximo_repaso ASC',
       limit: 1,
     );
-
+    
     if (repasosVencidos.isNotEmpty) {
       return repasosVencidos.first;
     }
 
-    // 2. Si no hay repasos urgentes, buscamos tarjetas nuevas de ESE nivel
+    // B. Si no hay repasos urgentes, buscamos tarjetas nuevas de ESE nivel
     final List<Map<String, dynamic>> tarjetasNuevas = await db.query(
       'caracteres',
       where: 'veces_visto = 0 AND nivel = ?',
@@ -119,7 +147,7 @@ class DatabaseHelper {
       orderBy: 'RANDOM()', 
       limit: 1,
     );
-
+    
     if (tarjetasNuevas.isNotEmpty) {
       return tarjetasNuevas.first;
     }

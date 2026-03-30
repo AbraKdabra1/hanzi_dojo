@@ -1,9 +1,16 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:path_drawing/path_drawing.dart';
 import 'package:perfect_freehand/perfect_freehand.dart'; 
 import 'database/db_helper.dart';
+import 'dart:ui'; // Efecto de Liquid Glass
+
+// ====================================================================================================
+// 1. CONFIGURACIÓN Y RAÍZ DE LA APP
+// Inicializa Flutter, la base de datos y lanza la aplicación.
+// ====================================================================================================
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,7 +21,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,40 +36,202 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class PantallaInicio extends StatelessWidget {
+// =========================================================================
+// 2. PANTALLA DE INICIO (PantallaInicio)
+// Menú principal con el botón de entrada, estadísticas y frases rotativas.
+// =========================================================================
+
+class PantallaInicio extends StatefulWidget {
   const PantallaInicio({super.key});
+
+  @override
+  State<PantallaInicio> createState() => _PantallaInicioState();
+}
+
+class _PantallaInicioState extends State<PantallaInicio> {
+  final List<String> _frases = [
+    "El viaje de mil millas comienza con un solo paso.",
+    "Aprender es un tesoro que seguirá a su dueño a todas partes.",
+    "No temas ir despacio, teme solo a detenerte.",
+    "La paciencia es una planta amarga, pero su fruto es dulce."
+  ];
+  int _indiceFrase = 0;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
+      if (mounted) {
+        setState(() {
+          _indiceFrase = (_indiceFrase + 1) % _frases.length;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.black,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            elevation: 0,
-          ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const PantallaSeleccion()),
-            );
-          },
-          child: const Text(
-            'Chino tradicional',
-            style: TextStyle(fontSize: 18, letterSpacing: 0.5, fontWeight: FontWeight.w500),
-          ),
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Spacer(),
+            
+            // --- BOTÓN LIQUID GLASS PRINCIPAL ---
+            ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const PantallaSeleccion()));
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    decoration: BoxDecoration(
+                      // ignore: deprecated_member_use
+                      color: Colors.black.withOpacity(0.75), // Cristal oscuro
+                      borderRadius: BorderRadius.circular(30),
+                      // ignore: deprecated_member_use
+                      border: Border.all(color: Colors.white.withOpacity(0.3), width: 1.5),
+                    ),
+                    child: const Text(
+                      'Chino tradicional',
+                      style: TextStyle(fontSize: 18, color: Colors.white, letterSpacing: 0.5, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            
+            const SizedBox(height: 20),
+            
+            // --- BOTÓN LIQUID GLASS SECUNDARIO (Estadísticas) ---
+            ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const PantallaEstadisticas()));
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
+                    decoration: BoxDecoration(
+                      // ignore: deprecated_member_use
+                      color: Colors.grey.shade100.withOpacity(0.5), // Cristal claro
+                      borderRadius: BorderRadius.circular(30),
+                      // ignore: deprecated_member_use
+                      border: Border.all(color: Colors.grey.shade300.withOpacity(0.5), width: 1.5),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.pie_chart_outline, color: Colors.grey.shade800, size: 20),
+                        const SizedBox(width: 8),
+                        Text(
+                          "Ver mis estadísticas",
+                          style: TextStyle(color: Colors.grey.shade800, fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            
+            const Spacer(),
+            
+            // --- EL MENSAJE CON EL BUG ARREGLADO ---
+            Container(
+              height: 60,
+              width: double.infinity, // ¡AQUÍ ESTÁ LA MAGIA! Esto evita que la pantalla tiemble
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 600),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  final rotate = Tween(begin: math.pi / 2, end: 0.0).animate(
+                    CurvedAnimation(parent: animation, curve: Curves.easeOutCubic)
+                  );
+                  final fade = Tween(begin: 0.0, end: 1.0).animate(animation);
+                  return AnimatedBuilder(
+                    animation: animation,
+                    child: child,
+                    builder: (context, child) {
+                      return Transform(
+                        transform: Matrix4.rotationX(rotate.value),
+                        alignment: Alignment.center,
+                        child: Opacity(opacity: fade.value, child: child),
+                      );
+                    }
+                  );
+                },
+                child: Text(
+                  _frases[_indiceFrase],
+                  key: ValueKey<int>(_indiceFrase),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey.shade500, fontStyle: FontStyle.italic, fontSize: 14),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
         ),
       ),
     );
   }
 }
 
-class PantallaSeleccion extends StatelessWidget {
+// =========================================================================
+// 3. PANTALLA DE SELECCIÓN (PantallaSeleccion)
+// Biblioteca HSK con barra de búsqueda animada y lista de niveles.
+// =========================================================================
+
+class PantallaSeleccion extends StatefulWidget {
   const PantallaSeleccion({super.key});
+
+  @override
+  State<PantallaSeleccion> createState() => _PantallaSeleccionState();
+}
+
+class _PantallaSeleccionState extends State<PantallaSeleccion> {
+  bool _estaBuscando = false;
+  List<Map<String, dynamic>> _resultadosBusqueda = [];
+
+  void _alEscribir(String query) async {
+    if (query.trim().isEmpty) {
+      setState(() {
+        _estaBuscando = false;
+        _resultadosBusqueda = [];
+      });
+      return;
+    }
+
+    setState(() => _estaBuscando = true);
+
+    final db = await DatabaseHelper.instance.database;
+    final res = await db.query(
+      'caracteres',
+      where: 'simplificado LIKE ? OR pinyin LIKE ? OR significados LIKE ?',
+      whereArgs: ['%$query%', '%$query%', '%$query%'],
+      limit: 15
+    );
+
+    if (mounted) {
+      setState(() {
+        _resultadosBusqueda = res;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,12 +252,13 @@ class PantallaSeleccion extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             child: TextField(
+              onChanged: _alEscribir,
               decoration: InputDecoration(
                 hintText: 'Buscar hanzi, pinyin o significado...',
                 hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 15),
                 prefixIcon: Icon(Icons.search, color: Colors.grey.shade500),
                 filled: true,
-                fillColor: Colors.grey.shade50, 
+                fillColor: Colors.grey.shade50,
                 contentPadding: const EdgeInsets.symmetric(vertical: 0),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
@@ -98,26 +268,62 @@ class PantallaSeleccion extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
+          
           Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              itemCount: 9, 
-              separatorBuilder: (context, index) => Divider(color: Colors.grey.shade100, height: 1),
-              itemBuilder: (context, index) {
-                final nivel = index + 1; 
-                return ListTile(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 5.0),
-                  title: Text('Nivel HSK $nivel', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
-                  subtitle: Text('Estudiar y repasar tarjetas', style: TextStyle(color: Colors.grey.shade500, fontSize: 14)),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => PantallaEstudio(nivelHSK: nivel)),
-                    );
-                  },
-                );
-              },
+            child: AnimatedCrossFade(
+              duration: const Duration(milliseconds: 300),
+              crossFadeState: _estaBuscando ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+              
+              firstChild: ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                itemCount: 7, 
+                separatorBuilder: (context, index) => Divider(color: Colors.grey.shade100, height: 1),
+                itemBuilder: (context, index) {
+                  final nivel = index + 1;
+                  return ListTile(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 5.0),
+                    title: Text(nivel == 7 ? "HSK 7-9" : "HSK $nivel", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                    subtitle: Text('Estudiar y repasar tarjetas', style: TextStyle(color: Colors.grey.shade500, fontSize: 14)),
+                    trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => PantallaEstudio(nivelHSK: nivel)),
+                      );
+                    },
+                  );
+                },
+              ),
+              
+              secondChild: _resultadosBusqueda.isEmpty 
+                ? const Center(child: Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Text("Sin resultados", style: TextStyle(color: Colors.grey)),
+                  ))
+                : ListView.separated(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    itemCount: _resultadosBusqueda.length,
+                    separatorBuilder: (context, index) => Divider(color: Colors.grey.shade100, height: 1),
+                    itemBuilder: (context, index) {
+                      final hanzi = _resultadosBusqueda[index];
+                      return ListTile(
+                        title: Text("${hanzi['simplificado']}  (${hanzi['pinyin']})", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        subtitle: Text("${hanzi['significados']}", maxLines: 1, overflow: TextOverflow.ellipsis),
+                        trailing: const Icon(Icons.draw, size: 18, color: Colors.blue),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PantallaEstudio(
+                                nivelHSK: hanzi['nivel'],
+                                hanziIdBuscado: hanzi['id'], // Conectamos la búsqueda
+                              )
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
             ),
           ),
         ],
@@ -126,9 +332,133 @@ class PantallaSeleccion extends StatelessWidget {
   }
 }
 
+// =========================================================================
+// 4. PANTALLA DE ESTADÍSTICAS (PantallaEstadisticas)
+// Consultas agrupadas y donas de progreso divididas por nivel HSK.
+// =========================================================================
+
+class PantallaEstadisticas extends StatefulWidget {
+  const PantallaEstadisticas({super.key});
+
+  @override
+  State<PantallaEstadisticas> createState() => _PantallaEstadisticasState();
+}
+
+class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
+  List<Map<String, dynamic>> _datosPorNivel = [];
+  bool _cargando = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _cargarDatos();
+  }
+
+  Future<void> _cargarDatos() async {
+    final db = await DatabaseHelper.instance.database;
+    final List<Map<String, dynamic>> stats = await db.rawQuery('''
+      SELECT nivel, 
+             COUNT(id) as total, 
+             SUM(CASE WHEN veces_visto > 0 THEN 1 ELSE 0 END) as estudiados 
+      FROM caracteres 
+      GROUP BY nivel 
+      ORDER BY nivel ASC
+    ''');
+
+    if (mounted) {
+      setState(() {
+        _datosPorNivel = stats;
+        _cargando = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Text('Mi Progreso', style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w600)),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black87, size: 20),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: _cargando 
+        ? const Center(child: CircularProgressIndicator(color: Colors.black))
+        : ListView.builder(
+            padding: const EdgeInsets.all(20),
+            itemCount: _datosPorNivel.length,
+            itemBuilder: (context, index) {
+              final nivelData = _datosPorNivel[index];
+              final int nivel = nivelData['nivel'];
+              final int total = nivelData['total'];
+              final int estudiados = nivelData['estudiados'] ?? 0;
+              final double porcentaje = total > 0 ? estudiados / total : 0.0;
+              
+              if (nivel > 7 || nivel == 10) return const SizedBox.shrink(); // Ocultamos errores o no oficiales
+
+              return Container(
+                margin: const EdgeInsets.only(bottom: 20),
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade50,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.grey.shade100)
+                ),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 60, height: 60,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          CircularProgressIndicator(
+                            value: porcentaje,
+                            strokeWidth: 6,
+                            backgroundColor: Colors.grey.shade200,
+                            color: Colors.black87,
+                          ),
+                          Text(
+                            "${(porcentaje * 100).toStringAsFixed(0)}%",
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                          )
+                        ]
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(nivel == 7 ? "HSK 7-9 (Avanzado)" : "Nivel HSK $nivel", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 5),
+                          Text("$estudiados de $total hanzi aprendidos", style: TextStyle(color: Colors.grey.shade600, fontSize: 14)),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
+          ),
+    );
+  }
+}
+
+// =========================================================================
+// 5. PANTALLA DE ESTUDIO (PantallaEstudio)
+// El núcleo de la práctica. Conecta el lienzo, el evaluador y los ejemplos.
+// =========================================================================
+
 class PantallaEstudio extends StatefulWidget {
   final int nivelHSK;
-  const PantallaEstudio({super.key, required this.nivelHSK});
+  final int? hanziIdBuscado; // Parámetro crucial para que la búsqueda funcione
+
+  const PantallaEstudio({super.key, required this.nivelHSK, this.hanziIdBuscado});
 
   @override
   State<PantallaEstudio> createState() => _PantallaEstudioState();
@@ -141,6 +471,7 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
   int _trazoCorrectoActual = 0;
   bool _mostrarPistaError = false;
   bool _hanziCompletado = false;
+  bool _esBusquedaInicial = true; // Control para cargar la búsqueda 
 
   @override
   void initState() {
@@ -149,7 +480,18 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
   }
 
   void _siguienteHanzi() async {
-    final hanzi = await DatabaseHelper.instance.obtenerSiguienteHanziParaEstudiar(widget.nivelHSK);
+    Map<String, dynamic>? hanzi;
+    
+    // Si viene de la barra de búsqueda, carga ese Hanzi exacto la primera vez
+    if (widget.hanziIdBuscado != null && _esBusquedaInicial) {
+      final db = await DatabaseHelper.instance.database;
+      final res = await db.query('caracteres', where: 'id = ?', whereArgs: [widget.hanziIdBuscado]);
+      if (res.isNotEmpty) hanzi = res.first;
+      _esBusquedaInicial = false;
+    } else {
+      hanzi = await DatabaseHelper.instance.obtenerSiguienteHanziParaEstudiar(widget.nivelHSK);
+    }
+
     setState(() {
       _hanziActual = hanzi;
       _trazosUsuario.clear(); 
@@ -179,6 +521,52 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
       _trazoCorrectoActual = 0;
       _hanziCompletado = false;
     });
+  }
+
+  // EL MODAL DE EJEMPLOS REPARADO
+  void _mostrarModalEjemplos(int hanziId) async {
+    final db = await DatabaseHelper.instance.database;
+    final listaEjemplos = await db.query(
+      'ejemplos',
+      where: 'caracter_id = ?',
+      whereArgs: [hanziId],
+    );
+
+    if (!mounted) return;
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20))
+      ),
+      builder: (context) {
+        if (listaEjemplos.isEmpty) {
+          return const Padding(
+            padding: EdgeInsets.all(30.0),
+            child: Text(
+              "Aún no hay ejemplos para este carácter.", 
+              style: TextStyle(fontSize: 16)
+            ),
+          );
+        }
+        return ListView.builder(
+          itemCount: listaEjemplos.length,
+          itemBuilder: (context, index) {
+            final ej = listaEjemplos[index];
+            return ListTile(
+              title: Text(
+                "${ej['palabra']} (${ej['pinyin']})", 
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
+              ),
+              subtitle: Text(
+                "${ej['significado']}", 
+                style: const TextStyle(fontSize: 16)
+              ),
+            );
+          },
+        );
+      }
+    );
   }
 
   void _auditarTrazo(Size canvasSize) {
@@ -222,13 +610,14 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
       });
     } else {
       setState(() {
-        _trazosUsuario.removeLast(); 
         _mostrarPistaError = true;   
       });
-      
-      Future.delayed(const Duration(milliseconds: 800), () {
+      Future.delayed(const Duration(milliseconds: 400), () {
         if (mounted) {
           setState(() {
+            if (_trazosUsuario.isNotEmpty) {
+              _trazosUsuario.removeLast(); 
+            }
             _mostrarPistaError = false;
           });
         }
@@ -270,7 +659,6 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          // ¡AQUÍ ESTÁ LA MAGIA! Filtramos el Pinyin crudo por nuestro traductor
                           PinyinHelper.formatear(_hanziActual!['pinyin']),
                           style: TextStyle(fontSize: 22, color: Colors.grey.shade600, letterSpacing: 1.2, fontWeight: FontWeight.w500),
                         ),
@@ -282,11 +670,51 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                         ),
+                        // Botón ver ejemplos
+                        // --- BOTÓN LIQUID GLASS (Ver Ejemplos) ---
+                        if (_hanziActual != null) 
+                          Padding(
+                            padding: const EdgeInsets.only(top: 15.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                                child: InkWell(
+                                  onTap: () => _mostrarModalEjemplos(_hanziActual!['id']),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      // ignore: deprecated_member_use
+                                      color: Colors.blue.shade50.withOpacity(0.6), // Cristal azulado sutil
+                                      borderRadius: BorderRadius.circular(20),
+                                      // ignore: deprecated_member_use
+                                      border: Border.all(color: Colors.blue.shade200.withOpacity(0.4), width: 1),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.menu_book_rounded, color: Colors.blue.shade700, size: 16),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          "Ver ejemplos",
+                                          style: TextStyle(
+                                            color: Colors.blue.shade700,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        // --- FIN DEL BOTÓN ---                             
                       ],
                     ),
                   ),
-                ),
-
+                ),                                                                                                                                
                 Expanded(
                   flex: 5, 
                   child: Center(
@@ -308,20 +736,16 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
                           child: LayoutBuilder(
                             builder: (context, constraints) {
                               final canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
-                              
                               List<String> todosLosVectores = _hanziActual!['trazos'] != null 
                                   ? List<String>.from(jsonDecode(_hanziActual!['trazos'])) 
                                   : [];
-
                               return Stack( 
                                 children: [
                                   Positioned.fill(child: CustomPaint(painter: GridPainter())),
-                                  
                                   if (todosLosVectores.isNotEmpty)
                                     Positioned.fill(
                                       child: CustomPaint(painter: SvgFondoPainter(todosLosVectores)),
                                     ),
-
                                   if (todosLosVectores.isNotEmpty && _trazoCorrectoActual < todosLosVectores.length)
                                     Positioned.fill(
                                       child: AnimatedOpacity(
@@ -330,7 +754,6 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
                                         child: CustomPaint(painter: PistaRojaPainter(todosLosVectores[_trazoCorrectoActual])),
                                       ),
                                     ),
-                                  
                                   Positioned.fill(
                                     child: GestureDetector(
                                       onPanStart: (details) {
@@ -364,7 +787,6 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
                     ),
                   ),
                 ),
-                
                 Expanded(
                   flex: 2, 
                   child: Center(
@@ -409,13 +831,12 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
 }
 
 // =========================================================================
-// EL TRADUCTOR DE PINYIN NUMÉRICO A PINYIN NATIVO (NUEVO)
+// 6. FORMATEADOR DE TEXTO (PinyinHelper)
+// Lógica para traducir Pinyin numérico (ej. ni3) a caracteres con acentos (nǐ).
 // =========================================================================
 class PinyinHelper {
   static String formatear(String texto) {
     if (texto.isEmpty) return texto;
-
-    // Nuestro catálogo de acentos (Tono 1, 2, 3, 4)
     final map = {
       'a': ['ā', 'á', 'ǎ', 'à'],
       'e': ['ē', 'é', 'ě', 'è'],
@@ -425,34 +846,28 @@ class PinyinHelper {
       'v': ['ǖ', 'ǘ', 'ǚ', 'ǜ'],
       'ü': ['ǖ', 'ǘ', 'ǚ', 'ǜ'],
     };
-
-    // Dividimos por espacios (ej. "zhong1 wen2" -> ["zhong1", "wen2"])
     List<String> palabras = texto.toLowerCase().split(RegExp(r'\s+'));
     List<String> resultado = [];
 
     for (String palabra in palabras) {
-      // Buscamos letras seguidas de un número (1 al 5)
       RegExp regex = RegExp(r'([a-züv]+)(\d)');
       Match? match = regex.firstMatch(palabra);
 
       if (match == null) {
-        resultado.add(palabra.replaceAll('v', 'ü')); // Sin número, se queda igual
+        resultado.add(palabra.replaceAll('v', 'ü'));
         continue;
       }
 
       String silaba = match.group(1)!.replaceAll('v', 'ü');
       int tono = int.parse(match.group(2)!);
-
-      // Si es tono 5 (neutro) o un número raro, solo quitamos el número
       if (tono < 1 || tono > 4) {
         String resto = palabra.substring(match.end);
         resultado.add(silaba + resto);
         continue;
       }
 
-      int t = tono - 1; // Ajuste para buscar en nuestra lista (índices 0 a 3)
+      int t = tono - 1;
 
-      // Reglas jerárquicas del Pinyin:
       if (silaba.contains('a')) {
         silaba = silaba.replaceFirst('a', map['a']![t]);
       } else if (silaba.contains('e')) {
@@ -460,7 +875,6 @@ class PinyinHelper {
       } else if (silaba.contains('o')) {
         silaba = silaba.replaceFirst('o', map['o']![t]);
       } else {
-        // Si no hay a, e, o -> El acento va en la *última* vocal (para iu, ui)
         for (int i = silaba.length - 1; i >= 0; i--) {
           String letra = silaba[i];
           if (map.containsKey(letra)) {
@@ -478,18 +892,18 @@ class PinyinHelper {
 }
 
 // =========================================================================
-// PINTORES DEL LIENZO GEOMÉTRICO
+// 7. PINTOR DE EVALUACIÓN Y TRAZOS (PincelPainter & PistaRojaPainter)
+// Renderiza el dedo del usuario con efecto de tinta y las alertas rojas de error.
 // =========================================================================
+
 class PincelPainter extends CustomPainter {
   final List<List<PointVector>> trazos;
   PincelPainter(this.trazos);
-
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = Colors.black87
       ..style = PaintingStyle.fill;
-
     for (var trazo in trazos) {
       final outlinePoints = getStroke(
         trazo,
@@ -500,7 +914,6 @@ class PincelPainter extends CustomPainter {
           streamline: 0.8,
         ),
       );
-
       if (outlinePoints.isEmpty) continue;
 
       final path = Path();
@@ -517,6 +930,11 @@ class PincelPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
 
+// =========================================================================
+// 8. PINTORES DE FONDO GEOMÉTRICO (GridPainter & SvgFondoPainter)
+// Dibujan las líneas guías (cruz) y la sombra gris del Hanzi a calcar.
+// =========================================================================
+
 class GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -524,7 +942,6 @@ class GridPainter extends CustomPainter {
       ..color = Colors.grey.shade300
       ..strokeWidth = 1
       ..style = PaintingStyle.stroke;
-
     final dashWidth = 8.0;
     final dashSpace = 6.0;
 
@@ -537,17 +954,14 @@ class GridPainter extends CustomPainter {
   void _drawDashedLine(Canvas canvas, Offset p1, Offset p2, Paint paint, double dashWidth, double dashSpace) {
     final double dx = p2.dx - p1.dx;
     final double dy = p2.dy - p1.dy;
-    final double distance = math.sqrt(dx * dx + dy * dy); 
-    
+    final double distance = math.sqrt(dx * dx + dy * dy);
     if (distance == 0) return;
     
     final double unitX = dx / distance;
     final double unitY = dy / distance;
-
     double currentX = p1.dx;
     double currentY = p1.dy;
     double drawn = 0.0;
-
     while (drawn < distance) {
       canvas.drawLine(
         Offset(currentX, currentY), 
@@ -567,20 +981,17 @@ class GridPainter extends CustomPainter {
 class SvgFondoPainter extends CustomPainter {
   final List<String> trazosSvg;
   SvgFondoPainter(this.trazosSvg);
-
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       // ignore: deprecated_member_use
       ..color = Colors.grey.withOpacity(0.12) 
       ..style = PaintingStyle.fill;
-
     final double scaleX = (size.width * 0.9) / 1024; 
     final double scaleY = (size.height * 0.9) / 1024;
     canvas.translate(size.width * 0.05, size.height * 0.05);
     canvas.scale(scaleX, -scaleY);
     canvas.translate(0, -1024);
-
     for (String trazo in trazosSvg) {
       canvas.drawPath(parseSvgPathData(trazo), paint);
     }
@@ -592,14 +1003,12 @@ class SvgFondoPainter extends CustomPainter {
 class PistaRojaPainter extends CustomPainter {
   final String trazoSvg;
   PistaRojaPainter(this.trazoSvg);
-
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       // ignore: deprecated_member_use
       ..color = Colors.red.withOpacity(0.4) 
       ..style = PaintingStyle.fill;
-
     final double scaleX = (size.width * 0.9) / 1024; 
     final double scaleY = (size.height * 0.9) / 1024;
     canvas.translate(size.width * 0.05, size.height * 0.05);
