@@ -1,5 +1,26 @@
 # hanzi_what
 
+lib/
+├── main.dart                 # Punto de entrada, inicializa DB y lanza app
+├── screens/                  # Pantallas completas (UI + lógica de navegación)
+│   ├── pantalla_inicio.dart
+│   ├── pantalla_seleccion.dart
+│   ├── pantalla_estudio.dart
+│   └── pantalla_estadisticas.dart
+├── painters/                 # Painters personalizados para lienzo y grids
+│   ├── pincel_painter.dart
+│   ├── grid_painter.dart
+│   ├── svg_fondo_painter.dart   # (recreado)
+│   └── pista_roja_painter.dart  # (recreado)
+├── helpers/                  # Utilidades
+│   └── pinyin_helper.dart
+├── widgets/                  # Componentes reutilizables
+│   ├── fondo_tinta.dart      # Fondo decorativo
+│   ├── glass_speaker_button.dart # Botón con efecto glassmorphism para TTS
+│   └── lienzo_hanzi.dart     # (actualizado con correcciones)
+└── database/                 # Acceso a datos
+    └── db_helper.dart        # SQLite + lógica de progreso SRS
+
 ## 🚀 Últimas Actualizaciones (Novedades de la Versión)
 
 ### 🏗️ Arquitectura y Refactorización
