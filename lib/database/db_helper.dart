@@ -24,7 +24,7 @@ class DatabaseHelper {
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(path, version: 2, onCreate: _createDB);
   }
 
   Future _createDB(Database db, int version) async {
@@ -39,6 +39,9 @@ class DatabaseHelper {
       simplificado $textType,
       tradicional $textType,
       pinyin $textType,
+      significados TEXT,
+      trazos TEXT,
+      medianas TEXT,
       nivel $intType,
       srs_interval $intType,
       e_factor REAL DEFAULT 2.5,

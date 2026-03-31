@@ -662,17 +662,20 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          PinyinHelper.formatear(_hanziActual!['pinyin']),
-                          style: TextStyle(fontSize: 22, color: Colors.grey.shade600, letterSpacing: 1.2, fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          _hanziActual!['significados'],
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.black87, height: 1.4),
-                          textAlign: TextAlign.center,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
+                        RichText(
+                          text: TextSpan(
+                            children: PinyinHelper.formatearConColores(_hanziActual!['pinyin'])
+                              .map((par) => TextSpan(
+                                text: par.$1,
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  letterSpacing: 1.2,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'SFPro',
+                                ).copyWith(color: par.$2),
+                              ))
+                              .toList(),
+                          ),
                         ),
                         // ── BOTÓN DE VOZ (nuevo) ──────────────────────────────────
                         const SizedBox(height: 14),
@@ -910,6 +913,76 @@ class PinyinHelper {
       resultado.add(silaba + resto);
     }
     return resultado.join(' ');
+  }
+   // ── Método nuevo 1: detecta el color según el número de tono ──
+  static Color colorDeTono(String palabra) {
+    final match = RegExp(r'(\d)').firstMatch(palabra);
+    if (match == null) return const Color(0xFF9E9E9E);
+    switch (match.group(1)) {
+      case '1': return const Color(0xFFE53935); // rojo
+      case '2': return const Color(0xFFF57C00); // naranja
+      case '3': return const Color(0xFF2E7D32); // verde
+      case '4': return const Color(0xFF1565C0); // azul
+      default:  return const Color(0xFF9E9E9E); // gris neutro
+    }
+  }
+
+  // ── Método nuevo 2: igual que formatear() pero devuelve texto + color ──
+  static List<(String, Color)> formatearConColores(String texto) {
+    if (texto.isEmpty) return [];
+    final map = {
+      'a': ['ā', 'á', 'ǎ', 'à'],
+      'e': ['ē', 'é', 'ě', 'è'],
+      'i': ['ī', 'í', 'ǐ', 'ì'],
+      'o': ['ō', 'ó', 'ǒ', 'ò'],
+      'u': ['ū', 'ú', 'ǔ', 'ù'],
+      'v': ['ǖ', 'ǘ', 'ǚ', 'ǜ'],
+      'ü': ['ǖ', 'ǘ', 'ǚ', 'ǜ'],
+    };
+
+    List<String> palabras = texto.toLowerCase().split(RegExp(r'\s+'));
+    List<(String, Color)> resultado = [];
+
+    for (int i = 0; i < palabras.length; i++) {
+      final palabra = palabras[i];
+      final RegExp regex = RegExp(r'([a-züv]+)(\d)');
+      final Match? match = regex.firstMatch(palabra);
+      final Color color = colorDeTono(palabra);
+
+      if (match == null) {
+        resultado.add((palabra.replaceAll('v', 'ü'), const Color(0xFF9E9E9E)));
+      } else {
+        String silaba = match.group(1)!.replaceAll('v', 'ü');
+        int tono = int.parse(match.group(2)!);
+
+        if (tono >= 1 && tono <= 4) {
+          int t = tono - 1;
+          if (silaba.contains('a')) {
+            silaba = silaba.replaceFirst('a', map['a']![t]);
+          } else if (silaba.contains('e')) {
+            silaba = silaba.replaceFirst('e', map['e']![t]);
+          } else if (silaba.contains('o')) {
+            silaba = silaba.replaceFirst('o', map['o']![t]);
+          } else {
+            for (int j = silaba.length - 1; j >= 0; j--) {
+              final letra = silaba[j];
+              if (map.containsKey(letra)) {
+                silaba = silaba.replaceRange(j, j + 1, map[letra]![t]);
+                break;
+              }
+            }
+          }
+        }
+
+        final String resto = palabra.substring(match.end);
+        resultado.add((silaba + resto, color));
+      }
+
+      if (i < palabras.length - 1) {
+        resultado.add((' ', const Color(0xFF9E9E9E)));
+      }
+    }
+    return resultado;
   }
 }
 
