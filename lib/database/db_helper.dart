@@ -100,6 +100,7 @@ class DatabaseHelper {
     if (numeroDeCaracteres != null && numeroDeCaracteres > 0) return;
 
     debugPrint("Leyendo el archivo JSON supercargado desde los assets...");
+    // Asegúrate de que el nombre coincida con tu nuevo archivo maestro
     final String respuesta = await rootBundle.loadString('assets/diccionario_supercargado_completo.json');
     final List<dynamic> datos = json.decode(respuesta);
 
@@ -107,51 +108,63 @@ class DatabaseHelper {
     Batch batch = db.batch();
 
     for (var item in datos) {
-      String significadosUnidos = item['significados'].join(', ');
-      String trazosStr = jsonEncode(item['strokes']);
-      String medianasStr = jsonEncode(item['medians']);
+      String significadosUnidos = item['significados'] != null ? item['significados'].join(', ') : '';
+      String trazosStr = jsonEncode(item['strokes'] ?? []);
+      String medianasStr = jsonEncode(item['medians'] ?? []);
+      
+      // Tomamos el nivel oficial del HSK 3.0, o el genérico si falla
+      int nivelAsignado = item['hsk_nivel_oficial'] != null 
+          ? int.tryParse(item['hsk_nivel_oficial'].toString()) ?? 10 
+          : (item['nivel'] ?? 10);
 
-      // El valor por defecto es 10 (No clasificado) para coincidir con el script
-      int nivelAsignado = item['nivel'] ?? item['hsk'] ?? 10;
-
+      // ==========================================
+      // PASO 4: Inserción Principal (Actualizada)
+      // ==========================================
       batch.insert('caracteres', {
         'simplificado': item['simplificado'],
-        'tradicional': item['tradicional'],
-        'pinyin': item['pinyin'],
+        'tradicional': item['tradicional'] ?? '',
+        'pinyin': item['pinyin'] ?? '',
         'significados': significadosUnidos,
         'trazos': trazosStr,
         'medianas': medianasStr,
-        'nivel': nivelAsignado, 
+        'nivel': nivelAsignado,
+        'audio_metodo': item['audio_config']?['metodo'] ?? 'tts',
+        'audio_ruta': item['audio_config']?['ruta_futura_local'] ?? '',
       });
-    }
-    // Tabla de Vocabulario Cruzado - NUEVO
-    await db.execute('''
-    CREATE TABLE vocabulario (
-      id $idType,
-      caracter_id INTEGER NOT NULL,
-      palabra $textType,
-      tradicional TEXT,
-      pinyin TEXT,
-      definicion TEXT,
-      FOREIGN KEY (caracter_id) REFERENCES caracteres (id) ON DELETE CASCADE
-    )
-    ''');
 
-    // Tabla de Oraciones Reales - NUEVO
-    await db.execute('''
-    CREATE TABLE oraciones (
-      id $idType,
-      caracter_id INTEGER NOT NULL,
-      oracion_simp $textType,
-      oracion_trad TEXT,
-      pinyin TEXT,
-      traduccion TEXT,
-      FOREIGN KEY (caracter_id) REFERENCES caracteres (id) ON DELETE CASCADE
-    )
-    ''');
+      // ==========================================
+      // PASO 5: Inserción de Tablas Relacionadas
+      // ==========================================
+      
+      // A. Insertar Vocabulario Relacionado
+      if (item['vocabulario_relacionado'] != null) {
+        for (var v in item['vocabulario_relacionado']) {
+          batch.insert('vocabulario', {
+            'hanzi_simp': item['simplificado'], // Usamos el carácter para relacionarlo
+            'palabra': v['palabra'] ?? '',
+            'tradicional': v['tradicional'] ?? '',
+            'pinyin': v['pinyin'] ?? '',
+            'definicion': v['definicion_ingles'] ?? '',
+          });
+        }
+      }
+
+      // B. Insertar Oraciones de Ejemplo
+      if (item['oraciones_ejemplo'] != null) {
+        for (var o in item['oraciones_ejemplo']) {
+          batch.insert('oraciones', {
+            'hanzi_simp': item['simplificado'], // Usamos el carácter para relacionarlo
+            'oracion_simp': o['oracion_simp'] ?? '',
+            'oracion_trad': o['oracion_trad'] ?? '',
+            'pinyin': o['pinyin'] ?? '',
+            'traduccion': o['traduccion_ingles'] ?? '',
+          });
+        }
+      }
+    } // Fin del ciclo for
 
     await batch.commit(noResult: true);
-    debugPrint("¡Base de datos poblada con éxito!");
+    debugPrint("¡Base de datos poblada con éxito con HSK 3.0, Vocabulario y Oraciones!");
   }
 
 // =========================================================================

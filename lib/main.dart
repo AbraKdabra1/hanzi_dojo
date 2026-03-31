@@ -6,6 +6,9 @@ import 'package:path_drawing/path_drawing.dart';
 import 'package:perfect_freehand/perfect_freehand.dart'; 
 import 'database/db_helper.dart';
 import 'dart:ui'; // Efecto de Liquid Glass
+import 'widgets/glass_speaker_button.dart'; // Ajusta la ruta si lo guardaste en otro lado
+import 'widgets/fondo_tinta.dart'; // Fondo de tinta china
+import 'package:flutter/services.dart'; // HapticFeedback
 
 // ====================================================================================================
 // 1. CONFIGURACIÓN Y RAÍZ DE LA APP
@@ -78,8 +81,9 @@ class _PantallaInicioState extends State<PantallaInicio> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
+    return FondoTintaChina(
+      child: Scaffold(
+      backgroundColor: Colors.transparent,
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -98,11 +102,9 @@ class _PantallaInicioState extends State<PantallaInicio> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     decoration: BoxDecoration(
-                      // ignore: deprecated_member_use
-                      color: Colors.black.withOpacity(0.75), // Cristal oscuro
+                      color: const Color(0xBF000000), // Cristal oscuro
                       borderRadius: BorderRadius.circular(30),
-                      // ignore: deprecated_member_use
-                      border: Border.all(color: Colors.white.withOpacity(0.3), width: 1.5),
+                      border: Border.all(color: const Color(0x4DFFFFFF), width: 1.5), // Borde blanco translúcido
                     ),
                     child: const Text(
                       'Chino tradicional',
@@ -127,11 +129,9 @@ class _PantallaInicioState extends State<PantallaInicio> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
                     decoration: BoxDecoration(
-                      // ignore: deprecated_member_use
-                      color: Colors.grey.shade100.withOpacity(0.5), // Cristal claro
+                      color: const Color(0x80F5F5F5), // Mismo cristal oscuro
                       borderRadius: BorderRadius.circular(30),
-                      // ignore: deprecated_member_use
-                      border: Border.all(color: Colors.grey.shade300.withOpacity(0.5), width: 1.5),
+                      border: Border.all(color: const Color(0x80E0E0E0), width: 1.5),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -187,7 +187,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
           ],
         ),
       ),
-    );
+      )) ;                                                                    
   }
 }
 
@@ -472,6 +472,7 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
   bool _mostrarPistaError = false;
   bool _hanziCompletado = false;
   bool _esBusquedaInicial = true; // Control para cargar la búsqueda 
+  bool _mostrarExito = false; // Para mostrar el mensaje de éxito al completar un hanzi
 
   @override
   void initState() {
@@ -602,21 +603,24 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
     double tolerancia = canvasSize.width * 0.25; 
 
     if (distanciaInicio <= tolerancia && distanciaFin <= tolerancia) {
+      HapticFeedback.lightImpact(); // ← trazo correcto: toque suave
       setState(() {
+        _mostrarExito = true; // Mostrar mensaje de éxito
         _trazoCorrectoActual++;
         if (_trazoCorrectoActual >= medians.length) {
-          _hanziCompletado = true; 
+          _hanziCompletado = true;
         }
       });
     } else {
+      HapticFeedback.heavyImpact(); // ← trazo incorrecto: vibración más fuerte
       setState(() {
-        _mostrarPistaError = true;   
+        _mostrarPistaError = true;
       });
       Future.delayed(const Duration(milliseconds: 400), () {
-        if (mounted) {
+        if (mounted) setState(() => _mostrarExito = false);{
           setState(() {
             if (_trazosUsuario.isNotEmpty) {
-              _trazosUsuario.removeLast(); 
+              _trazosUsuario.removeLast();
             }
             _mostrarPistaError = false;
           });
@@ -670,6 +674,12 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                         ),
+                        // ── BOTÓN DE VOZ (nuevo) ──────────────────────────────────
+                        const SizedBox(height: 14),
+                        GlassSpeakerButton(
+                          textoALeer: _hanziActual!['simplificado'],
+                        ),
+                        // ─────────────────────────────────────────────────────────
                         // Botón ver ejemplos
                         // --- BOTÓN LIQUID GLASS (Ver Ejemplos) ---
                         if (_hanziActual != null) 
@@ -684,11 +694,9 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                     decoration: BoxDecoration(
-                                      // ignore: deprecated_member_use
-                                      color: Colors.blue.shade50.withOpacity(0.6), // Cristal azulado sutil
+                                      color: const Color(0x99E3F2FD), // Azul claro translúcido
                                       borderRadius: BorderRadius.circular(20),
-                                      // ignore: deprecated_member_use
-                                      border: Border.all(color: Colors.blue.shade200.withOpacity(0.4), width: 1),
+                                      border: Border.all(color: const Color(0x6690CAF9), width: 1),
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
@@ -726,8 +734,7 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(15), 
                           boxShadow: [
-                            // ignore: deprecated_member_use
-                            BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 20, offset: const Offset(0, 10))
+                            BoxShadow(color: const Color(0x80000000), blurRadius: 20, offset: const Offset(0, 10))
                           ],
                           border: Border.all(color: Colors.grey.shade200, width: 1.5),
                         ),
@@ -754,6 +761,21 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
                                         child: CustomPaint(painter: PistaRojaPainter(todosLosVectores[_trazoCorrectoActual])),
                                       ),
                                     ),
+                                    if (_mostrarExito)
+                                      Positioned.fill(
+                                        child: IgnorePointer(
+                                          child: AnimatedOpacity(
+                                            opacity: _mostrarExito ? 1.0 : 0.0,
+                                            duration: const Duration(milliseconds: 200),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(13),
+                                                color: const Color(0x2200C853), // verde suave
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                   Positioned.fill(
                                     child: GestureDetector(
                                       onPanStart: (details) {
@@ -984,8 +1006,7 @@ class SvgFondoPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      // ignore: deprecated_member_use
-      ..color = Colors.grey.withOpacity(0.12) 
+      ..color = const Color(0X1F9E9E9E) 
       ..style = PaintingStyle.fill;
     final double scaleX = (size.width * 0.9) / 1024; 
     final double scaleY = (size.height * 0.9) / 1024;
@@ -1006,8 +1027,7 @@ class PistaRojaPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      // ignore: deprecated_member_use
-      ..color = Colors.red.withOpacity(0.4) 
+      ..color = const Color(0x66F44336) 
       ..style = PaintingStyle.fill;
     final double scaleX = (size.width * 0.9) / 1024; 
     final double scaleY = (size.height * 0.9) / 1024;
