@@ -1,40 +1,38 @@
-import 'dart:async';
-import 'dart:math' as math;
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'pantalla_modo.dart'; // ← único cambio de navegación
-import 'pantalla_estadisticas.dart';
 import '../widgets/fondo_tinta.dart';
+import 'pantalla_seleccion.dart';
+import 'pantalla_radicales.dart';
 
-class PantallaInicio extends StatefulWidget {
-  const PantallaInicio({super.key});
+class PantallaModo extends StatefulWidget {
+  const PantallaModo({super.key});
 
   @override
-  State<PantallaInicio> createState() => _PantallaInicioState();
+  State<PantallaModo> createState() => _PantallaModoState();
 }
 
-class _PantallaInicioState extends State<PantallaInicio> {
-  final List<String> _frases = [
-    "El viaje de mil millas comienza con un solo paso.",
-    "Aprender es un tesoro que seguirá a su dueño a todas partes.",
-    "No temas ir despacio, teme solo a detenerte.",
-    "La paciencia es una planta amarga, pero su fruto es dulce.",
-  ];
-  int _indiceFrase = 0;
-  Timer? _timer;
+class _PantallaModoState extends State<PantallaModo> {
+  bool? _modoNovato;
 
-  @override
-  void initState() {
-    super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
-      if (mounted) setState(() => _indiceFrase = (_indiceFrase + 1) % _frases.length);
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
+  void _navegar(bool esRadical) {
+    if (_modoNovato == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Primero elige tu nivel de experiencia'),
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => esRadical
+            ? PantallaRadicales(modoNovato: _modoNovato!)
+            : PantallaSeleccion(modoNovato: _modoNovato!),
+      ),
+    );
   }
 
   @override
@@ -42,121 +40,328 @@ class _PantallaInicioState extends State<PantallaInicio> {
     return FondoTintaChina(
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios,
+                color: Colors.black87, size: 20),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: const Text('¿Cómo quieres estudiar?',
+              style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600)),
+          centerTitle: true,
+        ),
         body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Spacer(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
 
-              // Botón principal → ahora va a PantallaModo
-              ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: InkWell(
-                    onTap: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => const PantallaModo())),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40, vertical: 15),
-                      decoration: BoxDecoration(
-                        color: const Color(0xBF000000),
-                        borderRadius: BorderRadius.circular(30),
-                        border: Border.all(
-                            color: const Color(0x4DFFFFFF), width: 1.5),
-                      ),
-                      child: const Text(
-                        'Estudiar',
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            letterSpacing: 0.5,
-                            fontWeight: FontWeight.w600),
+                // ── Selector de experiencia ──────────────────────────
+                const _Seccion(titulo: "Tu nivel de experiencia"),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _BotonSelector(
+                        seleccionado: _modoNovato == true,
+                        icono: Icons.school_rounded,
+                        titulo: "Soy novato",
+                        subtitulo: "Con guía de trazos",
+                        onTap: () => setState(() => _modoNovato = true),
                       ),
                     ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Botón estadísticas
-              ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: InkWell(
-                    onTap: () => Navigator.push(context,
-                        MaterialPageRoute(
-                            builder: (_) => PantallaEstadisticas())),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 25, vertical: 12),
-                      decoration: BoxDecoration(
-                        color: const Color(0x80F5F5F5),
-                        borderRadius: BorderRadius.circular(30),
-                        border: Border.all(
-                            color: const Color(0x80E0E0E0), width: 1.5),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.pie_chart_outline,
-                              color: Colors.grey.shade800, size: 20),
-                          const SizedBox(width: 8),
-                          Text("Ver mis estadísticas",
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500)),
-                        ],
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _BotonSelector(
+                        seleccionado: _modoNovato == false,
+                        icono: Icons.psychology_rounded,
+                        titulo: "Tengo experiencia",
+                        subtitulo: "Sin pistas de trazos",
+                        onTap: () => setState(() => _modoNovato = false),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ),
 
-              const Spacer(),
+                const SizedBox(height: 32),
 
-              // Frase animada
-              Container(
-                height: 60,
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 600),
-                  transitionBuilder: (child, animation) {
-                    final rotate = Tween(begin: math.pi / 2, end: 0.0)
-                        .animate(CurvedAnimation(
-                            parent: animation,
-                            curve: Curves.easeOutCubic));
-                    final fade =
-                        Tween(begin: 0.0, end: 1.0).animate(animation);
-                    return AnimatedBuilder(
-                      animation: animation,
-                      child: child,
-                      builder: (context, child) => Transform(
-                        transform: Matrix4.rotationX(rotate.value),
-                        alignment: Alignment.center,
-                        child: Opacity(opacity: fade.value, child: child),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    _frases[_indiceFrase],
-                    key: ValueKey<int>(_indiceFrase),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.grey.shade500,
-                        fontStyle: FontStyle.italic,
-                        fontSize: 14),
-                  ),
+                // ── Selector de contenido ────────────────────────────
+                const _Seccion(titulo: "¿Qué quieres estudiar?"),
+                const SizedBox(height: 12),
+
+                _TarjetaEstudio(
+                  icono: "📚",
+                  titulo: "Niveles HSK",
+                  subtitulo:
+                      "Vocabulario oficial del examen de chino estándar",
+                  detalle: "HSK 1 → HSK 7-9",
+                  colorBorde: const Color(0xFF1565C0),
+                  colorFondo: const Color(0x0F1565C0),
+                  activo: _modoNovato != null,
+                  onTap: () => _navegar(false),
                 ),
-              ),
-              const SizedBox(height: 20),
-            ],
+
+                const SizedBox(height: 12),
+
+                _TarjetaEstudio(
+                  icono: "🔑",
+                  titulo: "Radicales Kangxi",
+                  subtitulo:
+                      "Los 214 componentes base de todos los caracteres chinos",
+                  detalle: "Orden por radical",
+                  colorBorde: const Color(0xFF6A1B9A),
+                  colorFondo: const Color(0x0F6A1B9A),
+                  activo: _modoNovato != null,
+                  onTap: () => _navegar(true),
+                ),
+
+                const Spacer(),
+
+                // ── Nota informativa ─────────────────────────────────
+                if (_modoNovato == true)
+                  const _NotaInfo(
+                    icono: Icons.lightbulb_outline,
+                    texto:
+                        "Modo novato: verás una animación del trazo esperado cuando cometas un error.",
+                  ),
+                if (_modoNovato == false)
+                  const _NotaInfo(
+                    icono: Icons.fitness_center,
+                    texto:
+                        "Modo experto: sin pistas. Confías en tu memoria muscular.",
+                  ),
+
+                const SizedBox(height: 24),
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+// ─── Widgets auxiliares ───────────────────────────────────────────────────────
+
+class _Seccion extends StatelessWidget {
+  final String titulo;
+  const _Seccion({required this.titulo});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(titulo,
+        style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: Colors.grey.shade500,
+            letterSpacing: 0.8));
+  }
+}
+
+class _BotonSelector extends StatelessWidget {
+  final bool seleccionado;
+  final IconData icono;
+  final String titulo;
+  final String subtitulo;
+  final VoidCallback onTap;
+
+  const _BotonSelector({
+    required this.seleccionado,
+    required this.icono,
+    required this.titulo,
+    required this.subtitulo,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          // Color con alpha en hex, sin withOpacity
+          color: seleccionado
+              ? const Color(0xDE000000)  // black87
+              : const Color(0xB3FFFFFF), // white ~70%
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: seleccionado
+                ? const Color(0xDE000000)
+                : const Color(0xFFE0E0E0),
+            width: 1.5,
+          ),
+          boxShadow: seleccionado
+              ? const [
+                  BoxShadow(
+                      color: Color(0x33000000), blurRadius: 12)
+                ]
+              : [],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icono,
+                color: seleccionado
+                    ? Colors.white
+                    : Colors.grey.shade600,
+                size: 24),
+            const SizedBox(height: 8),
+            Text(titulo,
+                style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                    color: seleccionado
+                        ? Colors.white
+                        : Colors.black87)),
+            const SizedBox(height: 4),
+            Text(subtitulo,
+                style: TextStyle(
+                    fontSize: 11,
+                    color: seleccionado
+                        ? const Color(0x99FFFFFF)  // white60
+                        : Colors.grey.shade500)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TarjetaEstudio extends StatelessWidget {
+  final String icono;
+  final String titulo;
+  final String subtitulo;
+  final String detalle;
+  final Color  colorBorde;
+  final Color  colorFondo;
+  final bool   activo;
+  final VoidCallback onTap;
+
+  const _TarjetaEstudio({
+    required this.icono,
+    required this.titulo,
+    required this.subtitulo,
+    required this.detalle,
+    required this.colorBorde,
+    required this.colorFondo,
+    required this.activo,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: activo ? onTap : null,
+      child: AnimatedOpacity(
+        opacity: activo ? 1.0 : 0.4,
+        duration: const Duration(milliseconds: 300),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(18),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: colorFondo,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(
+                  // Usamos Color.fromARGB para el 30% de opacidad del borde
+                  color: Color.fromARGB(
+                    76, // ~30% de 255
+                    colorBorde.red,
+                    colorBorde.green,
+                    colorBorde.blue,
+                  ),
+                  width: 1.5,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Text(icono,
+                      style: const TextStyle(fontSize: 32)),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(titulo,
+                            style: const TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w700)),
+                        const SizedBox(height: 4),
+                        Text(subtitulo,
+                            style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey.shade600)),
+                        const SizedBox(height: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(
+                              26, // ~10%
+                              colorBorde.red,
+                              colorBorde.green,
+                              colorBorde.blue,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(detalle,
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  color: colorBorde,
+                                  fontWeight: FontWeight.w600)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(Icons.arrow_forward_ios,
+                      size: 14, color: Colors.grey.shade400),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NotaInfo extends StatelessWidget {
+  final IconData icono;
+  final String   texto;
+  const _NotaInfo({required this.icono, required this.texto});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF8E1), // amber.shade50
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFFFE082)), // amber.shade200
+      ),
+      child: Row(
+        children: [
+          Icon(icono, color: const Color(0xFFF9A825), size: 18), // amber.shade700
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(texto,
+                style: const TextStyle(
+                    fontSize: 13,
+                    color: Color(0xFFE65100), // amber.shade900
+                    height: 1.4)),
+          ),
+        ],
       ),
     );
   }
