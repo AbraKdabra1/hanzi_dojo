@@ -99,6 +99,20 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
                             Text("$estudiados de $total hanzi aprendidos",
                                 style: TextStyle(
                                     color: Colors.grey.shade600, fontSize: 14)),
+                                    // Botón temporal de diagnóstico
+                            ElevatedButton(
+                              onPressed: () async {
+                                final db = await DatabaseHelper.instance.database;
+                                final res = await db.rawQuery(
+                                  'SELECT nivel, COUNT(*) as total, '
+                                  'SUM(CASE WHEN trazos IS NOT NULL AND trazos != "[]" THEN 1 ELSE 0 END) as con_trazos, '
+                                  'SUM(CASE WHEN es_radical = 1 THEN 1 ELSE 0 END) as radicales '
+                                  'FROM caracteres GROUP BY nivel ORDER BY nivel'
+                                );
+                                for (var r in res) { debugPrint('$r'); }
+                              },
+                              child: const Text('Diagnóstico DB'),
+                            )
                           ],
                         ),
                       ),
