@@ -91,7 +91,7 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
               firstChild: ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 itemCount: 7,
-                separatorBuilder: (_, __) =>
+                separatorBuilder: (_, _) =>
                     Divider(color: Colors.grey.shade100, height: 1),
                 itemBuilder: (context, index) {
                   final nivel = index + 1;
@@ -131,7 +131,7 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
                       padding:
                           const EdgeInsets.symmetric(horizontal: 20.0),
                       itemCount: _resultadosBusqueda.length,
-                      separatorBuilder: (_, __) =>
+                      separatorBuilder: (_, _) =>
                           Divider(color: Colors.grey.shade100, height: 1),
                       itemBuilder: (context, index) {
                         final hanzi = _resultadosBusqueda[index];

@@ -440,7 +440,7 @@ class _PantallaEstudioState extends State<PantallaEstudio>
                                         child: IgnorePointer(
                                           child: AnimatedBuilder(
                                             animation: _guiaAnimation,
-                                            builder: (_, __) =>
+                                            builder: (_, _) =>
                                                 CustomPaint(
                                               painter: TrazoGuiaPainter(
                                                 puntos: medianaActual,

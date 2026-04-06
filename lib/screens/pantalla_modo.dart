@@ -12,7 +12,6 @@ class PantallaModo extends StatefulWidget {
 }
 
 class _PantallaModoState extends State<PantallaModo> {
-  // null = sin seleccionar, true = novato, false = experto
   bool? _modoNovato;
 
   void _navegar(bool esRadical) {
@@ -26,7 +25,6 @@ class _PantallaModoState extends State<PantallaModo> {
       );
       return;
     }
-
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -46,12 +44,15 @@ class _PantallaModoState extends State<PantallaModo> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.black87, size: 20),
+            icon: const Icon(Icons.arrow_back_ios,
+                color: Colors.black87, size: 20),
             onPressed: () => Navigator.pop(context),
           ),
           title: const Text('¿Cómo quieres estudiar?',
-              style: TextStyle(color: Colors.black87,
-                  fontSize: 16, fontWeight: FontWeight.w600)),
+              style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600)),
           centerTitle: true,
         ),
         body: SafeArea(
@@ -62,8 +63,8 @@ class _PantallaModoState extends State<PantallaModo> {
               children: [
                 const SizedBox(height: 20),
 
-                // ── Selector de experiencia ──────────────────────────────
-                _Seccion(titulo: "Tu nivel de experiencia"),
+                // ── Selector de experiencia ──────────────────────────
+                const _Seccion(titulo: "Tu nivel de experiencia"),
                 const SizedBox(height: 12),
                 Row(
                   children: [
@@ -91,47 +92,53 @@ class _PantallaModoState extends State<PantallaModo> {
 
                 const SizedBox(height: 32),
 
-                // ── Selector de contenido ────────────────────────────────
-                _Seccion(titulo: "¿Qué quieres estudiar?"),
+                // ── Selector de contenido ────────────────────────────
+                const _Seccion(titulo: "¿Qué quieres estudiar?"),
                 const SizedBox(height: 12),
 
-                // Tarjeta HSK
+                // Tarjeta HSK — colores azules fijos en hex
                 _TarjetaEstudio(
                   icono: "📚",
                   titulo: "Niveles HSK",
-                  subtitulo: "Vocabulario oficial del examen de chino estándar",
+                  subtitulo:
+                      "Vocabulario oficial del examen de chino estándar",
                   detalle: "HSK 1 → HSK 7-9",
-                  colorBorde: const Color(0xFF1565C0),
-                  colorFondo: const Color(0x0F1565C0),
+                  colorFondo:      const Color(0x0F1565C0),
+                  colorBorde:      const Color(0x4D1565C0), // azul 30%
+                  colorDetalleFondo: const Color(0x1A1565C0), // azul 10%
+                  colorDetalleTexto: const Color(0xFF1565C0),
                   activo: _modoNovato != null,
                   onTap: () => _navegar(false),
                 ),
 
                 const SizedBox(height: 12),
 
-                // Tarjeta Radicales
+                // Tarjeta Radicales — colores morados fijos en hex
                 _TarjetaEstudio(
                   icono: "🔑",
                   titulo: "Radicales Kangxi",
-                  subtitulo: "Los 214 componentes base de todos los caracteres chinos",
+                  subtitulo:
+                      "Los 214 componentes base de todos los caracteres chinos",
                   detalle: "Orden por radical",
-                  colorBorde: const Color(0xFF6A1B9A),
-                  colorFondo: const Color(0x0F6A1B9A),
+                  colorFondo:      const Color(0x0F6A1B9A),
+                  colorBorde:      const Color(0x4D6A1B9A), // morado 30%
+                  colorDetalleFondo: const Color(0x1A6A1B9A), // morado 10%
+                  colorDetalleTexto: const Color(0xFF6A1B9A),
                   activo: _modoNovato != null,
                   onTap: () => _navegar(true),
                 ),
 
                 const Spacer(),
 
-                // Nota informativa
+                // ── Nota informativa ─────────────────────────────────
                 if (_modoNovato == true)
-                  _NotaInfo(
+                  const _NotaInfo(
                     icono: Icons.lightbulb_outline,
                     texto:
                         "Modo novato: verás una animación del trazo esperado cuando cometas un error.",
                   ),
                 if (_modoNovato == false)
-                  _NotaInfo(
+                  const _NotaInfo(
                     icono: Icons.fitness_center,
                     texto:
                         "Modo experto: sin pistas. Confías en tu memoria muscular.",
@@ -165,10 +172,10 @@ class _Seccion extends StatelessWidget {
 }
 
 class _BotonSelector extends StatelessWidget {
-  final bool seleccionado;
+  final bool     seleccionado;
   final IconData icono;
-  final String titulo;
-  final String subtitulo;
+  final String   titulo;
+  final String   subtitulo;
   final VoidCallback onTap;
 
   const _BotonSelector({
@@ -188,15 +195,17 @@ class _BotonSelector extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: seleccionado
-              ? Colors.black87
-              : const Color.fromARGB(128, 236, 235, 235), //se modificó el color
+              ? const Color(0xDE000000)  // black87
+              : const Color(0xB3FFFFFF), // white ~70%
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: seleccionado ? Colors.black87 : Colors.grey.shade200,
+            color: seleccionado
+                ? const Color(0xDE000000)
+                : const Color(0xFFE0E0E0),
             width: 1.5,
           ),
           boxShadow: seleccionado
-              ? [const BoxShadow(color: Color(0x33000000), blurRadius: 12)]
+              ? const [BoxShadow(color: Color(0x33000000), blurRadius: 12)]
               : [],
         ),
         child: Column(
@@ -216,7 +225,7 @@ class _BotonSelector extends StatelessWidget {
                 style: TextStyle(
                     fontSize: 11,
                     color: seleccionado
-                        ? Colors.white60
+                        ? const Color(0x99FFFFFF) // white60
                         : Colors.grey.shade500)),
           ],
         ),
@@ -230,9 +239,11 @@ class _TarjetaEstudio extends StatelessWidget {
   final String titulo;
   final String subtitulo;
   final String detalle;
-  final Color colorBorde;
-  final Color colorFondo;
-  final bool activo;
+  final Color  colorFondo;
+  final Color  colorBorde;
+  final Color  colorDetalleFondo;
+  final Color  colorDetalleTexto;
+  final bool   activo;
   final VoidCallback onTap;
 
   const _TarjetaEstudio({
@@ -240,8 +251,10 @@ class _TarjetaEstudio extends StatelessWidget {
     required this.titulo,
     required this.subtitulo,
     required this.detalle,
-    required this.colorBorde,
     required this.colorFondo,
+    required this.colorBorde,
+    required this.colorDetalleFondo,
+    required this.colorDetalleTexto,
     required this.activo,
     required this.onTap,
   });
@@ -262,7 +275,7 @@ class _TarjetaEstudio extends StatelessWidget {
               decoration: BoxDecoration(
                 color: colorFondo,
                 borderRadius: BorderRadius.circular(18),
-                border: Border.all(color:const Color(0x80E0E0E0), width: 1.5),
+                border: Border.all(color: colorBorde, width: 1.5),
               ),
               child: Row(
                 children: [
@@ -274,23 +287,25 @@ class _TarjetaEstudio extends StatelessWidget {
                       children: [
                         Text(titulo,
                             style: const TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.w700)),
+                                fontSize: 17,
+                                fontWeight: FontWeight.w700)),
                         const SizedBox(height: 4),
                         Text(subtitulo,
                             style: TextStyle(
-                                fontSize: 13, color: Colors.grey.shade600)),
+                                fontSize: 13,
+                                color: Colors.grey.shade600)),
                         const SizedBox(height: 6),
                         Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
-                            color: const Color(0x80E0E0E0), //SE MODIFICO EL COLOR
+                            color: colorDetalleFondo,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(detalle,
                               style: TextStyle(
                                   fontSize: 11,
-                                  color: colorBorde,
+                                  color: colorDetalleTexto,
                                   fontWeight: FontWeight.w600)),
                         ),
                       ],
@@ -310,7 +325,7 @@ class _TarjetaEstudio extends StatelessWidget {
 
 class _NotaInfo extends StatelessWidget {
   final IconData icono;
-  final String texto;
+  final String   texto;
   const _NotaInfo({required this.icono, required this.texto});
 
   @override
@@ -318,18 +333,20 @@ class _NotaInfo extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.amber.shade50,
+        color: const Color(0xFFFFF8E1),   // amber.shade50
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.amber.shade200),
+        border: Border.all(color: const Color(0xFFFFE082)), // amber.shade200
       ),
       child: Row(
         children: [
-          Icon(icono, color: Colors.amber.shade700, size: 18),
+          Icon(icono, color: const Color(0xFFF9A825), size: 18),
           const SizedBox(width: 10),
           Expanded(
             child: Text(texto,
-                style: TextStyle(
-                    fontSize: 13, color: Colors.amber.shade900, height: 1.4)),
+                style: const TextStyle(
+                    fontSize: 13,
+                    color: Color(0xFFE65100),
+                    height: 1.4)),
           ),
         ],
       ),

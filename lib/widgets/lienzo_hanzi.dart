@@ -75,7 +75,7 @@ class _HanziPainter extends CustomPainter {
     final negro = Paint()..color = Colors.black87..style = PaintingStyle.fill;
     final rojo  = Paint()..color = Colors.redAccent.shade700..style = PaintingStyle.fill;
 
-    for (final trazo in trazosAprobados) _dibujar(canvas, trazo, negro);
+    for (final trazo in trazosAprobados) { _dibujar(canvas, trazo, negro); }
     if (trazoActual.isNotEmpty) _dibujar(canvas, trazoActual, alertaRoja ? rojo : negro);
   }
 
@@ -86,11 +86,11 @@ class _HanziPainter extends CustomPainter {
     if (contorno.isEmpty) return;
 
     final path = Path();
-    path.moveTo(contorno.first.x, contorno.first.y); // ✅ .x .y
+    path.moveTo(contorno.first.dx, contorno.first.dy);
     for (int i = 1; i < contorno.length - 1; i++) {
       final p0 = contorno[i], p1 = contorno[i + 1];
       path.quadraticBezierTo(
-          p0.x, p0.y, (p0.x + p1.x) / 2, (p0.y + p1.y) / 2); // ✅ .x .y
+          p0.dx, p0.dy, (p0.dx + p1.dx) / 2, (p0.dy + p1.dy) / 2);
     }
     canvas.drawPath(path, pincel);
   }

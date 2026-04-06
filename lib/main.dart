@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'database/db_helper.dart';
-import 'screens/pantalla_inicio.dart'; // ← esta línea
+import 'screens/pantalla_inicio.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
