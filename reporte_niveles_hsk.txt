@@ -1,0 +1,28 @@
+============================================================
+REPORTE DE REASIGNACIÓN DE NIVELES HSK 3.0
+============================================================
+Total de entradas:          9574
+Reasignados a nivel correcto: 36
+Tradicional actualizado:    4
+Sin nivel HSK (nivel 10):   6455
+
+Distribución ANTES:
+  HSK 1                  246
+  HSK 2                  125
+  HSK 3                  284
+  HSK 4                  440
+  HSK 5                  429
+  HSK 6                  413
+  HSK 7                 1146
+  Sin nivel (10)        6491
+
+Distribución DESPUÉS:
+  HSK 1                  246
+  HSK 2                  125
+  HSK 3                  284
+  HSK 4                  441
+  HSK 5                  431
+  HSK 6                  413
+  HSK 7                 1179
+  Sin nivel (10)        6455
+============================================================
