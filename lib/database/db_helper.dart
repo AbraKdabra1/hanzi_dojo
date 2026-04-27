@@ -133,9 +133,7 @@ class DatabaseHelper {
       final String trazosStr   = jsonEncode(item['strokes']  ?? []);
       final String medianasStr = jsonEncode(item['medians']  ?? []);
 
-      final int nivelAsignado = item['hsk_nivel_oficial'] != null
-          ? int.tryParse(item['hsk_nivel_oficial'].toString()) ?? 10
-          : (item['nivel'] ?? 10);
+      int nivelAsignado = item['nivel'] ?? 7;
 
       // ── Campos nuevos de radical ─────────────────────────────────────────
       final int esRadical      = (item['es_radical'] == true) ? 1 : 0;
