@@ -1,0 +1,32 @@
+============================================================
+REPORTE DE REESTRUCTURACIÓN — Hanzi Dojo
+============================================================
+Entradas originales:    9574
+Entradas válidas:       9574
+Omitidas sin vectores:  0
+Omitidas duplicadas:    0
+Radicales Kangxi:       271
+
+Distribución por nivel:
+  HSK 1        128 caracteres
+  HSK 2         71 caracteres
+  HSK 3        125 caracteres
+  HSK 4        196 caracteres
+  HSK 5        246 caracteres
+  HSK 6        239 caracteres
+  HSK 7       8569 caracteres
+============================================================
+
+Estructura del nuevo JSON:
+  caracter      → el hanzi simplificado
+  pinyin        → pronunciación numérica
+  significado   → definición en inglés (por ahora)
+  nivel_hsk     → 1-7 (7 incluye 7-9 y clásicos)
+  es_radical    → true/false
+  numero_radical → 0-214
+  trazos        → SVG paths []
+  medianas      → coordenadas []
+
+Archivo generado: assets/hanzi_dojo.json
+NOTA: El JSON original NO fue modificado.
+      Renombra hanzi_dojo.json cuando estés listo.
