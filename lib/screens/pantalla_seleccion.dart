@@ -17,19 +17,15 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
   void _alEscribir(String query) async {
     if (query.trim().isEmpty) {
       setState(() {
-        _estaBuscando = false;
+        _estaBuscando       = false;
         _resultadosBusqueda = [];
       });
       return;
     }
     setState(() => _estaBuscando = true);
-    final db = await DatabaseHelper.instance.database;
-    final res = await db.query(
-      'caracteres',
-      where: 'simplificado LIKE ? OR pinyin LIKE ? OR significados LIKE ?',
-      whereArgs: ['%$query%', '%$query%', '%$query%'],
-      limit: 15,
-    );
+
+    // ✅ CAMBIO: caracter, significado (sin s), usando buscar() del helper
+    final res = await DatabaseHelper.instance.buscar(query);
     if (mounted) setState(() => _resultadosBusqueda = res);
   }
 
@@ -88,9 +84,12 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
               crossFadeState: _estaBuscando
                   ? CrossFadeState.showSecond
                   : CrossFadeState.showFirst,
+
+              // ── Lista de niveles HSK ─────────────────────────────────
               firstChild: ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 itemCount: 7,
+                // ✅ CAMBIO: (_, __) corregido
                 separatorBuilder: (_, _) =>
                     Divider(color: Colors.grey.shade100, height: 1),
                 itemBuilder: (context, index) {
@@ -101,8 +100,7 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
                     title: Text(
                         nivel == 7 ? "HSK 7-9" : "HSK $nivel",
                         style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold)),
+                            fontSize: 18, fontWeight: FontWeight.bold)),
                     subtitle: Text('Estudiar y repasar tarjetas',
                         style: TextStyle(
                             color: Colors.grey.shade500, fontSize: 14)),
@@ -120,6 +118,8 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
                   );
                 },
               ),
+
+              // ── Resultados de búsqueda ───────────────────────────────
               secondChild: _resultadosBusqueda.isEmpty
                   ? const Center(
                       child: Padding(
@@ -128,29 +128,35 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
                             style: TextStyle(color: Colors.grey)),
                       ))
                   : ListView.separated(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 20.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       itemCount: _resultadosBusqueda.length,
+                      // ✅ CAMBIO: (_, __) corregido
                       separatorBuilder: (_, _) =>
                           Divider(color: Colors.grey.shade100, height: 1),
                       itemBuilder: (context, index) {
                         final hanzi = _resultadosBusqueda[index];
                         return ListTile(
                           title: Text(
-                              "${hanzi['simplificado']}  (${hanzi['pinyin']})",
-                              style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold)),
-                          subtitle: Text("${hanzi['significados']}",
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis),
+                            // ✅ CAMBIO: 'caracter' en lugar de 'simplificado'
+                            "${hanzi['caracter']}  (${hanzi['pinyin']})",
+                            style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Text(
+                            // ✅ CAMBIO: 'significado' en lugar de 'significados'
+                            "${hanzi['significado']}",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                           trailing: const Icon(Icons.draw,
                               size: 18, color: Colors.blue),
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (_) => PantallaEstudio(
-                                nivelHSK: hanzi['nivel'],
+                                // ✅ CAMBIO: 'nivel_hsk' en lugar de 'nivel'
+                                nivelHSK: hanzi['nivel_hsk'],
                                 hanziIdBuscado: hanzi['id'],
                                 modoNovato: widget.modoNovato,
                               ),

@@ -47,11 +47,12 @@ class _PantallaRadicalesState extends State<PantallaRadicales> {
       _filtrados = q.isEmpty
           ? _radicales
           : _radicales.where((r) {
-              final simp = (r['simplificado'] ?? '').toString();
-              final sig  = (r['significados'] ?? '').toString().toLowerCase();
-              final pin  = (r['pinyin']       ?? '').toString().toLowerCase();
+              // ✅ CAMBIO: 'caracter' y 'significado'
+              final char = (r['caracter']    ?? '').toString();
+              final sig  = (r['significado'] ?? '').toString().toLowerCase();
+              final pin  = (r['pinyin']      ?? '').toString().toLowerCase();
               final num  = r['numero_radical'].toString();
-              return simp.contains(q) ||
+              return char.contains(q) ||
                   sig.contains(q)     ||
                   pin.contains(q)     ||
                   num.contains(q);
@@ -213,7 +214,8 @@ class _PantallaRadicalesState extends State<PantallaRadicales> {
                                 style: TextStyle(
                                     color: Colors.grey.shade500)))
                         : GridView.builder(
-                            padding: const EdgeInsets.fromLTRB(14, 0, 14, 20),
+                            padding:
+                                const EdgeInsets.fromLTRB(14, 0, 14, 20),
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
@@ -225,8 +227,9 @@ class _PantallaRadicalesState extends State<PantallaRadicales> {
                             itemBuilder: (context, index) {
                               final r   = _filtrados[index];
                               final int num = r['numero_radical'] ?? 0;
+                              // ✅ CAMBIO: 'significado' en lugar de 'significados'
                               final String sig =
-                                  (r['significados'] ?? '').toString();
+                                  (r['significado'] ?? '').toString();
                               final String primerSig = sig.isNotEmpty
                                   ? sig.split(',').first.trim()
                                   : '';
@@ -234,7 +237,8 @@ class _PantallaRadicalesState extends State<PantallaRadicales> {
                                   (r['veces_visto'] ?? 0) > 0;
 
                               return _BotonRadical(
-                                caracter: r['simplificado'] ?? '',
+                                // ✅ CAMBIO: 'caracter' en lugar de 'simplificado'
+                                caracter: r['caracter'] ?? '',
                                 numero: num,
                                 significado: primerSig,
                                 visto: visto,
@@ -278,18 +282,17 @@ class _BotonRadical extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Colores expresados como Color con alpha en hex para evitar withOpacity
-    const Color fondoVisto  = Color(0xBFE8F5E9); // green.shade50 ~75% opacidad
-    const Color fondoNuevo  = Color(0x99FFFFFF);  // white ~60%
-    const Color bordeVisto  = Color(0xCCA5D6A7);  // green.shade200 ~80%
-    const Color bordeNuevo  = Color(0xB3FFFFFF);  // white ~70%
-    const Color numVisto    = Color(0xFF2E7D32);  // green.shade700
-    const Color numNuevo    = Color(0xFF9E9E9E);  // grey.shade400
-    const Color sombraColor = Color(0x0F000000);  // black ~6%
+    const Color fondoVisto  = Color(0xBFE8F5E9);
+    const Color fondoNuevo  = Color(0x99FFFFFF);
+    const Color bordeVisto  = Color(0xCCA5D6A7);
+    const Color bordeNuevo  = Color(0xB3FFFFFF);
+    const Color numVisto    = Color(0xFF2E7D32);
+    const Color numNuevo    = Color(0xFF9E9E9E);
+    const Color sombraColor = Color(0x0F000000);
 
-    final Color fondo  = visto ? fondoVisto  : fondoNuevo;
-    final Color borde  = visto ? bordeVisto  : bordeNuevo;
-    final Color numColor = visto ? numVisto  : numNuevo;
+    final Color fondo    = visto ? fondoVisto : fondoNuevo;
+    final Color borde    = visto ? bordeVisto : bordeNuevo;
+    final Color numColor = visto ? numVisto   : numNuevo;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(18),
@@ -313,44 +316,36 @@ class _BotonRadical extends StatelessWidget {
             ),
             child: Stack(
               children: [
-                // Número (esquina superior izquierda)
+                // Número
                 Positioned(
-                  top: 7,
-                  left: 9,
-                  child: Text(
-                    '$numero',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                      color: numColor,
-                      letterSpacing: 0.3,
-                    ),
-                  ),
+                  top: 7, left: 9,
+                  child: Text('$numero',
+                      style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          color: numColor,
+                          letterSpacing: 0.3)),
                 ),
 
-                // Check si ya fue visto (esquina superior derecha)
+                // Check visto
                 if (visto)
                   Positioned(
-                    top: 7,
-                    right: 9,
+                    top: 7, right: 9,
                     child: Icon(Icons.check_circle,
                         size: 11, color: Colors.green.shade400),
                   ),
 
-                // Carácter y significado (centro)
+                // Carácter y significado
                 Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const SizedBox(height: 8),
-                      Text(
-                        caracter,
-                        style: const TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w300,
-                          height: 1.0,
-                        ),
-                      ),
+                      Text(caracter,
+                          style: const TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.w300,
+                              height: 1.0)),
                       const SizedBox(height: 5),
                       if (significado.isNotEmpty)
                         Padding(
@@ -359,10 +354,9 @@ class _BotonRadical extends StatelessWidget {
                           child: Text(
                             significado,
                             style: TextStyle(
-                              fontSize: 9,
-                              color: Colors.grey.shade500,
-                              height: 1.2,
-                            ),
+                                fontSize: 9,
+                                color: Colors.grey.shade500,
+                                height: 1.2),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
@@ -380,7 +374,7 @@ class _BotonRadical extends StatelessWidget {
   }
 }
 
-// ─── Widget de leyenda ────────────────────────────────────────────────────────
+// ─── Leyenda ──────────────────────────────────────────────────────────────────
 class _Leyenda extends StatelessWidget {
   final Color  color;
   final String label;
@@ -391,8 +385,7 @@ class _Leyenda extends StatelessWidget {
     return Row(
       children: [
         Container(
-          width: 10,
-          height: 10,
+          width: 10, height: 10,
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(3),
@@ -401,8 +394,7 @@ class _Leyenda extends StatelessWidget {
         ),
         const SizedBox(width: 4),
         Text(label,
-            style: TextStyle(
-                fontSize: 11, color: Colors.grey.shade500)),
+            style: TextStyle(fontSize: 11, color: Colors.grey.shade500)),
       ],
     );
   }

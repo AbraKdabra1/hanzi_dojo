@@ -67,6 +67,36 @@ class _PantallaEstudioState extends State<PantallaEstudio>
     super.dispose();
   }
 
+  // ── Helpers para el nuevo esquema ────────────────────────────────────────
+
+  /// Carácter actual (campo 'caracter' en el nuevo esquema)
+  String get _caracter => _hanziActual?['caracter'] ?? '';
+
+  /// Verifica si hay medianas válidas (ahora es string JSON en la DB)
+  bool get _tieneMedianas {
+    final m = _hanziActual?['medianas'];
+    if (m == null) return false;
+    try {
+      final decoded = m is String ? jsonDecode(m) : m;
+      return decoded is List && decoded.isNotEmpty;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Decodifica medianas de forma segura
+  List<dynamic> get _medianasDecodificadas {
+    final m = _hanziActual?['medianas'];
+    if (m == null) return [];
+    try {
+      return m is String ? jsonDecode(m) : (m as List);
+    } catch (_) {
+      return [];
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+
   void _siguienteHanzi() async {
     Map<String, dynamic>? hanzi;
 
@@ -77,8 +107,7 @@ class _PantallaEstudioState extends State<PantallaEstudio>
       if (res.isNotEmpty) hanzi = res.first;
       _esBusquedaInicial = false;
     } else if (widget.modoRadical) {
-      hanzi =
-          await DatabaseHelper.instance.obtenerSiguienteRadicalParaEstudiar();
+      hanzi = await DatabaseHelper.instance.obtenerSiguienteRadicalParaEstudiar();
     } else {
       hanzi = await DatabaseHelper.instance
           .obtenerSiguienteHanziParaEstudiar(widget.nivelHSK);
@@ -93,7 +122,7 @@ class _PantallaEstudioState extends State<PantallaEstudio>
         _hanziCompletado     = false;
         _mostrarExito        = false;
         _mostrarGuia         = false;
-        if (_hanziActual != null && _hanziActual!['medianas'] == null) {
+        if (_hanziActual != null && !_tieneMedianas) {
           _hanziCompletado = true;
         }
       });
@@ -120,37 +149,23 @@ class _PantallaEstudioState extends State<PantallaEstudio>
     _guiaController.reset();
   }
 
-  void _mostrarModalEjemplos(String hanziSimp) async {
+  // ✅ Ahora consulta tabla 'ejemplos' con caracter_id
+  void _mostrarModalEjemplos(int hanziId) async {
     final db = await DatabaseHelper.instance.database;
-    final lista = await db.query('oraciones',
-        where: 'hanzi_simp = ?', whereArgs: [hanziSimp]);
+    final lista = await db.query(
+      'ejemplos',
+      where: 'caracter_id = ?',
+      whereArgs: [hanziId],
+    );
     if (!mounted) return;
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (context) {
-        if (lista.isEmpty) {
-          return const Padding(
-            padding: EdgeInsets.all(30.0),
-            child: Text("Aún no hay ejemplos para este carácter.",
-                style: TextStyle(fontSize: 16)),
-          );
-        }
-        return ListView.builder(
-          itemCount: lista.length,
-          itemBuilder: (_, i) {
-            final o = lista[i];
-            return ListTile(
-              title: Text("${o['oracion_simp']}  (${o['pinyin']})",
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold)),
-              subtitle: Text("${o['traduccion']}",
-                  style: const TextStyle(fontSize: 15)),
-            );
-          },
-        );
-      },
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => _ModalEjemplos(
+        ejemplos: lista,
+        caracter: _caracter,
+      ),
     );
   }
 
@@ -167,9 +182,9 @@ class _PantallaEstudioState extends State<PantallaEstudio>
   }
 
   void _auditarTrazo(Size canvasSize) {
-    if (_hanziActual == null || _hanziActual!['medianas'] == null) return;
+    if (_hanziActual == null || !_tieneMedianas) return;
 
-    final List<dynamic> medians = jsonDecode(_hanziActual!['medianas']);
+    final List<dynamic> medians = _medianasDecodificadas;
     if (_trazoCorrectoActual >= medians.length) return;
 
     final double sx   = (canvasSize.width  * 0.9) / 1024;
@@ -263,52 +278,46 @@ class _PantallaEstudioState extends State<PantallaEstudio>
                     flex: 2,
                     child: Container(
                       width: double.infinity,
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 20.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           RichText(
                             text: TextSpan(
-                              children:
-                                  PinyinHelper.formatearConColores(
-                                          _hanziActual!['pinyin'])
-                                      .map((par) => TextSpan(
-                                            text: par.$1,
-                                            style: const TextStyle(
-                                              fontSize: 22,
-                                              letterSpacing: 1.2,
-                                              fontWeight: FontWeight.w500,
-                                              fontFamily: 'SFPro',
-                                            ).copyWith(color: par.$2),
-                                          ))
-                                      .toList(),
+                              children: PinyinHelper.formatearConColores(
+                                      _hanziActual!['pinyin'])
+                                  .map((par) => TextSpan(
+                                        text: par.$1,
+                                        style: const TextStyle(
+                                          fontSize: 22,
+                                          letterSpacing: 1.2,
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: 'SFPro',
+                                        ).copyWith(color: par.$2),
+                                      ))
+                                  .toList(),
                             ),
                           ),
                           const SizedBox(height: 14),
-                          GlassSpeakerButton(
-                              textoALeer:
-                                  _hanziActual!['simplificado']),
+                          // ✅ CAMBIO: _caracter en lugar de ['simplificado']
+                          GlassSpeakerButton(textoALeer: _caracter),
                           Padding(
                             padding: const EdgeInsets.only(top: 15.0),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: BackdropFilter(
-                                filter: ImageFilter.blur(
-                                    sigmaX: 8, sigmaY: 8),
+                                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
                                 child: InkWell(
                                   onTap: () => _mostrarModalEjemplos(
-                                      _hanziActual!['simplificado']),
+                                      _hanziActual!['id'] as int),
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 16, vertical: 8),
                                     decoration: BoxDecoration(
                                       color: const Color(0x99E3F2FD),
-                                      borderRadius:
-                                          BorderRadius.circular(20),
+                                      borderRadius: BorderRadius.circular(20),
                                       border: Border.all(
-                                          color:
-                                              const Color(0x6690CAF9),
+                                          color: const Color(0x6690CAF9),
                                           width: 1),
                                     ),
                                     child: Row(
@@ -320,10 +329,8 @@ class _PantallaEstudioState extends State<PantallaEstudio>
                                         const SizedBox(width: 6),
                                         Text("Ver ejemplos",
                                             style: TextStyle(
-                                                color:
-                                                    Colors.blue.shade700,
-                                                fontWeight:
-                                                    FontWeight.w600,
+                                                color: Colors.blue.shade700,
+                                                fontWeight: FontWeight.w600,
                                                 fontSize: 14)),
                                       ],
                                     ),
@@ -344,8 +351,7 @@ class _PantallaEstudioState extends State<PantallaEstudio>
                       child: AspectRatio(
                         aspectRatio: 1.0,
                         child: Container(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 20.0),
+                          margin: const EdgeInsets.symmetric(horizontal: 20.0),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(15),
@@ -365,6 +371,7 @@ class _PantallaEstudioState extends State<PantallaEstudio>
                                 final canvasSize = Size(
                                     constraints.maxWidth,
                                     constraints.maxHeight);
+
                                 final List<String> vectores =
                                     _hanziActual!['trazos'] != null
                                         ? List<String>.from(jsonDecode(
@@ -373,32 +380,22 @@ class _PantallaEstudioState extends State<PantallaEstudio>
 
                                 // Mediana actual para guía
                                 List<Offset> medianaActual = [];
-                                if (widget.modoNovato &&
-                                    _hanziActual!['medianas'] != null) {
-                                  final meds = jsonDecode(
-                                          _hanziActual!['medianas'])
-                                      as List;
-                                  if (_trazoCorrectoActual <
-                                      meds.length) {
+                                if (widget.modoNovato && _tieneMedianas) {
+                                  final meds = _medianasDecodificadas;
+                                  if (_trazoCorrectoActual < meds.length) {
                                     final double sx2 =
                                         (canvasSize.width * 0.9) / 1024;
                                     final double sy2 =
                                         (canvasSize.height * 0.9) / 1024;
-                                    final double ox =
-                                        canvasSize.width * 0.05;
-                                    final double oy =
-                                        canvasSize.height * 0.05;
+                                    final double ox = canvasSize.width * 0.05;
+                                    final double oy = canvasSize.height * 0.05;
                                     medianaActual =
-                                        (meds[_trazoCorrectoActual]
-                                                as List)
+                                        (meds[_trazoCorrectoActual] as List)
                                             .map<Offset>((p) => Offset(
-                                                  ox +
-                                                      p[0].toDouble() *
-                                                          sx2,
+                                                  ox + p[0].toDouble() * sx2,
                                                   oy +
                                                       (1024 -
-                                                              p[1]
-                                                                  .toDouble()) *
+                                                              p[1].toDouble()) *
                                                           sy2,
                                                 ))
                                             .toList();
@@ -413,17 +410,14 @@ class _PantallaEstudioState extends State<PantallaEstudio>
                                     if (vectores.isNotEmpty)
                                       Positioned.fill(
                                         child: CustomPaint(
-                                            painter: SvgFondoPainter(
-                                                vectores)),
+                                            painter: SvgFondoPainter(vectores)),
                                       ),
                                     if (vectores.isNotEmpty &&
-                                        _trazoCorrectoActual <
-                                            vectores.length)
+                                        _trazoCorrectoActual < vectores.length)
                                       Positioned.fill(
                                         child: AnimatedOpacity(
-                                          opacity: _mostrarPistaError
-                                              ? 1.0
-                                              : 0.0,
+                                          opacity:
+                                              _mostrarPistaError ? 1.0 : 0.0,
                                           duration: const Duration(
                                               milliseconds: 300),
                                           child: CustomPaint(
@@ -440,12 +434,11 @@ class _PantallaEstudioState extends State<PantallaEstudio>
                                         child: IgnorePointer(
                                           child: AnimatedBuilder(
                                             animation: _guiaAnimation,
-                                            builder: (_, _) =>
-                                                CustomPaint(
+                                            // ✅ CAMBIO: (_, __) corregido
+                                            builder: (_, _) => CustomPaint(
                                               painter: TrazoGuiaPainter(
                                                 puntos: medianaActual,
-                                                progreso:
-                                                    _guiaAnimation.value,
+                                                progreso: _guiaAnimation.value,
                                               ),
                                             ),
                                           ),
@@ -455,17 +448,14 @@ class _PantallaEstudioState extends State<PantallaEstudio>
                                     Positioned.fill(
                                       child: IgnorePointer(
                                         child: AnimatedOpacity(
-                                          opacity:
-                                              _mostrarExito ? 1.0 : 0.0,
+                                          opacity: _mostrarExito ? 1.0 : 0.0,
                                           duration: const Duration(
                                               milliseconds: 200),
                                           child: Container(
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  BorderRadius.circular(
-                                                      13),
-                                              color:
-                                                  const Color(0x2200C853),
+                                                  BorderRadius.circular(13),
+                                              color: const Color(0x2200C853),
                                             ),
                                           ),
                                         ),
@@ -488,16 +478,14 @@ class _PantallaEstudioState extends State<PantallaEstudio>
                                               _trazosUsuario.last.add(
                                                   PointVector(
                                                       d.localPosition.dx,
-                                                      d.localPosition
-                                                          .dy)));
+                                                      d.localPosition.dy)));
                                         },
                                         onPanEnd: (_) {
                                           if (_hanziCompletado) return;
                                           _auditarTrazo(canvasSize);
                                         },
                                         child: CustomPaint(
-                                          painter: PincelPainter(
-                                              _trazosUsuario),
+                                          painter: PincelPainter(_trazosUsuario),
                                           size: Size.infinite,
                                         ),
                                       ),
@@ -552,13 +540,175 @@ class _PantallaEstudioState extends State<PantallaEstudio>
       style: ElevatedButton.styleFrom(
         backgroundColor: color.shade50,
         elevation: 0,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       ),
       onPressed: () => _evaluar(calificacion),
       child: Text(texto,
           style: TextStyle(
               color: color.shade700, fontWeight: FontWeight.w600)),
+    );
+  }
+}
+
+// =========================================================================
+// MODAL DE EJEMPLOS — minimalista con columnas
+// =========================================================================
+class _ModalEjemplos extends StatelessWidget {
+  final List<Map<String, dynamic>> ejemplos;
+  final String caracter;
+
+  const _ModalEjemplos({
+    required this.ejemplos,
+    required this.caracter,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Color(0xF5FFFFFF),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Handle
+              Container(
+                margin: const EdgeInsets.only(top: 12, bottom: 8),
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFBDBDBD),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+
+              // Título con carácter
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20, vertical: 8),
+                child: Row(
+                  children: [
+                    Text(caracter,
+                        style: const TextStyle(
+                            fontSize: 28, fontWeight: FontWeight.w300)),
+                    const SizedBox(width: 12),
+                    const Text('Ejemplos',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87)),
+                  ],
+                ),
+              ),
+
+              const Divider(height: 1),
+
+              // Cabecera de columnas
+              if (ejemplos.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 4),
+                  child: Row(
+                    children: [
+                      _Etiqueta('Chino',   flex: 3),
+                      _Etiqueta('Pinyin',  flex: 3),
+                      _Etiqueta('Español', flex: 4),
+                    ],
+                  ),
+                ),
+
+              // Contenido
+              if (ejemplos.isEmpty)
+                const Padding(
+                  padding: EdgeInsets.all(30),
+                  child: Text(
+                    'Aún no hay ejemplos para este carácter.',
+                    style: TextStyle(fontSize: 15, color: Colors.grey),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              else
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.45,
+                  ),
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.fromLTRB(20, 4, 20, 8),
+                    itemCount: ejemplos.length,
+                    separatorBuilder: (_, _) => const Divider(
+                        height: 1, color: Color(0xFFEEEEEE)),
+                    itemBuilder: (_, i) {
+                      final e = ejemplos[i];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                e['oracion_zh'] ?? '',
+                                style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                e['pinyin'] ?? '',
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.grey.shade600),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 4,
+                              child: Text(
+                                e['oracion_es'] ?? '',
+                                style: const TextStyle(fontSize: 13),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+              SizedBox(
+                  height: MediaQuery.of(context).padding.bottom + 16),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Etiqueta extends StatelessWidget {
+  final String texto;
+  final int flex;
+  const _Etiqueta(this.texto, {required this.flex});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: flex,
+      child: Text(
+        texto,
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w700,
+          color: Colors.grey.shade400,
+          letterSpacing: 0.5,
+        ),
+      ),
     );
   }
 }
