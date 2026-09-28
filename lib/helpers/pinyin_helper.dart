@@ -28,9 +28,13 @@ class PinyinHelper {
     return silaba;
   }
 
+  /// CC-CEDICT escribe la ü como "u:" (p. ej. "lu:4" = lǜ).
+  static String _normalizarU(String texto) =>
+      texto.replaceAll('u:', 'v').replaceAll('U:', 'V');
+
   static String formatear(String texto) {
     if (texto.isEmpty) return texto;
-    return texto
+    return _normalizarU(texto)
         .toLowerCase()
         .split(RegExp(r'\s+'))
         .map((palabra) {
@@ -58,7 +62,8 @@ class PinyinHelper {
 
   static List<(String, Color)> formatearConColores(String texto) {
     if (texto.isEmpty) return [];
-    final palabras = texto.toLowerCase().split(RegExp(r'\s+'));
+    final palabras =
+        _normalizarU(texto).toLowerCase().split(RegExp(r'\s+'));
     final resultado = <(String, Color)>[];
 
     for (int i = 0; i < palabras.length; i++) {
