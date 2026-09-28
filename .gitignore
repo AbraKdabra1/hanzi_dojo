@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Salidas de flutter analyze/test que genera el script de migración
+registros_locales/
