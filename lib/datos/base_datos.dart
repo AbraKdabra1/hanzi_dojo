@@ -66,16 +66,35 @@ class BaseDatos {
     );
 
     // 2. ¿Hay que copiar (o reemplazar) la base de contenido?
+    //
+    // Ojo: sqflite reutiliza la conexión si sigue abierta de un arranque
+    // anterior en el mismo proceso (en Android, al salir con "atrás" el
+    // proceso puede seguir vivo; también pasa con el hot restart). En ese caso
+    // `c` ya está adjunta y volver a adjuntarla daría "database c is already
+    // in use", así que primero se revisa.
     final rutaContenido = p.join(dir, _archivoContenido);
+    var adjunta = await _contenidoAdjunto(db);
     final versionLocal = await _leerAjuste(db, 'version_contenido');
     if (versionLocal != versionEsperada || !await File(rutaContenido).exists()) {
+      if (adjunta) {
+        await db.execute('DETACH DATABASE c');
+        adjunta = false;
+      }
       await _copiarContenido(rutaContenido, cargarContenido);
       await _guardarAjuste(db, 'version_contenido', versionEsperada);
     }
 
-    // 3. Adjuntar el contenido con el alias `c`.
-    await db.execute('ATTACH DATABASE ? AS c', [rutaContenido]);
+    // 3. Adjuntar el contenido con el alias `c` (si no lo estaba ya).
+    if (!adjunta) {
+      await db.execute('ATTACH DATABASE ? AS c', [rutaContenido]);
+    }
     return BaseDatos._(db);
+  }
+
+  /// ¿La conexión ya tiene adjunta la base de contenido como `c`?
+  static Future<bool> _contenidoAdjunto(Database db) async {
+    final filas = await db.rawQuery('PRAGMA database_list');
+    return filas.any((f) => f['name'] == 'c');
   }
 
   /// Escribe el archivo de contenido de forma segura: primero a un temporal

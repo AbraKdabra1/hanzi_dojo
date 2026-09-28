@@ -37,7 +37,14 @@ class ControladorTrazos extends ChangeNotifier {
 
   bool get dibujando => _actual.isNotEmpty;
 
+  /// Cuenta los trazos empezados. Sirve para saber si el trazo "actual"
+  /// sigue siendo el mismo (ver LienzoEscritura: borrar un trazo equivocado
+  /// sin tocar el siguiente si el usuario ya empezó otro).
+  int get numeroTrazo => _numeroTrazo;
+  int _numeroTrazo = 0;
+
   void empezar(Offset p) {
+    _numeroTrazo++;
     _actual
       ..clear()
       ..add(PointVector(p.dx, p.dy));

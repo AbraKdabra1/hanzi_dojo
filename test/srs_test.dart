@@ -41,6 +41,13 @@ void main() {
       expect(e.factor, greaterThanOrEqualTo(EstadoSrs.factorMinimo));
     });
 
+    test('el próximo repaso es el INICIO del día que toca (no la misma hora)', () {
+      const unDia = EstadoSrs(intervaloDias: 1);
+      expect(unDia.proximoRepaso(DateTime(2026, 1, 31, 21, 30)), DateTime(2026, 2, 1));
+      const seisDias = EstadoSrs(intervaloDias: 6);
+      expect(seisDias.proximoRepaso(DateTime(2026, 12, 28, 8)), DateTime(2027, 1, 3));
+    });
+
     test('calificación sugerida según errores', () {
       expect(Calificacion.sugerida(0), Calificacion.facil);
       expect(Calificacion.sugerida(2), Calificacion.medio);

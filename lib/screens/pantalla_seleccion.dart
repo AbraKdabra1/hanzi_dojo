@@ -62,7 +62,9 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
         return;
       }
       final r = await _repo.buscar(q);
-      if (mounted) {
+      // Si mientras buscaba cambiaste (o borraste) el texto, este resultado
+      // ya no sirve: se descarta.
+      if (mounted && _busqueda.text.trim() == q) {
         setState(() {
           _buscando = true;
           _resultados = r;
@@ -101,6 +103,7 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
                       ? IconButton(
                           icon: const Icon(Icons.close, size: 18),
                           onPressed: () {
+                            _espera?.cancel();
                             _busqueda.clear();
                             setState(() => _buscando = false);
                           },

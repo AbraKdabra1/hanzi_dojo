@@ -24,10 +24,18 @@ class Voz {
         await _tts.setVolume(1.0);
       }();
 
+  /// Lee [texto] en voz alta. Si el motor de voz falla (p. ej. aún no estaba
+  /// listo), no rompe la pantalla y en el siguiente toque se vuelve a intentar
+  /// configurar desde cero.
   static Future<void> decir(String texto) async {
-    await _configurar();
-    await _tts.stop();
-    await _tts.speak(texto);
+    try {
+      await _configurar();
+      await _tts.stop();
+      await _tts.speak(texto);
+    } catch (e) {
+      _configurando = null;
+      debugPrint('Voz: no se pudo leer "$texto": $e');
+    }
   }
 
   static Future<void> detener() => _tts.stop();

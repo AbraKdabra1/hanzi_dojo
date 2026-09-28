@@ -115,9 +115,7 @@ class LienzoEscrituraState extends State<LienzoEscritura>
 
   @override
   void dispose() {
-    for (final t in _temporizadores) {
-      t.cancel();
-    }
+    _cancelarTemporizadores();
     _guia.dispose();
     _tinta.dispose();
     super.dispose();
@@ -125,6 +123,7 @@ class LienzoEscrituraState extends State<LienzoEscritura>
 
   /// Borra lo dibujado y vuelve al primer trazo (botón ↻).
   void reiniciar() {
+    _cancelarTemporizadores(); // que un borrado pendiente no toque lo nuevo
     _tinta.limpiar();
     _guia.reset();
     setState(() {
@@ -138,9 +137,19 @@ class LienzoEscrituraState extends State<LienzoEscritura>
   }
 
   void _despues(Duration d, VoidCallback accion) {
-    _temporizadores.add(Timer(d, () {
+    late final Timer t;
+    t = Timer(d, () {
+      _temporizadores.remove(t);
       if (mounted) accion();
-    }));
+    });
+    _temporizadores.add(t);
+  }
+
+  void _cancelarTemporizadores() {
+    for (final t in _temporizadores) {
+      t.cancel();
+    }
+    _temporizadores.clear();
   }
 
   // ── Eventos del dedo ─────────────────────────────────────────────────────
@@ -205,9 +214,12 @@ class LienzoEscrituraState extends State<LienzoEscritura>
         _mostrarGuia = widget.modoNovato;
       });
       if (widget.modoNovato) _guia.forward(from: 0);
-      // El trazo equivocado se ve un instante y luego se borra.
+      // El trazo equivocado se ve un instante y luego se borra. Si en ese
+      // instante ya empezaste otro trazo, NO se toca (ese es el nuevo intento;
+      // el equivocado ya desapareció al empezarlo).
+      final trazoEquivocado = _tinta.numeroTrazo;
       _despues(const Duration(milliseconds: 450), () {
-        _tinta.descartarActual();
+        if (_tinta.numeroTrazo == trazoEquivocado) _tinta.descartarActual();
         setState(() => _mostrarPista = false);
       });
       _despues(const Duration(milliseconds: 1800), () => setState(() => _mostrarGuia = false));

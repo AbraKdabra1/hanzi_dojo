@@ -85,6 +85,35 @@ void main() {
     expect(siguiente!.id, isNot(c.id));
   });
 
+  test('abrir otra vez sin cerrar (conexión reutilizada) no falla', () async {
+    // En Android, al salir con "atrás" el proceso puede seguir vivo y sqflite
+    // devuelve la misma conexión, que ya tiene `c` adjunta.
+    final otra = await BaseDatos.abrir(carpeta: carpeta.path, cargarContenido: _leerContenido);
+    expect(await Repositorio(otra).totalEstudiados(), 0);
+    if (!identical(otra.db, base.db)) await otra.cerrar();
+  });
+
+  test('un repaso de 1 día vence desde el inicio del día siguiente', () async {
+    final c = (await repo.siguiente(const FiltroEstudio.nivel(1), permitirNuevos: true))!;
+    final noche = DateTime(2026, 3, 10, 21, 0);
+    await repo.registrarRespuesta(c, Calificacion.medio, ahora: noche); // intervalo: 1 día
+
+    expect(await repo.repasosPendientes(ahora: DateTime(2026, 3, 10, 23, 59)), 0);
+    final manana = DateTime(2026, 3, 11, 8, 0);
+    expect(await repo.repasosPendientes(ahora: manana), 1);
+    final vencido = await repo.siguiente(const FiltroEstudio.nivel(1), permitirNuevos: false, ahora: manana);
+    expect(vencido?.id, c.id);
+  });
+
+  test('calificar con una tarjeta "vieja" parte del progreso guardado', () async {
+    final c = (await repo.siguiente(const FiltroEstudio.nivel(1), permitirNuevos: true))!;
+    await repo.registrarRespuesta(c, Calificacion.facil); // 1.er acierto: 1 día
+    await repo.registrarRespuesta(c, Calificacion.facil); // misma foto de la tarjeta: 2.º acierto
+    final guardado = (await repo.caracter(c.id))!.progreso!;
+    expect(guardado.intervaloDias, 6);
+    expect(guardado.vecesVisto, 2);
+  });
+
   test('actualizar el contenido NO borra el progreso', () async {
     final c = (await repo.siguiente(const FiltroEstudio.nivel(2), permitirNuevos: true))!;
     await repo.registrarRespuesta(c, Calificacion.medio);

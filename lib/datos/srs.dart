@@ -74,6 +74,10 @@ class EstadoSrs {
     );
   }
 
-  /// Fecha del próximo repaso a partir de [ahora].
-  DateTime proximoRepaso(DateTime ahora) => ahora.add(Duration(days: intervaloDias));
+  /// Fecha del próximo repaso a partir de [ahora]: el INICIO (00:00, hora
+  /// local) del día que toca. Así un carácter con intervalo de 1 día que
+  /// practicaste a las 21:00 ya está listo desde temprano al día siguiente,
+  /// no hasta las 21:00. (DateTime acomoda solo "día 32" al mes siguiente.)
+  DateTime proximoRepaso(DateTime ahora) =>
+      DateTime(ahora.year, ahora.month, ahora.day + intervaloDias);
 }

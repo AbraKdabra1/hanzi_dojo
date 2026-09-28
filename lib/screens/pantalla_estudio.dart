@@ -55,36 +55,54 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _cargarSiguiente());
   }
 
+  /// true mientras se pide la siguiente tarjeta (evita pedir dos a la vez si
+  /// se toca "Estudiar más" dos veces seguidas).
+  bool _pidiendo = false;
+
   Future<void> _cargarSiguiente() async {
-    setState(() => _cargando = true);
-    final c = await _sesion.siguiente();
-    final r = c == null ? null : await _repo.radical(c.radical);
-    if (!mounted) return;
-    setState(() {
-      _actual = c;
-      _radical = r;
-      // Los trazos se decodifican una vez por tarjeta, no en cada build.
-      _trazosSvg = c?.trazosSvg ?? const [];
-      _medianas = c?.medianas ?? const [];
-      _cargando = false;
-      _completado = false;
-      _errores = 0;
-      _claveLienzo = GlobalKey();
-    });
+    if (_pidiendo) return;
+    _pidiendo = true;
+    try {
+      setState(() => _cargando = true);
+      final c = await _sesion.siguiente();
+      final r = c == null ? null : await _repo.radical(c.radical);
+      if (!mounted) return;
+      setState(() {
+        _actual = c;
+        _radical = r;
+        // Los trazos se decodifican una vez por tarjeta, no en cada build.
+        _trazosSvg = c?.trazosSvg ?? const [];
+        _medianas = c?.medianas ?? const [];
+        _cargando = false;
+        _completado = false;
+        _errores = 0;
+        _claveLienzo = GlobalKey();
+      });
+    } finally {
+      _pidiendo = false;
+    }
   }
 
+  /// Guarda la calificación y pasa a la siguiente tarjeta.
+  ///
+  /// [_guardando] sigue en true hasta que la siguiente tarjeta ya está en
+  /// pantalla, y mientras tanto los botones quedan desactivados: un doble
+  /// toque no puede guardar dos veces la misma respuesta.
   Future<void> _calificar(Calificacion c) async {
     final actual = _actual;
     if (actual == null || _guardando) return;
-    _guardando = true;
-    await _sesion.responder(actual, c);
-    _guardando = false;
-    if (!mounted) return;
-    if (widget.filtro.esUnico) {
-      Navigator.pop(context);
-      return;
+    setState(() => _guardando = true);
+    try {
+      await _sesion.responder(actual, c);
+      if (!mounted) return;
+      if (widget.filtro.esUnico) {
+        Navigator.pop(context);
+        return;
+      }
+      await _cargarSiguiente();
+    } finally {
+      if (mounted) setState(() => _guardando = false);
     }
-    await _cargarSiguiente();
   }
 
   Future<void> _verEjemplos(Caracter c) async {
@@ -199,29 +217,33 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
   // ── Lienzo ───────────────────────────────────────────────────────────────
 
   Widget _lienzo(Caracter c) {
-    return Center(
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: const Color(0xFFE0E0E0), width: 1.5),
-            boxShadow: const [BoxShadow(color: Color(0x1F000000), blurRadius: 18, offset: Offset(0, 8))],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(14),
-            child: LienzoEscritura(
-              key: _claveLienzo,
-              caracter: c.caracter,
-              trazosSvg: _trazosSvg,
-              medianas: _medianas,
-              modoNovato: widget.modoNovato,
-              onCompletado: (errores) => setState(() {
-                _completado = true;
-                _errores = errores;
-              }),
+    // El margen va FUERA del AspectRatio: así el lienzo queda exactamente
+    // cuadrado y la cuadrícula 米 coincide con el centro del carácter.
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+      child: Center(
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: const Color(0xFFE0E0E0), width: 1.5),
+              boxShadow: const [BoxShadow(color: Color(0x1F000000), blurRadius: 18, offset: Offset(0, 8))],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(14),
+              child: LienzoEscritura(
+                key: _claveLienzo,
+                caracter: c.caracter,
+                trazosSvg: _trazosSvg,
+                medianas: _medianas,
+                modoNovato: widget.modoNovato,
+                onCompletado: (errores) => setState(() {
+                  _completado = true;
+                  _errores = errores;
+                }),
+              ),
             ),
           ),
         ),
@@ -261,7 +283,7 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
                 calificacion: cal,
                 color: color,
                 resaltado: cal == sugerida,
-                onTap: () => _calificar(cal),
+                onTap: _guardando ? null : () => _calificar(cal),
               ),
           ],
         ),
@@ -350,7 +372,8 @@ class _BotonCalificacion extends StatelessWidget {
   final Calificacion calificacion;
   final MaterialColor color;
   final bool resaltado;
-  final VoidCallback onTap;
+  /// null = desactivado (mientras se guarda la respuesta anterior).
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

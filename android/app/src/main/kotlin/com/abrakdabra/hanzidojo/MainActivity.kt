@@ -17,8 +17,9 @@ import io.flutter.embedding.android.FlutterActivity
  * pedir el modo más rápido la animación se adapta sola a cada teléfono:
  * 60, 90, 120 o 144 Hz.
  *
- * En pantallas LTPO el sistema sigue bajando la frecuencia cuando nada se
- * mueve, así que esto no gasta batería de más.
+ * Costo: mientras la app está en pantalla, el teléfono se queda en ese modo
+ * aunque nada se mueva, así que gasta algo más de batería que a 60 Hz. Al
+ * salir de la app el sistema vuelve a su frecuencia automática.
  */
 class MainActivity : FlutterActivity() {
 

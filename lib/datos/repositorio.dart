@@ -152,31 +152,41 @@ class Repositorio {
   }
 
   /// Guarda el resultado de practicar un carácter (repaso espaciado).
+  ///
+  /// El estado anterior se lee de la base DENTRO de la transacción (no de
+  /// [c].progreso, que es una foto de cuando se cargó la tarjeta): si mientras
+  /// tanto practicaste el mismo carácter en otra pantalla, no se pisa ese avance.
   Future<void> registrarRespuesta(Caracter c, Calificacion calificacion, {DateTime? ahora}) async {
     final t = ahora ?? DateTime.now();
-    final anterior = c.progreso;
-    final estado = EstadoSrs(
-      intervaloDias: anterior?.intervaloDias ?? 0,
-      factor: anterior?.factor ?? EstadoSrs.factorInicial,
-      aciertosSeguidos: anterior?.aciertosSeguidos ?? 0,
-    ).calificar(calificacion);
-
-    // Se actualiza la fila si existe; si no, se crea. (No se usa "UPSERT"
-    // porque el SQLite de Android anterior a la versión 11 no lo soporta.)
     await _db.transaction((txn) async {
-      final actualizadas = await txn.rawUpdate('''
-        UPDATE progreso SET intervalo = ?, factor = ?, aciertos_seguidos = ?,
-               veces_visto = veces_visto + 1, proximo_repaso = ?, ultima_vez = ?
-        WHERE caracter = ?
-      ''', [
-        estado.intervaloDias,
-        estado.factor,
-        estado.aciertosSeguidos,
-        _segundos(estado.proximoRepaso(t)),
-        _segundos(t),
-        c.caracter,
-      ]);
-      if (actualizadas == 0) {
+      final filas = await txn.rawQuery(
+        'SELECT intervalo, factor, aciertos_seguidos FROM progreso WHERE caracter = ?',
+        [c.caracter],
+      );
+      final anterior = filas.isEmpty ? null : filas.first;
+      final estado = EstadoSrs(
+        intervaloDias: anterior?['intervalo'] as int? ?? 0,
+        factor: (anterior?['factor'] as num?)?.toDouble() ?? EstadoSrs.factorInicial,
+        aciertosSeguidos: anterior?['aciertos_seguidos'] as int? ?? 0,
+      ).calificar(calificacion);
+      final proximo = _segundos(estado.proximoRepaso(t));
+
+      // Se actualiza la fila si existe; si no, se crea. (No se usa "UPSERT"
+      // porque el SQLite de Android anterior a la versión 11 no lo soporta.)
+      if (anterior != null) {
+        await txn.rawUpdate('''
+          UPDATE progreso SET intervalo = ?, factor = ?, aciertos_seguidos = ?,
+                 veces_visto = veces_visto + 1, proximo_repaso = ?, ultima_vez = ?
+          WHERE caracter = ?
+        ''', [
+          estado.intervaloDias,
+          estado.factor,
+          estado.aciertosSeguidos,
+          proximo,
+          _segundos(t),
+          c.caracter,
+        ]);
+      } else {
         await txn.rawInsert('''
           INSERT INTO progreso (caracter, intervalo, factor, aciertos_seguidos, veces_visto,
                                 proximo_repaso, primera_vez, ultima_vez)
@@ -186,7 +196,7 @@ class Repositorio {
           estado.intervaloDias,
           estado.factor,
           estado.aciertosSeguidos,
-          _segundos(estado.proximoRepaso(t)),
+          proximo,
           _segundos(t),
           _segundos(t),
         ]);
