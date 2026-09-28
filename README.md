@@ -1,48 +1,167 @@
-# hanzi_what
+# Hanzi Dojo · 汉字道场
 
+App de Android (Flutter) para **aprender a escribir caracteres chinos** trazo por
+trazo. Revisa cada trazo mientras escribes, programa los repasos con repetición
+espaciada (SM-2) y permite estudiar **por nivel HSK** o **por radical**.
+
+- Identificador de la app: `com.abrakdabra.hanzidojo`
+- Versión: 2.0.0
+
+---
+
+## Qué hace
+
+| Función | Detalle |
+|---|---|
+| Estudio por nivel | HSK 1 a 6 y 7-9 (lista oficial HSK 3.0). |
+| Estudio por radical | Los 214 radicales Kangxi; cada uno muestra su familia de caracteres agrupada por nivel. |
+| Búsqueda | Por carácter, pinyin sin tonos (`hao`, `nv`) o significado en español/inglés. |
+| Modo novato / experto | Novato: silueta gris y pista del trazo. Experto: cuadrícula vacía. |
+| Revisión de trazos | Compara tu trazo con el correcto (DTW). Si fallas, el trazo se pinta de rojo y se borra. |
+| Repetición espaciada | SM-2. Calificas "Difícil / Medio / Fácil"; la app sugiere una según tus errores. Lo "Difícil" vuelve a salir a las 3 tarjetas. |
+| Límite diario | Nuevos por día configurable (5 a 50, 15 por defecto) en Ajustes. |
+| Ejemplos | 1 o 2 oraciones por carácter con pinyin y traducción al español. |
+| Voz | Pronunciación con el motor de voz del teléfono (chino mandarín). |
+| Estadísticas | Caracteres estudiados, dominados, repasos para hoy y avance por nivel. |
+
+El progreso se guarda **solo en el teléfono** (`progreso.db`). Las actualizaciones
+del contenido no lo borran.
+
+---
+
+## Los datos
+
+Todo el contenido está en una base SQLite prearmada, `assets/db/contenido.db`,
+que se copia al teléfono la primera vez (por eso la app abre rápido).
+
+| Dato | Fuente | Verificación (`validar_db.py`) |
+|---|---|---|
+| Niveles HSK | Lista oficial HSK 3.0 (GF 0025-2021, Ministerio de Educación de China) vía [ivankra/hsk30](https://github.com/ivankra/hsk30) | 300 caracteres por nivel del 1 al 6 y 1,200 en 7-9 = **3,000** |
+| Lista de escritura | Misma norma (手写字表): 300 / 400 / 500 caracteres | Coincide con la lista oficial |
+| Radical de cada carácter | Unicode Unihan (`kRSUnicode`) | Los 214 radicales tienen su carácter y su familia |
+| Trazos y medianas | [Make Me a Hanzi](https://github.com/skishore/makemeahanzi) | Cada carácter tiene tantos contornos como medianas |
+| Pinyin | Lista oficial HSK (palabras) + CC-CEDICT | Lecturas de polífonos según las palabras oficiales (好 hǎo / hào) |
+| Significado en español | Traducido de CC-CEDICT para los 3,000 HSK | 3,000 de 3,000 |
+| Ejemplos | Oraciones de [Tatoeba](https://tatoeba.org) (vía krmanik/chinese-example-sentences), traducidas al español | 4,521 ejemplos para 2,758 caracteres; cada ejemplo contiene su carácter |
+
+Los caracteres que no son HSK (unos 6,500) también están, con significado en
+inglés, para que las familias de radicales estén completas.
+
+### Cómo se construye (solo si cambias los datos)
+
+Necesitas Python 3.
+
+```bash
+# 1. (Opcional) volver a elegir ejemplos. Requiere: pip install pypinyin
+python herramientas_datos/seleccionar_ejemplos.py
+
+# 2. Construir la base y el archivo de versión
+python herramientas_datos/construir_db.py
+
+# 3. Revisar que todo cumpla
+python herramientas_datos/validar_db.py
+
+# 4. (Opcional) recortar la fuente si aparecieron caracteres nuevos.
+#    Requiere: pip install fonttools  y la fuente variable NotoSansSC-VF.ttf
+python herramientas_datos/recortar_fuente.py ruta/a/NotoSansSC-VF.ttf
+```
+
+Para **corregir una traducción**, edita la línea en
+`herramientas_datos/fuentes/traducciones/significados_es.tsv` (significados) o
+`ejemplos_es.tsv` (oraciones) y vuelve a correr `construir_db.py`.
+Para **quitar una oración** que no te guste, agrega su número a
+`ejemplos_excluidos.tsv` y corre los pasos 1 y 2.
+
+Cada vez que cambian las fuentes cambia `lib/datos/version_contenido.dart`, y la
+app sabe que tiene que copiar el contenido nuevo (sin tocar tu progreso).
+
+---
+
+## Cómo correr la app
+
+Requisitos: Flutter 3.44 (Dart 3.12) y Android SDK. La base ya viene en el repo,
+así que **no necesitas Python** para compilar.
+
+```bash
+flutter pub get
+flutter run --profile     # para probar la fluidez real
+flutter run               # modo debug (más lento, para programar)
+flutter test              # pruebas automáticas
+```
+
+> El modo **debug** siempre se siente más lento. Para juzgar la fluidez
+> (120 Hz en el Pura 70) usa `--profile` o `--release`.
+
+### Instalar el APK que genera GitHub
+
+Cada push corre la integración continua (pestaña **Actions** del repo). Al
+terminar, en la sección **Artifacts** está `hanzi-dojo-profile-apk`: descárgalo,
+descomprímelo y abre el `.apk` en el teléfono.
+
+---
+
+## Estructura del código
+
+```
 lib/
-├── main.dart                 # Punto de entrada, inicializa DB y lanza app
-├── screens/                  # Pantallas completas (UI + lógica de navegación)
-│   ├── pantalla_inicio.dart
-│   ├── pantalla_seleccion.dart
-│   ├── pantalla_estudio.dart
-│   └── pantalla_estadisticas.dart
-├── painters/                 # Painters personalizados para lienzo y grids
-│   ├── pincel_painter.dart
-│   ├── grid_painter.dart
-│   ├── svg_fondo_painter.dart   # (recreado)
-│   └── pista_roja_painter.dart  # (recreado)
-├── helpers/                  # Utilidades
-│   └── pinyin_helper.dart
-├── widgets/                  # Componentes reutilizables
-│   ├── fondo_tinta.dart      # Fondo decorativo
-│   ├── glass_speaker_button.dart # Botón con efecto glassmorphism para TTS
-│   └── lienzo_hanzi.dart     # (actualizado con correcciones)
-└── database/                 # Acceso a datos
-    └── db_helper.dart        # SQLite + lógica de progreso SRS
+├── main.dart                     Arranque: abre la base, tema (Noto Sans SC) y licencias
+├── datos/
+│   ├── base_datos.dart           Abre progreso.db y adjunta contenido.db (ATTACH)
+│   ├── repositorio.dart          Todas las consultas: siguiente tarjeta, búsqueda, radicales…
+│   ├── sesion_estudio.dart       Orden de las tarjetas en una sesión (repasos, nuevos, "Difícil")
+│   ├── srs.dart                  Algoritmo SM-2
+│   ├── modelos.dart              Caracter, Radical, Ejemplo, Progreso…
+│   ├── datos_app.dart            Da acceso al repositorio desde cualquier pantalla
+│   └── version_contenido.dart    (generado) versión de contenido.db
+├── helpers/
+│   ├── dtw_helper.dart           Compara tu trazo con el correcto
+│   ├── cache_trazos.dart         Convierte los contornos SVG a Path una sola vez
+│   └── pinyin_helper.dart        Colores por tono
+├── painters/                     Dibujo del lienzo (cuadrícula, silueta, tinta, pistas)
+├── widgets/
+│   ├── lienzo_escritura.dart     El lienzo donde escribes (eventos táctiles crudos)
+│   ├── boton_voz.dart            Pronunciación (flutter_tts)
+│   └── comunes.dart, …           Piezas de interfaz reutilizables
+└── screens/                      Inicio, modo, selección, radicales, familia,
+                                  estudio, estadísticas, ajustes, créditos
+android/app/src/main/kotlin/…/MainActivity.kt   Pide la tasa de refresco más alta de la pantalla
+herramientas_datos/               Scripts de Python que arman la base (ver arriba)
+test/                             Pruebas: SM-2, sesión, trazos, base de datos real
+```
 
-## 🚀 Últimas Actualizaciones (Novedades de la Versión)
+### Fluidez
 
-### 🏗️ Arquitectura y Refactorización
-* **Diseño Modular:** Separación estricta de responsabilidades en archivos independientes (`main.dart` para UI, `db_helper.dart` para el backend local y `lienzo_hanzi.dart` para el motor gráfico), siguiendo principios de Clean Architecture.
-* **Navegación Indexada:** Implementación de *Banners de Sección* estandarizados en el código fuente para colapsar bloques y facilitar la mantenibilidad.
+- El lienzo usa eventos táctiles crudos (`Listener`) y solo repinta la tinta, no
+  la pantalla completa (`ControladorTrazos` + capas con `RepaintBoundary`).
+- Los contornos de cada carácter se convierten a `Path` una sola vez (caché).
+- Sin desenfoque (`BackdropFilter`) en listas: era lo que más frenaba el scroll.
+- `MainActivity` pide a Android el modo de pantalla con más Hz disponible.
 
-### 🎨 UI/UX y Diseño Visual (Minimalismo)
-* **Efecto Liquid Glass (Glassmorphism):** Rediseño de los botones principales utilizando filtros de desenfoque (`BackdropFilter`) para lograr un acabado esmerilado, translúcido y premium.
-* **Prisma Motivacional:** Integración de una animación 3D rotativa (`AnimatedSwitcher`) en el menú principal que alterna frases inspiradoras, optimizada para evitar saltos en el layout.
-* **Transiciones Fluidas:** Uso de `AnimatedCrossFade` en la pantalla de selección para transicionar de manera orgánica entre el catálogo HSK y los resultados de búsqueda.
-* **Estadísticas Dinámicas:** Gráficas de dona (`CircularProgressIndicator`) con animaciones de llenado temporalizadas (`AnimationController`) para mostrar el progreso global e individual.
+---
 
-### ⚙️ Nuevas Funcionalidades Core
-* **Búsqueda Dinámica SQLite:** Motor de búsqueda en tiempo real capaz de filtrar caracteres por Hanzi, Pinyin o significado en fracciones de segundo.
-* **Módulo de Estadísticas Independiente:** Nueva pantalla dedicada exclusivamente a auditar el progreso de estudio, segregando el aprendizaje por cada nivel del HSK.
-* **Feedback Geométrico Inmediato:** El lienzo de dibujo ahora castiga visualmente los errores, pintando los trazos incorrectos de color rojo por 400ms antes de borrarlos.
-* **Contexto de Vocabulario:** Nuevo panel modal interactivo ("Ver ejemplos") que extrae de la base de datos palabras compuestas que utilizan el carácter que se está estudiando.
+## Integración continua
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+`.github/workflows/ci.yml` hace en cada push: construir y validar la base,
+`flutter analyze`, `flutter test` y compilar el APK de perfil. En ramas de trabajo,
+los resultados se publican además en la rama `ci-registros`.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## Licencias
+
+El código de la app es del autor. Los datos y la fuente tienen sus propias
+licencias (el texto completo está en `assets/licencias/` y dentro de la app, en
+**Créditos**):
+
+| Recurso | Licencia |
+|---|---|
+| CC-CEDICT | CC BY-SA 4.0 |
+| Make Me a Hanzi — gráficos | Arphic Public License |
+| Make Me a Hanzi — diccionario | LGPL |
+| Unicode Unihan | Unicode License |
+| hsk30 (ivankra) | MIT |
+| Tatoeba (oraciones) | CC BY 2.0 FR |
+| Noto Sans SC | SIL Open Font License 1.1 |
+
+Las traducciones al español de significados y ejemplos derivan de CC-CEDICT y
+Tatoeba, por lo que se comparten bajo sus mismas licencias.

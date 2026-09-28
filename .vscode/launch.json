@@ -1,11 +1,23 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    // Configuraciones para correr desde VS Code (Ejecutar y depurar, F5).
+    // "Perfil" es la que sirve para juzgar la fluidez en el teléfono.
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: Current File",
+            "name": "Hanzi Dojo (debug)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "Hanzi Dojo (perfil: fluidez real)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "Python: archivo actual",
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",

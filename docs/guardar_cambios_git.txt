@@ -1,18 +1,25 @@
-¿Cómo guardar los cambios?
+¿Cómo guardar y traer cambios con Git?
+======================================
 
-1. 
+Traer lo último de GitHub (hazlo antes de empezar a trabajar):
 
-git add .
+    git pull
 
-2. 
+Guardar tus cambios:
 
-git commit -m "Se generó estructura base de Flutter y se instalaron sqflite y path_provider"
+    1. git add .
+    2. git commit -m "Describe en una frase qué cambiaste"
+    3. git push
 
-3.
+Trabajar en una rama (recomendado para cambios grandes):
 
-git push
+    git checkout -b nombre-de-la-rama     crea la rama y te cambia a ella
+    git push -u origin nombre-de-la-rama  la sube a GitHub la primera vez
+    git checkout main                     vuelve a la rama principal
 
+Después, en GitHub se abre un "Pull request" para revisar y unir la rama a main.
 
-Para cargar los cambios
+Si cambiaste datos (herramientas_datos/fuentes/…), antes del commit corre:
 
-git pull
+    python herramientas_datos/construir_db.py
+    python herramientas_datos/validar_db.py

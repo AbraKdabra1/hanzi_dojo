@@ -1,3 +1,9 @@
+NOTA (septiembre 2026, versión 2.0): en la app ya NO se usa BackdropFilter en
+tarjetas ni listas. El desenfoque en tiempo real era la causa principal de que la
+app se sintiera "a 30 Hz". El efecto vidrio se imita con color translúcido y
+borde claro (lib/widgets/tarjeta_vidrio.dart). Este documento queda como
+referencia de la idea original.
+
 Aquí tienes la estructuración del archivo `.txt` con el análisis de la documentación de diseño de Apple y la estrategia técnica para aplicar estos conceptos en la arquitectura de nuestra app. 
 
 Puedes copiar el contenido de este bloque directamente a un archivo de texto en tu computadora.
