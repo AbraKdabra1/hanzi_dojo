@@ -1,0 +1,606 @@
+# Significados en español de los 3,000 caracteres HSK 3.0.
+# Traducción de las acepciones de CC-CEDICT (CC BY-SA 4.0), hecha con ayuda de IA
+# y pensada para estudiantes: 1 a 4 acepciones, las más usadas primero.
+# Si un carácter tiene varias lecturas oficiales, se indica cada una ("de: …; dì: …").
+# Para corregir una traducción: edita la línea y vuelve a correr construir_db.py.
+caracter	significado_es
+爱	amar; querer; gustar de; tender a
+八	ocho
+爸	papá; padre
+吧	(partícula de sugerencia o suposición: ¿no?, ¿verdad?, ¡vamos!)
+白	blanco; puro; vacío; en vano
+百	cien; numerosos; todo tipo de
+班	clase; grupo; turno de trabajo; (clasificador para grupos y horarios de transporte)
+半	mitad; medio; y media
+帮	ayudar; asistir; banda, pandilla
+包	envolver; bolsa, paquete; incluir; encargarse de
+杯	taza; vaso; copa, trofeo; (clasificador: un vaso de, una taza de)
+北	norte
+备	preparar; equipar; completamente
+本	raíz; origen; propio, este; (clasificador para libros)
+比	comparar; más… que (en comparaciones); proporción; gesticular
+边	lado; borde; orilla; frontera; (… y a la vez …)
+别	no (hagas); otro, diferente; separarse, despedirse; distinguir
+病	enfermedad; enfermarse; defecto
+不	no; in-, des- (negación)
+菜	verdura; platillo, plato de comida
+茶	té
+差	faltar; diferencia; malo, deficiente; equivocado
+常	a menudo; siempre; común, habitual
+场	lugar, recinto; escena; (clasificador para partidos, funciones, lluvias)
+唱	cantar
+车	coche; vehículo; máquina
+吃	comer; tomar (medicina); sufrir, soportar
+出	salir; producir; ocurrir; exceder
+穿	ponerse, vestir (ropa); atravesar, perforar
+床	cama
+次	vez; siguiente, segundo; secundario
+从	desde; a través de; seguir, obedecer
+错	error; equivocado; mal
+答	responder; contestar
+打	dǎ: golpear; hacer (verbo comodín: llamar, jugar, abrir…); dá: docena
+大	grande; mayor (de edad); muy
+蛋	huevo; cosa ovalada
+到	llegar; ir a; hasta; (complemento de resultado: lograr)
+道	camino; razón, principio; decir; (clasificador para platillos, preguntas, órdenes)
+得	dé: obtener, conseguir; de: (partícula tras verbo que introduce grado o resultado); děi: tener que
+地	de: (partícula adverbial, como "-mente"); dì: tierra, suelo; lugar
+的	(partícula posesiva o atributiva: de); (al final de frase: énfasis)
+等	esperar; etcétera; clase, grado; igual
+弟	hermano menor
+第	(prefijo de números ordinales: primero, segundo…)
+点	punto; hora (en punto); un poco; pedir (comida); encender
+电	electricidad; eléctrico; relámpago
+店	tienda; posada
+东	este (punto cardinal); anfitrión
+动	mover(se); acción; conmover
+都	todos; ambos; ya; incluso
+读	leer; leer en voz alta; estudiar
+对	correcto; hacia, para; frente a; tratar (a alguien); pareja
+多	mucho(s); más; ¿cuánto?; (tras un número) y pico
+饿	hambriento; tener hambre
+儿	hijo; niño; (sufijo erhua: -r)
+二	dos
+饭	arroz cocido; comida
+方	cuadrado; dirección; lado; método
+房	casa; habitación
+放	poner, colocar; soltar, liberar; dejar (de clases, vacaciones)
+飞	volar
+非	no ser; no, in-, anti-; equivocado; tener que (非…不可)
+分	dividir; minuto; punto (calificación); centavo (fen)
+风	viento; estilo; costumbre
+服	ropa; servir; obedecer, convencerse
+干	gān: seco; vacío; gàn: hacer, trabajar
+高	alto; elevado; fuerte (sonido)
+告	decir; anunciar; informar; denunciar
+哥	hermano mayor
+歌	canción; cantar
+个	(clasificador general: uno, un); individual
+给	dar; para, a (alguien); (en pasiva: por)
+跟	con; seguir; talón; comparado con
+工	trabajo; obrero; habilidad
+关	cerrar; apagar; paso de montaña; relación, concernir
+馆	edificio público (museo, biblioteca, restaurante); embajada
+贵	caro; valioso; noble; (su, de usted: honorífico)
+国	país; nación; nacional
+果	fruta; resultado; efectivamente
+过	guò: pasar, cruzar; celebrar (fiesta); demasiado; guo: (partícula de experiencia pasada)
+还	hái: todavía; aún más; además; huán: devolver, regresar
+孩	niño
+汉	etnia han; chino (idioma); hombre
+好	hǎo: bueno; bien; fácil de; muy; hào: gustar de, aficionarse
+号	número; fecha (día del mes); señal; talla
+喝	beber
+和	y; con; paz, armonía; suma
+很	muy
+后	detrás; después; posterior; emperatriz
+候	esperar; tiempo, época; clima
+花	flor; gastar (dinero, tiempo); estampado
+话	palabras; habla; lenguaje
+坏	malo; estropeado; descomponerse
+欢	alegre; contento
+回	regresar, volver; responder; vez (clasificador)
+会	saber (hacer); poder; ir a (probabilidad); reunión
+火	fuego; urgente; enojo
+机	máquina; avión; oportunidad
+鸡	pollo; gallina
+几	¿cuántos?; algunos, unos cuantos
+记	recordar; anotar, registrar; marca
+家	casa; familia; hogar; (clasificador para negocios); experto (sufijo: -ista)
+假	falso; vacaciones; suponer; tomar prestado
+间	entre; habitación; espacio; (clasificador para cuartos)
+见	ver; encontrarse con; opinión
+教	enseñar
+叫	llamar; llamarse; gritar; ordenar; (en pasiva: por)
+觉	jiào: sueño, siesta (睡觉); jué: sentir, percibir (觉得)
+姐	hermana mayor
+介	estar entre; presentar (介绍)
+今	ahora; actual; hoy, este (año, día)
+进	entrar; avanzar; progresar
+京	capital (de un país); Pekín
+净	limpio; neto; solamente
+九	nueve
+就	entonces; justo, precisamente; en cuanto; ya
+开	abrir; encender; conducir; comenzar; hervir
+看	kàn: ver; mirar; leer; visitar; opinar; kān: cuidar, vigilar
+考	examinar; presentar examen; comprobar
+渴	sediento; tener sed
+客	invitado; cliente; visitante
+课	clase; lección; materia
+口	boca; entrada; (clasificador para personas de una familia)
+块	pedazo, trozo; (moneda: yuan, coloquial); (clasificador para trozos)
+快	rápido; pronto; casi; feliz
+来	venir; llegar; (verbo comodín: hacer); (dirección hacia el hablante)
+老	viejo; mayor; (prefijo de trato familiar o de orden entre hermanos); siempre
+了	le: (partícula de acción completada o de cambio de estado); liǎo: terminar; poder (en 不了)
+累	cansado; cansar; agotarse
+冷	frío
+里	dentro; interior; (medida de distancia: li, medio kilómetro)
+两	dos (antes de clasificador); ambos; algunos
+零	cero; fracción, suelto
+六	seis
+楼	edificio de varios pisos; piso, planta
+路	camino; ruta; calle; línea (de autobús)
+妈	mamá; madre
+马	caballo
+吗	(partícula interrogativa de preguntas de sí o no)
+买	comprar
+慢	lento; despacio
+忙	ocupado; apresurarse
+毛	pelo; pluma; lana; (moneda: diez centavos)
+么	(sufijo en 什么, 怎么, 这么)
+没	no (haber, tener); no (en pasado: no hizo)
+妹	hermana menor
+门	puerta; entrada; (clasificador para materias, cursos)
+们	(sufijo plural para personas y pronombres)
+米	arroz (crudo); metro (unidad)
+面	cara; superficie; lado; fideos, harina
+名	nombre; famoso; lugar (en una clasificación); (clasificador para personas)
+明	claro; brillante; entender; próximo (明天)
+拿	tomar, agarrar; llevar; (como 把: con respecto a)
+哪	nǎ: ¿cuál?, ¿dónde?; na: (partícula exclamativa)
+那	ese, aquel; eso; entonces
+奶	leche; seno; abuela (奶奶)
+男	hombre, varón; masculino
+南	sur
+难	difícil; problema; desagradable
+脑	cerebro; mente; cabeza
+呢	(partícula final: ¿y…?, ¿qué tal…?; acción en curso; énfasis)
+能	poder; ser capaz de; habilidad; energía
+你	tú
+年	año; edad
+您	usted
+牛	vaca, buey, toro; (coloquial) genial, increíble
+女	mujer; femenino; hija
+旁	lado; al lado; otro
+跑	correr; huir; ir de un lado a otro
+朋	amigo
+票	boleto; billete; voto
+七	siete
+期	período; etapa; plazo; esperar; (clasificador para números de revistas o cursos)
+起	levantarse; subir; empezar; (complemento: hacia arriba)
+气	aire; gas; clima; enojo; energía vital (qi)
+汽	vapor
+前	delante; antes; anterior; hacia adelante
+钱	dinero; moneda
+请	por favor; invitar; pedir
+球	pelota, balón; esfera; globo
+去	ir; ir a; pasado (año, etc.); quitar
+热	caliente; calor; calentar; ferviente
+人	persona; gente
+认	reconocer; conocer; admitir
+日	sol; día; fecha
+肉	carne
+三	tres
+山	montaña; colina
+商	comercio; comerciante; consultar
+上	arriba; encima; subir; anterior; ir a (clase, trabajo)
+少	poco(s); faltar; menos
+绍	continuar (en 介绍: presentar)
+身	cuerpo; uno mismo; vida
+什	(en 什么: ¿qué?)
+生	nacer; dar a luz; vida; crudo; estudiante
+师	maestro; experto; división (militar)
+十	diez
+时	hora; tiempo; época; cuando
+识	conocer; saber; conocimiento
+事	asunto; cosa; trabajo; incidente
+试	probar; intentar; examen
+视	mirar; ver; considerar
+是	ser; sí; correcto
+手	mano; persona experta (sufijo)
+书	libro; carta; escribir
+树	árbol; establecer
+谁	¿quién?
+水	agua; río
+睡	dormir
+说	decir; hablar; explicar; regañar
+四	cuatro
+送	enviar; entregar; regalar; acompañar, despedir
+诉	contar, decir; quejarse; demandar
+岁	años (de edad); año
+他	él
+她	ella
+太	demasiado; muy; el más, sumo
+体	cuerpo; forma; estilo; sistema
+天	día; cielo
+条	tira; artículo, cláusula; (clasificador para cosas largas: calles, ríos, peces)
+听	escuchar; oír; obedecer; lata
+同	igual; mismo; juntos; con
+图	dibujo; imagen; mapa; plan
+外	fuera; exterior; extranjero
+玩	jugar; divertirse; juguete
+晚	noche; tarde (hora); tardío
+网	red; internet
+忘	olvidar
+文	escritura; lengua; cultura; literario
+问	preguntar
+我	yo; me; mi
+五	cinco
+午	mediodía
+西	oeste; occidental
+息	respirar, aliento; noticia; interés (financiero); descansar
+习	practicar; estudiar; costumbre
+洗	lavar; bañarse
+喜	gustar; alegre; felicidad
+系	xì: relacionar; sistema; departamento (universitario); jì: atar, abrochar
+下	abajo; bajar; próximo, siguiente; (clasificador para acciones breves)
+先	primero; antes; mientras tanto
+现	ahora; actual; aparecer
+想	pensar; querer, desear; extrañar
+小	pequeño; joven; poco
+校	escuela
+笑	reír; sonreír; burlarse
+些	algunos, unos (cuantos)
+写	escribir
+谢	agradecer; disculparse; marchitarse
+新	nuevo; recién
+星	estrella; astro
+行	xíng: caminar; ir; bien, de acuerdo; hacer; háng: fila; profesión; firma (comercial)
+兴	interés; entusiasmo (高兴: contento)
+休	descansar; cesar
+学	aprender; estudiar; ciencia, -logía
+样	forma; manera; tipo; apariencia
+要	querer; necesitar; ir a; deber; si
+爷	abuelo; señor (anciano)
+也	también; tampoco (con negación)
+页	página
+一	uno; un; todo, entero; en cuanto
+衣	ropa
+医	médico; medicina; curar
+影	sombra; imagen; película
+用	usar; utilizar; necesitar; con (instrumento)
+友	amigo
+有	tener; haber
+右	derecha
+雨	lluvia
+语	idioma; lengua; habla
+元	yuan (moneda); primero; original
+远	lejos; distante
+院	patio; instituto; hospital (医院)
+月	luna; mes
+再	otra vez; de nuevo; después; más
+在	estar (en); en; (acción en curso)
+早	temprano; mañana; ¡buenos días!; hace tiempo
+怎	¿cómo?
+站	estación; parada; estar de pie; sitio web
+找	buscar; encontrar; dar cambio (dinero)
+这	este; esto
+着	zhe: (partícula de acción en curso o estado); zháo: tocar; alcanzar; (resultado logrado)
+真	verdadero; real; realmente
+正	recto; correcto; justo; exactamente; estar (haciendo)
+知	saber; conocer
+中	medio, centro; dentro; entre; China
+重	zhòng: pesado; importante; serio; chóng: repetir; de nuevo
+住	vivir, residir; alojarse; (complemento: firme, fijo)
+准	preciso, exacto; permitir; estándar
+桌	mesa; escritorio
+子	hijo; semilla; (sufijo de sustantivos)
+字	carácter; letra; palabra
+走	caminar; ir; irse; marcharse
+最	el más; lo más
+昨	ayer
+左	izquierda
+作	hacer; escribir, componer; considerar como; obra
+坐	sentarse; tomar (autobús, avión, etc.)
+做	hacer; fabricar; ser (desempeñar un papel)
+啊	a: (partícula final de afirmación, sorpresa o ánimo); ā: ¡ah!, ¡oh!
+安	paz; tranquilo; seguro; instalar
+般	tipo, clase; manera (一般: en general)
+板	tabla; placa; pizarra; rígido
+办	hacer, encargarse de; gestionar; organizar
+饱	lleno, satisfecho (de comida)
+报	informar; anunciar; periódico; inscribirse; corresponder
+背	bèi: espalda; dar la espalda; memorizar; bēi: cargar a la espalda
+笔	bolígrafo, lápiz; pincel; trazo
+必	necesariamente; deber; seguramente
+变	cambiar; transformarse
+便	conveniente; informal; entonces; biàn (便宜: pián, barato)
+遍	por todas partes; vez (de principio a fin)
+表	mostrar, expresar; tabla, formulario; reloj (de pulsera); superficie
+部	parte; sección; ministerio; departamento; (clasificador para películas y obras)
+才	solo entonces; apenas, recién; talento
+参	participar; consultar
+餐	comida; comer; (clasificador para comidas)
+草	hierba; paja; borrador; descuidado
+层	piso (de edificio); capa; nivel
+查	revisar; investigar; buscar (en diccionario)
+长	cháng: largo; longitud; zhǎng: crecer; jefe; mayor
+超	superar; exceder; súper-
+晨	mañana; amanecer
+称	llamar, denominar; pesar; alabar
+成	convertirse en; lograr; terminar; diez por ciento
+楚	claro, nítido (清楚)
+处	chù: lugar; oficina; chǔ: tratar, manejar (处理)
+船	barco; nave
+吹	soplar; tocar (instrumento de viento); presumir
+春	primavera
+词	palabra; término; letra (de canción)
+带	llevar consigo; traer; cinta, cinturón; zona
+单	solo; simple; lista, formulario; sencillo
+但	pero; sin embargo; solo
+当	dāng: servir de; cuando; deber; dàng: considerar como; apropiado
+倒	dǎo: caer; derribar; cambiar (de transporte); dào: verter; al revés; en cambio
+灯	lámpara; luz
+低	bajo; bajar (la cabeza)
+典	clásico; ceremonia; norma
+掉	caer; perder; (complemento: quitar, deshacerse de)
+定	fijar; decidir; reservar; estable; seguramente
+冬	invierno
+懂	entender; comprender
+度	grado; medida; pasar (tiempo)
+短	corto; breve; faltar; defecto
+段	sección; párrafo; tramo; período
+队	equipo; fila; grupo
+而	y; pero; sin embargo; (conector de causa o contraste)
+发	enviar; emitir; desarrollarse; sentir; fā (头发: fa, cabello)
+法	ley; método; manera
+份	parte, porción; (clasificador para periódicos, documentos, regalos)
+封	sellar; cerrar; (clasificador para cartas)
+复	repetir; volver; recuperar; responder; complejo
+该	deber; tocar a (alguien); ese (mencionado)
+改	cambiar; corregir; modificar
+感	sentir; emoción; conmover
+刚	justo, apenas; recién; firme
+更	más; aún más; gēng: cambiar
+公	público; común; oficial; macho
+共	juntos; en total; compartir
+狗	perro
+够	suficiente; bastante; alcanzar
+故	causa, razón; viejo, antiguo; a propósito
+顾	cuidar; atender; tomar en cuenta; cliente (顾客)
+观	observar; ver; concepto, visión
+惯	acostumbrado; mimar (a un niño)
+广	amplio; extenso
+海	mar; océano
+喊	gritar; llamar a gritos
+合	juntar; cerrar; combinar; convenir; en total
+河	río
+黑	negro; oscuro; ilegal
+红	rojo; popular
+忽	de repente; descuidar
+湖	lago
+护	proteger; cuidar
+划	huá: remar; valer la pena; huà: planear; trazar; dividir
+画	dibujar; pintar; cuadro, pintura
+换	cambiar; intercambiar
+黄	amarillo
+活	vivir; vivo; trabajo; activo
+或	o; tal vez
+级	nivel; grado; año escolar
+急	urgente; ansioso; apresurado
+己	uno mismo (自己)
+计	calcular; contar; plan
+际	borde; entre (internacional: 国际)
+绩	logro; resultado (成绩)
+加	sumar; añadir; aumentar; más
+检	revisar; inspeccionar
+件	(clasificador para asuntos, ropa, objetos); pieza; documento
+健	sano; fuerte (健康)
+讲	hablar; explicar; dar importancia a
+交	entregar; pagar; hacer (amigos); cruzarse
+角	ángulo; esquina; cuerno; (moneda: diez centavos)
+饺	empanadilla china (饺子)
+脚	pie; pata; base
+接	recibir; contestar (teléfono); ir a buscar; conectar
+街	calle
+节	festividad; sección; nudo; ahorrar; (clasificador para clases)
+结	jié: nudo; atar; concluir; jiē: dar fruto; sólido
+借	pedir prestado; prestar
+斤	jin (medio kilo)
+近	cerca; próximo; aproximadamente
+经	pasar por; experimentar; clásico; ya (已经)
+睛	ojo (眼睛)
+静	tranquilo; quieto; silencioso
+久	mucho tiempo; largo tiempo
+酒	vino; licor; alcohol
+举	levantar; alzar; citar (ejemplo)
+句	oración, frase; (clasificador para frases)
+卡	kǎ: tarjeta; bloquear; caloría; qiǎ: atascarse
+康	sano; saludable
+靠	apoyarse en; depender de; acercarse
+科	materia, rama del saber; departamento
+可	poder; aprobar; (partícula de énfasis); pero
+克	gramo; superar; poder
+刻	cuarto de hora; momento; grabar, tallar
+空	kōng: vacío; aire, cielo; en vano; kòng: tiempo libre; desocupado
+哭	llorar
+筷	palillo (para comer)
+拉	jalar; tocar (instrumento de arco); arrastrar
+蓝	azul
+篮	canasta; cesta
+乐	lè: feliz; alegre; yuè: música
+离	separarse; alejarse; distar de
+礼	regalo; ceremonia; cortesía
+理	razón; lógica; ordenar; hacer caso (理)
+力	fuerza; poder; esfuerzo
+利	beneficio; ventaja; afilado; interés
+例	ejemplo; caso; regla
+脸	cara; rostro
+练	practicar; entrenar
+凉	fresco; frío
+亮	brillante; luminoso; iluminar
+辆	(clasificador para vehículos)
+量	liáng: medir; liàng: cantidad
+留	quedarse; dejar (mensaje); guardar
+流	fluir; corriente; propagar
+旅	viajar; viaje; brigada
+绿	verde
+论	discutir; teoría; opinión
+卖	vender
+满	lleno; completo; satisfecho
+猫	gato
+末	final; extremo; polvo
+目	ojo; objetivo; lista, catálogo
+鸟	pájaro; ave
+弄	hacer; manejar; arreglar; jugar con
+努	esforzarse (努力)
+爬	trepar; escalar; gatear
+怕	temer; tener miedo; quizá
+排	fila; ordenar; hacer fila; excluir
+碰	tocar; chocar; encontrarse con
+篇	(clasificador para textos, artículos); hoja
+片	pedazo; rebanada; película; lámina
+漂	flotar; piào: bonito (漂亮)
+平	plano; parejo; tranquilo; empate
+瓶	botella; florero; (clasificador para botellas)
+普	general; universal
+其	su, sus; ese; (其他: otro)
+骑	montar (caballo, bicicleta)
+千	mil
+墙	muro; pared
+且	además; y
+青	verde o azul; joven
+轻	ligero; suave; fácil; joven
+清	claro; limpio; puro
+情	sentimiento; emoción; situación
+晴	despejado (clima)
+秋	otoño
+求	pedir; buscar; exigir
+取	tomar; obtener; retirar; escoger
+全	todo; completo; entero
+确	verdadero; firme; realmente
+然	así; correcto; (sufijo: -mente)
+让	dejar, permitir; hacer que; ceder
+如	como; si; tal como
+入	entrar; ingresar; unirse
+色	color; aspecto
+声	sonido; voz; tono
+省	ahorrar; omitir; provincia
+实	real; verdadero; sólido; fruto
+食	comer; comida
+使	hacer que; usar; enviado
+示	mostrar
+市	ciudad; mercado
+适	adecuado; cómodo
+室	habitación; sala; oficina
+收	recibir; recoger; guardar; cobrar
+受	recibir; sufrir; soportar
+舒	extenderse; relajarse; cómodo (舒服)
+熟	maduro; bien cocido; familiar; hábil
+数	shǔ: contar; shù: número
+顺	seguir; en orden; favorable; de paso
+司	encargarse de; departamento (公司: empresa)
+思	pensar; considerar
+算	calcular; considerar como; contar
+虽	aunque
+随	seguir; como uno quiera
+所	lugar; (clasificador para edificios, escuelas); lo que
+它	eso, ello (cosa o animal)
+态	actitud; forma; estado
+堂	salón; sala
+讨	pedir; discutir (讨论); provocar
+套	juego, conjunto; cubrir; funda
+特	especial; particularmente
+疼	doler; querer mucho
+提	llevar (colgando de la mano); levantar; mencionar; proponer
+题	tema; pregunta, ejercicio; título
+铁	hierro; firme
+庭	patio; tribunal; familia (家庭)
+停	parar; detener; estacionar
+挺	bastante, muy; erguido; aguantar
+通	comunicar; pasar por; conectar; entender
+头	tóu: cabeza; principio; primero; tou: (sufijo de sustantivos)
+推	empujar; posponer; promover
+腿	pierna
+完	terminar; completo
+碗	tazón; plato hondo
+万	diez mil
+王	rey
+往	hacia; ir a; pasado
+为	wèi: para; por; porque; wéi: ser; actuar como; hacer
+位	(clasificador respetuoso para personas); lugar; posición
+味	sabor; olor
+喂	¡hola! (al teléfono); ¡oye!; alimentar
+温	tibio; temperatura; repasar
+闻	oír; oler; noticia
+务	asunto; tarea
+物	cosa; objeto
+夏	verano
+相	mutuamente; xiàng: apariencia; foto
+响	sonar; ruido
+向	hacia; dirección
+像	parecerse a; como; imagen
+鞋	zapato
+心	corazón; mente; centro
+信	carta; creer; confiar
+姓	apellido; apellidarse
+须	deber, tener que; barba
+许	permitir; tal vez; muy
+选	elegir; seleccionar; votar
+雪	nieve
+言	palabras; decir; lenguaje
+颜	color; cara
+眼	ojo; mirada
+阳	sol; positivo (yang)
+养	criar; mantener; cultivar
+药	medicina; medicamento
+业	industria; profesión; estudios
+夜	noche
+宜	adecuado (便宜: barato)
+已	ya
+以	con; para; según; (以前, 以后: antes, después)
+椅	silla
+亿	cien millones
+意	idea; significado; intención
+因	causa; porque
+阴	nublado; sombra; negativo (yin)
+音	sonido; nota musical
+银	plata; dinero
+印	imprimir; sello; huella
+应	yīng: deber (应该); yìng: responder; aceptar
+英	héroe; excelente; Inglaterra, inglés
+迎	dar la bienvenida; recibir
+永	para siempre; eterno
+由	por; desde; debido a; a cargo de
+油	aceite; grasa; petróleo
+游	nadar; recorrer, viajar; jugar (游戏)
+又	otra vez; también; y además
+于	en; a; de (literario)
+鱼	pez; pescado
+育	educar; criar
+园	jardín; parque
+原	original; primitivo; causa
+愿	desear; estar dispuesto
+越	cuanto más…, más… (越…越…); cruzar; superar
+云	nube
+运	transportar; fortuna, suerte; mover
+咱	nosotros (incluyendo al oyente)
+脏	sucio
+澡	baño (洗澡: bañarse)
+占	ocupar
+照	fotografiar; iluminar; según; foto
+者	(sufijo: el que…, -dor, -ista)
+直	recto; directo; continuamente
+只	zhǐ: solo, solamente; zhī: (clasificador para animales y objetos en par)
+纸	papel
+钟	reloj; campana; hora (点钟)
+周	semana; circuito; alrededor
+主	dueño; principal; anfitrión
+助	ayudar
+装	cargar; instalar; fingir; ropa
+自	uno mismo; desde
+租	alquilar; renta
+组	grupo; organizar
+嘴	boca
+座	asiento; (clasificador para montañas, edificios, puentes)

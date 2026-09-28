@@ -56,6 +56,7 @@ SIGNIFICADOS_ES = os.path.join(FUENTES, "traducciones", "significados_es.tsv")
 ORACIONES = os.path.join(FUENTES, "oraciones", "cmn_sen_db_2.tsv")
 EJEMPLOS_SELECCION = os.path.join(FUENTES, "traducciones", "ejemplos_seleccion.tsv")
 EJEMPLOS_ES = os.path.join(FUENTES, "traducciones", "ejemplos_es.tsv")
+EJEMPLOS_PINYIN = os.path.join(FUENTES, "traducciones", "ejemplos_pinyin.tsv")
 
 # Caracteres del bloque "CJK Radicals Supplement" (formas de radical sin
 # código propio en Unihan): se asignan a mano a su radical Kangxi.
@@ -453,12 +454,16 @@ def construir():
         oraciones = leer_oraciones()
         traducciones = {f["id_oracion"]: f["espanol"].strip()
                         for f in leer_tsv_simple(EJEMPLOS_ES, ["id_oracion", "espanol"])}
+        # Pinyin regenerado (oficial HSK + pypinyin); el del corpus solo de respaldo.
+        pinyin_nuevo = {f["id_oracion"]: f["pinyin"].strip()
+                        for f in leer_tsv_simple(EJEMPLOS_PINYIN, ["id_oracion", "pinyin"])}
         for s in seleccion:
             c, id_or = s["caracter"], s["id_oracion"]
             if c not in id_por_caracter or id_or not in oraciones:
                 problemas.append(f"ejemplo {id_or} para {c}: no encontrado")
                 continue
             chino, pinyin, ingles = oraciones[id_or]
+            pinyin = pinyin_nuevo.get(id_or) or pinyin
             filas_ejemplos.append({
                 "caracter_id": id_por_caracter[c], "orden": int(s["orden"]),
                 "chino": chino, "pinyin": pinyin,
