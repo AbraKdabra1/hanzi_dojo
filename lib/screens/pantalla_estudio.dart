@@ -43,6 +43,12 @@ class _PantallaEstudioState extends State<PantallaEstudio>
   bool _esBusquedaInicial   = true;
   bool _mostrarExito        = false;
   bool _mostrarGuia         = false;
+  bool _sinPendientes       = false;
+
+  // Trazos decodificados una sola vez por carácter (antes se hacía jsonDecode
+  // en cada cuadro mientras el usuario dibujaba).
+  List<String>       _vectores = [];
+  List<List<Offset>> _medianas = []; // coordenadas originales make-me-a-hanzi
 
   late AnimationController _guiaController;
   late Animation<double>   _guiaAnimation;
@@ -72,27 +78,50 @@ class _PantallaEstudioState extends State<PantallaEstudio>
   /// Carácter actual (campo 'caracter' en el nuevo esquema)
   String get _caracter => _hanziActual?['caracter'] ?? '';
 
-  /// Verifica si hay medianas válidas (ahora es string JSON en la DB)
-  bool get _tieneMedianas {
-    final m = _hanziActual?['medianas'];
-    if (m == null) return false;
+  /// Hay medianas válidas para evaluar trazos
+  bool get _tieneMedianas => _medianas.isNotEmpty;
+
+  /// Decodifica trazos y medianas del carácter una sola vez.
+  void _decodificarHanzi(Map<String, dynamic>? h) {
+    _vectores = [];
+    _medianas = [];
+    if (h == null) return;
     try {
-      final decoded = m is String ? jsonDecode(m) : m;
-      return decoded is List && decoded.isNotEmpty;
+      final t = h['trazos'];
+      if (t is String && t.isNotEmpty) {
+        _vectores = List<String>.from(jsonDecode(t) as List);
+      }
     } catch (_) {
-      return false;
+      _vectores = [];
+    }
+    try {
+      final m = h['medianas'];
+      final decoded = m is String ? jsonDecode(m) : m;
+      if (decoded is List) {
+        _medianas = decoded
+            .map<List<Offset>>((trazo) => (trazo as List)
+                .map<Offset>((p) => Offset(
+                      (p[0] as num).toDouble(),
+                      (p[1] as num).toDouble(),
+                    ))
+                .toList())
+            .toList();
+      }
+    } catch (_) {
+      _medianas = [];
     }
   }
 
-  /// Decodifica medianas de forma segura
-  List<dynamic> get _medianasDecodificadas {
-    final m = _hanziActual?['medianas'];
-    if (m == null) return [];
-    try {
-      return m is String ? jsonDecode(m) : (m as List);
-    } catch (_) {
-      return [];
-    }
+  /// Convierte coordenadas make-me-a-hanzi (y hacia arriba, borde superior
+  /// en y = 900) a coordenadas del lienzo. Debe coincidir con SvgFondoPainter.
+  static List<Offset> _aLienzo(List<Offset> puntos, Size size) {
+    final double sx = (size.width  * 0.9) / 1024;
+    final double sy = (size.height * 0.9) / 1024;
+    final double ox = size.width  * 0.05;
+    final double oy = size.height * 0.05;
+    return puntos
+        .map((p) => Offset(ox + p.dx * sx, oy + (900 - p.dy) * sy))
+        .toList();
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -116,6 +145,8 @@ class _PantallaEstudioState extends State<PantallaEstudio>
     if (mounted) {
       setState(() {
         _hanziActual         = hanzi;
+        _sinPendientes       = hanzi == null;
+        _decodificarHanzi(hanzi);
         _trazosUsuario.clear();
         _trazoCorrectoActual = 0;
         _mostrarPistaError   = false;
@@ -183,25 +214,20 @@ class _PantallaEstudioState extends State<PantallaEstudio>
 
   void _auditarTrazo(Size canvasSize) {
     if (_hanziActual == null || !_tieneMedianas) return;
-
-    final List<dynamic> medians = _medianasDecodificadas;
-    if (_trazoCorrectoActual >= medians.length) return;
-
-    final double sx   = (canvasSize.width  * 0.9) / 1024;
-    final double sy   = (canvasSize.height * 0.9) / 1024;
-    final double offX = canvasSize.width  * 0.05;
-    final double offY = canvasSize.height * 0.05;
+    if (_trazosUsuario.isEmpty) return;
+    if (_trazoCorrectoActual >= _medianas.length) return;
 
     final List<Offset> trazoEsperado =
-        (medians[_trazoCorrectoActual] as List).map<Offset>((p) {
-      return Offset(
-        offX + p[0].toDouble() * sx,
-        offY + (1024 - p[1].toDouble()) * sy,
-      );
-    }).toList();
+        _aLienzo(_medianas[_trazoCorrectoActual], canvasSize);
 
     final ultimoTrazo = _trazosUsuario.last;
-    if (ultimoTrazo.length < 5) return;
+    if (ultimoTrazo.length < 2) {
+      // Un toque sin movimiento: se descarta. Antes, cualquier trazo con
+      // menos de 5 puntos (p. ej. un punto 丶 rápido) se quedaba dibujado
+      // sin evaluarse y el ejercicio no avanzaba.
+      setState(() => _trazosUsuario.removeLast());
+      return;
+    }
 
     final List<Offset> trazoUsuario =
         ultimoTrazo.map((pv) => Offset(pv.dx, pv.dy)).toList();
@@ -214,7 +240,7 @@ class _PantallaEstudioState extends State<PantallaEstudio>
       setState(() {
         _mostrarExito = true;
         _trazoCorrectoActual++;
-        if (_trazoCorrectoActual >= medians.length) _hanziCompletado = true;
+        if (_trazoCorrectoActual >= _medianas.length) _hanziCompletado = true;
       });
       Future.delayed(const Duration(milliseconds: 350), () {
         if (mounted) setState(() => _mostrarExito = false);
@@ -268,7 +294,9 @@ class _PantallaEstudioState extends State<PantallaEstudio>
             ),
           ],
         ),
-        body: _hanziActual == null
+        body: _sinPendientes
+            ? _vistaSinPendientes()
+            : _hanziActual == null
             ? const Center(
                 child: CircularProgressIndicator(color: Colors.black))
             : Column(
@@ -372,34 +400,15 @@ class _PantallaEstudioState extends State<PantallaEstudio>
                                     constraints.maxWidth,
                                     constraints.maxHeight);
 
-                                final List<String> vectores =
-                                    _hanziActual!['trazos'] != null
-                                        ? List<String>.from(jsonDecode(
-                                            _hanziActual!['trazos']))
-                                        : [];
+                                final List<String> vectores = _vectores;
 
                                 // Mediana actual para guía
                                 List<Offset> medianaActual = [];
-                                if (widget.modoNovato && _tieneMedianas) {
-                                  final meds = _medianasDecodificadas;
-                                  if (_trazoCorrectoActual < meds.length) {
-                                    final double sx2 =
-                                        (canvasSize.width * 0.9) / 1024;
-                                    final double sy2 =
-                                        (canvasSize.height * 0.9) / 1024;
-                                    final double ox = canvasSize.width * 0.05;
-                                    final double oy = canvasSize.height * 0.05;
-                                    medianaActual =
-                                        (meds[_trazoCorrectoActual] as List)
-                                            .map<Offset>((p) => Offset(
-                                                  ox + p[0].toDouble() * sx2,
-                                                  oy +
-                                                      (1024 -
-                                                              p[1].toDouble()) *
-                                                          sy2,
-                                                ))
-                                            .toList();
-                                  }
+                                if (widget.modoNovato &&
+                                    _trazoCorrectoActual < _medianas.length) {
+                                  medianaActual = _aLienzo(
+                                      _medianas[_trazoCorrectoActual],
+                                      canvasSize);
                                 }
 
                                 return Stack(
@@ -531,6 +540,45 @@ class _PantallaEstudioState extends State<PantallaEstudio>
                   ),
                 ],
               ),
+      ),
+    );
+  }
+
+  /// Se muestra cuando no quedan caracteres nuevos ni repasos vencidos.
+  /// Antes esta situación dejaba un spinner girando para siempre.
+  Widget _vistaSinPendientes() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('🎉', style: TextStyle(fontSize: 48)),
+            const SizedBox(height: 16),
+            const Text(
+              'No hay caracteres pendientes',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              widget.modoRadical
+                  ? 'Ya viste todos los radicales. Vuelve cuando toque repasar.'
+                  : 'Terminaste los nuevos y los repasos de HSK '
+                      '${widget.nivelHSK} por ahora.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+            ),
+            const SizedBox(height: 24),
+            OutlinedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Volver'),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -46,6 +46,11 @@ class DTWHelper {
 
   // Algoritmo DTW — devuelve el costo normalizado (menor = más similar)
   static double calcular(List<Offset> trazoUsuario, List<Offset> trazoEsperado) {
+    // Con menos de 2 puntos no hay trazo que comparar (y _normalizar
+    // devolvería una lista corta que rompería los índices de abajo).
+    if (trazoUsuario.length < 2 || trazoEsperado.length < 2) {
+      return double.infinity;
+    }
     const int n = 16; // Puntos de comparación
     final List<Offset> a = _normalizar(trazoUsuario, n);
     final List<Offset> b = _normalizar(trazoEsperado, n);

@@ -14,7 +14,7 @@ class PistaRojaPainter extends CustomPainter {
     final scaleY = (size.height * 0.9) / 1024;
     canvas.translate(size.width * 0.05, size.height * 0.05);
     canvas.scale(scaleX, -scaleY);
-    canvas.translate(0, -1024);
+    canvas.translate(0, -900); // misma referencia que SvgFondoPainter
     canvas.drawPath(parseSvgPathData(trazoSvg), paint);
   }
 

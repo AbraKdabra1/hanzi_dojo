@@ -14,7 +14,9 @@ class SvgFondoPainter extends CustomPainter {
     final scaleY = (size.height * 0.9) / 1024;
     canvas.translate(size.width * 0.05, size.height * 0.05);
     canvas.scale(scaleX, -scaleY);
-    canvas.translate(0, -1024);
+    // make-me-a-hanzi: la parte de arriba del carácter está en y = 900
+    // (el cuadro va de 900 a -124). Con 1024 el carácter quedaba bajo y cortado.
+    canvas.translate(0, -900);
     for (final trazo in trazosSvg) {
       canvas.drawPath(parseSvgPathData(trazo), paint);
     }
