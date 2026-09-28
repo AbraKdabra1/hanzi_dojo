@@ -371,12 +371,14 @@ class DatabaseHelper {
   Future<void> actualizarProgresoSRS(int id, int calificacion) async {
     final db = await instance.database;
     final rows = await db.query('caracteres',
-        columns: ['srs_interval', 'e_factor', 'aciertos_seguidos'],
+        // veces_visto debe estar aquí: sin él, el contador nunca pasaba de 1.
+        columns: ['srs_interval', 'e_factor', 'aciertos_seguidos', 'veces_visto'],
         where: 'id = ?', whereArgs: [id]);
     if (rows.isEmpty) return;
 
     int    intervalo  = rows.first['srs_interval']      as int;
-    double eFactor    = rows.first['e_factor']           as double;
+    // SQLite puede devolver 2 (int) en lugar de 2.0 (double).
+    double eFactor    = (rows.first['e_factor'] as num).toDouble();
     int    aciertos   = rows.first['aciertos_seguidos']  as int;
 
     if (calificacion < 3) {
