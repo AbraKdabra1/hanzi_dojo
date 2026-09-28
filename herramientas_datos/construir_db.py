@@ -153,7 +153,11 @@ def leer_lecturas_hsk():
         if len(palabras) != len(pinyins):
             continue
         for palabra, py in zip(palabras, pinyins):
-            palabra = re.sub(r"[（(].*?[)）]|\d", "", palabra).strip()
+            # Afijos con ejemplo, como 子（桌子） o 们（朋友们）: no son la lectura
+            # del carácter suelto; se obtienen de las palabras (ver abajo).
+            if "（" in palabra or "(" in palabra:
+                continue
+            palabra = re.sub(r"\d", "", palabra).strip()
             # Algunas lecturas traen un ejemplo o una alternativa:
             # "dì (dì-èr)" → "dì";  "shéi/shuí" → "shéi".
             py = re.split(r"[\s(（/]", py.strip())[0]
@@ -162,6 +166,81 @@ def leer_lecturas_hsk():
                 if num not in lecturas[palabra]:
                     lecturas[palabra].append(num)
     return dict(lecturas)
+
+
+def silabas_validas(cedict):
+    """Todas las sílabas pinyin sin tono que existen (hao, lv, zhuang…)."""
+    silabas = set()
+    for entradas in cedict.values():
+        for _orden, py, _acs in entradas:
+            s = re.sub(r"\d", "", normalizar_num(py))
+            if s.isalpha():
+                silabas.add(s)
+    silabas.update({"r", "er", "n", "ng", "m", "hm", "hng"})
+    return silabas
+
+
+def partir_pinyin(pinyin_acentos, n_caracteres, validas):
+    """
+    Parte el pinyin de una palabra en sílabas con número de tono, una por
+    carácter: "zhùmíng", 2 → ["zhu4", "ming2"]. Devuelve None si no cuadra.
+    """
+    trozos = [t for t in re.split(r"[\s'’\-·]+", pinyin_acentos.strip().lower()) if t]
+    silabas = []
+    for trozo in trozos:
+        # Cada letra con su tono (si la letra lleva acento).
+        letras = [acentos_a_num(ch) for ch in trozo]           # "ǎ" → "a3", "h" → "h5"
+        planas = "".join(l[:-1] for l in letras)
+        tonos = [int(l[-1]) for l in letras]
+        # Programación dinámica: partir "planas" en sílabas válidas.
+        mejor = {0: []}
+        for i in range(len(planas)):
+            if i not in mejor:
+                continue
+            for j in range(i + 1, min(len(planas), i + 6) + 1):
+                if planas[i:j] in validas and j not in mejor:
+                    mejor[j] = mejor[i] + [(i, j)]
+        if len(planas) not in mejor:
+            return None
+        for i, j in mejor[len(planas)]:
+            tono = next((x for x in tonos[i:j] if x != 5), 5)
+            silabas.append(f"{planas[i:j]}{tono}")
+    return silabas if len(silabas) == n_caracteres else None
+
+
+def leer_lecturas_en_palabras(validas):
+    """
+    carácter → Counter de lecturas según las palabras HSK que lo contienen.
+    Ej.: 觉 aparece en 觉得 (jué) y en 睡觉 (jiào).
+    """
+    lecturas = defaultdict(dict)   # carácter → {lectura: (nivel mínimo, veces)}
+    with open(HSK_PALABRAS, encoding="utf-8") as f:
+        for fila in csv.DictReader(f):
+            nivel = 7 if fila["Level"] == "7-9" else int(fila["Level"])
+            palabras = fila["Simplified"].split("|")
+            pinyins = fila["Pinyin"].split("|")
+            if len(palabras) != len(pinyins):
+                continue
+            for palabra, py in zip(palabras, pinyins):
+                palabra = re.sub(r"[（(].*?[)）]|\d|…", "", palabra).strip()
+                py = re.split(r"[(（/]", py.strip())[0]
+                if not palabra or not all("\u3400" <= ch <= "\u9fff" for ch in palabra):
+                    continue
+                silabas = None
+                if len(palabra) > 1 and palabra.endswith("儿") and py.endswith("r"):
+                    # Erhua: 这儿 zhèr, 模特儿 mótèr → el 儿 no es sílaba propia.
+                    silabas = partir_pinyin(py[:-1], len(palabra) - 1, validas)
+                    if silabas:
+                        palabra = palabra[:-1]
+                if not silabas:
+                    silabas = partir_pinyin(py, len(palabra), validas)
+                if silabas:
+                    for ch, s in zip(palabra, silabas):
+                        if s.startswith("r") and len(s) == 2:   # erhua (一点儿 → r)
+                            continue
+                        nv, veces = lecturas[ch].get(s, (99, 0))
+                        lecturas[ch][s] = (min(nv, nivel), veces + 1)
+    return lecturas
 
 
 def leer_unihan():
@@ -228,14 +307,53 @@ def limpiar_acepciones(acepciones):
     return buenas
 
 
+def lecturas_oficiales(c, lecturas_hsk, en_palabras, cedict):
+    """
+    Lecturas del carácter según la lista oficial HSK (con números), la
+    principal primero:
+      1. si el carácter es palabra por sí solo, sus lecturas (nivel más bajo
+         primero); así las partículas quedan en tono neutro (吗 ma, 吧 ba);
+      2. después, cómo se lee en las palabras HSK que lo contienen, primero
+         las de nivel más bajo y luego las más frecuentes (觉: 觉得 jué).
+    Una sílaba en tono neutro que viene de una palabra (清楚 qīngchu) se
+    cambia por la misma sílaba con su tono propio (chǔ), que es como se cita
+    el carácter suelto. El tono propio se busca en CC-CEDICT; si no existe
+    (钥匙 yàoshi: 匙 solo se lee "shi" en esa palabra), se deja neutro.
+    """
+    solas = list(lecturas_hsk.get(c, []))
+    de_palabras = sorted(en_palabras.get(c, {}).items(), key=lambda kv: (kv[1][0], -kv[1][1]))
+    # Las lecturas en tono neutro dentro de palabras van después de las que
+    # tienen tono propio (卜: 萝卜 luóbo es de nivel más bajo, pero se cita bǔ).
+    de_palabras.sort(key=lambda kv: kv[0].endswith("5"))
+    candidatas = solas + [s for s, _ in de_palabras if s not in solas]
+    if not candidatas:
+        return []
+
+    def sin_num(x):
+        return re.sub(r"\d", "", x)
+
+    tonos_cedict = [normalizar_num(e[1]) for e in cedict.get(c, []) if not e[1][:1].isupper()]
+    resultado = []
+    for x in candidatas:
+        if x.endswith("5") and x not in solas:
+            misma = [y for y in candidatas + tonos_cedict if sin_num(y) == sin_num(x) and not y.endswith("5")]
+            if misma:
+                x = misma[0]
+        if x not in resultado:
+            resultado.append(x)
+    # "Otras lecturas": todas las demás que aparecen en la lista oficial, también
+    # las que solo cambian de tono (好 hǎo / hào, 教 jiāo / jiào, 为 wéi / wèi).
+    return resultado
+
+
 def elegir_lectura(c, lecturas_hsk, mmh, cedict):
     """
     Lectura principal del carácter (con números), en este orden de confianza:
-      1. la que da la lista oficial HSK cuando el carácter es palabra sola;
+      1. la que da la lista oficial HSK (ver lecturas_oficiales);
       2. la más usual según Unihan (primer pinyin de make-me-a-hanzi);
       3. la mejor entrada de CC-CEDICT (minúscula, no variante).
     """
-    if c in lecturas_hsk:
+    if lecturas_hsk.get(c):
         return lecturas_hsk[c][0]
     pys = mmh.get(c, {}).get("pinyin") or []
     if pys:
@@ -360,6 +478,10 @@ def construir():
     lecturas_hsk = leer_lecturas_hsk()
     unihan = leer_unihan()
     radicales = leer_radicales()
+    # Lecturas oficiales: palabra sola + cómo se lee en las palabras HSK.
+    en_palabras = leer_lecturas_en_palabras(silabas_validas(cedict))
+    lecturas_hsk = {c: lecturas_oficiales(c, lecturas_hsk, en_palabras, cedict)
+                    for c in set(lecturas_hsk) | set(en_palabras)}
     significados_es = {f["caracter"]: f["significado_es"].strip()
                        for f in leer_tsv_simple(SIGNIFICADOS_ES, ["caracter", "significado_es"])
                        if f["significado_es"].strip()}
