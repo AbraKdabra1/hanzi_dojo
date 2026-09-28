@@ -307,6 +307,12 @@ def limpiar_acepciones(acepciones):
     return buenas
 
 
+# Casos donde la regla general deja como principal una partícula en tono
+# neutro, pero el carácter se cita (y se busca en el diccionario) por su
+# lectura con significado propio: 地 "dì" (tierra), no la partícula "de".
+PRINCIPAL_PREFERIDA = {"地": "di4"}
+
+
 def lecturas_oficiales(c, lecturas_hsk, en_palabras, cedict):
     """
     Lecturas del carácter según la lista oficial HSK (con números), la
@@ -341,6 +347,10 @@ def lecturas_oficiales(c, lecturas_hsk, en_palabras, cedict):
                 x = misma[0]
         if x not in resultado:
             resultado.append(x)
+    preferida = PRINCIPAL_PREFERIDA.get(c)
+    if preferida in resultado:
+        resultado.remove(preferida)
+        resultado.insert(0, preferida)
     # "Otras lecturas": todas las demás que aparecen en la lista oficial, también
     # las que solo cambian de tono (好 hǎo / hào, 教 jiāo / jiào, 为 wéi / wèi).
     return resultado

@@ -18,7 +18,8 @@ Qué comprueba:
     4. Pinyin con formato válido; significados no vacíos en los caracteres HSK.
     5. Trazos y medianas se pueden leer y tienen la misma cantidad.
     6. Español: todos los caracteres HSK tienen significado en español.
-    7. Ejemplos: cada ejemplo contiene su carácter; cobertura mínima en HSK.
+    7. Ejemplos: cada ejemplo contiene su carácter, su pinyin tiene una sílaba
+       por carácter chino y hay cobertura mínima en HSK.
     8. La versión de la base coincide con lib/datos/version_contenido.dart.
 """
 
@@ -29,6 +30,9 @@ import re
 import sqlite3
 import sys
 from collections import Counter
+
+from construir_db import leer_cedict, silabas_validas
+from pinyin_util import acentos_a_num
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB = os.path.join(RAIZ, "assets", "db", "contenido.db")
@@ -47,6 +51,31 @@ def error(msg):
 
 def aviso(msg):
     avisos.append(msg)
+
+
+def contar_silabas(pinyin, validas):
+    """
+    Cuántas sílabas tiene un texto en pinyin con acentos ("wǒ xǐhuan chá." → 4).
+    Cada palabra se parte en el MENOR número de sílabas válidas; None si no
+    se puede partir.
+    """
+    total = 0
+    for trozo in re.split(r"[\s'’\-·]+", pinyin.lower()):
+        planas = "".join(acentos_a_num(ch)[:-1] for ch in trozo if ch.isalpha())
+        if not planas:
+            continue
+        infinito = 10 ** 9
+        mejor = [0] + [infinito] * len(planas)
+        for i in range(len(planas)):
+            if mejor[i] == infinito:
+                continue
+            for j in range(i + 1, min(len(planas), i + 6) + 1):
+                if planas[i:j] in validas and mejor[i] + 1 < mejor[j]:
+                    mejor[j] = mejor[i] + 1
+        if mejor[-1] == infinito:
+            return None
+        total += mejor[-1]
+    return total
 
 
 def main():
@@ -130,6 +159,12 @@ def main():
     for c, chino in q("SELECT c.caracter, e.chino FROM ejemplos e JOIN caracteres c ON c.id = e.caracter_id"):
         if c not in chino:
             error(f"El ejemplo «{chino}» no contiene {c}")
+    validas = silabas_validas(leer_cedict())
+    han = re.compile("[\u3400-\u9fff]")
+    desparejos = [(chino, pinyin) for chino, pinyin in q("SELECT DISTINCT chino, pinyin FROM ejemplos")
+                  if contar_silabas(pinyin, validas) != len(han.findall(chino))]
+    if desparejos:
+        error(f"{len(desparejos)} ejemplos con pinyin incompleto o de más, p. ej.: {desparejos[:3]}")
     con_ejemplo = q("SELECT count(DISTINCT e.caracter_id) FROM ejemplos e "
                     "JOIN caracteres c ON c.id = e.caracter_id WHERE c.nivel_hsk > 0")[0][0]
     cobertura = con_ejemplo / 3000

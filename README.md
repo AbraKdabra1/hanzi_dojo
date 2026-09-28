@@ -42,7 +42,7 @@ que se copia al teléfono la primera vez (por eso la app abre rápido).
 | Trazos y medianas | [Make Me a Hanzi](https://github.com/skishore/makemeahanzi) | Cada carácter tiene tantos contornos como medianas |
 | Pinyin | Lista oficial HSK (palabras) + CC-CEDICT | Lecturas de polífonos según las palabras oficiales (好 hǎo / hào) |
 | Significado en español | Traducido de CC-CEDICT para los 3,000 HSK | 3,000 de 3,000 |
-| Ejemplos | Oraciones de [Tatoeba](https://tatoeba.org) (vía krmanik/chinese-example-sentences), traducidas al español | 4,521 ejemplos para 2,758 caracteres; cada ejemplo contiene su carácter |
+| Ejemplos | Oraciones de [Tatoeba](https://tatoeba.org) (vía krmanik/chinese-example-sentences), traducidas al español | 4,518 ejemplos para 2,755 caracteres; cada ejemplo contiene su carácter |
 
 Los caracteres que no son HSK (unos 6,500) también están, con significado en
 inglés, para que las familias de radicales estén completas.

@@ -71,7 +71,8 @@ def main():
     print(f"{len(texto)} caracteres a conservar")
     os.makedirs(SALIDA, exist_ok=True)
     for nombre, peso in PESOS.items():
-        fuente = instancer.instantiateVariableFont(TTFont(variable), {"wght": peso})
+        # updateFontNames: que el nombre interno diga "Medium", "Bold"… y no "Thin".
+        fuente = instancer.instantiateVariableFont(TTFont(variable), {"wght": peso}, updateFontNames=True)
         opciones = subset.Options()
         opciones.layout_features = ["*"]
         opciones.name_IDs = ["*"]

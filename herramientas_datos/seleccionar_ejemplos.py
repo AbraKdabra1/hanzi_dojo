@@ -48,8 +48,26 @@ HAN = re.compile("[㐀-鿿]")
 SOLO_HAN = re.compile("[㐀-鿿]+")
 PUNTUACION = str.maketrans({
     "，": ",", "。": ".", "？": "?", "！": "!", "：": ":", "；": ";", "、": ",",
-    "“": '"', "”": '"', "‘": "'", "’": "'", "（": "(", "）": ")", "《": "«", "》": "»",
+    "（": "(", "）": ")", "《": "«", "》": "»",   # las comillas “ ” ‘ ’ se quedan igual
 })
+
+
+# Caracteres que en Tatoeba aparecen casi siempre dentro de nombres propios
+# transcritos. Una oración no cuenta como ejemplo de ese carácter si solo lo
+# trae dentro de uno de estos nombres (贝蒂 "Betty" no enseña qué es 蒂).
+NOMBRES = {
+    "蒂": ["贝蒂", "史蒂", "狄蒂", "蒂丝", "蒂亚", "蒂芬", "蒂娜", "蒂姆", "蒂米", "马蒂", "凯蒂", "克里斯蒂"],
+    "藤": ["佐藤", "加藤", "伊藤", "后藤", "斋藤", "藤原", "藤田", "藤井", "近藤", "远藤", "安藤", "工藤"],
+    "戈": ["戈登", "戈尔", "萨拉戈萨", "英戈", "芝加哥", "圣地亚戈"],
+    "兹": ["利兹", "兹卡", "卡兹", "兹沃"],
+}
+
+
+def solo_en_nombres(caracter, chino):
+    """True si [caracter] aparece en [chino] únicamente dentro de nombres propios."""
+    for nombre in NOMBRES.get(caracter, ()):
+        chino = chino.replace(nombre, "")
+    return caracter not in chino
 
 
 LARGO_NORMAL = 14    # caracteres chinos por oración, lo normal
@@ -62,7 +80,16 @@ def ejemplos_para(nivel):
 
 
 def cargar_pinyin_hsk():
-    """Palabra HSK → pinyin oficial (solo palabras con una única lectura)."""
+    """
+    Palabra HSK → pinyin oficial (solo palabras con una única lectura).
+
+    Se conserva el pinyin completo aunque traiga espacios ("huí jiā" para
+    回家) y se comprueba que tenga una sílaba por carácter; si no cuadra, esa
+    palabra la resuelve pypinyin.
+    """
+    from construir_db import leer_cedict, partir_pinyin, silabas_validas
+    validas = silabas_validas(leer_cedict())
+
     lecturas = defaultdict(set)
     with open(HSK_PALABRAS, encoding="utf-8") as f:
         for fila in csv.DictReader(f):
@@ -72,10 +99,47 @@ def cargar_pinyin_hsk():
                 continue
             for palabra, py in zip(palabras, pinyins):
                 palabra = re.sub(r"[（(].*?[)）]|\d|…", "", palabra).strip()
-                py = re.split(r"[\s(（/]", py.strip())[0]
-                if palabra and SOLO_HAN.fullmatch(palabra) and py:
-                    lecturas[palabra].add(py)
+                py = re.split(r"[(（/]", py.strip())[0].strip()
+                if not (palabra and SOLO_HAN.fullmatch(palabra) and py):
+                    continue
+                if partir_pinyin(py, len(palabra), validas) is None:
+                    continue
+                lecturas[palabra].add(py)
     return {palabra: next(iter(p)) for palabra, p in lecturas.items() if len(p) == 1}
+
+
+# ── Partículas 得 y 地 ───────────────────────────────────────────────────────
+# pypinyin lee 得 y 地 sueltos como "dé" y "dì", pero casi siempre son las
+# partículas "de" (说得很好, 高兴地笑). Estas reglas deciden por el contexto.
+
+# 地 sí es "dì" (tierra, suelo) antes o después de estos caracteres.
+_DI_DESPUES = set("底上下面里方区图球板毯铁址震位带形势质道主狱窖摊基段皮价铺")
+_DI_ANTES = set("随拖扫土田草种耕遍满落天陆园场基境各该原当本外异两盆工产属空墓高低平内山洼腹领宝胜营阵驻重要")
+# 得 como "dé" (obtener) en palabras y nombres; "de" neutro en 记得, 懂得…
+_DE2_ANTES = set("彼哈求兼获取赢难应")
+_DE5_ANTES = set("记懂舍晓免省值觉认")
+# 得 como "děi" (tener que) después de un sujeto o un adverbio.
+_DEI_ANTES = set("我你他她它们您咱的在就也还都又总须")
+
+
+def _lectura_particula(caracter, antes, despues):
+    """Lectura de 得/地 según el carácter anterior y el siguiente ('' si no hay)."""
+    han_antes = bool(antes and HAN.match(antes))
+    han_despues = bool(despues and HAN.match(despues))
+    if caracter == "地":
+        if not han_antes or not han_despues:
+            return "dì"
+        if despues in _DI_DESPUES or antes in _DI_ANTES:
+            return "dì"
+        return "de"
+    # 得
+    if not han_antes or not han_despues or antes in _DE2_ANTES or despues == "标":
+        return "dé"
+    if antes in _DE5_ANTES:
+        return "de"
+    if antes in _DEI_ANTES:
+        return "děi"
+    return "de"
 
 
 def generar_pinyin(texto, pinyin_hsk):
@@ -83,13 +147,18 @@ def generar_pinyin(texto, pinyin_hsk):
     from pypinyin import Style, pinyin
     from pypinyin.seg.mmseg import seg
 
-    def por_pypinyin(fragmento):
-        partes = []
+    def por_pypinyin(fragmento, inicio):
+        partes, pos = [], inicio
         for palabra in seg.cut(fragmento):
-            if HAN.search(palabra):
+            if palabra in ("得", "地"):
+                antes = texto[pos - 1] if pos > 0 else ""
+                despues = texto[pos + 1] if pos + 1 < len(texto) else ""
+                partes.append(_lectura_particula(palabra, antes, despues))
+            elif HAN.search(palabra):
                 partes.append("".join(s[0] for s in pinyin(palabra, style=Style.TONE, heteronym=False)))
             elif palabra.strip():
                 partes.append(palabra.strip().translate(PUNTUACION))
+            pos += len(palabra)
         return partes
 
     salida, pendiente, i = [], "", 0
@@ -102,7 +171,7 @@ def generar_pinyin(texto, pinyin_hsk):
                 break
         if encontrada:
             if pendiente:
-                salida += por_pypinyin(pendiente)
+                salida += por_pypinyin(pendiente, i - len(pendiente))
                 pendiente = ""
             salida.append(pinyin_hsk[encontrada])
             i += len(encontrada)
@@ -110,9 +179,12 @@ def generar_pinyin(texto, pinyin_hsk):
             pendiente += texto[i]
             i += 1
     if pendiente:
-        salida += por_pypinyin(pendiente)
+        salida += por_pypinyin(pendiente, len(texto) - len(pendiente))
     frase = " ".join(salida)
-    frase = re.sub(r"\s+([,.!?:;…)\"»])", r"\1", frase)
+    frase = re.sub(r"\s+([,.!?:;…)»”’])", r"\1", frase)     # sin espacio antes de cierres
+    frase = re.sub(r"([(«“‘])\s+", r"\1", frase)             # ni después de aperturas
+    frase = re.sub(r"([”’])([“‘])", r"\1 \2", frase)         # ”“ → ” “
+    frase = re.sub(r"([,.!?:;])([“‘«(])", r"\1 \2", frase)   # :“ → : “
     return re.sub(r"\s+", " ", frase).strip()
 
 
@@ -150,7 +222,7 @@ def main():
     por_caracter = defaultdict(list)
     for id_, o in oraciones.items():
         for c in o[2]:
-            if c in niveles:
+            if c in niveles and not solo_en_nombres(c, o[0]):
                 por_caracter[c].append(id_)
 
     elegidas, seleccion = set(), []

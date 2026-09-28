@@ -22,7 +22,7 @@ id_oracion	pinyin
 235	hé tā zhēng biàn shì méiyòng de.
 251	nǐ zìjǐ ná dàngāo chī ba.
 259	wǒmen yǒu hěn duō tīngzhòng.
-267	xià wǒ qù wēn gē huá kàn wǒ mèimei.
+267	xià zhōu wǒ qù wēn gē huá kàn wǒ mèimei.
 276	tā qǐngqiú tā jǐyǔ yōudài.
 290	jǐ fēnzhōng hòu, diànhuà xiǎng le.
 293	háizi men xǐ le tāmen de jiǎo.
@@ -32,8 +32,8 @@ id_oracion	pinyin
 309	tā yǒu hěn duō lìshǐ shūjí.
 312	jiànzhùwù zài dìzhèn zhōng yáohuàng.
 316	tā de zhèngquán bìdìng huì bēngkuì.
-317	xiǎo tōu xùnsù dì cuàn rù le rénqún.
-331	jiǎn ér yán zhī, wǒ bù yì.
+317	xiǎo tōu xùnsù de cuàn rù le rénqún.
+331	jiǎn ér yán zhī, wǒ bù tóng yì.
 345	zhège bān yǒu duōshao nánshēng?
 351	wǒmen yě qù le miào lǐ.
 353	nǐ qíshí méi bìyào dài sǎn.
@@ -41,16 +41,16 @@ id_oracion	pinyin
 359	méiyǒu rén pǎo zài tā qiánmiàn.
 371	wǒ yǒu yígè dàjiātíng.
 374	wǒ ná chéng le nǐ de yǔsǎn.
-383	wǒ duì shèyǐng gǎn.
+383	wǒ duì shèyǐng gǎn xìngqù.
 384	wǒ mǎi le yī zhǎn gǔlǎo de dēng.
 385	nǐ kěyǐ zuò chuán qù nà.
-391	tāmen shēnghuó dé hěn xìngfú.
-396	tā jiǎndān dì chǎnshù le tā de lǐyóu.
+391	tāmen shēnghuó de hěn xìngfú.
+396	tā jiǎndān de chǎnshù le tā de lǐyóu.
 401	tā zài sēnlín zhōng mí le lù.
 406	wǒ huì jiào nǐ zěnme kāichē.
 411	wǒ yànjuàn le wǒ de gōngzuò.
 413	wǒ xiǎng zài lái yī bēi píjiǔ.
-423	wǒmen zài zhèlǐ xià ba.
+423	wǒmen zài zhèlǐ xià chē ba.
 434	ràng wǒ kànkàn nàxiē zhàopiàn.
 435	cèsuǒ chōngshuǐ bù zhèngcháng.
 439	tā yī dào, wǒmen jiù kāishǐ.
@@ -61,7 +61,7 @@ id_oracion	pinyin
 476	tā de yǎnli yǒngchū le lèishuǐ.
 484	xiǎochǒu zuò le gè guǐ liǎn.
 491	wǒmen guójiā bù quē shíyóu.
-494	bàba jīntiān hěn bù.
+494	bàba jīntiān hěn bù nàifán.
 503	zhè shǒu gē ràng wǒ xiǎng jiā le.
 508	wǒmen àn lì chǔfá le tā.
 511	wǒ de fángjiān hào shì duōshao?
@@ -83,7 +83,7 @@ id_oracion	pinyin
 612	jīntiān wǒ tóutòng yù liè.
 624	wǒ tóu zhuàng dàole mén, zhǒng le yī kuài.
 629	qǐng nǐ bǎ lěngqì diào gāo diǎn.
-632	wǒ hái qítā xuǎnzé ma?
+632	wǒ hái yǒu qítā xuǎnzé ma?
 639	huǒchē yīn dàxuě bèi dānge le.
 640	zhè zhǐ lí wén shàngqù hěn xiāng.
 699	zhòngguādéguā, zhòngdòudédòu.
@@ -97,12 +97,12 @@ id_oracion	pinyin
 785	fúwù shēng, wǒ yàodiǎn cài.
 788	xiànzài shì xíngdòng de shíhou le.
 802	tāmen yīzhí pá dào xuányá dǐngshàng.
-810	zuò yùndòng yǒulì jiànkāng.
+810	zuò yùndòng yǒulì yú jiànkāng.
 819	tā zǒng hē tā de hēi kāfēi.
 821	zhè zhāng shūzhuō shì mù zhì de.
 826	tā zěnme gǎn chāi wǒ de xìn!
 834	zhè jù jùzi de yìsi móléngliǎngkě.
-844	nǐ dé zài shè gǔ huàn chéng huǒchē.
+844	nǐ děi zài shè gǔ huàn chéng huǒchē.
 847	wǒ yǒu hěn duō péngyou bāng wǒ.
 855	wǒ mèimei mùqián bù xuéxí.
 857	wǒ bàba bù xǐhuan zúqiú.
@@ -119,13 +119,13 @@ id_oracion	pinyin
 973	shuí shì nǐ de Hànyǔ lǎoshī?
 983	wǒ Hànyǔ lǎoshī shì nán de.
 997	māma bǐ bàba dà wǔ suì.
-998	lǐ hóng Fǎyǔ bǐ wàng yuè shuō dé hǎo.
+998	lǐ hóng Fǎyǔ bǐ wàng yuè shuō de hǎo.
 1007	tā dehuà ànshì zhe shénme?
 1010	tā duì shéidōu hěn hé'ǎi kěqīn.
 1012	wǒ yǐjīng chī bǎo le, xièxie.
 1015	bǎ tīzi kào qiáng fàng zhe.
 1026	nǐ néng cāi dào wǒ de niánlíng ma?
-1035	tā yǎng gèzhǒng bù de chǒngwù.
+1035	tā yǎng gèzhǒng bù tóng de chǒngwù.
 1071	tā zuótiān shàngxué chídào le.
 1076	wǒmen míngtiān yǒu gè cèyàn.
 1077	dá fēn qí bǐ biérén gāozhānyuǎnzhǔ.
@@ -140,16 +140,16 @@ id_oracion	pinyin
 1159	wǒ xūyào yòng yào lái zhèn tòng.
 1201	gǒu xiàngzhe wǒ pǎo le guòlái.
 1204	yú hé hóngjiǔ bù xiāngpèi.
-1219	xiànzài wǒ yǒu xǔ tóutòng.
+1219	xiànzài wǒ yǒuxiē xǔ tóutòng.
 1227	wǒ mèimei hěn xiàng wǒ māma.
 1232	dàjiā dōu wán àiqíng yóuxì.
 1262	jiào Yīngyǔ shì tā de zhíyè.
 1270	zhōu sì wǎnshang píjiǔ miǎnfèi chàng yǐn.
 1274	shuǐ jiébīng hòu chéngwéi gùtǐ.
 1281	tā shōu qǐ le tā de wánjù.
-1286	guójiā bù, xísú gè yì.
+1286	guójiā bù tóng, xísú gè yì.
 1288	yīng guó shǒudū lúndūn zài tài wù shì hépàn.
-1291	wǒ lèi dé bùnéng zài lèile.
+1291	wǒ lèi de bùnéng zài lèile.
 1313	yǒuyītiān nǐ huì wàng le wǒ.
 1346	xǔduō fángwū bèi hóngshuǐ chōng zǒu le.
 1364	wǒ fùqīn zhújiàn hǎozhuǎn le.
@@ -166,12 +166,12 @@ id_oracion	pinyin
 1429	tā jùjué le wǒ de zīzhù.
 1432	wǒmen qù gōngyuán pāizhào le.
 1436	zhè běn shū yǒu hěn duō chātú.
-1466	tāmen jīng dé mùdèng-kǒudāi.
+1466	tāmen jīng de mùdèng-kǒudāi.
 1472	qǐngwèn jīdàn zài nǎlǐ?
-1505	" wǒ xiǎng dǎpái."" wǒ yěshì."
-1512	" tā xǐhuan yīnyuè."" wǒ yěshì."
-1519	" zhè zhèngshì wǒ zài zhǎo de." tā hǎn dào.
-1526	" zěnme huí shì?" xiǎo bái tù wèn dào.
+1505	“wǒ xiǎng dǎpái.” “wǒ yěshì.”
+1512	“tā xǐhuan yīnyuè.” “wǒ yěshì.”
+1519	“zhè zhèngshì wǒ zài zhǎo de.” tā hǎn dào.
+1526	“zěnme huí shì?” xiǎo bái tù wèn dào.
 1546	zhè liàng zìxíngchē shǔyú wǒ.
 1552	zhège xiāoxi shǐ tā xīn suì le.
 1566	zhège gōngzuò méiyǒu chóu láo.
@@ -187,19 +187,19 @@ id_oracion	pinyin
 1634	yīnyuèhuì shàng yǒu hěn duō rén.
 1635	wǒ néng xiūxi yīhuìr ma?
 1637	niǎo ér shēnshang pù mǎn le báisè de yǔ máo.
-1647	jǐngchá duì tāmen shuō:" zhù shǒu".
+1647	jǐngchá duì tāmen shuō: “zhù shǒu”.
 1652	wǒ měi tiān zǎoshang dào gōngyuán lǐ liú gǒu.
 1655	xīyān yǐngxiǎng le tā de fèi bù.
 1659	tā kànjiàn sècǎi xiānyàn de niǎo, huā duǒ hé shùyè.
-1670	nǐ zhēn méiyǒu yōuxiān quán!
+1670	nǐ zhēn de méiyǒu yōuxiān quán!
 1683	wǒmen bìxū zūnshǒu guīzé.
 1696	nǐ zǒu huò liú, suí nǐ gāoxìng.
-1700	tā lángtūnhǔyàn dì chī le yī dùn.
+1700	tā lángtūnhǔyàn de chī le yī dùn.
 1718	yǎnchū shénme shíhou kāishǐ?
 1727	tā de zuǒ shǒu bèi dāo gē shāng le.
 1729	tā tòulù le wǒ de mìmì.
 1731	nǐ píng shénme jiào wǒ zǒu?
-1732	shuō zhège méi hǎochù.
+1732	shuō zhège méi shénme hǎochù.
 1733	tā xǐhuan shòu nánshēng zhù mù.
 1739	yān cóng yāncōng lǐ mào le chūlái.
 1750	wǒ jiànyì nǐ yǒngyuǎn bùyào rùbùfūchū.
@@ -207,21 +207,21 @@ id_oracion	pinyin
 1783	niánqīng de shíhou nǐ yīnggāi kāituò nǐ de sīxiǎng.
 1786	wǒ xuéhuì le bù kào tā shēnghuó.
 1790	míngtiān, tā jiāng dēng shàng yuèqiú.
-1845	zhème zuò méi hǎochù.
+1845	zhème zuò méi shénme hǎochù.
 1846	zhè zhǒng chángshì hěn huāngmiù.
-1860	wǒ Fǎyǔ shuō dé bùgòu hǎo!
+1860	wǒ Fǎyǔ shuō de bùgòu hǎo!
 1862	bùyào xiǎokàn wǒ de lìliàng.
-1864	zhè kē zuànshí búshì zhēn.
-1893	zhè bù shì jīngxǐ, shì ba?
+1864	zhè kē zuànshí búshì zhēn de.
+1893	zhè bù suàn shì jīngxǐ, shì ba?
 1909	tā néng zhuàn duōshao jiù zhuàn duōshao.
-1916	tā dǎ wǎngqiú dǎ dé hěn hǎo.
+1916	tā dǎ wǎngqiú dǎ de hěn hǎo.
 1922	zhège cí shì shénme yìsi?
 1931	tā kàn le yīyǎn tā de biǎo.
 1942	bùyào duì pīpíng tài mǐngǎn le.
 1954	nǐ de Zhōngwén lǎoshī shì shuí?
 1968	zhèxiē yànhuǒ zhēn zhuàngguān!
 1973	tā wù tūn le xǐyīfěn.
-1974	yǒu chuān cuò le wǒ de xié.
+1974	yǒu rén chuān cuò le wǒ de xié.
 1995	zuìjìn de jiàotáng zài nǎlǐ?
 2008	zhànzhēng bìngfēi bùkě-bìmiǎn.
 2016	wǒ shì gāi duì de lǐngdǎo zhě.
@@ -234,7 +234,7 @@ id_oracion	pinyin
 2056	tā wèi wǒ zuò le xiángxì shuōmíng.
 2062	háizi men de fángjiān hěn luàn.
 2076	qīn'ài de, wǒmen tiàowǔ ba.
-2091	tā bǎ xìn dì le mìshū.
+2091	tā bǎ xìn dì gěi le mìshū.
 2101	zhè zhǐ huǒ jī wèidào hěn hǎo.
 2107	bàozhà de yuányīn shì shénme?
 2124	wǒ gāi gàosu nǐ duōshao biàn?
@@ -253,7 +253,7 @@ id_oracion	pinyin
 2284	xǔduō xiǎo gōngsī dǎobì le.
 2288	nán hái dì yī cì qí le mǎ.
 2302	tā huàn le yīzhǒng yánzhòng jíbìng.
-2310	tā Fǎyǔ shuō dé hěn liúlì.
+2310	tā Fǎyǔ shuō de hěn liúlì.
 2313	tāmen dōu hāhā dàxiào qǐlái.
 2316	tā yīnggāi dédào jìnshēng.
 2320	téngtòng lìngrén nányǐ rěnshòu.
@@ -288,14 +288,14 @@ id_oracion	pinyin
 2493	wǒmen néng sīxià tán tán ma?
 2494	tā shì gè juéjiàng de nǚhái.
 2501	wǒmen kànjiàn le xiǎo shān.
-2507	nǐ xǐ bù xǐhuan méi.
+2507	nǐ xǐ bù xǐhuan méi guānxi.
 2531	bǎobao zài yáolán lǐ rù shuì le.
 2540	zhè zhèngshì wèntí de guānjiàn.
 2553	nǐ gēn lǎobǎn hédelái ma?
 2583	kànlái méi nàme róngyì a...
-2605	zhù nǐ yī tiān guò dé yúkuài.
+2605	zhù nǐ yī tiān guò de yúkuài.
 2614	zhèxiē shùzì zǒngshù bùfú.
-2626	yǒu rén zhǐ zhuīqiú kuàilè.
+2626	yǒuxiē rén zhǐ zhuīqiú kuàilè.
 2642	zhè bǎ dāo de dāo fēng hěn lì.
 2663	xiǎo zhèn chōngmǎn le huólì.
 2669	nǐ yuànyì hé wǒ tiàowǔ ma?
@@ -305,7 +305,7 @@ id_oracion	pinyin
 2681	bǎobao hái búhuì shǐyòng sháo zi.
 2697	gōngkāi biǎoshì mǒu rén de ài.
 2698	nǐ zuì xǐhuan shénme shuǐguǒ?
-2702	chuán hé huǒchē nǎge pǎo dé kuài?
+2702	chuán hé huǒchē nǎge pǎo de kuài?
 2703	nǐ de yánxíng bìxū yīzhì.
 2714	dàyǔ shǐ hé shuǐ fànlàn.
 2716	zhè tiáo yú méiyǒu dú.
@@ -316,22 +316,21 @@ id_oracion	pinyin
 2779	ài lì shì yǒu duōshao liàng chē?
 2821	nǐ yǒu shénme yào shuō de ma?
 2824	qǐchū shuí yě bù xiāngxìn wǒ.
-2843	nín wèi chéngfá tāmen?
+2843	nín wèi shénme chéngfá tāmen?
 2868	tā jùjué le tā de yāoqǐng.
 2871	duì le, nǐ zuò shénme gōngzuò?
 2882	wǒ shì yī míng yínháng zhíyuán.
 2883	wǒ kǒngpà bùnéng bāng nǐ le.
 2954	hěn gāoxìng néng zàijiàn dào nǐ.
 2959	xīnxiān shuǐguǒ duì shēntǐ hǎo.
-2966	tā kàn hěn gūdān.
+2966	tā kàn qǐlái hěn gūdān.
 2973	hǎohǎo bǎwò zhège jīhuì.
 2984	bùyào zài kè shìnèi tánhuà.
 2987	zhè gōngsī zhèng jìhuà kuòzhāng.
 3008	wǒ hěn dānxīn tā de jiànkāng.
-3015	hǎidào bǎ cái bǎozàng jìn le dì dǐ.
 3017	zhè xuē shì yòng pí gé zuò de.
 3024	wǒ háishi xiě bùhǎo Hànyǔ.
-3026	qǐng bǎ nà běn shū dì wǒ.
+3026	qǐng bǎ nà běn shū dì gěi wǒ.
 3027	qǐng zài zhège guì wèi fùkuǎn.
 3035	pài duì zài jiǔ shí wánjié le.
 3038	wǒ shì gè bàn gōng shìnǚ láng.
@@ -352,7 +351,7 @@ id_oracion	pinyin
 3183	tāmen zài chǔ qián mǎi fángzi.
 3198	zhù jūn bèipò tóuxiáng.
 3214	nǐ huì shǒu chéngnuò de, duì ba?
-3231	wǒ jǐnshèn dì xiě xià dá'àn.
+3231	wǒ jǐnshèn de xiě xià dá'àn.
 3244	tā de qīzi shì fǎ guó rén
 3259	hàoqí huì chīkǔ tóu de.
 3269	zuótiān wǎnshang xià dàxuě le.
@@ -383,7 +382,7 @@ id_oracion	pinyin
 3515	wǒ bàba xīyān hěn lìhai.
 3533	tài láng, nǐ huì bāng wǒmen ma?
 3535	zhège dìfāng de qìfēn hěn shénmì.
-3541	wǒ bù xǐhuan kàn diànshì.
+3541	wǒ bù tài xǐhuan kàn diànshì.
 3554	qǐng kāi dào xī ěr dùn jiǔdiàn.
 3560	wǒ xiǎngyào chéngwéi bǎiwàn fùwēng.
 3574	nǐmen zànchéng háishi fǎnduì?
@@ -392,7 +391,7 @@ id_oracion	pinyin
 3641	tiě shì gè yǒuyòng de jīnshǔ.
 3665	tā dehuà ràng wǒ hěn gāngà.
 3691	nǐ duì měi guó yìnxiàng rúhé?
-3707	yígè mòshēng rén jìn le dà.
+3707	yígè mòshēng rén jìn le dà lóu.
 3711	míngtiān wǒ huì dāi zàijiā lǐ.
 3735	rì běn zìrán zīyuán pín fá.
 3737	yóuqí shì yào yǒu nàixīn.
@@ -401,15 +400,15 @@ id_oracion	pinyin
 3761	tā bǎ zhège jiǎng shìwéi zuì gāo róngyù.
 3765	bùyào zài gōngyuán wán lěi qiú.
 3794	niúnǎi shì gè hěn hǎo de shípǐn.
-3796	tā gāngqín dàn dé bù hǎo.
+3796	tā gāngqín dàn de bù tài hǎo.
 3810	wǒmen bùbì jūlǐ le.
 3815	tā hǎoxiàng shīmián le jǐ wǎn.
 3819	tā bǎtóu fàng zài zhěntou shàng.
-3842	wǒ xià huì xiángxì shuōmíng de.
+3842	wǒ xià zhōu huì xiángxì shuōmíng de.
 3843	fàngxia nǐmen de wǔqì.
 3852	tā shì gè cōngmíng de shàonián.
 3861	tā de tuǐ bèi èyú yǎo le.
-3865	wǒmen máng dé bùkěkāijiāo.
+3865	wǒmen máng de bùkěkāijiāo.
 3898	wèntí shì wǒmen bùgòu qián.
 3948	tā huā hěn duō qián mǎi yīfu.
 3957	yùqī jīnnián dào mǐ huì fēngshōu.
@@ -417,7 +416,7 @@ id_oracion	pinyin
 3982	shuí lái le yě bùyào kāi mén.
 3993	shuí bǎ wǒ de píbāo názǒu le?
 3994	dì yī bù shì zuì máfan de.
-4001	xuán guān yǒu lái le yé.
+4001	xuán guān yǒu rén lái le yé.
 4023	tā lǎo diē shì rì běnrén.
 4025	tā shì diǎnxíng de rì běnrén.
 4028	tā bǎ qiānbǐ ná zàishǒu shàng.
@@ -431,7 +430,7 @@ id_oracion	pinyin
 4111	tā de jìshù shì gōngrèn de.
 4116	wǒ hěn róngxìng néng jiàndào nǐ.
 4121	zhídé guānkàn de diànshì jiémù liáoliáo-wújǐ.
-4150	ruò zhuīgēnsùyuán, jué měi guó rén dōu shì yímín.
+4150	ruò zhuīgēnsùyuán, jué dàduōshù měi guó rén dōu shì yímín.
 4169	sījī bèi kòng chāosù jiàshǐ.
 4197	zhè zuò cūn méiyǒu kōngqì wūrǎn.
 4198	qǐng fùshàng zhìliàng zhèngmíng shū.
@@ -447,7 +446,7 @@ id_oracion	pinyin
 4266	tā yī zhěngtiān dōu chénmò zhe.
 4269	lún dào nǐ huídá wèntí le.
 4284	wǒ juéde tā huì chénggōng de.
-4301	tā shòu dé zhǐ shèng píbāo gǔ le.
+4301	tā shòu de zhǐ shèng píbāo gǔ le.
 4312	tā yǒu gè piàoliang de wáwa.
 4317	zhè zuò cūn lǐ méiyǒu gōngchǎng.
 4326	tā huì shì tā de hǎo qīzi.
@@ -463,7 +462,7 @@ id_oracion	pinyin
 4419	shòushāng zhě bèi yùn lí xiànchǎng.
 4434	jiànkāng bǐ cáifù zhòngyào.
 4442	tā zài xuéxiào chéngjì bùhǎo.
-4455	wǒ xīngfèn dé shuì bù zhe jué.
+4455	wǒ xīngfèn de shuì bù zhe jué.
 4479	wǒ mèimei chànggē hěn hǎotīng.
 4498	yīng'ér zài yáolán zhōng shuìjiào.
 4499	màncháng de yī tiān guòqù le.
@@ -488,9 +487,9 @@ id_oracion	pinyin
 4717	tā de dàoqiàn dōu shì jiǎ de.
 4758	wǒ mǎi le liǎng jiàn mián zhì chènshān.
 4761	dàjiā dōu shuō wǒ de huàihuà.
-4777	tā shuāng yǎn fāguāng dì shuō zhe.
+4777	tā shuāng yǎn fāguāng de shuō zhe.
 4791	shuāng hái méiyǒu kāishǐ rónghuà.
-4797	bù, wǒ mílù le.
+4797	bù hǎoyìsi, wǒ mílù le.
 4807	jīntiān wǒ qù kàn le yá yī.
 4829	tā de wàibiǎo qīpiàn le wǒ.
 4837	tā zào le yígè jīqìrén.
@@ -499,12 +498,12 @@ id_oracion	pinyin
 4844	wǒ xǐhuan shūqíng shī duō yú shǐ shī.
 4853	tā de érzi zhèngzài fúyì.
 4855	tā yāoqiú yào jiàn jiàn jīnglǐ.
-4868	tā biàn dé yuè gāo le.
+4868	tā biàn de yuè lái yuè gāo le.
 4880	wǒ dā diàntī qù le sì lóu.
 4887	zhěnggè jiāzú zài nóngchǎng gōngzuò.
 4894	wǒ xiǎng qǐng nǐ cānjiā pài duì.
 4914	tā rēng le hěn duō jiù xìnjiàn.
-4921	zuò lái xiūxi yīhuìr.
+4921	zuò xia lái xiūxi yīhuìr.
 4936	tiān tūrán biàn nuǎnhuo le.
 4938	tiānqì yīxiàzi nuǎnhuo le
 4943	zhège guójiā jiàngyǔliàng shǎo.
@@ -523,7 +522,7 @@ id_oracion	pinyin
 5135	wūhuì dǎozhì jíbìng.
 5136	shuō de hǎo bùrú zuò de hǎo
 5155	wǒmen gāng dǎsǎo le cèsuǒ.
-5162	nǐ xuǎn nǎ yígè dōu méi.
+5162	nǐ xuǎn nǎ yígè dōu méi guānxi.
 5236	zhè zhāng zhuōzi tài zhòng, méi tái dòng.
 5238	ài huā de rén shì xìngfú de.
 5239	kěn ēn xiànzài zài zuò shénme?
@@ -535,18 +534,17 @@ id_oracion	pinyin
 5262	wǒ jīntiān kěyǐ zǎo tuì ma?
 5263	wǒmen bié zài tǎolùn le ba.
 5268	néng gěi wǒ huàn gè fángjiān ma?
-5278	zuǒ téng shì shèzhǎng de xīn mìshū.
 5283	wǒmen shénme shíhou dàodá?
-5287	kōngfù hē jiǔ, yǒu jiànkāng!
+5287	kōngfù hē jiǔ, yǒu hài jiànkāng!
 5358	hòu shì jìng diē le xiàlái.
 5361	wǒmen yòng kuàizi, bùyòng dāochā.
 5371	chēzi jí sù biāo guò.
 5379	tā zuǒgù-yòupàn.
 5383	tā huán gù le yī xià sìzhōu.
-5392	tā xīngfèn dì fān le fān shū yè.
+5392	tā xīngfèn de fān le fān shū yè.
 5393	xiǎng zài yào yìdiǎn dàngāo ma?
-5397	jìn duō diǎn chá zìdiǎn.
-5407	tā wèi « ā fán dá» pèi le yīn.
+5397	jìn kěnéng duō diǎn chá zìdiǎn.
+5407	tā wèi «ā fán dá» pèi le yīn.
 5425	jiàoshòu wēi wēixiào le yī xià.
 5426	jiàoshòu wēi wēixiào le xiào.
 5432	yǒu gè nǚrén xiàng wǒ wènlù.
@@ -589,7 +587,7 @@ id_oracion	pinyin
 5768	wǒ zhēngzhá zhe jǐ chū dìtiě.
 5790	xióngmāo yǐ zhú wèi shí.
 5793	wǎn'ān. zhù nǐ zuò gè hǎo mèng.
-5803	nǐ qíshí yǒu kàn guò?
+5803	nǐ qíshí yǒu méiyǒu kàn guò?
 5822	nǐ zǒu le wǒ huì hěn xiǎng nǐ.
 5858	wǒmen de gǒu dài zài gǒu wō lǐ.
 5889	dàn tā méiyǒu zūnshǒu chéngnuò.
@@ -612,14 +610,14 @@ id_oracion	pinyin
 6145	wǒ xiǎng zàicì jiàndào tāmen.
 6162	háizi xūyào hěn duō shuìmián.
 6174	tā zài dǎsǎo tā de fángjiān.
-6192	lǎorén kàn hěn shāngxīn.
-6202	yángé dì jiǎng, fānqié shì shuǐguǒ.
+6192	lǎorén kàn qǐlái hěn shāngxīn.
+6202	yángé de jiǎng, fānqié shì shuǐguǒ.
 6220	tā shì guò xiě yī běn duǎn piān xiǎoshuō.
 6222	yuèliang bèi yún zhē zhù le.
 6223	māma qīn le tā de bǎobèi.
 6224	tā chángcháng wèn xiē shǎ wèntí.
 6230	wǒ zhège xīngqī fàngjià le.
-6250	tā quán shén guàn zhù dì xiě zhe shī.
+6250	tā quán shén guàn zhù de xiě zhe shī.
 6252	tā biān huī shǒu biān wēixiào zhe.
 6253	wǒ xiǎng nǐ yīnggāi jiéshí le.
 6283	wǒ jiānxìn tā shì wúgū de.
@@ -656,26 +654,26 @@ id_oracion	pinyin
 6568	wǒ xiǎng chī diǎn xīnxiān de yú.
 6578	yīqiè héhū zìrán fǎ zé.
 6593	fùqīn bǎ nàozhōng diào dào liù shí.
-6623	tā xiàng wǒ dà fā.
+6623	tā xiàng wǒ dà fā píqi.
 6651	nà chǎng yìwài shǐ jiāotōng dà luàn.
 6657	wǒ yāoqiú tā mǎshàng lí qù.
 6669	zhè jiàn wàitào shì fáng yǔ de.
-6671	wǒ tūrán dù tòng dé yàomìng.
+6671	wǒ tūrán dù tòng de yàomìng.
 6676	nǐ huì yóuyǒng, wǒ què búhuì.
 6682	wǒ de yāoqiú bìng bùguò fēn.
 6683	jìrán yào zuò, jiù hǎohǎo zuò.
 6685	zhè yīzhèn wǒ hěn máng!
-6687	méi hǎo zhāodài nǐ de.
+6687	méi shénme hǎo zhāodài nǐ de.
 6699	nǐ bù yīnggāi yǐ mào qǔ rén.
 6734	nǐ jìnggǎn zhèyàng hé wǒ shuōhuà?
-6747	kànlái chuánwén shì zhēn le.
+6747	kànlái chuánwén shì zhēn de le.
 6754	nǐ dìng yuè le shénme zázhì?
 6770	xiángxì xùshù yī xià zhè qǐ shìgù ba.
 6806	tā cóng shénme dìfāng lái de?
 6823	zhè bǎ dāo bùgòu fēng lì.
 6824	nǐ zuì xǐhuan nǎge jìjié?
 6842	tā bèi nàge nǚrén xīyǐn zhù le.
-6846	nǐ duì zhèngzhì gǎn ma?
+6846	nǐ duì zhèngzhì gǎn xìngqù ma?
 6862	tā gěi le wǒ shíwù hé qián.
 6895	nǐ xūyào qūfēn shàn yǔ è.
 6942	wǒ xiāo yè chī le sùshímiàn.
@@ -709,7 +707,7 @@ id_oracion	pinyin
 7332	wǒ zuò bù guàn cū zhònghuó.
 7373	wǒ cónglái méi shuō guò wǒ hěn cuìruò.
 7375	wǒ tǎoyàn tīng nǐ de bàoyuàn.
-7393	ràng wǒ ānjìng dì gōngzuò.
+7393	ràng wǒ ānjìng de gōngzuò.
 7404	yígè háizi zhèngzài dàn shù qín.
 7409	wǒ de fángzi juéduì bǎoxiǎn.
 7415	tā cóngtóu dào jiǎo dōu shī le.
@@ -717,15 +715,15 @@ id_oracion	pinyin
 7436	bùyòng kèqi, suíbiàn zuò ba.
 7447	wǒ shòubuliǎo zhè jiāhuo.
 7465	zhè zhǒng kējì de yōushì shì shénme?
-7471	wǒ késou, hái diǎn fāshāo.
+7471	wǒ késou, hái yǒu diǎn fāshāo.
 7489	nǐ yào báijiǔ háishi hóngjiǔ?
 7491	bái gē shì zhǒng měilì de niǎo lèi.
 7496	bówùguǎn rùkǒu zài nǎlǐ?
-7514	tā xiě wénzhāng xiě dé hěn zhǔguān.
+7514	tā xiě wénzhāng xiě de hěn zhǔguān.
 7526	qiǎoyánlìngsè, xiān yǐ rén.
 7540	wǒ kànjiàn tā māma mà tā.
 7560	wǒ dìdi hé wǒ yīyàng gāo.
-7593	xiǎo niǎo huānkuài dì gēchàng.
+7593	xiǎo niǎo huānkuài de gēchàng.
 7595	àiqíng bǐ sǐwáng gèng qiángdà.
 7640	qǐng nǐ gěi wǒ zhǐdiǎn yī xià.
 7693	zài nǎr wǒ néng zhǎodào yágāo?
@@ -759,7 +757,7 @@ id_oracion	pinyin
 7997	mǎlù xié duìmiàn yǒu yījiā biànlìdiàn.
 7998	yǒu yījiā biànlìdiàn zài mǎlù xié duìmiàn.
 8007	zhè duì xiōngdì hùxiāng chóushì.
-8023	xiǎonǚ hái gāoxìng dì xiào le.
+8023	xiǎonǚ hái gāoxìng de xiào le.
 8031	nà búshì dāo. zhège cái shì!
 8072	nǐ gēge zhēn yōuxiù, xué xué tā.
 8079	zhè yīqiè duì wǒ hěn zhòngyào.
@@ -778,10 +776,10 @@ id_oracion	pinyin
 8354	tā shuō déchū jiù zuò dédào.
 8359	wǒ kāi mén de shíhou bǎmén bǐng niǔ le chūlái.
 8394	tā chuān le yī jiàn hóng de qípáo.
-8407	nà wǒ zhèngzài kàn diànshì.
+8407	nà shí wǒ zhèngzài kàn diànshì.
 8416	zhè tái jīqì hěn róngyì cāozuò.
-8438	nǐ yǒu qù guò wàiguó?
-8441	nǐ shèng dàn guò dé kāixīn ma?
+8438	nǐ yǒu méiyǒu qù guò wàiguó?
+8441	nǐ shèng dàn guò de kāixīn ma?
 8486	tāmen liǎ dōu zài fángjiān lǐ.
 8493	tā bǎ tā de yīshēng xiàngěi le jiàoyù shìyè.
 8495	zhège jiàgé hán le shuì.
@@ -798,8 +796,8 @@ id_oracion	pinyin
 8753	tā shì gè lǎnduò de xuéshēng.
 8769	zhè xiàng gōngzuò wèibì róngyì.
 8790	tā xuéxí le wénxué jiànshǎng.
-8798	tā yī gèrén qù le guó.
-8818	wǒ dǔ míngtiān huì xià.
+8798	tā yī gèrén qù le guó wài.
+8818	wǒ dǔ míngtiān huì xià yǔ.
 8819	tā búzhù zài wǒ de xiǎoqū.
 8846	rì běn quēfá yuáncáiliào.
 8862	bǎ nà fú huà guà dào qiáng shàng.
@@ -807,25 +805,25 @@ id_oracion	pinyin
 8874	mùtou néng fú zài shuǐmiàn shàng.
 8878	tā hé tā péngyou zuò zài zhǎng dèng shàng.
 8902	wǒjiā pángbiān yǒu jǐ jiā shāngdiàn.
-8910	shìjiè shàng yǒu hěn duō bù de mínzú.
+8910	shìjiè shàng yǒu hěn duō bù tóng de mínzú.
 8919	wǒmen yīnggāi zhàogù zìjǐ.
 8922	nín yǒushì xiǎng duì wǒ shuō ma?
 8929	wǒ bùzhī suǒ cuò
 8938	dān píng lìliàng bùnéng bǎozhèng qǔshèng.
 8958	xiànzài shì bā diǎn yī kè.
-8967	tā yíbùyíbù dì shèjíérshàng.
+8967	tā yíbùyíbù de shèjíérshàng.
 8982	tā piàn le lǎopo pó de qián.
 8996	tā de jiànyì cùshǐ wǒ gǎibiàn le zhǔyi.
 9000	shāchē de gōngnéng shì shǐ chē tíngxia.
 9003	ó, shì a, wǒ jì qǐlái le.
 9017	dǎ wǎngqiú duì jiànkāng hěn hǎo.
-9018	wūyún shì xià de zhēng zhào.
+9018	wūyún shì xià yǔ de zhēng zhào.
 9024	wǒ xiǎo shuì hòu jiù gǎndào jīnglì chōngpèi.
 9035	zuó wǎn, wǒ zuò le gè hǎo mèng.
 9052	zǎo qǐ de niǎo ér yǒu chóng chī.
 9066	wǒ dēng shàng le fù shì shāndǐng.
 9086	wǒ mǎi le zhè jiàn jiǎnjià de hànshān.
-9116	wǒ zhǎndīngjiétiě dì jùjué le.
+9116	wǒ zhǎndīngjiétiě de jùjué le.
 9129	jīntiān zǎoshang hěn lěng, búshì ma?
 9142	chénmò jiù yìwèizhe tóngyì.
 9156	yǎnjing shì xīnlíng de chuānghu.
@@ -833,35 +831,35 @@ id_oracion	pinyin
 9182	wǒ kànjiàn tā zhèngzài jù yī kē shù.
 9183	zhège wánjù shì mù zhì de.
 9188	nǐ néng zài zhèlǐ qiānmíng ma?
-9195	fángjiān lǐ yǒu yù gāng?
+9195	fángjiān lǐ yǒu méiyǒu yù gāng?
 9214	nàge míngzi hěn pǔtōng ma?
 9252	tā shì jīngjì xué de zhuānjiā.
-9272	zhǐhuī guān yāoqiú shìbīng lìkè kāi huǒ.
-9298	nǐmen yǒu sù zhuā fàn?
+9272	zhǐhuī guān yāoqiú shìbīng lì kè kāi huǒ.
+9298	nǐmen yǒu méiyǒu sù zhuā fàn?
 9301	zài miàntāng lǐ yǒu gè cāngying.
 9303	nǐ xiǎng chī jǐ chuàn kǎo yáng ròu?
 9304	nín xiǎng chī jǐ chuàn kǎo yáng ròu?
 9308	nǐmen yībān jǐ diǎn xiàbān?
 9312	tā de shǒutíbāo bèi tōu le.
-9332	nǐ wèi yào mà rénjia?
-9340	wǒ zuò dé shí zài tài liáocǎo.
+9332	nǐ wèi shénme yào mà rénjia?
+9340	wǒ zuò de shí zài tài liáocǎo.
 9343	bǎ zhè tiáo yīn gōutōng hǎo!
 9360	nǐ bié lái dǎo dàn xíng ba!
-9384	tā zài mànmàn dì gǎnshàng qù.
-9400	shíjiān hái zǎo zhe ne, dàjiā zuò lái kǎn yīhuìr ba.
+9384	tā zài mànmàn de gǎnshàng qù.
+9400	shíjiān hái zǎo zhe ne, dàjiā zuò xia lái kǎn yīhuìr ba.
 9408	nǐ jīntiān xiàqù duànliàn le ma?
 9434	yěxǔ tā bù huíqù guò Chūnjié.
 9462	bùyòng, xǐ yī xǐ, chuī yī chuī ba.
 9463	nǐ yào gānxǐ háishi shī xǐ?
-9477	nǐ yào xiū dé zhěngqí diǎn ér.
+9477	nǐ yào xiū de zhěngqí diǎn ér.
 9494	bùxíng, wǒ bùnéng zuò péi běn shēngyi.
-9506	zhū tí zhǔ dé sū yìdiǎn, zhīdào ma?
-9520	yī wǎn zhòu shā húntún, pí ér báo dé lián ròu yě kàndejiàn!
-9524	nǐ shuō dé wǒ chán sǐ le!
+9506	zhū tí zhǔ de sū yìdiǎn, zhīdào ma?
+9520	yī wǎn zhòu shā húntún, pí ér báo de lián ròu yě kàndejiàn!
+9524	nǐ shuō de wǒ chán sǐ le!
 9538	yǒudiǎn shénme gōnggòng shèshī?
 9576	hǎo de. fángjiān lǐ chángtú diànhuà kěyǐ zhíbō ma?
 9581	zhè liàng chē qù jìng ān sì ma?
-9584	wǒ zuò guò zhàn le, zěnme?
+9584	wǒ zuò guò zhàn le, zěnme bàn?
 9603	nǐ yào yìng zuò háishi wòpù?
 9606	cóng shànghǎi zuò huǒchē dào zhèng zhōu xū jǐgè xiǎoshí?
 9632	bié wàng le xiě yóuzhèng biān mǎ!
@@ -873,9 +871,9 @@ id_oracion	pinyin
 9705	zhème guì! néng piányi xiē ma?
 9723	xíng le! jiù shí yuán mǎi wǔ jīn ba.
 9724	nǐ zhège táichèng yǒu wèntí ma?
-9733	gū mā tā dānwèi bùjǐngqì, tā xiàgǎng yǐhòu qù zuò yuè sǎo shōurù què bù.
+9733	gū mā tā dānwèi bùjǐngqì, tā xiàgǎng yǐhòu qù zuò yuè sǎo shōurù què bù shǎo.
 9746	gěi nǐ tiān máfan la!
-9802	tā de tǐxíng shēng dé hěn yúnchèn! jiānbǎng kuān, yāo shēn zhǎi, dùzi yòu méi tū chūlái.
+9802	tā de tǐxíng shēng de hěn yúnchèn! jiānbǎng kuān, yāo shēn zhǎi, dùzi yòu méi tū chūlái.
 9826	wèikǒu zěnmeyàng? xiǎng bùxiǎng tǔ?
 9979	lǜdēng shí, guǎiwān chē yào ràng rén.
 9983	lǎoruòbìngcán yùn yòu dōu yào zhàogù.
@@ -887,22 +885,22 @@ id_oracion	pinyin
 10046	zhège zì shì xīlà yǔ yǎnshēng chūlái de.
 10082	nín bùxiǎng zài hē diǎn chá ma?
 10088	wǒmen zài dìshang jué le yígè dòng.
-10098	lǎorén xūyào yǒu qīngsù.
-10102	wǒ búshì yītiáo zhēn yú, wǒ zhǐshì yígè chángmáoróng wánjù.
-10145	qǐngwèn yǒu shuāng rén fáng?
+10098	lǎorén xūyào yǒu rén qīngsù.
+10102	wǒ búshì yītiáo zhēn de yú, wǒ zhǐshì yígè chángmáoróng wánjù.
+10145	qǐngwèn yǒu méiyǒu shuāng rén fáng?
 10158	yān shì fèi bù jiànkāng de dírén.
-10199	bù, xiànzài xiànlù fánmáng.
-10204	wǒ xià yào bānjiā le.
+10199	bù hǎoyìsi, xiànzài xiànlù fánmáng.
+10204	wǒ xià ge yuè yào bānjiā le.
 10227	wǒmen shuì zài wǒ jiùjiu jiā.
 10242	qiūlíng mù yù zài yángguāng xià.
 10264	wǒ tóngyì bāngzhù lǎotàitai.
 10289	Zhōngguó rénmín fēicháng qínláo.
-10295	wǒmen zhēn mùdǔ le shìgù.
+10295	wǒmen zhēn de mùdǔ le shìgù.
 10333	zhè shì yī bǎ zhōng shì shànzi.
 10352	tā zài gōngzuò zhōng jīngyàn shàng qiǎn.
 10390	tā fàngqì le suǒyǒu xīwàng.
-10397	wèi bù cháng cháng shòusī?
-10430	tā pà yú, érqiě cónglái chī.
+10397	wèi shénme bù cháng cháng shòusī?
+10430	tā pà yú, érqiě cónglái bù chī.
 10442	wǒ bèipò qiān le nà zhāng zhǐ.
 10459	bǎ wǒ de yǎnjìng nágěi wǒ.
 10466	wǒ bùxiǎng shài hēi.
@@ -915,7 +913,7 @@ id_oracion	pinyin
 10544	tā gěi le yǐxià de dáfù.
 10553	wǒmen de fàn cài hěn piányi.
 10591	wǒ dǎsuàn chéngwéi gōngchéngshī.
-10594	tā gāngqín dàn dé fēicháng hǎo.
+10594	tā gāngqín dàn de fēicháng hǎo.
 10601	tā de yáchǐ bèi yānxūn huángle.
 10605	zhè shì cáo cāo de jiān jì.
 10609	duìbuqǐ, mántou mài wánle.
@@ -955,7 +953,7 @@ id_oracion	pinyin
 11031	tā jiēshòu le wǒ de zhǔyi.
 11035	tā shì zuìhòu yígè dào de.
 11068	rén yuè lǎo, jìyì lì jiù yuè chà.
-11070	tā gǎnmào cónglái chī yào.
+11070	tā gǎnmào cónglái bù chī yào.
 11099	wǒ shì zhe yòngfǎ yǔ tíwèn.
 11128	māma jiào wǒ xiū jiǎn cǎopíng.
 11162	wǒ bù yǔnxǔ nǐ nàyàng zuò.
@@ -1029,7 +1027,7 @@ id_oracion	pinyin
 12234	nǐ shōushi hǎo dōngxi le méiyǒu?
 12255	nà piàn yún shì yú de xíngzhuàng.
 12257	nà fú lún bó lǎng de huà shì jiàn yìshù pǐn.
-12264	yáoyán kěnéng shì zhēn ma?
+12264	yáoyán kěnéng shì zhēn de ma?
 12266	xiǎojiě! wǒ juéde bù shūfu.
 12275	nín yě xǐhuan juéshì lè ma?
 12286	nín cānguān guò dōng jīng tǎ ma?
@@ -1041,7 +1039,7 @@ id_oracion	pinyin
 12347	nín de niúpái yào jǐfēn shú?
 12355	jīnnián xiàtiān wǒ yào chūguó.
 12360	wǒ bǎ hézi káng zài jiān shàng.
-12373	shàng wǒ déle zhòng gǎnmào.
+12373	shàng zhōu wǒ déle zhòng gǎnmào.
 12378	qǐng xiǎoxīn yuètái yǔ chēxiāng zhījiān de kòngxì.
 12382	wǒ méi tīngdào nín de xìng.
 12393	háizi zhuāzhù le māo de wěiba.
@@ -1054,7 +1052,7 @@ id_oracion	pinyin
 12512	tā qí zìxíngchē qù shàngxué.
 12573	nín gāi shēnqǐng zhège zhíwèi.
 12574	nǐ gāi shēnqǐng zhè fèn gōngzuò.
-12578	wèi nín shì zhe táozǒu?
+12578	wèi shénme nín shì zhe táozǒu?
 12585	wǒ de jiāxiāng fēicháng piàoliang.
 12596	bàofēngyǔ huì chíxù duōjiǔ?
 12600	tā mǔqīn yīzhí péi zhe tā.
@@ -1074,7 +1072,7 @@ id_oracion	pinyin
 12822	huāpíng bèi shuāi chéng le suìpiàn.
 12852	wǒmen bǎmén tú chéng le lǜsè.
 12866	lù zhōngjiān yǒu yī liàng kǎchē.
-12892	lǎoshī bǎ xuéshēng hěn hěn dì mà le yī dùn.
+12892	lǎoshī bǎ xuéshēng hěn hěn de mà le yī dùn.
 12927	tā bǎshou chā jìn le kǒudai.
 12939	wǒ xiǎng mǎi diǎn ā sī pǐ lín.
 12944	jìxù shuō nǐ de gùshi ba.
@@ -1082,28 +1080,28 @@ id_oracion	pinyin
 12999	nàge chá hú hěnzāng a!
 13003	wǒmen yīnggāi zūnjìng fùmǔ.
 13005	wǒ hěnlèi, xiǎng zǎo diǎn shuìjiào.
-13047	yǒu qīng qīng kòu le mén.
+13047	yǒu rén qīng qīng kòu le mén.
 13059	nín xuǎn nǎge wǒ wúsuǒwèi.
 13061	jiàgé gēnjù xūqiú biànhuà.
 13070	wǒmen wúfǎ jiējìn dírén.
 13082	yǒu zhǐ māo zuò zài yǐzi shàng.
-13094	wǒ bùxiǎng biàn dé bēicǎn, wǒ xiǎngyào xiāosǎ!!
+13094	wǒ bùxiǎng biàn de bēicǎn, wǒ xiǎngyào xiāosǎ!!
 13104	zìsī búshì wǒ de běnyì.
-13164	" a!" shì yígè gǎntàn cí.
-13192	" qǐng bǎ yán dì wǒ."" ná zhe."
+13164	“a!” shì yígè gǎntàn cí.
+13192	“qǐng bǎ yán dì gěi wǒ.” “ná zhe.”
 13196	duōkuī nǐ wǒ wèikǒu dōu méi le.
 13213	wǒ shì zhe xiāomó shíjiān.
 13218	jīn wǎn wǒmen yào qù jiàotáng.
-13252	wèi nǐ bùchī shūcài?
+13252	wèi shénme nǐ bùchī shūcài?
 13290	nǐ ràng wǒ shīqù lǐzhì le.
 13292	nǐ shì bùkě kàngjù de.
 13307	wǒ kù ài yì dà lì kuān miàntiáo.
 13312	bùyào shīwàng, méiyǒu quán diū.
 13325	zìyóu zhǐzài nénggòu zuò suǒyǒu bù shānghài qítā rén de shì.
 13337	nǐ yī tiān zhào jǐ cì jìngzi?
-13407	shì yī wèi cíxiáng de lǎorén zì gào fènyǒng dì wèi tā de línjū gē cǎopíng.
+13407	shì yī wèi cíxiáng de lǎorén zì gào fènyǒng de wèi tā de línjū gē cǎopíng.
 13441	bùyào zài pīpíng wǒ le!
-13444	wǒ zài méiyǒu línggǎn le.
+13444	wǒ zài yě méiyǒu línggǎn le.
 13497	guāng sù bǐ yīn sù kuài hěn duō.
 13500	shìjiè búshì wéi zhe nǐ zhuǎn de.
 13510	wǒmen zǎocān zuò le jiān bǐng.
@@ -1122,8 +1120,8 @@ id_oracion	pinyin
 13637	zhè fèn gōngzuò bù fù qián de.
 13654	wǒ juéde jīntiān huì hěn rè.
 13673	tāmen zuó wǎn shè yàn zhāodài le wǒmen.
-13714	tā shǒu ná zhe yī běn shū.
-13733	wǒ mèimei méiyǒu shuō" nǐhǎo".
+13714	tā shǒu li ná zhe yī běn shū.
+13733	wǒ mèimei méiyǒu shuō “nǐhǎo”.
 13757	yòng chǐ lái huà zhíxiàn hěn fāngbiàn.
 13767	bùyào duì háizi tài wēnróu.
 13796	nín zhīdào nín de chǐcùn ma?
@@ -1135,7 +1133,7 @@ id_oracion	pinyin
 13874	yòng liǎng zhǐ shǒu pěng zhù huāpíng.
 13881	wǒmen dōu guì le xiàlái qídǎo.
 13911	nǐ yóuyǒng hěn bàng, búshì ma?
-13913	xià gōngchǎng kěnéng huì guān.
+13913	xià zhōu gōngchǎng kěnéng huì guān.
 13925	shū cóng guìzi shàng diào xiàlái.
 13937	wǒ xiǎng hé nǐ gòng jìn zǎocān.
 13960	tā xīngqī liù bùyòng shàngxué.
@@ -1143,8 +1141,8 @@ id_oracion	pinyin
 13999	tā xǐhuan dìlǐ hé lìshǐ.
 14022	méi bìng bùyīdìng dōu shì hēi de.
 14041	tā cóngtóu dào jiǎo dōu shì níbā.
-14046	Zhōngguó fāzhǎn dé tài kuài le.
-14058	jiào shēng jiànjiàn dì biàn ruò le.
+14046	Zhōngguó fāzhǎn de tài kuài le.
+14058	jiào shēng jiànjiàn de biàn ruò le.
 14074	nà wéibèi le wǒ zuò rén de yuánzé.
 14132	sān cì cèliáng, yī cì qiēchú.
 14138	tā yòng fǔtóu chóngchóng de zhǎn le yī xià, nà kē shù jiù dào le xiàlái.
@@ -1166,7 +1164,7 @@ id_oracion	pinyin
 14425	yuē hàn líkāi le gōngsī, lìng qǐ lúzào.
 14453	wǒ tīngdào jiān jiào shēng.
 14469	tāmen de yǒuqíng yùnniàng chéng àiqíng de guǒshí.
-14476	tiānqì shì rúcǐ dì měihǎo.
+14476	tiānqì shì rúcǐ de měihǎo.
 14483	nǔlì shì xuéxí de běnzhì.
 14498	wǒ de xìngqù shì shōují qián bì.
 14524	tā quán shén guàn zhù.
@@ -1176,7 +1174,7 @@ id_oracion	pinyin
 14646	dì èr tiān wǒ de tuǐ hěn suān.
 14647	tā de fùmǔ jīngyíng yījiā jiǔdiàn.
 14680	tāmen bùdébù hòu chè.
-14688	gǒu de xiùjué bǐ rénlèi mǐnruì dé duō.
+14688	gǒu de xiùjué bǐ rénlèi mǐnruì de duō.
 14694	fēijī zài yún céng shàng fēi zhe.
 14739	zuótiān de tiānqì huài tòu le.
 14757	wǒ chángshì yòng zuǒ shǒu xiě zì.
@@ -1203,16 +1201,16 @@ id_oracion	pinyin
 15119	wǒ néng kàn yī xià nín de piào ma?
 15120	zhè shì wǔfàn shèngxia lái de.
 15127	wǒ zhǐshì gè lǎobǎixìng.
-15131	tā kàn liǎnsè tiě qīng.
+15131	tā kàn shàngqù liǎnsè tiě qīng.
 15149	wǒ de yǒng shù hé gēge bù xiāng bózhòng.
 15220	tā chuān le yītiáo niúzǎikù.
 15222	wǒ měi tiān zǎoshang guā húzi.
-15235	yànzi fēi dé fēicháng kuài.
+15235	yànzi fēi de fēicháng kuài.
 15322	tiān nà, zhēn hǎochī!
 15325	měi guó de yīliáo fèi hěn gāo.
 15338	xǔduō guójiā yǐjīng fèichú le sǐ xíng.
 15347	tā cóng dàlù huílái le.
-15378	nóngfū men zài tiándì lǐ mánglù dì gēngzhòng.
+15378	nóngfū men zài tiándì lǐ mánglù de gēngzhòng.
 15393	tā tīngdào mǒu rén jiào jiùmìng.
 15394	qǐng zūnxún hùshi de zhǐdǎo.
 15399	wǒ cái bùtīng nǐ shuō de ne!
@@ -1224,10 +1222,10 @@ id_oracion	pinyin
 15475	tā bèi fá le yī wàn rì yuán.
 15500	tā zhēn shì gè hǎo gūniang.
 15510	yīqǐ suàn háishi fēnkāi suàn?
-15550	wǒ kāichē sòng nǐ huí ba.
+15550	wǒ kāichē sòng nǐ huí jiā ba.
 15552	gōngchéng de dì yī jiēduàn yǐjīng wánchéng le.
 15564	māo zài diànzi shàng.
-15594	yǒu hǎn wǒ de míngzi.
+15594	yǒu rén hǎn wǒ de míngzi.
 15596	dìqiú měi èr shí sì xiǎoshí jiù huì rào zhóu zìzhuàn yī zhōu.
 15607	yì dà lì shì yígè bàndǎo.
 15609	nàge zérèn duì tā shì gè bāofu.
@@ -1277,12 +1275,12 @@ id_oracion	pinyin
 16282	wǒ shì qǐyè jiā.
 16347	wǒ cónglái méi qù guò guǎngdǎo.
 16373	bǎ là gēn xiāopí zài xuē chéng qiān.
-16392	wǒ shuā, wǒ shū tóufa.
+16392	wǒ shuā yá, wǒ shū tóufa.
 16402	tāmen wéi zài bì lú pángbiān.
 16408	ài lái bù lái, xī tīng zūn biàn.
 16424	wǒ ài nǐ shèngguò nǐ ài wǒ.
 16430	tāmen bǎocún le zhè jiànzhù.
-16446	tā xīn rán yòng chē sòng wǒ huí.
+16446	tā xīn rán yòng chē sòng wǒ huí jiā.
 16491	wǒ hé yīxiē péngyou hē jiǔ.
 16507	nǐ kàn dōu chūxiě le, wǒ fú nǐ qǐlái ba.
 16541	rénmen huì xuǎnzé nǐ huò wǒ.
@@ -1296,17 +1294,17 @@ id_oracion	pinyin
 16699	tā zhù zài yígè cūn zi lǐ.
 16720	zhège zǔzhī gēn rènhé zhèngdǎng méiyǒu liánxì.
 16728	tā fēi dào nánfāng.
-16743	tā zài hǎi yǒusuǒ fángzi.
+16743	tā zài hǎi biān yǒusuǒ fángzi.
 16753	tā qù bǎihuò gōngsī gòuwù.
 16774	tā zǎoshang qī diǎn qǐchuáng de.
 16806	nǐ rènshi bù lǎng xiānsheng ma?
 16807	yīzhī lǎo shǔ pǎo guò fángjiān.
 16830	shuǐguǒ yǐ píngguǒ wèi zuìjiā.
-16849	wǒ jiāojí dì zài děng zhe qù jùhuì.
+16849	wǒ jiāojí de zài děng zhe qù jùhuì.
 16852	zhè shuǐ bèi shíyóu wūrǎn le.
 16879	Chūnjié, jí nónglì xīnnián.
 16880	qìngzhù Chūnjié súchēng guònián.
-16888	zài Zhōngwén lǐmiàn, jiǎozi hé" jiāo zi" xié yīn, yīn'ér jùyǒu fēngfù de wénhuà hányì.
+16888	zài Zhōngwén lǐmiàn, jiǎozi hé “jiāo zi” xié yīn, yīn'ér jùyǒu fēngfù de wénhuà hányì.
 16894	wèntí shì, tàiyángnéng tài guì le.
 16941	zhè bīng gòu hòu kěyǐ zài shàngmiàn zǒu.
 16976	shuǐmiàn fú zhe yīpiàn luòyè.
@@ -1324,13 +1322,13 @@ id_oracion	pinyin
 17188	tāmen zuòchē qù zhī jiā gē.
 17192	wǔ bǎi niánqián shì yījiā.
 17215	méiyǒu liánxì tā de fāngshì.
-17225	tā mǎi xīn de qìchē.
+17225	tā mǎi bu qǐ xīn de qìchē.
 17245	tā jiǎn qǐ le yī kuài éluǎnshí.
 17253	wǒ wèi nǐ zhǔ mǎ líng shǔ.
 17257	nǐ kàndào shénme ná shénme.
 17261	wǒ yào qù kàn kǒngbù diànyǐng.
 17309	rénshēng bìng bù zǒngshì nàme měihǎo, měi gèrén dōu yǒu guò cuòzhé.
-17312	chúfēi xià, wǒ yě huì qù.
+17312	chúfēi xià yǔ, wǒ yě huì qù.
 17332	bīng róng le jiù huì huàchéng shuǐ.
 17354	tāmen kuò kuò le dìguó de lǐngtǔ.
 17408	tā jìngrán huángěi wǒ zhuāng shǎ.
@@ -1351,9 +1349,9 @@ id_oracion	pinyin
 17684	diànyǐng zài shí diǎn zhōng kāi yǎn.
 17689	wǒmen lìjí kāishǐ shīgōng.
 17695	jīntiān shì wúliáo de yī tiān.
-17716	zhè chuáng kàn hěn wěngù.
+17716	zhè chuáng kàn qǐlái hěn wěngù.
 17745	tā de měilì zhōngjiāng xiāoshī.
-17746	yǒu tuī wǒ dào lǐmiàn.
+17746	yǒu rén tuī wǒ dào lǐmiàn.
 17748	tā gēge réngrán bǐjiào gāo.
 17771	nà bìng méiyǒu dǎjī dào tā.
 17811	dàduōshù jítā yǒu liùgēn xián.
@@ -1368,20 +1366,19 @@ id_oracion	pinyin
 17941	zhè zhǐ lǎo shǔ pǎo jìn dòng lǐ.
 17959	wǒ cónglái méiyǒu jiànguo tā.
 17961	zhèxiē shì wú yòng qiě rǒngcháng de huìyì.
-17965	tā háo dì cānjiā le huìyì.
+17965	tā háo bù yóuyù de cānjiā le huìyì.
 17990	zánmen wánr zhuōmícáng ba.
 18005	nǐ měi nián juān duōshao qián?
 18018	shāng zhě bèi jiùhùchē zài sòng.
 18036	tā chuǎng rù yī jiān fángzi.
 18044	ràng wǒmen zài jù zài yīqǐ!
 18087	wǒ huì xiǎngniàn nǐ de chú yì.
-18100	bèi dì xǐhuan gǔdiǎn yīnyuè.
 18110	wǒ xiǎng hē diǎn ér rètāng.
 18125	shēnghuó zhōng yǒu gāodī qǐfú.
 18137	duìbuqǐ, wǒ méiyǒu língqián.
 18158	tiānshǐ wèijù chù, yú rén gǎn chuǎng rù.
 18174	tā bùyíyúlì bāngzhù wǒ.
-18177	tā kū dé gān cháng cùn duàn.
+18177	tā kū de gān cháng cùn duàn.
 18231	nǐ xiǎngyào zhè jiàn chènshān ma?
 18232	hā lì jīnnián cái sì shí suì.
 18294	tā de huídá shìfǒu dìng de.
@@ -1392,14 +1389,14 @@ id_oracion	pinyin
 18357	nǐ zhīdào zěnme zhǔ ròu ma?
 18367	wǒ huáiyí zhè shì liàng hēichē.
 18396	xīngqī yī nǐ bìxū jiǎo jiāo bàogào.
-18397	nǐ yīnggāi guāngróng dì cízhí.
-18401	nǐ yīnggāi nǔlì qù jiè.
+18397	nǐ yīnggāi guāngróng de cízhí.
+18401	nǐ yīnggāi nǔlì qù jiè yān.
 18460	nǐ bùfáng gàosu wǒ yīqiè.
 18475	tā duì lǎopo yántīngjìcóng.
 18477	tā méiyǒu zuìhǎo de míngshēng.
 18479	wǒ mǔqīn zài chúfáng lǐ yīmiàn zuò wǎnfàn yīmiàn hēng zhe gē.
 18550	rènshi tā de rén dōu ài tā.
-18557	tā ràng wǒ qì dé tóuténg le.
+18557	tā ràng wǒ qì de tóuténg le.
 18587	měi gèrén dōu yīnggāi shì zìjǐ mìngyùn de zhǔzǎi.
 18613	nín kěyǐ shìfàn yī xià ma?
 18624	Yuándàn jiù zài yǎnqián.
@@ -1423,10 +1420,10 @@ id_oracion	pinyin
 18903	tā de màibó zhèngcháng ma?
 18920	wǒ zhōngyú yōngyǒu le yīzhěngtào!
 18935	zhè búshì xuè. zhè shì tián cài.
-18940	wǒ lìkè dǎ gěi tā.
+18940	wǒ lì kè dǎ diànhuà gěi tā.
 18947	bǐ dé de nóngshè fēicháng dà.
 18961	zhēnzhèng de ài méiyǒu miǎnqiǎng.
-19016	měi cì xià wūdǐng jiù lòu shuǐ.
+19016	měi cì xià yǔ wūdǐng jiù lòu shuǐ.
 19017	zhèngwǔ shí fēnzhōng shēng xiǎngqǐ.
 19027	cóng jùn hé wān kàn, fù shì shān hěn měilì.
 19051	tāmen zhuàng gào zhèngfǔ péicháng sǔnshī.
@@ -1439,8 +1436,8 @@ id_oracion	pinyin
 19132	zhè zhǐ gǒu zhǎng de xiàng pǐ mǎ.
 19134	yīdàn guò le hé, nǐ jiù ānquán le.
 19135	āiyā - wǒ wàng le wǒ de yào.
-19139	tā yánlì dì zhǐzé wǒ.
-19168	wǒ jǐnjǐn dì bào zhe tā kū.
+19139	tā yánlì de zhǐzé wǒ.
+19168	wǒ jǐnjǐn de bào zhe tā kū.
 19179	yīngxióng zǒngshì láide tài chí.
 19206	tā bèi rènmìng wèi zhù yīng guó dàshǐ.
 19225	tā huì shì gè hǎo zhàngfu de.
@@ -1451,13 +1448,13 @@ id_oracion	pinyin
 19276	nǐ zhīdào fēnbiàn hǎohuài ma?
 19340	nà fú huà yǒu duōshao nián le?
 19356	bǎ pèi liào hǎohǎo hùn yī xià.
-19370	nǐ shì gāng rènshi tā?
+19370	nǐ shì bu shì gāng rènshi tā?
 19377	pāizhào piàn guāngxiàn bùgòu liàng.
 19400	zhè zhǒng zuòfǎ jí bù gōngpíng.
 19411	wǒ gāi zài nǎr fù méiqì fèi?
 19414	tā shì zhe yíngdé jìngsài.
 19430	nǐ qù guò mò xī gē ma?
-19456	tāmen bùduàn dì mōsuǒ.
+19456	tāmen bùduàn de mōsuǒ.
 19464	wǒ de tóupí fēicháng yǎng.
 19477	wǒmen mǎi le yī bàng de chá.
 19498	wǒ juéde wǒ kuài hūn dào le.
@@ -1482,8 +1479,8 @@ id_oracion	pinyin
 19783	nà jiā gōngchǎng shēngchǎn wánjù.
 19785	zánmen qù nàlǐ jiàn tā ba.
 19799	tā qián xīn yánjiū yīnyuè.
-19817	wǒ de fángjiān jiù zài lóu.
-19818	wǒ de fángjiān jiù zài lóu.
+19817	wǒ de fángjiān jiù zài lóu xià.
+19818	wǒ de fángjiān jiù zài lóu shàng.
 19854	tā diēdǎo nòng shāng le tā de shǒu.
 19857	yī gōngjīn xiāngjiāo duōshao qián?
 19858	tā hěn pànwàng kàndào nǐ.
@@ -1491,11 +1488,11 @@ id_oracion	pinyin
 19902	mǎn zhāo sǔn, qiān shòuyì.
 19907	jiāo'ào shì rénlèi de ruòdiǎn.
 19957	niú yào qiān dào nǎlǐ qù?
-19961	wèi bù qūzhú tā?
+19961	wèi shénme bù qūzhú tā?
 19964	wǒ jīnnián méi qián mǎi xīn chē.
 19980	wǒ juéde zhè nányǐ-zhìxìn.
 19989	zhè shì wǒ jǐn yǒude yī běn shū.
-19997	tā zǒulù huòzhě qí guòlái.
+19997	tā zǒulù huòzhě qí chē guòlái.
 20002	wǒ bù míngbai tā shuō dehuà.
 20079	tā zhǐgù zìjǐ de lìyì.
 20082	wǒmen bìxū zūnjìshǒufǎ.
@@ -1522,7 +1519,7 @@ id_oracion	pinyin
 20459	tā cái kāi le nàge xìnfēng.
 20469	shí jiān fángwū bèi shāohuǐ le.
 20475	wǒ zài dàxué zhǔ xiū zhéxué.
-20516	" wǒ juéde zhè tài fěngcì le."" zěnme huì?"
+20516	“wǒ juéde zhè tài fěngcì le.” “zěnme huì?”
 20520	mèngxiǎng néng ràng wǒ fēngkuáng.
 20525	zhè fángzi hé tǔdì shǔyú wǒ.
 20529	rì běn yǒu hěn duō wēnquán.
@@ -1538,7 +1535,7 @@ id_oracion	pinyin
 20591	tā gēn yīshēng yùyuē kàn zhěn le.
 20603	tā yòu hē le yī wǎn tāng.
 20604	wǒmen zài shùyīn xià xiūxi.
-20607	wǒ hé tā liáo dé hěn yúkuài.
+20607	wǒ hé tā liáo de hěn yúkuài.
 20616	zuó wǎn xià le yīcháng dàyǔ.
 20617	zuó wǎn yǔshì hěn dà.
 20619	jīntiān zǎoshang tiānqì yán hán.
@@ -1587,7 +1584,7 @@ id_oracion	pinyin
 21059	hóng lǜdēng yīzhí zài yùnzuò.
 21061	bié xián liáo le, kāishǐ gōngzuò.
 21065	duìbuqǐ, wǒ bō cuò le hàomǎ.
-21067	shuō, wǒ gǎndào gūdú.
+21067	shuō shíhuà, wǒ gǎndào gūdú.
 21077	jǐngchá mìnglìng tāmen tíng shǒu.
 21093	shāo de shíhou jiā huáng jiǔ bǎ xīng wèi qùdiào.
 21108	bùyào tīng fēng jiùshì yǔ.
@@ -1601,11 +1598,11 @@ id_oracion	pinyin
 21191	bǎochí zài jiào dī de wēndù.
 21204	duìbuqǐ, wǒ méi jiǎng qīngchu.
 21205	wǒ xiǎng duìhuàn lǚxíng zhīpiào.
-21214	wǒ de báifà yuè duō.
-21229	wànyī xià, wǒ jiù bù qù.
+21214	wǒ de báifà yuè lái yuè duō.
+21229	wànyī xià yǔ, wǒ jiù bù qù.
 21234	kàn búdào rènhé yī kē shù.
 21256	zhè duì wǒ shì hěn dà de zhènhàn.
-21265	yīshēng lìkè bèi qǐng lái le.
+21265	yīshēng lì kè bèi qǐng lái le.
 21272	jīntiān fēicháng rè, búshì ma?
 21296	wǒ duì tā de píngjià hěn hǎo.
 21308	wǒ cāi nà yīnggāi kěyǐ de.
@@ -1619,7 +1616,7 @@ id_oracion	pinyin
 21428	wǒ de yǎnjing jìn le xiē shā.
 21451	zhège lǎorén dǎng le tā de lù.
 21520	nǐ jiùshì wǒ yǒngyuǎn de zhì ài.
-21523	kǎi tè kàn le kè lǐ sī yīyǎn, ránhòu bù cǎi tā, shǐ tā gǎndào tòngkǔ.
+21523	kǎi tè kàn le kè lǐ sī yīyǎn, ránhòu bù lǐ cǎi tā, shǐ tā gǎndào tòngkǔ.
 21530	tā kàndào tā jiù liǎn hóng le.
 21623	wǒ bèi hěn duō de wénzi dīng le.
 21624	tā dédào le fǎlǜ shuòshì xuéwèi.
@@ -1628,8 +1625,8 @@ id_oracion	pinyin
 21648	méiyǒu rén kěyǐ gòng shì èr zhǔ.
 21694	wǒ méi míngbai nàge xiàohua.
 21712	gěi wǒ dàn yī qū xiào bāng.
-21714	tā xiū qiè dì kàn le yīyǎn nàge niánqīng rén.
-21793	tā qīng qīng dì tuī le mén.
+21714	tā xiū qiè de kàn le yīyǎn nàge niánqīng rén.
+21793	tā qīng qīng de tuī le mén.
 21810	zhuó bié lín shì yǒu yùjiàn lì de rén.
 21811	wǒ xīwàng kǎoshì néng lùqǔ.
 21825	nǐ huì qiántú wúliàng de.
@@ -1644,7 +1641,7 @@ id_oracion	pinyin
 21893	tā xíguàn le tuánduì hézuò.
 21921	wǒ xíguàn zài zǎoshang xǐzǎo.
 21925	zhēn kěxī nǐ bùnéng lái!
-21931	yǒu wěiba de māo.
+21931	yǒu méiyǒu wěiba de māo.
 21937	zhè tiáo héliú xiàng tàipíng yáng.
 21940	zhège lùndiǎn zhídé qiángdiào.
 21942	wǒ yōuxián de chī zǎocān.
@@ -1659,7 +1656,7 @@ id_oracion	pinyin
 22076	měi duǒ yún dōu pī zhe yín yī.
 22081	fán shì yào yùxiān zhǔnbèi hǎo.
 22084	zǐnǚ shì qióngrén de cáifù.
-22103	rú shuǐ liú guò yā bèi bān háo fǎnyìng.
+22103	rú shuǐ liú guò yā bèi bān háo wú fǎnyìng.
 22110	míbǔ yǒngyuǎn búhuì tài wǎn.
 22111	miànbāo bǐ niǎo de míng chàng hǎo.
 22112	méiyǒu bù dài cì de méigui.
@@ -1668,7 +1665,7 @@ id_oracion	pinyin
 22194	zhōngxīn zhùhè nǐ de shēngrì, mù lǐ ěr!
 22204	zhīshi búshì yíchuán de.
 22233	shàngliángbùzhèngxiàliángwāi.
-22237	háo xīwàng, bái fèi xīnsi.
+22237	háo wú xīwàng, bái fèi xīnsi.
 22257	tā méiyǒu tā dìdi cōngmíng.
 22277	nǐ bù xǐhuan dǔbó, shì ma?
 22291	tā de dànǎo réngrán hěn huóyuè.
@@ -1695,7 +1692,7 @@ id_oracion	pinyin
 22712	zuì zǎo de pí pá dàyuē zài qín cháo shíqī fāmíng de.
 22739	tā jímáng chū le bàngōngshì.
 22742	tā shì gè yǒu jiàoyǎng de rén.
-22746	rùn huá xìtǒng shèjì dé bùhǎo.
+22746	rùn huá xìtǒng shèjì de bùhǎo.
 22759	huāyuán lǐ kāi mǎn le huáng huā.
 22767	zhǒng de shì fēng, ér shōuhuò de shì xuán fēng.
 22793	wǒ qī diǎn bàn huì zài nàlǐ.
@@ -1706,14 +1703,14 @@ id_oracion	pinyin
 22872	tā de jìhuà bèi bóhuí le.
 22887	tā zài tā huāyuán lǐ zhǒng xīhóngshì.
 22919	jī'è de zhū mèng dào xiàng shù zi.
-22926	yǒu rén fùzhàilěilěi.
+22926	yǒuxiē rén fùzhàilěilěi.
 22958	māo gōng qǐ bèi, shēn le gè lǎn yāo.
 22979	xiànzài wò gè shǒu héjiě ba.
 23001	tā mōsuǒ zhe yī zhāng zhǐ.
 23014	qíngkuàng zhèngzài gǎishàn, suǒyǐ zhènzuò qǐlái!
 23017	wǒmen qǔxiào le tā zhè yìdiǎn.
 23072	ràng wǒmen lái dǎ bàngqiú ba!
-23103	wǒ zhēn hěn dǎoméi!
+23103	wǒ zhēn de hěn dǎoméi!
 23147	qiáo nǐ shēn hòu.
 23151	zhēn zi duì zhe tāmen wēixiào.
 23213	bàgōng yǐngxiǎng le guójiā jīngjì.
@@ -1721,15 +1718,15 @@ id_oracion	pinyin
 23244	xīnjiāng yǒu xǔduō fēngjǐng yōuměi de dìfāng.
 23280	tā zhuānzhù yú tā de yánjiū.
 23320	wǒ yào yīxiē tián de dōngxi.
-23321	tā de zīwèi zhēn hěn hǎo.
+23321	tā de zīwèi zhēn de hěn hǎo.
 23390	wǒ huì yánjiū nǐ de bàogào.
-23398	nán xī kàn hěn píbèi.
+23398	nán xī kàn qǐlái hěn píbèi.
 23408	nà zhǐ niǎo jiào shénme míngzi?
 23481	zuìjìn wùjià yǐjīng xiàjiàng.
 23492	tā de jìhuà shì wēixiǎn de!
 23508	nàxiē dōu shì wǒ de kùzi.
 23509	měi gèrén dōu pēngjī wǒ de yìjiàn.
-23515	tā kàn hěn qiángzhuàng.
+23515	tā kàn qǐlái hěn qiángzhuàng.
 23517	zhège dàizi lǐ shì shénme?
 23544	nà shì yígè fǎng zào pǐn.
 23556	tā dài hū zhí shǒu le.
@@ -1742,13 +1739,13 @@ id_oracion	pinyin
 23821	hǎohǎo zhēng dà yǎnjing kàn zhe!
 23835	wǒ wèi wǒ érzi gǎndào jiāo'ào.
 23836	guǎngfàn de ānquán cuòshī shíshī le.
-23847	xǐyījī yǒu bùduì jìn.
+23847	xǐyījī yǒuxiē bùduì jìn.
 23864	hǎixiào de jǐng bào jiěchú le.
 23871	tā jì méi qián, yě bù chūmíng.
 23875	tā yòng jiāohé jì tiánmǎn le lièfèng.
 23882	shìbīng men chèlí le tāmen de zhèndì.
 23911	wǒmen dōu bù rènwéi tā shì shìgù de zuìkuí-huòshǒu.
-23990	wǒ xùnsù dì chī le wǔfàn.
+23990	wǒ xùnsù de chī le wǔfàn.
 24006	zhēn shì wùměijiàlián.
 24028	wǒ shì zuǒpiězi.
 24077	máfan zài yī píng pútaojiǔ.
@@ -1757,7 +1754,7 @@ id_oracion	pinyin
 24099	nǐ xǐhuan hēisè de māo ma?
 24104	nǐ yǒu yīliáo bǎoxiǎn ma?
 24121	nǐ yīnggāi gèng nǔlì xuéxí.
-24127	ān wǎngqiú dǎ dé fēicháng hǎo.
+24127	ān wǎngqiú dǎ de fēicháng hǎo.
 24143	tā náchū le tā de hùzhào.
 24180	nǐ cái qiè zhǐ zhāng le ma?
 24184	nǐ néng shēngchī mǔ lì ma?
@@ -1784,12 +1781,12 @@ id_oracion	pinyin
 24490	wǒ yě xǐhuan zhège yánsè.
 24512	zhēn zìjǐ xiě le zhè fēng xìn.
 24526	jīntiān hěn wēnnuǎn, búshì ma?
-24563	hěn míngxiǎn dì nǐ cuò le.
+24563	hěn míngxiǎn de nǐ cuò le.
 24574	wǒ de zǔfù fēicháng jiànkāng.
 24575	wǒ fùqīn xǐhuan nóng kāfēi.
 24578	ràng wǒmen kāichē dào hú biān.
 24591	wǒ huì gěi nǐ zhège zhuì shì.
-24640	tā niánjì yuè dà biàn dé yuè wángù.
+24640	tā niánjì yuè dà biàn de yuè wángù.
 24674	méi gé tóngyì kěn de jìhuà.
 24703	wǒ de gōngyù zài zhè fùjìn.
 24710	yǐjīng hěn zhǎng yī duàn shíjiān le.
@@ -1804,13 +1801,13 @@ id_oracion	pinyin
 24890	nǎ yī wèi fǎguān shěn lǐ cǐ àn?
 24923	tā méiyǒu zūnxún wǒmen de zhōng gào.
 24951	nàge mùchǎng yǒu shí yīng mǔ dà.
-24957	nǐ kěyǐ zài wǒ huí ma?
+24957	nǐ kěyǐ zài wǒ huí jiā ma?
 24998	nǐ hěn yǒnggǎn, búshì ma?
 25090	duō zuò duō dé. shǎo zuò duō shī.
 25100	yào yòngxīn, bùyào cāoxīn, fán xīn.
 25115	shìshàng yǒu liǎng jiàn shì bùnéng děng: yī, xiàoshùn èr, xíngshàn.
 25119	dé lǐ yào ráo rén, lǐ zhí yào qì hé.
-25141	fā shì duǎnzàn de fāfēng.
+25141	fā píqi shì duǎnzàn de fāfēng.
 25214	bǎ nǐ de wàitào guà zài gōuzi shàng.
 25222	nà shì wǒ mèimei de zhàopiàn.
 25224	zuìjìn de diànhuà tíng zài nǎlǐ?
@@ -1831,7 +1828,7 @@ id_oracion	pinyin
 25407	nǐ xīngqī liù yào shàngxué ma?
 25425	tā gùyì dǎpò le chuānghu.
 25447	tāmen yǐjīng xuānbù dìnghūn le.
-25453	jiàgé yīzhí zài wěndìng dì pānshēng.
+25453	jiàgé yīzhí zài wěndìng de pānshēng.
 25454	tā dàyuē gēn wǒ tóngnián jì.
 25456	tā duì háizi hěn yǒu yī tào.
 25465	tā gěi le wǒ yī zhī shǒubiǎo.
@@ -1840,7 +1837,7 @@ id_oracion	pinyin
 25492	zuótiān wǒ mǎi le liǎnggè mántou.
 25514	tā zébèi le wǒ de shūhu.
 25520	tā xū suì sān shí qī suì.
-25561	zhè zhēn shì gè hǎo tiānqì.
+25561	zhè zhēn de shì gè hǎo tiānqì.
 25577	shuǐ duì rén shì hěn zhòngyào de.
 25582	sū shì yígè měi guóxué shēng.
 25586	tā bèi hā fú dàxué lùqǔ le.
@@ -1853,14 +1850,14 @@ id_oracion	pinyin
 25679	huìyì tīng zuò wú xū xí.
 25691	tāmen yào fāsòng mùcái gěi wǒmen.
 25692	tā qù le yóujú jì bāoguǒ.
-25698	tā ràng wǒ bǎ yán dì tā.
+25698	tā ràng wǒ bǎ yán dì gěi tā.
 25710	wǒmen méiyǒu shōudào diànbào.
 25715	yào mǎi xiē shuǐguǒ hé shūcài.
 25736	tā zǎoshang zǒngshì yǒudiǎn píqi bàozào.
 25765	fèi shuǐ jīngcháng wūrǎn hǎiyáng.
-25771	tā mǔ rǔ hē dé bùgòu.
+25771	tā mǔ rǔ hē de bùgòu.
 25774	háizi men zài hǎitān biān yòng shāzi duīqì chéngbǎo.
-25780	mìshū lěngmò dì huídá le wǒ.
+25780	mìshū lěngmò de huídá le wǒ.
 25788	tā yě bǎ bēizi dǎpò le.
 25795	bùyào cǎi zài suì bōli shàng.
 25801	xièxie nín jīn wǎn de guānglín.
@@ -1869,12 +1866,12 @@ id_oracion	pinyin
 25840	nǐ yǒu bǐjiào dà de chǐcùn ma?
 25849	xǔduō huā zài sān yuèfèn zhànfàng.
 25868	gāi bìngrén zhèng zhúbù kāngfù.
-25882	nǐ jiǔ hē dé tài zuì le bùnéng kāichē.
+25882	nǐ jiǔ hē de tài zuì le bùnéng kāichē.
 25897	dào lì wù pǔ de piàojià duōshao qián?
 25924	zhè shì nǐ wéiyī de jīhuì.
 25947	wǒ zài wǎng lùshang mài yīfu.
 26001	yīshēng jiǎnchá le bìngrén.
-26003	nǐ yǒu zhǐ yào ma?
+26003	nǐ yǒu zhǐ ké yào ma?
 26097	hóng měi zhèng chuānzhuó yī jiàn xīn yīfu.
 26107	tā bǎ qián tóuzī yú gǔpiào.
 26138	tā bǎmén qī chéng le báisè.
@@ -1899,16 +1896,16 @@ id_oracion	pinyin
 26555	tā jiù zhù zài mǎlù duìmiàn.
 26559	tā zuò qìchē dào bō shì dùn.
 26560	tā shòudào xuéshēng de huānyíng.
-26565	tā pǎo dé gēn nǐ yīyàng kuài.
-26573	tā jūzhù zài guó duō.
-26575	wǒ duì nǐ háo yǐnmán.
+26565	tā pǎo de gēn nǐ yīyàng kuài.
+26573	tā jūzhù zài guó wài duō nián.
+26575	wǒ duì nǐ háo wú yǐnmán.
 26587	wǒ wèi tā zuò gāngqín bànzòu.
 26591	wǒ měi gé yī tiān qù gòuwù.
 26604	tā zài dàxué zhǔ xiū xìjù.
 26609	tā duì wǒ de tíyì bùxiè yī gù.
 26635	wǒ cóng guǎngbō zhōng tīngdào tā.
 26641	tā hěn niánqīng jiù kāishǐ tūtóu le.
-26691	wǒ cōngmáng dì chī le wǔfàn.
+26691	wǒ cōngmáng de chī le wǔfàn.
 26733	wǒ dàn gāngqín wèi tā bànzòu.
 26749	dànyuàn wǒ kěyǐ bāngzhù nǐ.
 26797	qǐng gěi wǒ yījuàn cǎisè jiāopiàn.
@@ -1925,7 +1922,7 @@ id_oracion	pinyin
 26948	jīntiān shàngwǔ hěn liángshuǎng, búshì ma?
 26986	wǒ mèimei bǐ nǐ ǎi.
 26995	tā de jìmǔ hěn xiōng'è.
-27003	tā duì gǔdǒng hěn gǎn.
+27003	tā duì gǔdǒng hěn gǎn xìngqù.
 27010	wǒ míngnián xiǎng xué pǔtōnghuà.
 27028	wǒ xiǎng hē diǎn rè de yǐnliào.
 27031	tā de Yīngwén chéngjì hěn hǎo.
@@ -1933,7 +1930,7 @@ id_oracion	pinyin
 27082	ràng wǒ liàng liàng nǐ de xuèyā.
 27093	wǒ yào qù huàn wǒ de chènshān.
 27147	wǒ shì zài Běijīng xué de Zhōngwén.
-27165	tā shàng dào tā de wòshì.
+27165	tā shàng lóu dào tā de wòshì.
 27173	tā měi liǎng tiān tàn fǎng wǒmen.
 27177	tā pìnqǐng tā zuò chéng shì shèjìshī.
 27186	méi gé lián kàn dōu bù kàn wǒ.
@@ -1952,7 +1949,7 @@ id_oracion	pinyin
 27507	wǒ yào yī kuātuō de niúnǎi.
 27562	niǔ yuē chōngmǎn zhe gāo lóu dàshà.
 27565	tā bùxiǎng shè rù qízhōng.
-27594	nǐ kàn jiànkāng rú xī.
+27594	nǐ kàn qǐlái jiànkāng rú xī.
 27595	tā mǎi de dōngxi hěn ángguì.
 27617	chá tài nóng le, jiā diǎn shuǐba.
 27690	zhè jià fēijī ānquán zhuólù le.
@@ -2019,12 +2016,12 @@ id_oracion	pinyin
 28754	wǒ huā le wǔ yuán mǎi zhè běn shū.
 28755	tā yǒu fēngfù de jīngyàn.
 28760	měi nián bīn sōng yǒu fēngzheng jié.
-28779	tā cóng zài shēnyè chūmén.
+28779	tā cóng bù zài shēnyè chūmén.
 28871	wǒ yìdiǎn yě bùyào xiāngjiāo.
 28878	tā zhù zài dōng jīng jiāoqū.
 28880	tā qiào zhe èrlángtuǐ zuò zài nàlǐ.
 28926	tā gàosu wǒ yào shuō màn yìdiǎn.
-28936	tā kàn xiàng yīzhī yāzi.
+28936	tā kàn qǐlái xiàng yīzhī yāzi.
 28977	gěi wǒ yīxiē zhǐ lái xiě zì.
 28997	chǒu gè kōng tā yòu láidào le qián xiǎo hóng jiā.
 29000	ā ěr bēi sī shāndì kuà ōu zhōu bā guó.
@@ -2038,13 +2035,13 @@ id_oracion	pinyin
 29099	tā yǒu hěn hǎo de yōumò gǎn.
 29111	tā yǒu qiángliè de zérèn gǎn.
 29124	tā zhìshǎo yǒu yī qiān běn shū.
-29166	wǒ bùshí dì juéde nánguò.
+29166	wǒ bùshí de juéde nánguò.
 29188	mǎntiānxīngdǒu jìnshōuyǎndǐ.
-29189	tā píngrì dōu hěn zǎo huí.
+29189	tā píngrì dōu hěn zǎo huí jiā.
 29195	lābā hé shuǐ yòu zàidù fàn qǐ le bái làng.
 29238	zànshí shōu shǒu bù dàibiǎo wàngjì.
 29253	wǒmen búshì tā de qīnqi.
-29268	wǒ dé chéngrèn nǐ shì duì de.
+29268	wǒ děi chéngrèn nǐ shì duì de.
 29281	wǒmen shēn chù hénéng shídài.
 29283	méirén guǎn shù huò kāi dǎo tā.
 29327	tōngguò shíyàn lái zhèngmíng tā.
@@ -2058,7 +2055,7 @@ id_oracion	pinyin
 29398	nà shì wújīzhītán. zhǐyǒu shǎguā cái huì xiāngxìn.
 29404	nàxiē túhuà shì tā huà de.
 29440	tā yào fǔyǎng yī dàjiā rén.
-29471	tā bù tīng wǒ de quàngào.
+29471	tā bù kěn tīng wǒ de quàngào.
 29478	tā jīngcháng zài wǎnshang áoyè.
 29544	tā xié zhe yígè bāoguǒ.
 29580	wǒ zhù zài dōng jīng jiāoqū.
@@ -2087,7 +2084,7 @@ id_oracion	pinyin
 30286	zhè duì fūqī shǒu qiān shǒu zǒulù.
 30287	nín chī le shénmeyàng de shànshí?
 30325	gàosu tā bié duō guǎn xián shì.
-30354	wǒmen hěn jiéshěng dì lǚxíng.
+30354	wǒmen hěn jiéshěng de lǚxíng.
 30402	xiǎo nán hái pǎo jìn le fángjiān.
 30424	nǐ bùnéng zài zhǎozé dìshang jiànzào jiànzhùwù.
 30478	nǐ huì cānjiā zhège yíshì ma?
@@ -2099,9 +2096,9 @@ id_oracion	pinyin
 30531	yuē hàn xīshēng zìjǐ de jiànkāng, wánchéng gōngzuò.
 30573	tāmen xiǎngyǒu chónggāo de wēi wàng.
 30618	shuǐ zài shè shì língdù shí jiébīng.
-30624	yǒu rén hàipà hūnyīn.
+30624	yǒuxiē rén hàipà hūnyīn.
 30655	shù xià yǒu yīxiē nán hái.
-30685	lù zhuāng le xǔduō léi dá.
+30685	lù biān zhuāng le xǔduō léi dá.
 30690	zhè kǒu jǐng lǐ de shuǐ hěn shǎo.
 30705	wǒmen qīwàng jīnnián fēngshōu.
 30727	nǐ xiǎng jiārù nǎ yī zǔ?
@@ -2114,6 +2111,7 @@ id_oracion	pinyin
 30908	dàn de jiàgé zhèngzài shàngzhǎng.
 30927	tā de xíngwéi hé tā de xìnniàn bèidàoérchí.
 30929	hǎohǎo xiǎng xiǎng, kāidòng nǎojīn.
+30932	zhè shì yī kē téngluó.
 30933	bié duō luó suo.
 30934	tā cóng rè nà yà lái.
 31038	zhè shì wǒ wéiyī de xiàngjī.
@@ -2123,7 +2121,7 @@ id_oracion	pinyin
 31130	zhè běn shū de zuòzhě shì shuí?
 31138	nǐ yào wǒ jiěshì yī xià ma?
 31140	nǐ zuì xǐhuan shénme kēmù?
-31149	tā yǒushí biàn dé xīnqíng yìyù.
+31149	tā yǒushí biàn de xīnqíng yìyù.
 31180	tā tì le bā zì hú.
 31191	wǒ shūshu qùnián lì xià le yízhǔ.
 31244	fěi cuì bān de qīng shān, shān jiàn zhōngde liúshuǐ shēng chán chán.
@@ -2136,7 +2134,6 @@ id_oracion	pinyin
 31369	wǒ xiànzài yào qù zhè jiā shāngdiàn.
 31374	gé léi è mǔ gé lín shì wǒ zuì xǐhuan de zuòjiā.
 31394	dàn tā wén qǐlái hěn qíguài.
-31409	jīntiān zǎoshang wǒ kàndào le lì zī.
 31410	zhège yuè yǒu hěn duō gōngzī.
 31411	zhège yuè de xīnshui hěn duō.
 31436	zhè wánquán shì làngfèi shíjiān.
@@ -2149,7 +2146,7 @@ id_oracion	pinyin
 31675	wǒ kěyǐ dǎkāi zhè shàn chuāng.
 31720	yǔzhòu hào hàn wúbiān.
 31723	nǐ cóng zhuō xià pá chūlái ba!
-31733	nàge bāo bāo kàn hǎo guì
+31733	nàge bāo bāo kàn qǐlái hǎo guì
 31745	wǒ qiàn nǐ yī qiān měiyuán.
 31746	hǎoxiàng wǒ kuàiyào hūn dào le.
 31824	wǒ jiāshàng yīxiē zuìhòu de rùn shì.
@@ -2161,19 +2158,19 @@ id_oracion	pinyin
 31881	zǎoshang qī diǎn wǒ qù shàngkè.
 31898	tā pīn le mìng de yào kào àn.
 31930	zhè tào shū gòng sì shí bā cè.
-31953	tā shěngqián wèile qù guó.
+31953	tā shěngqián wèile qù guó wài.
 31960	qǐng dú dì sì shí jiǔ yè.
-32007	tā xīngfèn dé chàndǒu le qǐlái.
+32007	tā xīngfèn de chàndǒu le qǐlái.
 32014	zài nǎnéng mǎi dào rùchǎngquàn?
 32017	yīshí zhù shì shēngcún de jīchǔ.
 32049	fèiténg de yóu yùdào shuǐ dī huì fēijiàn, tóngshí mímàn chū yī gǔ hěn qiàngrén de wèidào.
 32079	fùqīn hé érzi zài yīqǐ, zhēn wēnxīn a.
-32082	qù dé zǎo bùrú qù dé qiǎo.
+32082	qù de zǎo bùrú qù de qiǎo.
 32088	wǒ diǎn le qīngwā jiā miàntiáo.
 32091	yáng qún zài cǎodì shàng chī zhe cǎo.
 32109	zhège xiǎo hái shēntǐ hěn tàng.
-32116	nà dùn fàn jiǎnzhí hǎo…jí.
-32119	zhè duì wǒ méi chābié.
+32116	nà dùn fàn jiǎnzhí hǎojíle.
+32119	zhè duì wǒ méi shénme chābié.
 32126	tā bǎ tóufa pāi zhěngqí le.
 32135	nǐ kěyǐ hé wǒ yīqǐ liànxí Rìyǔ ma?
 32232	tā zhǔ zhuóshǒu zhàng.
@@ -2183,7 +2180,7 @@ id_oracion	pinyin
 32351	fēijī zài yún shàng fēixiáng.
 32354	wǒ bǐngqì guānkàn yǎnqián guāngjǐng.
 32359	wǒ duì tā de xíngjìng nányǐ rěnnài.
-32360	jīnnián Zhōngqiū shì xīngqī yī ma?
+32360	jīnnián Zhōngqiū Jié shì xīngqī yī ma?
 32366	jīn yè, xīng guāng rán liàng tiān jì.
 32399	wǒ bǎ zhè bāo bǐng chī wánle.
 32496	zhège shìjiè shì cànlàn de ma?
@@ -2198,14 +2195,14 @@ id_oracion	pinyin
 32634	wǒ yǒu yīfù tàiyáng yǎnjìng.
 32666	wǒ qù nǐ nà cèng fàn chī.
 32696	wǒ hěn xiǎng chī jiǎozi.
-32735	tā Yīngyǔ shuō dé tǐng bùcuò.
+32735	tā Yīngyǔ shuō de tǐng bùcuò.
 32748	tāng mǔ búhuì chuī duǎn dí.
 32763	wǒ quàn nǐ gàosu tā shíhuà.
-32767	nǐ yǒu chūguó guò ma? pìrú, měi guó?
+32767	nǐ yǒu chūguó guò ma? pìrú shuō, měi guó?
 32787	tóunǎo de jiégòu hěn fùzá.
 32792	dàjiā dōu shì qǐyè jiā.
 32819	shìgù méi jiǎnshǎo ér zēngjiā.
-32889	zhège chéngyǔ yòng dé zhēn qiàdàng.
+32889	zhège chéngyǔ yòng de zhēn qiàdàng.
 32915	wǒmen kàn zhe xī yáng xī xià.
 32952	móu shì zài rén, chéng shì zài tiān.
 32956	nǐ xìnyǎng Shàngdì me?
@@ -2239,20 +2236,20 @@ id_oracion	pinyin
 33476	nǐ bùyào zì gān duòluò.
 33484	wǒ péngyou yāo wǒ gòng fù wǎncān.
 33496	lièrén zài tián yě zhuī tùzi
-33497	chūntiān dàjiā qǐ dé dōu hěn zǎo.
+33497	chūntiān dàjiā qǐ de dōu hěn zǎo.
 33512	bùyào chù pèng zhèxiē huòwù.
 33525	wǒ xiǎng jiéshù zhè chǎng zhēngzhí.
 33530	wǒ jiànguo gǒu yóuyǒng dù hé.
 33613	zhè bǎ dāo bùhǎo qiè dōngxi.
 33626	huǒshān huī zǔ'ài hángyùn.
-33650	jiānchí-bùxiè dì nǔlì!
+33650	jiānchí-bùxiè de nǔlì!
 33667	xǐ jiǎ shuǐ de wèidào hěn nánwén.
 33674	túshūguǎn lǐ yǒu hěn duō shū.
-33691	zhège xìtǒng yǒu míngxiǎn de quēxiàn.
+33691	zhège xìtǒng yǒuxiē míngxiǎn de quēxiàn.
 33745	xìjié chéngjiù wěidà de xiǎngfǎ.
 33784	wǒmen néng kànjiàn yuǎn qù de jūnjiàn.
-33811	shuō dé yù duō, zuò dé yù shǎo.
-33839	nǐ kàn wǒ shì hěn kù?
+33811	shuō de yù duō, zuò de yù shǎo.
+33839	nǐ kàn wǒ shì bu shì hěn kù?
 33851	yún bǐ tā de mèimei piàoliang.
 33873	wǒ de lǎopo shì Zhōngguó rén.
 33908	tā shìyìng le xīn de shēnghuó.
@@ -2265,18 +2262,18 @@ id_oracion	pinyin
 34120	wǒ hàoqí ěr chuí yǒu shénme zuòyòng.
 34159	tā bǎ nà shì zuò le wěiwǎn de pīpíng.
 34167	tā méiyǒu yìdiǎn lǐyí.
-34200	tā bù gěi wǒ zhǎng gōngzī.
+34200	tā bù kěn gěi wǒ zhǎng gōngzī.
 34209	tā jiànyì tā měi tiān duànliàn.
 34237	tā měi gè yuè zhēng duōshao?
 34241	wǔ qiān yuán shì yī dàbǐ qián.
 34268	huòchē de zàihuò liàng chāoguò le sān dūn.
 34272	wǒ dǒngde de dōu yǐjīng qīngnáng xiāng shòu le.
 34285	nán hái chì luǒ zhe shàngshēn.
-34288	jīnnián de shíshàng cháoliú wánquán bù yú qùnián.
+34288	jīnnián de shíshàng cháoliú wánquán bù tóng yú qùnián.
 34294	xìjūn wēi xiǎo dào wúfǎ yòng ròu yǎnkàn dào.
 34316	wǒ xiǎngyào yī bǎ luósī dāo.
-34362	chē huǎnhuǎn dì tíngxia le.
-34408	tā hěn hǎo dì yǎnyì le zhè shǒu qíng gē.
+34362	chē huǎnhuǎn de tíngxia le.
+34408	tā hěn hǎo de yǎnyì le zhè shǒu qíng gē.
 34451	tā bǎ jiǎngbēi gāo gāo jǔ qǐ.
 34491	yīzhī lǎo hǔ zài fùjìn chūmò.
 34502	zhū ròu, niú ròu, jīdàn wǒ dōu bùchī.
@@ -2285,18 +2282,18 @@ id_oracion	pinyin
 34556	wǒ hūrán tíngxia le jiǎobù.
 34562	tā zhuāzhù le háizi de shǒu.
 34568	wǒ nǚ'ér xǐhuan chī dàn huáng.
-34571	wǒmen yào zài hǎi kǎoròu.
+34571	wǒmen yào zài hǎi biān kǎoròu.
 34572	nǐ huì dāng wǒ nǚxu.
-34579	tā de pífū bái dé xiàng xuě.
+34579	tā de pífū bái de xiàng xuě.
 34581	déyǔ shì zōnghé yǔ.
 34600	wǒ bèi zhè qíngjǐng xià dàole.
 34606	zhège nán hái hěn yǒu qiántú.
 34617	tā bá qǐ zá cǎo jiù rēng diào.
-34666	shàngchuáng shuìjiào qián yào shuā.
+34666	shàngchuáng shuìjiào qián yào shuā yá.
 34669	zhǎnlǎn xiànzài yǐjīng kāifàng.
 34681	hěn duō rén wèn wǒ, qīngchūn de juébié shìfǒu yìwèizhe niánmài de jiāngjìn.
 34713	tā shì gè èr niánjí xuéshēng.
-34741	wǒ fùqīn jīngyíng wàimào duō.
+34741	wǒ fùqīn jīngyíng wàimào duō nián.
 34747	tā jiāng xiézhù zhège jìhuà.
 34753	tā chén zuì yú xǐyuè zhīzhōng.
 34754	zhège yìshù jiā huà guóhuà.
@@ -2304,9 +2301,9 @@ id_oracion	pinyin
 34780	rénmen huáiyí tā shì jiàndié.
 34841	wǒ bùxiǎng nòngzāng wǒ de shǒu.
 34850	wǒ nìngyuàn chī yào, yě bù dǎzhēn.
-34871	huìyì jiāng zài xià rì zhàokāi.
+34871	huìyì jiāng zài xià zhōu rì zhàokāi.
 34890	mìfēng zài huā cóng zhōng fēixíng.
-34892	tā de xiōngzhōng hái zúgòu de dòuzhì.
+34892	tā de xiōngzhōng hái yǒu zúgòu de dòuzhì.
 34908	tā xūruò de yàngzi ràng wǒ niē le yī bǎ hàn.
 34925	tā guò zhe fùzú de rìzi.
 34934	tā yǐ jūnzǐ zhī dào shēnghuó.
@@ -2317,7 +2314,7 @@ id_oracion	pinyin
 34967	zhè míngzi tīng lái ěr shú.
 34973	tā wánquán sàngshī le zérèn xīn.
 34974	zhè tiáo lù shì qù jīchǎng de.
-34982	tā xiǎoxīn-yìyì dì zǒu.
+34982	tā xiǎoxīn-yìyì de zǒu.
 34989	měi gèrén dōu gǎndào bēiguān.
 34996	nǚhái yǔ wǒ cā jiān ér guò.
 34997	zhè jiàn chènshān mài shí èr yīngbàng.
@@ -2328,9 +2325,9 @@ id_oracion	pinyin
 35092	tā de péngyou dōu zūnjìng tā.
 35097	nǐ juéde wǒ zài gànmá ne?
 35145	tāmen xiǎng cānjiā Àoyùnhuì.
-35204	wǒ mǎi zhème guì de jiàochē.
+35204	wǒ mǎi bu qǐ zhème guì de jiàochē.
 35215	huān xiào shì rén zhī běnnéng, yǒu le huān xiào, jiù méi le wénhuà géhé.
-35233	wǒ jiǒng dé xiǎng zhǎo gè dòng zuān jìnqù.
+35233	wǒ jiǒng de xiǎng zhǎo gè dòng zuān jìnqù.
 35255	wǒmen zhījiān yǒu gè pàn tú.
 35265	wǒ mǔqīn hěn huóyuè.
 35298	suízhe tōng huò péngzhàng de fāzhǎn měiyuán biǎnzhí le.
@@ -2356,21 +2353,21 @@ id_oracion	pinyin
 35771	wǒ xiǎngyào xiàng zhèyàng de yī bǎ jiàn!
 35797	zǐxì huídá wǒ de wèntí.
 35816	tā qīnwěn tā de liǎnjiá.
-35826	xìzhì dì xuǎnzé yī běn shū.
+35826	xìzhì de xuǎnzé yī běn shū.
 35844	zhège chéngshì rénkǒu zhòngduō.
-35865	shāowēi lěng yìdiǎn méi.
+35865	shāowēi lěng yìdiǎn méi guānxi.
 35903	zhè yìdiǎn wǒ bù zànchéng nǐ.
-35906	tā kàn jiànkāng qiángzhuàng.
+35906	tā kàn qǐlái jiànkāng qiángzhuàng.
 35908	chèn tāng méi liáng zhīqián hē xià.
 35945	shí èr yuè yǒu sān shí yī tiān.
 35957	dàxué yǒu jiàoshì, yě yǒu sùshè.
 35984	zuì lìngrénshénwǎng de shì xīnlíng de chúnjié, níngjìng hé duì chén shì de lǐngwù.
 36021	wǒ jǐnjǐn chī le kǒu miànbāo.
 36025	wǒ qiāoqiāo bǎ xìn gěi le tā.
-36047	kǒngpà wǒ xiànzài dé zǒu le.
+36047	kǒngpà wǒ xiànzài děi zǒu le.
 36057	cóng zhèr kàn jǐngsè hěn měi.
 36067	dēnglong zài shùzhī shàngdiào zhe.
-36068	wèihé dà xuānrǎng?
+36068	wèihé dà shēng xuānrǎng?
 36086	nǐ zěnyàng zuòchū de jiěshì?
 36120	wǒ gǎndào fángzi zài yáo dòng.
 36123	dǒngde yòng diànnǎo shì yīzhǒng yōushì.
@@ -2384,7 +2381,6 @@ id_oracion	pinyin
 36334	chī zǎocān zhīqián xiān jiāo huā.
 36355	fàn cuò nǎi rén zhī cháng qíng.
 36379	tā qiàqiǎo zhīdào tā de dìzhǐ.
-36392	" wǒ xǐhuan lǚyóu."" wǒ yěshì."
 36408	méiyǒu shuí bǐ nǐmen xīnkǔ.
 36446	tā de huà bèi xuánguà zài qiáng shàng.
 36478	rěn yīshí, fēngpínglàngjìng. ràng yī bù, hǎi kuò tiānkōng.
@@ -2414,14 +2410,14 @@ id_oracion	pinyin
 37077	tāng mǔ gǎndào shífēn jìmò.
 37112	jīxiè lì dàitì rénlì, zhè shì zhēng qì jī fāmíng de jiéguǒ.
 37177	tā zhíyánbùhuì
-37179	wǒ bù néng jué dōngxi.
-37182	wǒmen duì shì zhècì pīngpāngqiú bǐsài dé biāodì rèmén duì.
+37179	wǒ bù tài néng jué dōngxi.
+37183	Zhōngguó pīngpāngqiú duì jìnxíng le yígè yuè de fēngbì shì dōng xùn.
 37187	liǎnggè gùnbàng xiānghù mócā néng qǐ huǒ.
 37191	tāmen shìtú yòng yī gēn tiě bàng qiào kāi suǒ.
 37212	qínglǚ hěn shěbude líkāi.
 37232	tā qù le míng gǔ wū gōnggàn.
 37234	shuǐguǒ fàng jiǔ le, jiù huì shōusuō.
-37241	yòng yuán zhōu néng qiú dé zhíjìng?
+37241	yòng yuán zhōu néng bu néng qiú dé zhíjìng?
 37273	dàhào de háishi zhōnghào de?
 37310	wǒ měi tiān zǎochen chī yī wǎn màipiàn zhōu.
 37311	dào xǐdí cáo qù bāngmáng xǐ wǎn pán ba!
@@ -2431,13 +2427,13 @@ id_oracion	pinyin
 37360	dōng jīng bǐ Běijīng hái rènao.
 37368	tàiyáng dōu yào xiàshān le.
 37380	wǒ cái búhuì bèi nǐmen zhuā dào liě!
-37392	zhēn còuqiǎo, zhè liǎng yàng xiànzài hái zài wéixiū.
+37392	zhēn de còuqiǎo, zhè liǎng yàng xiànzài hái zài wéixiū.
 37410	wèi shénme yīzhí rào yuǎnlù?
 37414	nǐ yòu zài qīfu ruò xiǎo le!
 37478	wǎncān wǒ huì zhǔnbèi cì shēn.
 37493	dàodǐ duǒ dào nǎlǐ qù le?
 37508	zhèyàng shì xíng bùtōng de la.
-37526	wa, nǐ zài gàn a?
+37526	wa, nǐ zài gàn shénme a?
 37571	zhǐyǒu hépíng nénggòu zhěngjiù shìjiè.
 37613	zànshí cáng zài cāngkù lǐ hǎo le.
 37691	wǔshuì xǐnglai chóu wèi xǐng.
@@ -2445,7 +2441,7 @@ id_oracion	pinyin
 37795	wǒ yào qù bǔxí bān le.
 37809	Zhōngguó fúyuán liáokuò, yīn'ér chá de pǐnzhǒng fánduō.
 37848	rén ruò déxíng, rú shuǐ zhī qīng.
-37855	yóuyú xià, yěcān pàotāng le.
+37855	yóuyú xià yǔ, yěcān pàotāng le.
 37888	kěshì diànshì zhèng jīngcǎi ne!
 37934	wǒ xiǎng wǒ huì yībèizi dānshēn.
 37955	pèngdào hěn juésè le.
@@ -2483,15 +2479,15 @@ id_oracion	pinyin
 38549	zhège dìfāng yǒu yīzhǒng shénmì de qìfēn.
 38551	bùyào dīgū wǒ de lìliàng.
 38567	tā tāo chū jǐ méi yìngbì.
-38570	tā shuǎngkuai dì tóngyì le.
+38570	tā shuǎngkuai de tóngyì le.
 38589	xiànzài hòuhuǐ yě méiyòng le.
 38593	bùyào qīnfàn tā de yǐnsī.
 38594	tā qīnfàn le tā de yǐnsī.
 38597	āi ya! wǒ chàdiǎn wàngjì le!
 38644	tā wǔrǔ le tā.
 38654	nǐ bìxū bǐng gōng cáijué zhè gè'àn zi.
-38690	quēshǎo yùndòng yǒu jiànkāng.
-38693	wǒ de yòu yǎn bù shūfu.
+38690	quēshǎo yùndòng yǒu hài jiànkāng.
+38693	wǒ de yòu yǎn bù tài shūfu.
 38697	bùyào diào le zhège bēizi.
 38791	yéye diāo zhe yān guǎn gēn wǒ shuōhuà.
 38796	diào dài shì zuì ānquán de.
@@ -2499,11 +2495,11 @@ id_oracion	pinyin
 38860	yào shàn dài hèn nǐmen de rén.
 38863	hèn nǐmen de, yào dài tā hǎo.
 38877	wǔ dé xiānsheng méiyǒu érzi.
-38878	tǎnshuài dì shuō, tā cuò le.
+38878	tǎnshuài de shuō, tā cuò le.
 38904	suànpán qǐyuán yú Zhōngguó ma?
 38951	tā gàosu wǒ tā shēngbìng le.
 38980	tā shēngqì de bèi guò shēn qù.
-39003	shuō dé jīngpì.
+39003	shuō de jīngpì.
 39007	wǒ bù xǐhuan zhè zhǒng tángguǒ.
 39050	zhuōzi shàng yǒu yī běn guānyú wǔdǎo de shū.
 39067	jī fǔ shì wū kè lán de shǒudū.
@@ -2511,17 +2507,18 @@ id_oracion	pinyin
 39080	wǒ wǎnshang yībān hěn zǎo shuì.
 39084	wǒ shuìjiào hěn qiǎn, róngyì xǐng.
 39086	zhège mén huì zìjǐ shàngsuǒ.
-39098	zhège gùshi cāng cù dì jié le wěi.
+39098	zhège gùshi cāng cù de jié le wěi.
 39119	zhè shǒu shī shì zuó wǎn xiě de.
 39179	quèshí yǒu wǎng yǐn zhè huí shì.
 39184	tā bèi jiǎnglì le yī kuài jīn biǎo.
 39213	shìjiè yǔ shì yǒuyì de yǔyán.
 39278	nà wèi shuàigē shì wǒmen de lǎoshī.
-39404	lí fàng shǔjià hái wǔ tiān.
+39404	lí fàng shǔjià hái yǒu wǔ tiān.
 39419	zhè shì yī bù wǔ mù gējù
 39430	tāmen zǔzhuāng fēijī.
 39489	wǒmen zhèngdiǎn bō bào xīnwén.
 39490	máfan gěi wǒ diǎn yūn jī yào.
+39518	nǐ zhēn de bùgāi yòng dàobǎn ruǎnjiàn.
 39549	mǎ kě hòuhuǐ zuò le cuò shì.
 39558	niánqīng rén cháng chuān guài yīfu.
 39560	wǒ jiānxìn tā huì bāng wǒ de.
@@ -2534,8 +2531,9 @@ id_oracion	pinyin
 39653	pànjué duì tā bùlì.
 39664	tā hěn shuài, háishi yùndòng jiànjiàng.
 39735	wǒmen détǐ liàng tā niánqīng.
-39737	wǒ chúncuì zhǐshì xǐhuan jiāo.
-39775	tāmen zǒngshì chǎo gè bù.
+39737	wǒ chúncuì zhǐshì xǐhuan jiāo péngyou.
+39775	tāmen zǒngshì chǎo gè bù tíng.
+39781	nǐ néng yóu de bǐ tā kuài ma?
 39796	ào zhōu de kǎoshì fāngshì bìng búshì wèile diāonàn shòu cè zhě.
 39800	tā de wēixìn rìjiàn shuāiluò.
 39801	bǎ nǐ jiǎmiàn jù sī xiàlái.
@@ -2544,10 +2542,10 @@ id_oracion	pinyin
 39909	nǐ bìxū fù sān gè yuè de fángzū zuòwéi yājīn.
 39939	wǒ mā huì shā le wǒ de.
 39944	wǒ zhōngyú gǎndào bèi shǎngshí le.
-39974	dàhuǒr wán dé gāoxìng ma?
+39974	dàhuǒr wán de gāoxìng ma?
 39984	chúfēi nǐ yǒu shénme zhídé shuō dehuà yào shuō, fǒuzé jiù bié kēngshēng.
 39997	wǒ quàn tā bié lǎo xiǎngzhe kěn lǎo.
-40053	zhè shì yígè wěidà de shíkè.
+40053	zhè shì yígè wěidà de shí kè.
 40083	wèilái fēixíngyuán huì zài xūnǐ jiàshǐ cāng lǐ xùnliàn.
 40171	tā hé wǒ gē chàbuduō gāo.
 40172	jiàntóu zhǐchū le qiánjìn de fāngxiàng.
@@ -2559,6 +2557,7 @@ id_oracion	pinyin
 40310	tā jiǎnghuà fēicháng sú qì.
 40317	zhè míng lǎorén yīzhī yǎn máng le.
 40322	sīchóu shì hěn zhēnguì de.
+40349	tā jìnshēng wèi dà zuǒ.
 40357	zuótiān qiángdào chuǎng jìn le diàn lǐ.
 40358	dàshǐ bèi cóng huá shā zhàohuí.
 40471	nàge gū pì de rén yǐ guānchá mǎyǐ qǔlè.
@@ -2566,38 +2565,38 @@ id_oracion	pinyin
 40516	chuán zhōngyú shǐ jìn le mǔ gǎng.
 40537	tāmen lǒngduàn le yuán wù liào gōngyìng, bìng kāi tiān jià.
 40557	hē le yī wǎn rètāng, xīnqíng shūchàng.
-40574	shàng mò wǒ pá qù le.
+40574	shàng zhōu mò wǒ pá shān qù le.
 40578	guóhuì yǐjīng zài tǎolùn le.
 40584	shuǐ liú de qiánglì bǎ qiáo gěi chōng kuǎ le.
 40590	wǒ wèi wǒ fùqīn ér zìháo.
 40604	wǒmen hái zài shāo tàn qǔnuǎn.
-40750	tā de guāndiǎn háo jiàzhí.
+40750	tā de guāndiǎn háo wú jiàzhí.
 40753	tā de xíngwéi hěn cū sú.
-40761	nǐ zhīdào wèi ma? shì māo de yuángù.
+40761	nǐ zhīdào wèi shénme ma? shì māo de yuángù.
 40784	bié chānhuo tā de shì.
 40794	zhè zhǒng rén zhùdìng cǎn bài.
 40795	nǐ hěn rú yǎ, guānyú táng shī shénme dōu zhīdào.
 40829	zhè chòuwèi zhēn shì lìngrénzuòǒu.
 40830	tā guòqù cānjiā pài duì, zǒngshì zhàn zhàn jīng jīng bèn shǒu bèn jiǎo de.
-40854	lóng māo shuō:" wǒ búhuì shuō Zhōngwén."
+40854	lóng māo shuō: “wǒ búhuì shuō Zhōngwén.”
 40903	zhuōzi shàng yǒu gè hénjì.
 41010	zhèyàng huīhuáng de chéngjì, shì rúhé qǔdé de?
-41065	yìliào, shōuhuò pǒ fēng.
+41065	yìliào zhī wài, shōuhuò pǒ fēng.
 41086	tā yòng bēngdài bāozā le shāngkǒu.
 41149	wù lǐ shì jīchǔ zìrán kēxué.
 41168	tā qiǎngpò wǒ dào nàlǐ qù.
 41172	tā yōu xīndì kāishǐ kàn zhōng.
 41213	yīshēng zài gěi bìngrén kànbìng.
 41268	nà běn shū hányǒu hěn duō yè.
-41288	lǎo shǔ fánzhí dé hěn kuài.
+41288	lǎo shǔ fánzhí de hěn kuài.
 41309	xī liú chán chán, cuī wǒ rù mián.
 41325	wǒ yī tiān chī le sān cì hēi mǐ zhōu!
 41344	wǒmen yǐjīng yuánliàng nǐ le.
-41349	nǐmen yǒu zhǐ yào ma?
+41349	nǐmen yǒu zhǐ ké yào ma?
 41390	nín kěyǐ àn xiǎoshí zū chuán.
 41392	rì běnrén pǔbiàn hěn nèi liǎn.
 41412	zhè míng qǐgài zài shōují gàn miànbāo.
-41437	nǐ ruò ānhǎo, biàn qíngtiān.
+41437	nǐ ruò ānhǎo, biàn shì qíngtiān.
 41450	nǐ wòshì lǐ yǒu diànshì ma?
 41503	kuàizi zěnme yòng?
 41510	wǒ xiǎngyào wǔ gè ròu wán.
@@ -2614,22 +2613,22 @@ id_oracion	pinyin
 41779	tāng mǔ hé wǒ zhījiān de mìmì bèi bàoguāng le.
 41781	nán hái xiàng wǒ jū le gè gōng.
 41796	zhè tiáo fǎlǜ yīrán yǒuxiào.
-41945	tā zhǎng dé hěn màoshèng.
+41945	tā zhǎng de hěn màoshèng.
 41957	fāshēng le fēicháng bāguà de shìqing.
 42184	tāmen zhǐshì húshuō bā dào.
 42310	nà miàn qiáng mō shàngqù hěn liáng.
 42399	měi gè bàngwǎn wǒ dūhuì wèi wǒ de gǒu gǒu men.
-42406	nà zhǐ māo zài tiàoyuè zhīqián bǎ shēnzi dūn dé hěn dī.
+42406	nà zhǐ māo zài tiàoyuè zhīqián bǎ shēnzi dūn de hěn dī.
 42489	wǒ bùnéng yǎnshì wǒ de xīnqíng.
-42524	tā téng dé kū le.
+42524	tā téng de kū le.
 42531	tā yǒu yǎo zhǐjia de xíguàn.
 42589	xiāoshòu rényuán jiānchí dàodǐ
 42604	wǔ yī huángjīn zhōu dàjiā hǎoxiàng dōu zhái zàijiā lǐ.
 42606	lù chī nándào jiù wǒ yígè ma?
 42627	tā shì gè hěn tǎnshuài de rén.
 42665	wǒ xiǎng xué biāozhǔn de Yīngyǔ.
-42676	wǒ kànjiàn tāmen gēbo wǎn zhe gēbo dì zǒulù.
-42679	jiē gāi zěnme zuò, wǒ wánquán tīngcóng nín de fēnfù.
+42676	wǒ kànjiàn tāmen gēbo wǎn zhe gēbo de zǒulù.
+42679	jiē xiàlái gāi zěnme zuò, wǒ wánquán tīngcóng nín de fēnfù.
 42694	xiǎo míng dúshū shì wèile táoyě qíng cāo.
 42718	zuò méitǐ qǐng duìdeqǐ zìjǐ de liángxīn.
 42729	xiǎo míng xìnggé hěn zhāngyáng.
@@ -2665,7 +2664,7 @@ id_oracion	pinyin
 43536	tā fù le liǎng bèi de fèiyong.
 43570	tāmen ràng wǒ dāng le duìzhǎng.
 43619	tā shì shénme shíhou qù méng gǔ de?
-43622	wǒ shì shàng lái de Běijīng.
+43622	wǒ shì shàng ge yuè lái de Běijīng.
 43625	wǒ zuótiān mǎi le zhè tóu zhū.
 43670	xiàbān qián bié wàng le dǎ kǎ.
 43687	nín yǒu sūnzi, sūnnǚ ma?
@@ -2677,19 +2676,19 @@ id_oracion	pinyin
 43812	wǒ de gēge zài shù xià.
 43871	wǒ bǎ rìlì guà zài qiáng shàng.
 43880	nǐ zhīdào zěnme zhǔ lóng xiā ma?
-44007	niǎo yìdiǎn yìdiǎn dì zhù cháo.
-44017	wèi xuéxí kè lín gòng yǔ?
+44007	niǎo yìdiǎn yìdiǎn de zhù cháo.
+44017	wèi shénme xuéxí kè lín gòng yǔ?
 44056	shùxué shì shén yònglái zhuànxiě yǔzhòu de yǔyán.
 44064	zhè māo shì hěn féi.
 44081	zhè bǎ yǐzi shì sùliào zuò de.
 44110	zhè bǎ sùliào yǐzi hěn piányi.
-44191	zǒu xiàng qù, wèi róng yào!
+44191	zǒu xiàng qián qù, wèi róng yào!
 44235	wǒ zài dié wǒ de lián yī qún.
-44247	tāmen de guānxì yǒu ài mèi.
+44247	tāmen de guānxì yǒuxiē ài mèi.
 44254	yánsè jiàn qū shēn àn.
 44284	tā zuìjìn hǎoxiàng shòu le.
-44293	chēliàng wǎnglái zhòuyè bù.
-44331	tā zài hǎi mài bèiké.
+44293	chēliàng wǎnglái zhòuyè bù tíng.
+44331	tā zài hǎi biān mài bèiké.
 44368	zhè zhēn shì chèdǐ de xūwěi!
 44417	wǒmen xūyào jiǎn suō kāizhī.
 44421	zhège diànyǐng hěn yǒu zhēngyì.
@@ -2706,9 +2705,9 @@ id_oracion	pinyin
 44809	wǒmen zhǎo wǒmen de hùzhào.
 44884	nǐ yīnggāi xiǎng xiǎng nǐ tuìxiū.
 44896	tā bèi téng, bùnéng wān yāo.
-44902	mótiān dà zài shì zhōngxīn.
-44910	yǎnjing huǒlàlà dì tòng.
-44961	zhè shì dòufu?
+44902	mótiān dà lóu zài shì zhōngxīn.
+44910	yǎnjing huǒlàlà de tòng.
+44961	zhè shì bu shì dòufu?
 44975	lánzi lǐ yǒu hěn duō jīdàn.
 44982	shuǐguǒ duì shēntǐ fēicháng hǎo.
 44991	wǒ juéde tā hěn yǒnggǎn.
@@ -2719,7 +2718,7 @@ id_oracion	pinyin
 45363	nǐ bié zài gēn tā zhēngchǎo le.
 45370	bù lìjí jiějué, nà zhuāng shì huì mǎshàng gào chuī de.
 45373	nǐ jiù zhǐ chāo le zhème duō zhāng a?
-45390	wǒ tàiyáng xué chù téng…jí.
+45390	wǒ tàiyáng xué chù téng jí le.
 45437	nǐ de fángjiān zhēn gānjìng.
 45526	wǒmen yīnggāi hùxiāng bāngzhù.
 45576	réntǐ de zǔzhī shì yóu xìbāo gòuchéng de.
@@ -2732,7 +2731,7 @@ id_oracion	pinyin
 45761	qǐng zài nàge guǎijiǎo zuǒzhuǎn.
 45766	tā yǒuzhe qímiào de xiǎngfǎ.
 45824	wǒ bèi shàng nénggòu tuó zhège xiāngzi
-45837	háizi lǒu zài māma huái, tīng māma jiǎng gùshi.
+45837	háizi lǒu zài māma huái li, tīng māma jiǎng gùshi.
 45877	tā céngjīng shì jiàn qiáo dàxué de jiàoshòu.
 45912	tā gěi chē zhào shàng yī céng chē zhào.
 45995	wǒ zài xuéxí miǎn diān yǔ.
@@ -2755,7 +2754,7 @@ id_oracion	pinyin
 46611	shèn zàng bìng huànzhě qǐng wù zài wú yīshēng tóngyì xià fúyòng.
 46619	wǒmen qǐng nǚhái dài zhe mùjuān xiāng láidào wǔtái.
 46678	dài wéi xiānsheng hǎoxiàng hěnlèi.
-46726	wèi zǒngshì wǒ àishì ér ne?
+46726	wèi shénme zǒngshì wǒ àishì ér ne?
 46729	wǒ zài mǎ lái xī yà jūzhù.
 46737	wǒ kěyǐ chùmō zhège ma?
 46758	yòng dà guō bāo tāng.
@@ -2814,11 +2813,11 @@ id_oracion	pinyin
 48471	tāng mǔ níng gàn máojīn guà qǐlái liànggān.
 48493	nǐ hái xìnfèng nǐ de zōngjiào ma?
 48510	nǐ shúxi zhège lǐngyù ma?
-48525	zhēn lìngrén sàngqì.
+48525	zhēn de lìngrén sàngqì.
 48549	wǒ dǎ xīndǐ lǐ gǎnjī nǐ.
 48577	píngjūn yī tiān shuì liù gè xiǎoshí.
 48586	nǐ tài qiānxū le.
-48606	wǒ gēn nǐ de luójí.
+48606	wǒ gēn bu shàng nǐ de luójí.
 48614	tā zài tā de bèi shàng chuō le yī xià.
 48661	bù liè diān yěshì yī zuò dǎo.
 48662	wǒ duì dōngfāng táocí yǒu xìngqù.
@@ -2828,20 +2827,20 @@ id_oracion	pinyin
 48894	nǐ yǒu shēn hǎi kǒngjù zhèng ma?
 48913	tā jiùshì suǒwèi de shū chóng.
 48965	shèng dàn jiāng bǐng / fēngmì bǐng shì yīzhǒng chuántǒng de dé guó diǎnxin
-48967	kěyǐ, dàn kěnéng xìng bù
+48967	kěyǐ, dàn kěnéng xìng bù dà
 48987	xiànzài wǒ kāishǐ fā tóngpái.
 49049	tā miáozhǔn le, què méimìng zhōng.
-49071	wǒmen yīrán zuò dé hěn hǎo.
+49071	wǒmen yīrán zuò de hěn hǎo.
 49140	zhè shì yígè jùdà de tiǎozhàn.
 49150	tāmen gōngzuò de hěn xīnkǔ.
 49167	wǒmen xiànzài quēfá kù cún.
 49196	wǒmen yīnggāi yīqǐ qìngzhù.
 49257	zhè yě zhǐshì zuǐ shàng shuō shuō.
 49297	wǒ búhuì shuō mèng jiā lā yǔ.
-49368	bù, wǒ nòngcuò le.
+49368	bù hǎoyìsi, wǒ nòngcuò le.
 49443	qǐngwèn xiǎojiě fāng líng?
 49478	wǒmen zuò chūzūchē qù ba!
-49480	bù, dǎduàn yī xià.
+49480	bù hǎoyìsi, dǎduàn yī xià.
 49502	wǒ néng yòng yī xià diànnǎo ma?
 49565	tā duì shēnghuó gǎndào hěn wúnài.
 49568	wǒ wúnài zhǐdé gēnsuí zhe tā.
@@ -2852,7 +2851,7 @@ id_oracion	pinyin
 49890	wǒ bùzhī dào nà zhǒng wǔdǎo.
 49917	bié wàng le bǎ lājī náchū qù.
 50007	nán bùchéng nǐ lòu le shénme le?
-50046	zhè piàn qūyù hěn shǎo xià.
+50046	zhè piàn qūyù hěn shǎo xià xuě.
 50063	gēn nǐ méi bàn máo qián guānxì.
 50064	zhè hǎobǐ dàhǎi lāo zhēn.
 50072	tā bùguò shì gè wú míng xiǎozú éryǐ.
@@ -2880,12 +2879,12 @@ id_oracion	pinyin
 51360	wǒ ài jiē gǔ mù guǒzhī.
 51379	háizi men xǐhuan hē guǒzhī.
 51388	zhège píngguǒ zhī shì chún de.
-51439	tāng mǔ cónglái fùyù.
+51439	tāng mǔ cónglái bù fùyù.
 51444	zhè dàng'àn zài nǎ yě zhǎo búdào.
 51518	wǒ néng zuò zài nǐ pángbiān ma?
 51523	yīzhī yīng de chìbǎng duàn le.
 51539	tā shuōhuà yǎo shé.
-51571	nǐ yīnggāi shuō dé gèng qīngchu.
+51571	nǐ yīnggāi shuō de gèng qīngchu.
 51573	tā de āyí yǒu sān zhǐ māo.
 51574	tāmen bǎ tā fèngwéi lǐngxiù.
 51584	yǒu èr shí wǔ zuò de chē ma?
@@ -2908,10 +2907,10 @@ id_oracion	pinyin
 52014	wǒ zhīdào zěnme shè xiànjǐng.
 52142	kōngjiān jìshù hái zài yòu ér qī.
 52199	nǐ méi dǎsuàn shuǎ wǒ, duì ba?
-52251	wàijiāoguān yǒu duō tèquán.
+52251	wàijiāoguān yǒu duō zhǒng tèquán.
 52260	wǒ huì ràng nǐ tíqián zhīdào.
-52261	lièchē tíngxia qián bié xià.
-52263	tā gēn tāmen gāncuì dì duàn jué láiwǎng le.
+52261	lièchē tíngxia qián bié xià chē.
+52263	tā gēn tāmen gāncuì de duàn jué láiwǎng le.
 52274	tā cuòguò le zuìhòu qīxiàn.
 52280	yàoshi yǒu dōngxi huài le ne.
 52313	nǐ néng yòng yuánzhūbǐ xiě ma?
@@ -2935,12 +2934,12 @@ id_oracion	pinyin
 52940	nǐ yǒu chúxiù de dōngxi ma?
 52962	měi gèrén dōu ài wū wū sāi lā!
 53046	nà shì chǎng jīngcǎi de huìyì.
-53099	zhè kuài zuànshí xiàng shì zhēn.
+53099	zhè kuài zuànshí xiàng shì zhēn de.
 53138	bāokuò zǎofàn ma?
 53183	wǒ yòu bí kǒng lǐ yǒu wān dòu.
 53195	dān shènzhì méiyǒu shàng guò jīchǔ jiěpōu kè.
-53221	Duānwǔ yào chī zòngzi.
-53222	Duānwǔ yào sài lóngzhōu.
+53221	Duānwǔ Jié yào chī zòngzi.
+53222	Duānwǔ Jié yào sài lóngzhōu.
 53256	tā tī le yígè wū lóng qiú.
 53271	wǒ xǐhuan nuó wēi yǔyán.
 53380	tā de chénggōng ràng tā chéngwéi jídù xīn de bǎzi.
@@ -2959,7 +2958,7 @@ id_oracion	pinyin
 53773	zhè shì wǒ de jiàshǐ zhízhào.
 53910	nǐ mànmàn xiǎng yòng měishí ba!
 53962	shéidōu bùxiǎng kàn wǒ de tóugǎo
-54029	Yuánxiāo yào chī yuán xiāo.
+54029	Yuánxiāo Jié yào chī yuán xiāo.
 54047	tā zài yòng yú wǎng bǔ yú.
 54054	nǐ de zhè shuāng tuōxié hěn méng.
 54112	wǒ shì zhe zǔzhǐ tā fāshēng.
@@ -2972,12 +2971,11 @@ id_oracion	pinyin
 54420	yòng kuàizi chīfàn nán ma?
 54427	wǒmen rènwéi zhè bù yánsù.
 54428	nǐ xiànzài kěyǐ shānchú tā.
-54431	zhè kàn sìcéng-xiāngshí.
+54431	zhè kàn qǐlái sìcéng-xiāngshí.
 54459	sāi wéi lì yà xià le dàyǔ.
 54560	tā yǒu wǒ de sān bèi de shū.
-54574	wǒmen yào zài sà lā gē sà zhuǎnchē.
 54606	wǒmen yào yǐ shǐ wèi jiàn.
-54614	tiān yīn le, yào xià le.
+54614	tiān yīn le, yào xià yǔ le.
 54630	nǐ shíjìshàng xiǎng shuō shénme?
 54648	wǒ bùnéng kòngzhì wǒ de fènnù.
 54650	wǒ de tuǐ bǐ nǐ de xiǎo.
@@ -2985,7 +2983,7 @@ id_oracion	pinyin
 54785	wǒ cóng yígè dàjiātíng lái.
 54803	wǒ fāshì wǒ shénme yě méi zuò.
 54804	wǒ de tuǐ yǒu shénme máobìng?
-54811	" dǐng" shì Zhōngguó shànggǔ shídài de yīzhǒng chuī jù, sān zú liǎng ěr.
+54811	“dǐng” shì Zhōngguó shànggǔ shídài de yīzhǒng chuī jù, sān zú liǎng ěr.
 54857	tā tài lèile xué bù dòng le
 54924	nà shì zhídé zìháo de shì.
 54977	jǐngchá zhǎodào zhǐwén le ma?
@@ -2997,7 +2995,7 @@ id_oracion	pinyin
 55179	nín yǐjīng tóu le piào le ma?
 55215	tā shì nánzǐ shuānggàng xuǎnshǒu.
 55254	tā bǎ xiǎochē qīngcè dàokōng le.
-55275	lánqiú kě zhēn shì yǒu.
+55275	lánqiú kě zhēn shì yǒu yìsi.
 55278	qǐng àn tāmen jiào nǐ de zuò.
 55282	zhège shèjì hěn rénxìng huà.
 55443	wǒ bùzhī dào yào chuān shénme.
@@ -3031,7 +3029,7 @@ id_oracion	pinyin
 56338	tā bù xǐhuan chī yēzi wèi de dōngxi.
 56340	tā de yánlùn yǐnqǐ le yúlùn de bùmǎn.
 56638	tāng mǔ chī le duōshao júzi?
-56662	zhǎodào fǎ dí lēi bìng bù.
+56662	zhǎodào fǎ dí lēi bìng bù nán.
 56665	nǐ huì shuō nà měiyǔ ma?
 56689	láojì tā de jiànyì.
 56831	lièchē wǎn dàole shífēn zhōng.
@@ -3044,7 +3042,7 @@ id_oracion	pinyin
 57057	yuángào zhǔdòng xiàng fǎyuàn tíqǐ sùsòng, fǎyuàn cái kāishǐ shěn lǐ.
 57065	xiàndài rén tài yǎnglài shǒujī.
 57069	yuèqiú shàng de kēng dòng lìngrén qǐ jīpígēda.
-57092	shì yīnggāi huàn gè cì fú qì?
+57092	shì bu shì yīnggāi huàn gè cì fú qì?
 57145	nǐ néng jiěkāi zhège mí ma?
 57189	zhèlǐ méirén huì dǎrǎo nǐ.
 57198	wǒmen yǒu tèshū liánxì.
@@ -3063,7 +3061,7 @@ id_oracion	pinyin
 57800	jiēshòu xiànjīn juānzèng.
 57836	tā gěi le wǒ yītóu dàsuàn.
 57863	zhège dǎoyǔ jíjiāng bèi yānmò.
-57910	yuè duō de rén qiān wǎng xiāngcūn.
+57910	yuè lái yuè duō de rén qiān wǎng xiāngcūn.
 57977	tā de sīwéi fāngshì hěn yòuzhì.
 57997	wǒ zài chuānghu shàng kànjiàn le wǒ de yìng xiàng.
 58043	cǐ chǎnyè yínglái le jǐngpēn shì fāzhǎn.
@@ -3074,7 +3072,7 @@ id_oracion	pinyin
 58287	nàxiē huā ér ānwèi le tā.
 58292	wǒmen zài ānwèi tā mǔqīn.
 58318	bǎ píng dǐ guō cóng huǒ shàng ná kāi.
-58336	wǒ lèi dé hān rán rù mèng.
+58336	wǒ lèi de hān rán rù mèng.
 58359	wǒ jǔ qǐ shǒu lán chūzūchē.
 58409	cānsài ménkǎn fēicháng gāo.
 58461	tā fāshēng zài yī zhǎyǎn zhījiān.
@@ -3087,7 +3085,7 @@ id_oracion	pinyin
 58859	nà shì gè měihǎo de shùnjiān.
 58887	wǒ zài xiě yǎnjiǎng de cǎo gǎo.
 58950	tāng mǔ kǎn le tā mén qián de shù.
-59065	wǒ bù kě le.
+59065	wǒ bù tài kě le.
 59070	tāng mǔ hěn bèn zhuō.
 59079	tāng mǔ háizi men zài gé lóu.
 59086	wǒ zài kàn yà guān bǐsài.
@@ -3098,7 +3096,7 @@ id_oracion	pinyin
 59157	tāng mǔ gǎnjué shǒujī zhèn dàng le.
 59201	tàipíng niǎo shì gè kāfēi sè qiě yuán pàng de niǎo.
 59251	wú shì lìshǐ de rén wǎngwǎng huì chóngdǎofùzhé.
-59314	wǒ xià lùnwén dábiàn.
+59314	wǒ xià ge yuè lùnwén dábiàn.
 59431	wǒmen jiāng huì shū le ma?
 59455	wǒ tèbié xǐhuan mógu de wèidào.
 59481	xī húlú shì lǜsè de.
@@ -3133,7 +3131,7 @@ id_oracion	pinyin
 60320	jīqì méng shàng le yī céng huī.
 60371	lǎo hǔ chī shénme dōngxi?
 60391	nǐ shì gè yōuxiù de jìzhě.
-60430	nǐ kàn lèile. nǐ gāi xiē xī yīhuìr le.
+60430	nǐ kàn qǐlái lèile. nǐ gāi xiē xī yīhuìr le.
 60450	tā cí le zhí, bìng cān le jūn.
 60562	tā de zǔzhī nénglì hěn zāo.
 60629	dēng yuè shì yī xiàng lǐchéngbēi shì de chéngjiù.
@@ -3143,13 +3141,13 @@ id_oracion	pinyin
 60817	děng fùmǔ lǎo le, wǒ huì shànyǎng tāmen.
 60874	nǐ shénme shíhou chī huǒ jī?
 60903	wǒ de diào dài shān dōu jiù le.
-60918	yǒu shuō niú yóu guǒ zhàn jiàngyóu hěn hǎochī.
+60918	yǒu rén shuō niú yóu guǒ zhàn jiàngyóu hěn hǎochī.
 60919	ǒu jiùshì lián huā de gēn bù.
 60923	hàn bǎo wǒ dōu chī nì le.
 60924	shāyú pí bǐ jīn qiāng yú pí cūcāo duō le.
 60945	tíngzhǐ bà líng!
 60970	mǎ shì shēngchù.
-60980	néng bǎ hú jiāo dì wǒ ma?
+60980	néng bǎ hú jiāo dì gěi wǒ ma?
 60985	tā bǎ bízi tiē zài bōli shàng.
 60986	wūyún zhèng lüè guò zhè zuò chéngshì.
 60997	zhǎngwò yī mén wàiyǔ hěn nán.
@@ -3168,7 +3166,7 @@ id_oracion	pinyin
 61345	wǒmen yīqǐ qù xiǎo zhuó jǐ bēi ba.
 61348	mǎ líng shǔ shì tǔdòu, xīhóngshì shì fānqié.
 61364	tā bǎ tā xíngróng wèi zhēn tàn.
-61400	bǎ yáokòng qì dì wǒ.
+61400	bǎ yáokòng qì dì gěi wǒ.
 61431	zhè fèn gōngzuò gōngzī hěn gāo.
 61436	rì běnrén xǐhuan chī jīn qiāng yú.
 61469	wǒ xiǎng jièshào nǐ gěi tā rènshi.
@@ -3177,7 +3175,7 @@ id_oracion	pinyin
 61583	zhège miáoshù tài chōuxiàng le.
 61594	nóngmín shì guójiā de xīnzàng.
 61595	tā yǔ tā xiāngrúyǐmò.
-61615	xièxie. zhēn bàituō nǐ le.
+61615	xièxie. zhēn de bàituō nǐ le.
 61618	wǒ jímáng kāishǐ zhēngzhá.
 61634	xiángqíng qǐng xiàng jiēdài chù zīxún.
 61651	zhège zhěnsuǒ zhèngzài zuò jīguāng shǒushù.
@@ -3190,7 +3188,7 @@ id_oracion	pinyin
 62250	tā gùyōng wǒ lái bāngzhù tā
 62284	tā gǎndào hán qì cìgǔ.
 62299	máquè zhèngzài shù shàng chànggē.
-62312	bié huāng. zhè méi de.
+62312	bié huāng. zhè méi shénme de.
 62339	zhè tái diànnǎo de píngmù hěn qīngxī
 62460	nǐ mǎi māo liáng le ma?
 62477	nǐ de wǎncān zài kǎo xiāng lǐ.
@@ -3200,7 +3198,7 @@ id_oracion	pinyin
 62582	tā yòng shǒu wǔ zhù le diànhuà dehuà tǒng.
 62586	yīnwèi dǔchē, wǒ kāihuì chídào le.
 62613	tā cóng chuānglián hòu chūlái le.
-62628	wǒ juéde zhèlǐ tǐng de.
+62628	wǒ juéde zhèlǐ tǐng hǎo de.
 62678	tāng mǔ wò jǐn le chǎnzi.
 62681	tā yǒu míngxiǎn de jīròu xiàntiáo.
 62723	nǐ dīgū le nǐ de mèilì.
@@ -3226,4 +3224,4 @@ id_oracion	pinyin
 63227	bié láodao! wǒ xūyào xuéxí.
 63235	zhège máng guǒ hěn tián.
 63267	tāmen niánlíng xiāngfǎng.
-63292	wǒmen zhēn dé jiājǐn bùfá le.
+63292	wǒmen zhēn de děi jiājǐn bùfá le.
