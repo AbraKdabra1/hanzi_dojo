@@ -1,0 +1,56 @@
+Aquí tienes la estructuración del archivo `.txt` con el análisis de la documentación de diseño de Apple y la estrategia técnica para aplicar estos conceptos en la arquitectura de nuestra app. 
+
+Puedes copiar el contenido de este bloque directamente a un archivo de texto en tu computadora.
+
+```text
+========================================================================
+DOCUMENTO DE DISEÑO VISUAL: ADOPCIÓN DE "LIQUID GLASS" EN HANZI DOJO
+========================================================================
+
+1. ANÁLISIS DE LA FILOSOFÍA "LIQUID GLASS" (APPLE HIG)
+Según las pautas de interfaz humana y documentación de Apple, "Liquid Glass" es un material dinámico que difumina el contenido que se encuentra detrás de él, refleja la luz y el color del entorno, y reacciona a las interacciones táctiles en tiempo real. Su objetivo no es ser protagonista, sino dar una sensación de fluidez mientras centra la atención del usuario en el contenido subyacente.
+
+Principios clave de diseño a respetar:
+* Jerarquía Espacial: El Liquid Glass debe vivir en la capa más alta de la interfaz (barras de navegación, paneles laterales, botones flotantes) para establecer una distinción clara entre los controles interactivos y el contenido puro.
+* Uso Moderado: Está estrictamente desaconsejado usar este efecto en la capa base o abusar de él en múltiples controles, ya que un exceso de desenfoque genera ruido visual y arruina la experiencia.
+* Fluidez Geométrica (Morphing): Los componentes que usan este material deben poder fusionarse y transformarse de forma fluida cuando interactúan o se agrupan en contenedores.
+
+------------------------------------------------------------------------
+
+2. TRADUCCIÓN TÉCNICA Y APLICACIÓN EN FLUTTER
+
+Aunque Liquid Glass es una API nativa de SwiftUI (mediante modificadores como `glassEffect` y `GlassEffectContainer`), su comportamiento óptico se puede replicar a la perfección en el ecosistema de Flutter para mantener nuestra app minimalista, fluida y elegante.
+
+A. La Receta Óptica del Material
+Para lograr la refracción de luz y el desenfoque sin saturar el rendimiento, estandarizaremos este "widget base" en todo el proyecto:
+  ClipRRect(
+    borderRadius: BorderRadius.circular(30),
+    child: BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12), // El difuminado del cristal
+      child: Container(
+        color: Colors.white.withOpacity(0.15), // Refracción de luz
+        border: Border.all(color: Colors.white.withOpacity(0.3), width: 1.2), // Borde especular (brillo)
+        child: [Elemento UI],
+      ),
+    ),
+  )
+
+B. Sensibilidad Táctil
+Apple enfatiza que el cristal debe reaccionar al tacto de manera responsiva. En lugar de usar botones estáticos, envolveremos nuestros elementos de Liquid Glass con `GestureDetector` gestionando un `AnimatedContainer` para reducir su escala (scale) un 2% y aumentar ligeramente la opacidad del cristal al momento de hacer presión.
+
+C. Transiciones Fluidas ("Morphing")
+Para igualar el efecto de "fusión" de figuras que ofrece Apple, utilizaremos `AnimatedCrossFade` y `Hero Animations`. Cuando un elemento de la biblioteca de Hanzi se seleccione, su tarjeta de cristal se expandirá suavemente hasta convertirse en la barra de herramientas principal de la pantalla de dibujo.
+
+------------------------------------------------------------------------
+
+3. ESTRATEGIA DE IMPLEMENTACIÓN POR PANTALLAS
+
+I. Barras de Navegación "Edge-to-Edge" (Pantalla de Biblioteca)
+Para que el cristal tenga razón de ser, debe haber contenido pasando por debajo. Modificaremos nuestros `Scaffold` agregando la propiedad `extendBodyBehindAppBar: true`. Así, al hacer scroll por la lista de los niveles HSK, los caracteres pasarán por debajo del AppBar superior, revelando los colores y formas a través del desenfoque.
+
+II. Paneles Modales Flotantes (Pantalla de Estudio)
+El menú inferior de "Ver Ejemplos" y los botones de evaluación SRS (Fácil, Medio, Difícil) no deben bloquear el lienzo de dibujo. Los reconstruiremos como "píldoras" de Liquid Glass flotantes. Esto permite que los trazos de tinta del usuario sigan siendo sutilmente visibles por debajo del menú.
+
+III. Tema Contextual
+Apple provee variantes de cristal (como `regular` o `clear`) dependiendo del fondo. Nosotros crearemos una variante "Liquid Glass Dark" (basada en tonos oscuros translucidos) exclusivamente para los elementos interactivos primarios y "Liquid Glass Light" para el resto de la interfaz, asegurando un balance de legibilidad óptimo sobre el lienzo blanco.
+```

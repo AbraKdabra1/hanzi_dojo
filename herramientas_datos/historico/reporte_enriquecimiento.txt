@@ -1,0 +1,10 @@
+============================================================
+REPORTE DE ENRIQUECIMIENTO — Hanzi Dojo
+============================================================
+Caracteres antes:  7275
+Caracteres nuevos: 2299
+Total final:       9574
+
+Nuevos por nivel:
+  Sin nivel HSK        +2299
+============================================================
