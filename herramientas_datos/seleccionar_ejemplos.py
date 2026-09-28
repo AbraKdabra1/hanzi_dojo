@@ -8,9 +8,12 @@ Criterios (en orden):
   1. Que el alumno pueda leerla: todos los demás caracteres de la oración son
      de su mismo nivel HSK o de uno más bajo. Si no hay, se permite un nivel
      más; si tampoco, cualquier oración.
-  2. Que sea corta (4 a 14 caracteres), sin letras latinas ni números.
+  2. Que sea corta (4 a 14 caracteres), sin letras latinas ni números. Si un
+     carácter no tiene ninguna así, se acepta una de hasta 24 caracteres.
   3. Reutilizar oraciones: si una oración ya se eligió para otro carácter y
      también sirve para este, se prefiere (así hay menos que traducir).
+  4. Nunca usar las de fuentes/traducciones/ejemplos_excluidos.tsv (erratas,
+     frases confusas o temas poco adecuados, revisadas a mano).
 
 Pinyin: el del corpus es automático y trae errores (很好 = "hěn hào"). Se
 regenera así: las palabras que están en la lista oficial HSK usan el pinyin
@@ -20,6 +23,10 @@ Salidas (en fuentes/traducciones/):
   ejemplos_seleccion.tsv     caracter · orden · id_oracion
   ejemplos_pinyin.tsv        id_oracion · pinyin (regenerado)
   ejemplos_por_traducir.tsv  id_oracion · chino · inglés  (las que aún no tienen español)
+
+Entradas escritas a mano (en fuentes/traducciones/):
+  ejemplos_es.tsv            id_oracion · español
+  ejemplos_excluidos.tsv     id_oracion · motivo
 
 Requisitos (solo para este script):  pip install pypinyin
 Uso:  python herramientas_datos/seleccionar_ejemplos.py
@@ -43,6 +50,10 @@ PUNTUACION = str.maketrans({
     "，": ",", "。": ".", "？": "?", "！": "!", "：": ":", "；": ";", "、": ",",
     "“": '"', "”": '"', "‘": "'", "’": "'", "（": "(", "）": ")", "《": "«", "》": "»",
 })
+
+
+LARGO_NORMAL = 14    # caracteres chinos por oración, lo normal
+LARGO_MAXIMO = 24    # solo si el carácter no tiene ninguna oración corta
 
 
 def ejemplos_para(nivel):
@@ -113,6 +124,12 @@ def main():
             orden_hsk.append(fila["Hanzi"])
     posicion = {c: i for i, c in enumerate(orden_hsk)}
 
+    excluidas = set()
+    ruta_excluidas = os.path.join(SALIDA, "ejemplos_excluidos.tsv")
+    if os.path.exists(ruta_excluidas):
+        with open(ruta_excluidas, encoding="utf-8") as f:
+            excluidas = {linea.split("\t")[0] for linea in f if linea[:1].isdigit()}
+
     # id → (chino, inglés, caracteres, nivel máximo, largo)
     oraciones, vistas = {}, set()
     with open(ORACIONES, encoding="utf-8") as f:
@@ -121,11 +138,11 @@ def main():
             if len(p) < 5:
                 continue
             id_, chino, ingles = p[0], p[1].strip(), p[4].strip()
-            if chino in vistas:
+            if chino in vistas or id_ in excluidas:
                 continue
             vistas.add(chino)
             caracteres = HAN.findall(chino)
-            if not 4 <= len(caracteres) <= 14 or re.search(r"[A-Za-z0-9０-９]", chino):
+            if not 4 <= len(caracteres) <= LARGO_MAXIMO or re.search(r"[A-Za-z0-9０-９]", chino):
                 continue
             nivel = max(niveles.get(c, 99) for c in caracteres)
             oraciones[id_] = (chino, ingles, set(caracteres), nivel, len(caracteres))
@@ -138,10 +155,17 @@ def main():
 
     elegidas, seleccion = set(), []
     # Primero los caracteres con menos oraciones disponibles (los difíciles).
-    for c in sorted(orden_hsk, key=lambda c: len(por_caracter[c])):
+    cortas = {c: sum(1 for i in ids if oraciones[i][4] <= LARGO_NORMAL) for c, ids in por_caracter.items()}
+    for c in sorted(orden_hsk, key=lambda c: cortas.get(c, 0)):
         nivel, meta, tomadas = niveles[c], ejemplos_para(niveles[c]), []
-        for tolerancia in (nivel, min(7, nivel + 1), 99):
-            aptas = [i for i in por_caracter[c] if oraciones[i][3] <= tolerancia and i not in tomadas]
+        # (nivel de vocabulario permitido, largo máximo)
+        pasadas = ((nivel, LARGO_NORMAL), (min(7, nivel + 1), LARGO_NORMAL),
+                   (99, LARGO_NORMAL), (99, LARGO_MAXIMO))
+        for tolerancia, largo in pasadas:
+            if largo > LARGO_NORMAL and tomadas:
+                break   # las largas solo si no hay ninguna corta
+            aptas = [i for i in por_caracter[c]
+                     if oraciones[i][3] <= tolerancia and oraciones[i][4] <= largo and i not in tomadas]
             aptas.sort(key=lambda i: (
                 i not in elegidas,          # reutilizar primero
                 abs(oraciones[i][4] - 8),   # cerca de 8 caracteres

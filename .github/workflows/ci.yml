@@ -56,7 +56,7 @@ jobs:
         run: |
           set -o pipefail
           python3 herramientas_datos/construir_db.py 2>&1 | tee validar_db.txt
-          python3 herramientas_datos/validar_db.py --permitir-incompleto 2>&1 | tee -a validar_db.txt
+          python3 herramientas_datos/validar_db.py 2>&1 | tee -a validar_db.txt
           git diff --exit-code --stat -- lib/datos/version_contenido.dart 2>&1 | tee -a validar_db.txt
 
       - name: Dependencias
