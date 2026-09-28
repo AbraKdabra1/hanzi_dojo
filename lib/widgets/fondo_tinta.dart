@@ -1,8 +1,16 @@
-// lib/widgets/fondo_tinta.dart
+// ─────────────────────────────────────────────────────────────────────────────
+// fondo_tinta.dart — Fondo de papel de arroz con manchas de tinta y una rama
+// de ciruelo, detrás de las pantallas principales.
+//
+// Rendimiento: el dibujo está dentro de un RepaintBoundary, así que se
+// rasteriza una vez y se reutiliza; aunque el resto de la pantalla se anime,
+// el fondo no se vuelve a pintar.
+// ─────────────────────────────────────────────────────────────────────────────
 
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
+/// Envuelve una pantalla con el fondo de papel y tinta.
 class FondoTintaChina extends StatelessWidget {
   final Widget child;
   const FondoTintaChina({super.key, required this.child});
@@ -23,9 +31,12 @@ class FondoTintaChina extends StatelessWidget {
             ),
           ),
         ),
-        CustomPaint(
-          painter: _TintaPainter(),
-          child: const SizedBox.expand(),
+        const RepaintBoundary(
+          child: CustomPaint(
+            painter: _TintaPainter(),
+            isComplex: true, // pista para que Flutter guarde la imagen en caché
+            child: SizedBox.expand(),
+          ),
         ),
         child,
       ],
@@ -34,12 +45,16 @@ class FondoTintaChina extends StatelessWidget {
 }
 
 class _TintaPainter extends CustomPainter {
+  const _TintaPainter();
+
   @override
   void paint(Canvas canvas, Size size) {
     _dibujarManchasTinta(canvas, size);
     _dibujarRamaCiruelo(canvas, size);
   }
 
+  /// Cinco manchas difusas de tinta café en las orillas.
+  /// Cada fila: [x relativa, y relativa, radio, opacidad].
   void _dibujarManchasTinta(Canvas canvas, Size size) {
     final List<List<double>> manchas = [
       [0.08, 0.12, 90.0, 0.06],
@@ -70,6 +85,7 @@ class _TintaPainter extends CustomPainter {
     }
   }
 
+  /// Rama de ciruelo (梅花) en la esquina superior izquierda.
   void _dibujarRamaCiruelo(Canvas canvas, Size size) {
     final paintRama = Paint()
       ..color = const Color(0x18402010)
@@ -111,6 +127,7 @@ class _TintaPainter extends CustomPainter {
     _dibujarFlor(canvas, size, 0.33, 0.055, 3.5);
   }
 
+  /// Flor de cinco pétalos centrada en (cx, cy) relativos, de radio r.
   void _dibujarFlor(Canvas canvas, Size size, double cx, double cy, double r) {
     final paintPetalo = Paint()
       ..color = const Color(0x22C87080)

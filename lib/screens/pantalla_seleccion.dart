@@ -1,174 +1,196 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// pantalla_seleccion.dart — Niveles HSK y búsqueda
+//
+// Lista los niveles oficiales HSK 3.0 (1 a 6 y 7-9) con tu avance en cada
+// uno. Arriba hay un buscador: por carácter (好), pinyin con o sin tonos
+// (hao, hǎo) o significado (bueno). Toca un resultado para practicarlo.
+// ─────────────────────────────────────────────────────────────────────────────
+
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import '../database/db_helper.dart';
+
+import '../datos/datos_app.dart';
+import '../datos/modelos.dart';
+import '../datos/repositorio.dart';
+import '../widgets/comunes.dart';
+import '../widgets/fondo_tinta.dart';
+import '../widgets/tarjeta_vidrio.dart';
 import 'pantalla_estudio.dart';
 
 class PantallaSeleccion extends StatefulWidget {
-  final bool modoNovato;
   const PantallaSeleccion({super.key, required this.modoNovato});
+  final bool modoNovato;
 
   @override
   State<PantallaSeleccion> createState() => _PantallaSeleccionState();
 }
 
 class _PantallaSeleccionState extends State<PantallaSeleccion> {
-  bool _estaBuscando = false;
-  List<Map<String, dynamic>> _resultadosBusqueda = [];
+  late final Repositorio _repo = DatosApp.de(context);
+  final _busqueda = TextEditingController();
+  Timer? _espera;
+  List<AvanceNivel> _niveles = const [];
+  List<Caracter> _resultados = const [];
+  bool _buscando = false;
 
-  void _alEscribir(String query) async {
-    if (query.trim().isEmpty) {
-      setState(() {
-        _estaBuscando       = false;
-        _resultadosBusqueda = [];
-      });
-      return;
-    }
-    setState(() => _estaBuscando = true);
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _cargar());
+  }
 
-    // ✅ CAMBIO: caracter, significado (sin s), usando buscar() del helper
-    final res = await DatabaseHelper.instance.buscar(query);
-    if (mounted) setState(() => _resultadosBusqueda = res);
+  @override
+  void dispose() {
+    _espera?.cancel();
+    _busqueda.dispose();
+    super.dispose();
+  }
+
+  Future<void> _cargar() async {
+    final n = await _repo.avancePorNivel();
+    if (mounted) setState(() => _niveles = n);
+  }
+
+  /// Busca 250 ms después de la última tecla (para no consultar en cada letra).
+  void _alEscribir(String texto) {
+    _espera?.cancel();
+    _espera = Timer(const Duration(milliseconds: 250), () async {
+      final q = texto.trim();
+      if (q.isEmpty) {
+        if (mounted) setState(() => _buscando = false);
+        return;
+      }
+      final r = await _repo.buscar(q);
+      if (mounted) {
+        setState(() {
+          _buscando = true;
+          _resultados = r;
+        });
+      }
+    });
+  }
+
+  Future<void> _estudiar(FiltroEstudio filtro) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute<void>(builder: (_) => PantallaEstudio(filtro: filtro, modoNovato: widget.modoNovato)),
+    );
+    _cargar();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Column(
+    return FondoTintaChina(
+      child: Scaffold(
+        appBar: BarraSuperior(
+          titulo: 'Niveles HSK',
+          subtitulo: widget.modoNovato ? '🐣 Modo novato' : '🥋 Modo experto',
+        ),
+        body: Column(
           children: [
-            const Text('Biblioteca HSK',
-                style: TextStyle(
-                    color: Colors.black87, fontWeight: FontWeight.w600)),
-            Text(
-              widget.modoNovato ? '🐣 Modo novato' : '🥋 Modo experto',
-              style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
-            ),
-          ],
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios,
-              color: Colors.black87, size: 20),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 20.0, vertical: 10.0),
-            child: TextField(
-              onChanged: _alEscribir,
-              decoration: InputDecoration(
-                hintText: 'Buscar hanzi, pinyin o significado...',
-                hintStyle:
-                    TextStyle(color: Colors.grey.shade400, fontSize: 15),
-                prefixIcon:
-                    Icon(Icons.search, color: Colors.grey.shade500),
-                filled: true,
-                fillColor: Colors.grey.shade50,
-                contentPadding: const EdgeInsets.symmetric(vertical: 0),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide.none,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+              child: TextField(
+                controller: _busqueda,
+                onChanged: _alEscribir,
+                decoration: InputDecoration(
+                  hintText: 'Buscar: 好, hao, bueno…',
+                  prefixIcon: const Icon(Icons.search, size: 20),
+                  suffixIcon: _buscando
+                      ? IconButton(
+                          icon: const Icon(Icons.close, size: 18),
+                          onPressed: () {
+                            _busqueda.clear();
+                            setState(() => _buscando = false);
+                          },
+                        )
+                      : null,
+                  isDense: true,
+                  filled: true,
+                  fillColor: const Color(0xB3FFFFFF),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: AnimatedCrossFade(
-              duration: const Duration(milliseconds: 300),
-              crossFadeState: _estaBuscando
-                  ? CrossFadeState.showSecond
-                  : CrossFadeState.showFirst,
-
-              // ── Lista de niveles HSK ─────────────────────────────────
-              firstChild: ListView.separated(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                itemCount: 7,
-                // ✅ CAMBIO: (_, __) corregido
-                separatorBuilder: (_, _) =>
-                    Divider(color: Colors.grey.shade100, height: 1),
-                itemBuilder: (context, index) {
-                  final nivel = index + 1;
-                  return ListTile(
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 5.0),
-                    title: Text(
-                        nivel == 7 ? "HSK 7-9" : "HSK $nivel",
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                    subtitle: Text('Estudiar y repasar tarjetas',
-                        style: TextStyle(
-                            color: Colors.grey.shade500, fontSize: 14)),
-                    trailing: const Icon(Icons.arrow_forward_ios,
-                        size: 16, color: Colors.grey),
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => PantallaEstudio(
-                          nivelHSK: nivel,
-                          modoNovato: widget.modoNovato,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-
-              // ── Resultados de búsqueda ───────────────────────────────
-              secondChild: _resultadosBusqueda.isEmpty
-                  ? const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(20.0),
-                        child: Text("Sin resultados",
-                            style: TextStyle(color: Colors.grey)),
-                      ))
-                  : ListView.separated(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      itemCount: _resultadosBusqueda.length,
-                      // ✅ CAMBIO: (_, __) corregido
-                      separatorBuilder: (_, _) =>
-                          Divider(color: Colors.grey.shade100, height: 1),
-                      itemBuilder: (context, index) {
-                        final hanzi = _resultadosBusqueda[index];
-                        return ListTile(
-                          title: Text(
-                            // ✅ CAMBIO: 'caracter' en lugar de 'simplificado'
-                            "${hanzi['caracter']}  (${hanzi['pinyin']})",
-                            style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text(
-                            // ✅ CAMBIO: 'significado' en lugar de 'significados'
-                            "${hanzi['significado']}",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          trailing: const Icon(Icons.draw,
-                              size: 18, color: Colors.blue),
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => PantallaEstudio(
-                                // ✅ CAMBIO: 'nivel_hsk' en lugar de 'nivel'
-                                nivelHSK: hanzi['nivel_hsk'],
-                                hanziIdBuscado: hanzi['id'],
-                                modoNovato: widget.modoNovato,
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-            ),
-          ),
-        ],
+            Expanded(child: _buscando ? _listaResultados() : _listaNiveles()),
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget _listaNiveles() {
+    return ListView.separated(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+      itemCount: _niveles.length,
+      separatorBuilder: (_, _) => const SizedBox(height: 10),
+      itemBuilder: (_, i) {
+        final n = _niveles[i];
+        return TarjetaVidrio(
+          onTap: () => _estudiar(FiltroEstudio.nivel(n.nivel)),
+          child: Row(
+            children: [
+              Container(
+                width: 52,
+                height: 52,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: EtiquetaNivel.colorDe(n.nivel).withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Text(n.nivel == 7 ? '7-9' : '${n.nivel}',
+                    style: TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w700, color: EtiquetaNivel.colorDe(n.nivel))),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(nombreDeNivel(n.nivel), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 2),
+                    Text(
+                      n.dominados > 0 ? '${n.dominados} dominados' : '${n.total} caracteres oficiales',
+                      style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                    ),
+                    const SizedBox(height: 6),
+                    BarraAvance(valor: n.estudiados, total: n.total, color: EtiquetaNivel.colorDe(n.nivel)),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey.shade400),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _listaResultados() {
+    if (_resultados.isEmpty) {
+      return const MensajeCentrado(emoji: '🔍', titulo: 'Sin resultados');
+    }
+    return ListView.separated(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+      itemCount: _resultados.length,
+      separatorBuilder: (_, _) => const Divider(height: 1),
+      itemBuilder: (_, i) {
+        final c = _resultados[i];
+        return ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+          leading: Text(c.caracter, style: const TextStyle(fontSize: 32)),
+          title: Row(children: [
+            Text(c.pinyin, style: const TextStyle(fontWeight: FontWeight.w600)),
+            const SizedBox(width: 8),
+            EtiquetaNivel(nivel: c.nivelHsk),
+          ]),
+          subtitle: Text(c.significado, maxLines: 1, overflow: TextOverflow.ellipsis),
+          trailing: const Icon(Icons.draw_outlined, size: 18, color: Colors.blue),
+          onTap: () => _estudiar(FiltroEstudio.unico(c.id)),
+        );
+      },
     );
   }
 }

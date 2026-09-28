@@ -1,736 +1,336 @@
-import 'dart:convert';
-import 'dart:ui';
+// ─────────────────────────────────────────────────────────────────────────────
+// pantalla_estudio.dart — Sesión de escritura
+//
+// Arriba: pinyin, significado, audio, ejemplos y el radical del carácter.
+// En medio: el lienzo donde lo escribes trazo por trazo.
+// Abajo: al terminar, tus errores y los botones Difícil / Medio / Fácil
+//        (se resalta el que sugiere la app según tus errores).
+//
+// Qué carácter sigue lo decide SesionEstudio (repasos vencidos, "Difícil"
+// que vuelven en la misma sesión y nuevos hasta tu límite diario).
+// ─────────────────────────────────────────────────────────────────────────────
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:perfect_freehand/perfect_freehand.dart';
-import '../database/db_helper.dart';
-import '../helpers/pinyin_helper.dart';
-import '../helpers/dtw_helper.dart';
-import '../painters/grid_painter.dart';
-import '../painters/svg_fondo_painter.dart';
-import '../painters/pista_roja_painter.dart';
-import '../painters/pincel_painter.dart';
-import '../painters/trazo_guia_painter.dart';
-import '../widgets/glass_speaker_button.dart';
+
+import '../datos/datos_app.dart';
+import '../datos/modelos.dart';
+import '../datos/repositorio.dart';
+import '../datos/sesion_estudio.dart';
+import '../datos/srs.dart';
+import '../widgets/boton_voz.dart';
+import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
+import '../widgets/lienzo_escritura.dart';
+import 'pantalla_familia_radical.dart';
 
 class PantallaEstudio extends StatefulWidget {
-  final int nivelHSK;
-  final int? hanziIdBuscado;
-  final bool modoNovato;
-  final bool modoRadical;
+  const PantallaEstudio({super.key, required this.filtro, required this.modoNovato});
 
-  const PantallaEstudio({
-    super.key,
-    required this.nivelHSK,
-    this.hanziIdBuscado,
-    this.modoNovato  = false,
-    this.modoRadical = false,
-  });
+  final FiltroEstudio filtro;
+  final bool modoNovato;
 
   @override
   State<PantallaEstudio> createState() => _PantallaEstudioState();
 }
 
-class _PantallaEstudioState extends State<PantallaEstudio>
-    with SingleTickerProviderStateMixin {
-  Map<String, dynamic>? _hanziActual;
-  final List<List<PointVector>> _trazosUsuario = [];
+class _PantallaEstudioState extends State<PantallaEstudio> {
+  late final Repositorio _repo = DatosApp.de(context);
+  late final SesionEstudio _sesion = SesionEstudio(FuenteRepositorio(_repo), widget.filtro);
+  /// Clave del lienzo. Se crea una nueva por tarjeta para que cada una
+  /// empiece limpia (aunque se repita el mismo carácter).
+  GlobalKey<LienzoEscrituraState> _claveLienzo = GlobalKey();
 
-  int  _trazoCorrectoActual = 0;
-  bool _mostrarPistaError   = false;
-  bool _hanziCompletado     = false;
-  bool _esBusquedaInicial   = true;
-  bool _mostrarExito        = false;
-  bool _mostrarGuia         = false;
-  bool _sinPendientes       = false;
-
-  // Trazos decodificados una sola vez por carácter (antes se hacía jsonDecode
-  // en cada cuadro mientras el usuario dibujaba).
-  List<String>       _vectores = [];
-  List<List<Offset>> _medianas = []; // coordenadas originales make-me-a-hanzi
-
-  late AnimationController _guiaController;
-  late Animation<double>   _guiaAnimation;
+  Caracter? _actual;
+  List<String> _trazosSvg = const [];
+  List<List<Offset>> _medianas = const [];
+  Radical? _radical;
+  bool _cargando = true;
+  bool _completado = false;
+  bool _guardando = false;
+  int _errores = 0;
 
   @override
   void initState() {
     super.initState();
-    _guiaController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    );
-    _guiaAnimation = CurvedAnimation(
-      parent: _guiaController,
-      curve: Curves.easeInOut,
-    );
-    _siguienteHanzi();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _cargarSiguiente());
   }
 
-  @override
-  void dispose() {
-    _guiaController.dispose();
-    super.dispose();
-  }
-
-  // ── Helpers para el nuevo esquema ────────────────────────────────────────
-
-  /// Carácter actual (campo 'caracter' en el nuevo esquema)
-  String get _caracter => _hanziActual?['caracter'] ?? '';
-
-  /// Hay medianas válidas para evaluar trazos
-  bool get _tieneMedianas => _medianas.isNotEmpty;
-
-  /// Decodifica trazos y medianas del carácter una sola vez.
-  void _decodificarHanzi(Map<String, dynamic>? h) {
-    _vectores = [];
-    _medianas = [];
-    if (h == null) return;
-    try {
-      final t = h['trazos'];
-      if (t is String && t.isNotEmpty) {
-        _vectores = List<String>.from(jsonDecode(t) as List);
-      }
-    } catch (_) {
-      _vectores = [];
-    }
-    try {
-      final m = h['medianas'];
-      final decoded = m is String ? jsonDecode(m) : m;
-      if (decoded is List) {
-        _medianas = decoded
-            .map<List<Offset>>((trazo) => (trazo as List)
-                .map<Offset>((p) => Offset(
-                      (p[0] as num).toDouble(),
-                      (p[1] as num).toDouble(),
-                    ))
-                .toList())
-            .toList();
-      }
-    } catch (_) {
-      _medianas = [];
-    }
-  }
-
-  /// Convierte coordenadas make-me-a-hanzi (y hacia arriba, borde superior
-  /// en y = 900) a coordenadas del lienzo. Debe coincidir con SvgFondoPainter.
-  static List<Offset> _aLienzo(List<Offset> puntos, Size size) {
-    final double sx = (size.width  * 0.9) / 1024;
-    final double sy = (size.height * 0.9) / 1024;
-    final double ox = size.width  * 0.05;
-    final double oy = size.height * 0.05;
-    return puntos
-        .map((p) => Offset(ox + p.dx * sx, oy + (900 - p.dy) * sy))
-        .toList();
-  }
-
-  // ─────────────────────────────────────────────────────────────────────────
-
-  void _siguienteHanzi() async {
-    Map<String, dynamic>? hanzi;
-
-    if (widget.hanziIdBuscado != null && _esBusquedaInicial) {
-      final db = await DatabaseHelper.instance.database;
-      final res = await db.query('caracteres',
-          where: 'id = ?', whereArgs: [widget.hanziIdBuscado]);
-      if (res.isNotEmpty) hanzi = res.first;
-      _esBusquedaInicial = false;
-    } else if (widget.modoRadical) {
-      hanzi = await DatabaseHelper.instance.obtenerSiguienteRadicalParaEstudiar();
-    } else {
-      hanzi = await DatabaseHelper.instance
-          .obtenerSiguienteHanziParaEstudiar(widget.nivelHSK);
-    }
-
-    if (mounted) {
-      setState(() {
-        _hanziActual         = hanzi;
-        _sinPendientes       = hanzi == null;
-        _decodificarHanzi(hanzi);
-        _trazosUsuario.clear();
-        _trazoCorrectoActual = 0;
-        _mostrarPistaError   = false;
-        _hanziCompletado     = false;
-        _mostrarExito        = false;
-        _mostrarGuia         = false;
-        if (_hanziActual != null && !_tieneMedianas) {
-          _hanziCompletado = true;
-        }
-      });
-      _guiaController.reset();
-    }
-  }
-
-  void _evaluar(int calificacion) async {
-    if (_hanziActual != null) {
-      await DatabaseHelper.instance
-          .actualizarProgresoSRS(_hanziActual!['id'], calificacion);
-    }
-    _siguienteHanzi();
-  }
-
-  void _limpiarLienzo() {
-    setState(() {
-      _trazosUsuario.clear();
-      _trazoCorrectoActual = 0;
-      _hanziCompletado     = false;
-      _mostrarExito        = false;
-      _mostrarGuia         = false;
-    });
-    _guiaController.reset();
-  }
-
-  // ✅ Ahora consulta tabla 'ejemplos' con caracter_id
-  void _mostrarModalEjemplos(int hanziId) async {
-    final db = await DatabaseHelper.instance.database;
-    final lista = await db.query(
-      'ejemplos',
-      where: 'caracter_id = ?',
-      whereArgs: [hanziId],
-    );
+  Future<void> _cargarSiguiente() async {
+    setState(() => _cargando = true);
+    final c = await _sesion.siguiente();
+    final r = c == null ? null : await _repo.radical(c.radical);
     if (!mounted) return;
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context) => _ModalEjemplos(
-        ejemplos: lista,
-        caracter: _caracter,
-      ),
-    );
-  }
-
-  void _mostrarAnimacionGuia() {
-    if (!widget.modoNovato) return;
-    setState(() => _mostrarGuia = true);
-    _guiaController.forward(from: 0).then((_) {
-      if (mounted) {
-        Future.delayed(const Duration(milliseconds: 400), () {
-          if (mounted) setState(() => _mostrarGuia = false);
-        });
-      }
+    setState(() {
+      _actual = c;
+      _radical = r;
+      // Los trazos se decodifican una vez por tarjeta, no en cada build.
+      _trazosSvg = c?.trazosSvg ?? const [];
+      _medianas = c?.medianas ?? const [];
+      _cargando = false;
+      _completado = false;
+      _errores = 0;
+      _claveLienzo = GlobalKey();
     });
   }
 
-  void _auditarTrazo(Size canvasSize) {
-    if (_hanziActual == null || !_tieneMedianas) return;
-    if (_trazosUsuario.isEmpty) return;
-    if (_trazoCorrectoActual >= _medianas.length) return;
-
-    final List<Offset> trazoEsperado =
-        _aLienzo(_medianas[_trazoCorrectoActual], canvasSize);
-
-    final ultimoTrazo = _trazosUsuario.last;
-    if (ultimoTrazo.length < 2) {
-      // Un toque sin movimiento: se descarta. Antes, cualquier trazo con
-      // menos de 5 puntos (p. ej. un punto 丶 rápido) se quedaba dibujado
-      // sin evaluarse y el ejercicio no avanzaba.
-      setState(() => _trazosUsuario.removeLast());
+  Future<void> _calificar(Calificacion c) async {
+    final actual = _actual;
+    if (actual == null || _guardando) return;
+    _guardando = true;
+    await _sesion.responder(actual, c);
+    _guardando = false;
+    if (!mounted) return;
+    if (widget.filtro.esUnico) {
+      Navigator.pop(context);
       return;
     }
+    await _cargarSiguiente();
+  }
 
-    final List<Offset> trazoUsuario =
-        ultimoTrazo.map((pv) => Offset(pv.dx, pv.dy)).toList();
-
-    final double costo  = DTWHelper.calcular(trazoUsuario, trazoEsperado);
-    final double umbral = canvasSize.width * 0.28;
-
-    if (costo <= umbral) {
-      HapticFeedback.lightImpact();
-      setState(() {
-        _mostrarExito = true;
-        _trazoCorrectoActual++;
-        if (_trazoCorrectoActual >= _medianas.length) _hanziCompletado = true;
-      });
-      Future.delayed(const Duration(milliseconds: 350), () {
-        if (mounted) setState(() => _mostrarExito = false);
-      });
-    } else {
-      HapticFeedback.heavyImpact();
-      setState(() => _mostrarPistaError = true);
-      _mostrarAnimacionGuia();
-      Future.delayed(const Duration(milliseconds: 400), () {
-        if (mounted) {
-          setState(() {
-            if (_trazosUsuario.isNotEmpty) _trazosUsuario.removeLast();
-            _mostrarPistaError = false;
-          });
-        }
-      });
-    }
+  Future<void> _verEjemplos(Caracter c) async {
+    final ejemplos = await _repo.ejemplos(c.id);
+    if (!mounted) return;
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => _HojaEjemplos(caracter: c, ejemplos: ejemplos),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final String titulo = widget.modoRadical
-        ? 'Radicales Kangxi'
-        : 'Estudiando HSK ${widget.nivelHSK}';
-
+    final c = _actual;
     return FondoTintaChina(
       child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          title: Column(
-            children: [
-              Text(titulo,
-                  style: const TextStyle(color: Colors.black87, fontSize: 16)),
-              Text(widget.modoNovato ? '🐣 Novato' : '🥋 Experto',
-                  style: TextStyle(fontSize: 11, color: Colors.grey.shade500)),
-            ],
-          ),
-          centerTitle: true,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios,
-                color: Colors.black87, size: 20),
-            onPressed: () => Navigator.pop(context),
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.refresh, color: Colors.black54),
-              onPressed: _limpiarLienzo,
-              tooltip: "Reiniciar trazos",
-            ),
+        appBar: BarraSuperior(
+          titulo: widget.filtro.titulo,
+          subtitulo: widget.modoNovato ? '🐣 Novato' : '🥋 Experto',
+          acciones: [
+            if (c != null)
+              IconButton(
+                icon: const Icon(Icons.refresh, color: Colors.black54),
+                tooltip: 'Reiniciar trazos',
+                onPressed: () {
+                  _claveLienzo.currentState?.reiniciar();
+                  setState(() {
+                    _completado = false;
+                    _errores = 0;
+                  });
+                },
+              ),
           ],
         ),
-        body: _sinPendientes
-            ? _vistaSinPendientes()
-            : _hanziActual == null
-            ? const Center(
-                child: CircularProgressIndicator(color: Colors.black))
-            : Column(
-                children: [
-                  // ── Panel superior ────────────────────────────────────
-                  Expanded(
-                    flex: 2,
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                              children: PinyinHelper.formatearConColores(
-                                      _hanziActual!['pinyin'])
-                                  .map((par) => TextSpan(
-                                        text: par.$1,
-                                        style: const TextStyle(
-                                          fontSize: 22,
-                                          letterSpacing: 1.2,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: 'SFPro',
-                                        ).copyWith(color: par.$2),
-                                      ))
-                                  .toList(),
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          // ✅ CAMBIO: _caracter en lugar de ['simplificado']
-                          GlassSpeakerButton(textoALeer: _caracter),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 15.0),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                                child: InkWell(
-                                  onTap: () => _mostrarModalEjemplos(
-                                      _hanziActual!['id'] as int),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 8),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0x99E3F2FD),
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                          color: const Color(0x6690CAF9),
-                                          width: 1),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(Icons.menu_book_rounded,
-                                            color: Colors.blue.shade700,
-                                            size: 16),
-                                        const SizedBox(width: 6),
-                                        Text("Ver ejemplos",
-                                            style: TextStyle(
-                                                color: Colors.blue.shade700,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 14)),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  // ── Lienzo ────────────────────────────────────────────
-                  Expanded(
-                    flex: 5,
-                    child: Center(
-                      child: AspectRatio(
-                        aspectRatio: 1.0,
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 20.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                            boxShadow: const [
-                              BoxShadow(
-                                  color: Color(0x22000000),
-                                  blurRadius: 20,
-                                  offset: Offset(0, 10))
-                            ],
-                            border: Border.all(
-                                color: Color(0xFFE0E0E0), width: 1.5),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(13),
-                            child: LayoutBuilder(
-                              builder: (context, constraints) {
-                                final canvasSize = Size(
-                                    constraints.maxWidth,
-                                    constraints.maxHeight);
-
-                                final List<String> vectores = _vectores;
-
-                                // Mediana actual para guía
-                                List<Offset> medianaActual = [];
-                                if (widget.modoNovato &&
-                                    _trazoCorrectoActual < _medianas.length) {
-                                  medianaActual = _aLienzo(
-                                      _medianas[_trazoCorrectoActual],
-                                      canvasSize);
-                                }
-
-                                return Stack(
-                                  children: [
-                                    Positioned.fill(
-                                        child: CustomPaint(
-                                            painter: GridPainter())),
-                                    if (vectores.isNotEmpty)
-                                      Positioned.fill(
-                                        child: CustomPaint(
-                                            painter: SvgFondoPainter(vectores)),
-                                      ),
-                                    if (vectores.isNotEmpty &&
-                                        _trazoCorrectoActual < vectores.length)
-                                      Positioned.fill(
-                                        child: AnimatedOpacity(
-                                          opacity:
-                                              _mostrarPistaError ? 1.0 : 0.0,
-                                          duration: const Duration(
-                                              milliseconds: 300),
-                                          child: CustomPaint(
-                                              painter: PistaRojaPainter(
-                                                  vectores[
-                                                      _trazoCorrectoActual])),
-                                        ),
-                                      ),
-                                    // Guía animada (solo novato)
-                                    if (widget.modoNovato &&
-                                        _mostrarGuia &&
-                                        medianaActual.isNotEmpty)
-                                      Positioned.fill(
-                                        child: IgnorePointer(
-                                          child: AnimatedBuilder(
-                                            animation: _guiaAnimation,
-                                            // ✅ CAMBIO: (_, __) corregido
-                                            builder: (_, _) => CustomPaint(
-                                              painter: TrazoGuiaPainter(
-                                                puntos: medianaActual,
-                                                progreso: _guiaAnimation.value,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    // Flash verde
-                                    Positioned.fill(
-                                      child: IgnorePointer(
-                                        child: AnimatedOpacity(
-                                          opacity: _mostrarExito ? 1.0 : 0.0,
-                                          duration: const Duration(
-                                              milliseconds: 200),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(13),
-                                              color: const Color(0x2200C853),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned.fill(
-                                      child: GestureDetector(
-                                        onPanStart: (d) {
-                                          if (_hanziCompletado) return;
-                                          setState(() =>
-                                              _trazosUsuario.add([
-                                                PointVector(
-                                                    d.localPosition.dx,
-                                                    d.localPosition.dy)
-                                              ]));
-                                        },
-                                        onPanUpdate: (d) {
-                                          if (_hanziCompletado) return;
-                                          setState(() =>
-                                              _trazosUsuario.last.add(
-                                                  PointVector(
-                                                      d.localPosition.dx,
-                                                      d.localPosition.dy)));
-                                        },
-                                        onPanEnd: (_) {
-                                          if (_hanziCompletado) return;
-                                          _auditarTrazo(canvasSize);
-                                        },
-                                        child: CustomPaint(
-                                          painter: PincelPainter(_trazosUsuario),
-                                          size: Size.infinite,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // ── Botones SRS ───────────────────────────────────────
-                  Expanded(
-                    flex: 2,
-                    child: Center(
-                      child: AnimatedOpacity(
-                        opacity: _hanziCompletado ? 1.0 : 0.0,
-                        duration: const Duration(milliseconds: 500),
-                        child: _hanziCompletado
-                            ? Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    _botonSRS('Difícil', Colors.red,    0),
-                                    _botonSRS('Medio',   Colors.orange, 3),
-                                    _botonSRS('Fácil',   Colors.green,  5),
-                                  ],
-                                ),
-                              )
-                            : Text("Dibuja el carácter...",
-                                style: TextStyle(
-                                    color: Colors.grey.shade400,
-                                    fontSize: 16,
-                                    fontStyle: FontStyle.italic)),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-      ),
-    );
-  }
-
-  /// Se muestra cuando no quedan caracteres nuevos ni repasos vencidos.
-  /// Antes esta situación dejaba un spinner girando para siempre.
-  Widget _vistaSinPendientes() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('🎉', style: TextStyle(fontSize: 48)),
-            const SizedBox(height: 16),
-            const Text(
-              'No hay caracteres pendientes',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              widget.modoRadical
-                  ? 'Ya viste todos los radicales. Vuelve cuando toque repasar.'
-                  : 'Terminaste los nuevos y los repasos de HSK '
-                      '${widget.nivelHSK} por ahora.',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-            ),
-            const SizedBox(height: 24),
-            OutlinedButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Volver'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _botonSRS(String texto, MaterialColor color, int calificacion) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color.shade50,
-        elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      ),
-      onPressed: () => _evaluar(calificacion),
-      child: Text(texto,
-          style: TextStyle(
-              color: color.shade700, fontWeight: FontWeight.w600)),
-    );
-  }
-}
-
-// =========================================================================
-// MODAL DE EJEMPLOS — minimalista con columnas
-// =========================================================================
-class _ModalEjemplos extends StatelessWidget {
-  final List<Map<String, dynamic>> ejemplos;
-  final String caracter;
-
-  const _ModalEjemplos({
-    required this.ejemplos,
-    required this.caracter,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-        child: Container(
-          decoration: const BoxDecoration(
-            color: Color(0xF5FFFFFF),
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Handle
-              Container(
-                margin: const EdgeInsets.only(top: 12, bottom: 8),
-                width: 36,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFBDBDBD),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-
-              // Título con carácter
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 20, vertical: 8),
-                child: Row(
+        body: SafeArea(
+          child: c == null
+              ? (_cargando
+                  ? const Center(child: CircularProgressIndicator(color: Colors.black54))
+                  : _vistaFin())
+              : Column(
                   children: [
-                    Text(caracter,
-                        style: const TextStyle(
-                            fontSize: 28, fontWeight: FontWeight.w300)),
-                    const SizedBox(width: 12),
-                    const Text('Ejemplos',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black87)),
+                    Expanded(flex: 3, child: _panelSuperior(c)),
+                    Expanded(flex: 6, child: _lienzo(c)),
+                    Expanded(flex: 2, child: _panelInferior()),
                   ],
                 ),
+        ),
+      ),
+    );
+  }
+
+  // ── Panel superior: qué carácter escribir ────────────────────────────────
+
+  Widget _panelSuperior(Caracter c) {
+    final r = _radical;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          PinyinColoreado(caracter: c),
+          const SizedBox(height: 6),
+          TextoSignificado(caracter: c, maxLineas: 2),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 6,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            alignment: WrapAlignment.center,
+            children: [
+              BotonVoz(texto: c.caracter),
+              _Pastilla(
+                icono: Icons.menu_book_rounded,
+                texto: 'Ejemplos',
+                color: const Color(0xFF1565C0),
+                onTap: () => _verEjemplos(c),
               ),
-
-              const Divider(height: 1),
-
-              // Cabecera de columnas
-              if (ejemplos.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 4),
-                  child: Row(
-                    children: [
-                      _Etiqueta('Chino',   flex: 3),
-                      _Etiqueta('Pinyin',  flex: 3),
-                      _Etiqueta('Español', flex: 4),
-                    ],
+              if (r != null)
+                _Pastilla(
+                  icono: Icons.account_tree_outlined,
+                  texto: 'Radical ${r.formaPrincipal} ${r.nombreEs}',
+                  color: const Color(0xFF6A1B9A),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (_) => PantallaFamiliaRadical(numero: r.numero, modoNovato: widget.modoNovato),
+                    ),
                   ),
                 ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              EtiquetaNivel(nivel: c.nivelHsk),
+              if (c.nivelEscritura != null) ...[
+                const SizedBox(width: 6),
+                Text('✍ escritura oficial', style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+              ],
+              const SizedBox(width: 6),
+              Text('· ${c.numTrazos} trazos', style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
-              // Contenido
-              if (ejemplos.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.all(30),
-                  child: Text(
-                    'Aún no hay ejemplos para este carácter.',
-                    style: TextStyle(fontSize: 15, color: Colors.grey),
-                    textAlign: TextAlign.center,
-                  ),
-                )
-              else
-                ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height * 0.45,
-                  ),
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.fromLTRB(20, 4, 20, 8),
-                    itemCount: ejemplos.length,
-                    separatorBuilder: (_, _) => const Divider(
-                        height: 1, color: Color(0xFFEEEEEE)),
-                    itemBuilder: (_, i) {
-                      final e = ejemplos[i];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              flex: 3,
-                              child: Text(
-                                e['oracion_zh'] ?? '',
-                                style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 3,
-                              child: Text(
-                                e['pinyin'] ?? '',
-                                style: TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.grey.shade600),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 4,
-                              child: Text(
-                                e['oracion_es'] ?? '',
-                                style: const TextStyle(fontSize: 13),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
+  // ── Lienzo ───────────────────────────────────────────────────────────────
 
-              SizedBox(
-                  height: MediaQuery.of(context).padding.bottom + 16),
+  Widget _lienzo(Caracter c) {
+    return Center(
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFFE0E0E0), width: 1.5),
+            boxShadow: const [BoxShadow(color: Color(0x1F000000), blurRadius: 18, offset: Offset(0, 8))],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(14),
+            child: LienzoEscritura(
+              key: _claveLienzo,
+              caracter: c.caracter,
+              trazosSvg: _trazosSvg,
+              medianas: _medianas,
+              modoNovato: widget.modoNovato,
+              onCompletado: (errores) => setState(() {
+                _completado = true;
+                _errores = errores;
+              }),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ── Panel inferior: calificación ─────────────────────────────────────────
+
+  Widget _panelInferior() {
+    if (!_completado) {
+      return Center(
+        child: Text(
+          'Escribe el carácter trazo por trazo',
+          style: TextStyle(color: Colors.grey.shade500, fontSize: 15, fontStyle: FontStyle.italic),
+        ),
+      );
+    }
+    final sugerida = Calificacion.sugerida(_errores);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          _errores == 0 ? 'Sin errores ✨' : '$_errores ${_errores == 1 ? 'error' : 'errores'} de trazo',
+          style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
+        ),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            for (final (cal, color) in const [
+              (Calificacion.dificil, Colors.red),
+              (Calificacion.medio, Colors.orange),
+              (Calificacion.facil, Colors.green),
+            ])
+              _BotonCalificacion(
+                calificacion: cal,
+                color: color,
+                resaltado: cal == sugerida,
+                onTap: () => _calificar(cal),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  // ── Fin de la sesión ─────────────────────────────────────────────────────
+
+  Widget _vistaFin() {
+    final resumen = 'Nuevos: ${_sesion.nuevasEnSesion} · Repasados: ${_sesion.repasadasEnSesion}';
+    final volver = OutlinedButton(onPressed: () => Navigator.pop(context), child: const Text('Volver'));
+    return switch (_sesion.fin) {
+      FinSesion.limiteDiario => MensajeCentrado(
+          emoji: '🎯',
+          titulo: 'Cumpliste tu meta de caracteres nuevos por hoy',
+          texto: '$resumen\n\nPuedes seguir con más nuevos o volver mañana para tus repasos.',
+          acciones: [
+            volver,
+            FilledButton(
+              onPressed: () {
+                _sesion.estudiarMas();
+                _cargarSiguiente();
+              },
+              child: const Text('Estudiar más'),
+            ),
+          ],
+        ),
+      FinSesion.unicoTerminado => MensajeCentrado(emoji: '✅', titulo: 'Práctica terminada', acciones: [volver]),
+      _ => MensajeCentrado(
+          emoji: '🎉',
+          titulo: 'No hay nada pendiente aquí',
+          texto: '$resumen\n\nTerminaste los nuevos y los repasos de este grupo por ahora.',
+          acciones: [volver],
+        ),
+    };
+  }
+}
+
+// ─── Piezas de la pantalla ───────────────────────────────────────────────────
+
+/// Botón redondeado pequeño con ícono y texto.
+class _Pastilla extends StatelessWidget {
+  const _Pastilla({required this.icono, required this.texto, required this.color, required this.onTap});
+
+  final IconData icono;
+  final String texto;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: color.withValues(alpha: 0.08),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: BorderSide(color: color.withValues(alpha: 0.30)),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(18),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icono, size: 16, color: color),
+              const SizedBox(width: 6),
+              Text(texto, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: color)),
             ],
           ),
         ),
@@ -739,24 +339,148 @@ class _ModalEjemplos extends StatelessWidget {
   }
 }
 
-class _Etiqueta extends StatelessWidget {
-  final String texto;
-  final int flex;
-  const _Etiqueta(this.texto, {required this.flex});
+class _BotonCalificacion extends StatelessWidget {
+  const _BotonCalificacion({
+    required this.calificacion,
+    required this.color,
+    required this.resaltado,
+    required this.onTap,
+  });
+
+  final Calificacion calificacion;
+  final MaterialColor color;
+  final bool resaltado;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      flex: flex,
-      child: Text(
-        texto,
-        style: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w700,
-          color: Colors.grey.shade400,
-          letterSpacing: 0.5,
+    return AnimatedScale(
+      scale: resaltado ? 1.08 : 1.0,
+      duration: const Duration(milliseconds: 200),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: resaltado ? color.shade100 : color.shade50,
+          elevation: resaltado ? 2 : 0,
+          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+            side: resaltado ? BorderSide(color: color.shade300, width: 1.5) : BorderSide.none,
+          ),
         ),
+        onPressed: onTap,
+        child: Text(calificacion.etiqueta,
+            style: TextStyle(color: color.shade800, fontWeight: FontWeight.w700)),
       ),
+    );
+  }
+}
+
+/// Hoja inferior con las oraciones de ejemplo.
+class _HojaEjemplos extends StatelessWidget {
+  const _HojaEjemplos({required this.caracter, required this.ejemplos});
+
+  final Caracter caracter;
+  final List<Ejemplo> ejemplos;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Color(0xFAFFFFFF),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Center(
+            child: Container(
+              margin: const EdgeInsets.only(top: 12, bottom: 8),
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(color: const Color(0xFFBDBDBD), borderRadius: BorderRadius.circular(2)),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            child: Row(
+              children: [
+                Text(caracter.caracter, style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w400)),
+                const SizedBox(width: 12),
+                const Text('Ejemplos', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+              ],
+            ),
+          ),
+          const Divider(height: 1),
+          if (ejemplos.isEmpty)
+            const Padding(
+              padding: EdgeInsets.all(30),
+              child: Text('Aún no hay ejemplos para este carácter.',
+                  textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)),
+            )
+          else
+            ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.5),
+              child: ListView.separated(
+                shrinkWrap: true,
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+                itemCount: ejemplos.length,
+                separatorBuilder: (_, _) => const Divider(height: 20, color: Color(0xFFEEEEEE)),
+                itemBuilder: (_, i) => _FilaEjemplo(ejemplo: ejemplos[i], resaltar: caracter.caracter),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FilaEjemplo extends StatelessWidget {
+  const _FilaEjemplo({required this.ejemplo, required this.resaltar});
+
+  final Ejemplo ejemplo;
+
+  /// Carácter que se resalta en la oración.
+  final String resaltar;
+
+  @override
+  Widget build(BuildContext context) {
+    final esEspanol = ejemplo.espanol != null && ejemplo.espanol!.isNotEmpty;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Text.rich(TextSpan(children: [
+                for (final ch in ejemplo.chino.split(''))
+                  TextSpan(
+                    text: ch,
+                    style: TextStyle(
+                      fontSize: 19,
+                      fontWeight: ch == resaltar ? FontWeight.w700 : FontWeight.w400,
+                      color: ch == resaltar ? const Color(0xFFC62828) : Colors.black87,
+                    ),
+                  ),
+              ])),
+            ),
+            BotonVoz(texto: ejemplo.chino, tamano: 16),
+          ],
+        ),
+        const SizedBox(height: 2),
+        Text(ejemplo.pinyin, style: TextStyle(fontSize: 13, color: Colors.grey.shade600)),
+        const SizedBox(height: 4),
+        Text(
+          esEspanol ? ejemplo.traduccion : 'EN  ${ejemplo.traduccion}',
+          style: TextStyle(
+            fontSize: 14,
+            fontStyle: esEspanol ? FontStyle.normal : FontStyle.italic,
+            color: Colors.black87,
+          ),
+        ),
+      ],
     );
   }
 }

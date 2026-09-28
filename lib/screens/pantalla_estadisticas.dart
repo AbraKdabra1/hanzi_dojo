@@ -1,5 +1,17 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// pantalla_estadisticas.dart — Tu avance
+//
+// Totales generales y, por cada nivel HSK: caracteres estudiados (al menos
+// una vez) y dominados (su próximo repaso está a 3 semanas o más).
+// ─────────────────────────────────────────────────────────────────────────────
+
 import 'package:flutter/material.dart';
-import '../database/db_helper.dart';
+
+import '../datos/datos_app.dart';
+import '../datos/modelos.dart';
+import '../widgets/comunes.dart';
+import '../widgets/fondo_tinta.dart';
+import '../widgets/tarjeta_vidrio.dart';
 
 class PantallaEstadisticas extends StatefulWidget {
   const PantallaEstadisticas({super.key});
@@ -9,131 +21,101 @@ class PantallaEstadisticas extends StatefulWidget {
 }
 
 class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
-  List<Map<String, dynamic>> _datosPorNivel = [];
-  bool _cargando = true;
+  List<AvanceNivel>? _niveles;
+  int _total = 0;
+  int _pendientes = 0;
 
   @override
   void initState() {
     super.initState();
-    _cargarDatos();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _cargar());
   }
 
-  Future<void> _cargarDatos() async {
-    final db = await DatabaseHelper.instance.database;
-    // ✅ CAMBIO: nivel → nivel_hsk
-    final stats = await db.rawQuery('''
-      SELECT nivel_hsk,
-             COUNT(id) as total,
-             SUM(CASE WHEN veces_visto > 0 THEN 1 ELSE 0 END) as estudiados
-      FROM caracteres
-      GROUP BY nivel_hsk
-      ORDER BY nivel_hsk ASC
-    ''');
-    if (mounted) {
-      setState(() {
-        _datosPorNivel = stats;
-        _cargando      = false;
-      });
-    }
+  Future<void> _cargar() async {
+    final repo = DatosApp.de(context);
+    final niveles = await repo.avancePorNivel();
+    final total = await repo.totalEstudiados();
+    final pendientes = await repo.repasosPendientes();
+    if (!mounted) return;
+    setState(() {
+      _niveles = niveles;
+      _total = total;
+      _pendientes = pendientes;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text('Mi Progreso',
-            style: TextStyle(
-                color: Colors.black87, fontWeight: FontWeight.w600)),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios,
-              color: Colors.black87, size: 20),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: _cargando
-          ? const Center(
-              child: CircularProgressIndicator(color: Colors.black))
-          : ListView.builder(
-              padding: const EdgeInsets.all(20),
-              itemCount: _datosPorNivel.length,
-              itemBuilder: (context, index) {
-                final d = _datosPorNivel[index];
-                // ✅ CAMBIO: nivel_hsk en lugar de nivel
-                final int nivel      = d['nivel_hsk'];
-                final int total      = d['total'];
-                final int estudiados = d['estudiados'] ?? 0;
-                final double pct =
-                    total > 0 ? estudiados / total : 0.0;
-
-                // Solo mostrar niveles 1-7
-                if (nivel < 1 || nivel > 7) {
-                  return const SizedBox.shrink();
-                }
-
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 20),
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.grey.shade100),
-                  ),
-                  child: Row(
+    final niveles = _niveles;
+    return FondoTintaChina(
+      child: Scaffold(
+        appBar: const BarraSuperior(titulo: 'Mi progreso'),
+        body: niveles == null
+            ? const Center(child: CircularProgressIndicator(color: Colors.black54))
+            : ListView(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+                children: [
+                  Row(
                     children: [
-                      // Dona de progreso
-                      SizedBox(
-                        width: 60,
-                        height: 60,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            CircularProgressIndicator(
-                              value: pct,
-                              strokeWidth: 6,
-                              backgroundColor: Colors.grey.shade200,
-                              color: Colors.black87,
-                            ),
-                            Text(
-                              "${(pct * 100).toStringAsFixed(0)}%",
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 20),
+                      Expanded(child: _Cifra(valor: _total, etiqueta: 'caracteres estudiados')),
+                      const SizedBox(width: 10),
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              nivel == 7
-                                  ? "HSK 7-9 (Avanzado)"
-                                  : "Nivel HSK $nivel",
-                              style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              "$estudiados de $total hanzi aprendidos",
-                              style: TextStyle(
-                                  color: Colors.grey.shade600,
-                                  fontSize: 14),
-                            ),
-                          ],
+                        child: _Cifra(
+                          valor: niveles.fold(0, (s, n) => s + n.dominados),
+                          etiqueta: 'dominados',
                         ),
                       ),
+                      const SizedBox(width: 10),
+                      Expanded(child: _Cifra(valor: _pendientes, etiqueta: 'repasos para hoy')),
                     ],
                   ),
-                );
-              },
-            ),
+                  const SizedBox(height: 20),
+                  for (final n in niveles) ...[
+                    TarjetaVidrio(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(children: [
+                            EtiquetaNivel(nivel: n.nivel),
+                            const Spacer(),
+                            Text('${(n.fraccion * 100).round()} %',
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+                          ]),
+                          const SizedBox(height: 10),
+                          BarraAvance(valor: n.estudiados, total: n.total, color: EtiquetaNivel.colorDe(n.nivel)),
+                          const SizedBox(height: 4),
+                          Text('${n.dominados} dominados',
+                              style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ],
+              ),
+      ),
+    );
+  }
+}
+
+class _Cifra extends StatelessWidget {
+  const _Cifra({required this.valor, required this.etiqueta});
+
+  final int valor;
+  final String etiqueta;
+
+  @override
+  Widget build(BuildContext context) {
+    return TarjetaVidrio(
+      relleno: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+      child: Column(
+        children: [
+          Text('$valor', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
+          const SizedBox(height: 2),
+          Text(etiqueta,
+              textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+        ],
+      ),
     );
   }
 }

@@ -1,32 +1,34 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// pista_roja_painter.dart — Muestra en rojo el trazo que tocaba
+// fondo_caracter_painter.dart — Silueta gris del carácter (modo novato)
 //
-// Aparece un instante cuando el trazo que dibujaste no coincide con el que
-// sigue, para que veas dónde y cómo iba.
+// Dibuja todos los trazos del carácter en gris muy claro, como plantilla
+// para calcar. Recibe los Path ya interpretados (CacheTrazos), así que solo
+// se repinta cuando cambia el carácter.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
 
 import 'geometria.dart';
 
-class PistaRojaPainter extends CustomPainter {
-  const PistaRojaPainter(this.contorno);
+class FondoCaracterPainter extends CustomPainter {
+  const FondoCaracterPainter(this.contornos);
 
-  /// Contorno del trazo esperado (coordenadas de 1024×1024).
-  final Path contorno;
+  final List<Path> contornos;
 
   static final Paint _pintura = Paint()
-    ..color = const Color(0x66F44336)
+    ..color = const Color(0x1F9E9E9E)
     ..style = PaintingStyle.fill;
 
   @override
   void paint(Canvas canvas, Size size) {
     canvas.save();
     GeometriaLienzo.aplicar(canvas, size);
-    canvas.drawPath(contorno, _pintura);
+    for (final c in contornos) {
+      canvas.drawPath(c, _pintura);
+    }
     canvas.restore();
   }
 
   @override
-  bool shouldRepaint(PistaRojaPainter old) => !identical(old.contorno, contorno);
+  bool shouldRepaint(FondoCaracterPainter old) => !identical(old.contornos, contornos);
 }
