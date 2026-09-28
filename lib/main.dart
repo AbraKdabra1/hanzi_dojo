@@ -9,6 +9,7 @@
 //   4. Al terminar, se muestra la pantalla de inicio.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import 'package:flutter/foundation.dart' show LicenseEntryWithLineBreaks, LicenseRegistry;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

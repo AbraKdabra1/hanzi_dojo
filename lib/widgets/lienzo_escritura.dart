@@ -104,9 +104,9 @@ class LienzoEscrituraState extends State<LienzoEscritura>
   }
 
   @override
-  void didUpdateWidget(LienzoEscritura anterior) {
-    super.didUpdateWidget(anterior);
-    if (anterior.caracter != widget.caracter) {
+  void didUpdateWidget(LienzoEscritura oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.caracter != widget.caracter) {
       _contornos = CacheTrazos.contornos(widget.caracter, widget.trazosSvg);
       _tamano = Size.zero; // fuerza recalcular medianas
       reiniciar();
