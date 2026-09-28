@@ -31,6 +31,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # SQLite nativo para las pruebas de base de datos (sqflite_common_ffi).
+      - name: Instalar libsqlite3
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq libsqlite3-dev
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -42,19 +46,21 @@ jobs:
           flutter-version: 3.44.5   # la misma versión que en tu PC
           cache: true
 
-      - name: Dependencias
-        run: flutter pub get 2>&1 | tee pub_get.txt
 
-      - name: Validar base de datos
+      # La base de contenido se vuelve a construir desde las fuentes. Si la
+      # versión cambia respecto a la del repo, alguien olvidó correr
+      # construir_db.py después de editar las fuentes.
+      - name: Construir y validar base de datos
         id: validar
         continue-on-error: true
         run: |
-          if [ -f herramientas_datos/validar_db.py ]; then
-            python3 herramientas_datos/validar_db.py 2>&1 | tee validar_db.txt
-            exit ${PIPESTATUS[0]}
-          else
-            echo "validar_db.py aún no existe" | tee validar_db.txt
-          fi
+          set -o pipefail
+          python3 herramientas_datos/construir_db.py 2>&1 | tee validar_db.txt
+          python3 herramientas_datos/validar_db.py --permitir-incompleto 2>&1 | tee -a validar_db.txt
+          git diff --exit-code --stat -- lib/datos/version_contenido.dart 2>&1 | tee -a validar_db.txt
+
+      - name: Dependencias
+        run: flutter pub get 2>&1 | tee pub_get.txt
 
       - name: Analizar código
         id: analyze
@@ -90,7 +96,7 @@ jobs:
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mkdir -p /tmp/reg && cp -f *.txt /tmp/reg/ 2>/dev/null || true
+          mkdir -p /tmp/reg && cp -f *.txt pubspec.lock /tmp/reg/ 2>/dev/null || true
           cd /tmp/reg
           {
             echo "commit: $GITHUB_SHA"
