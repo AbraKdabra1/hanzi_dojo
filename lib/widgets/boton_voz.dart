@@ -11,6 +11,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
+import '../datos/registro_errores.dart';
+
 /// Motor de voz compartido.
 class Voz {
   Voz._();
@@ -32,9 +34,10 @@ class Voz {
       await _configurar();
       await _tts.stop();
       await _tts.speak(texto);
-    } catch (e) {
+    } catch (e, pila) {
       _configurando = null;
       debugPrint('Voz: no se pudo leer "$texto": $e');
+      RegistroErrores.registrar('Voz', e, pila);
     }
   }
 

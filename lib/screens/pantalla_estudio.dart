@@ -8,6 +8,9 @@
 //
 // Qué carácter sigue lo decide SesionEstudio (repasos vencidos, "Difícil"
 // que vuelven en la misma sesión y nuevos hasta tu límite diario).
+//
+// Al calificar se guarda también en el historial cuánto tardaste, qué trazos
+// fallaste (y si fue al revés) y en qué modo estabas.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
@@ -51,6 +54,9 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
   /// Ajuste caligráfico (de Ajustes); se lee una vez al abrir la sesión.
   bool _ajusteCaligrafico = true;
 
+  /// Cuándo apareció la tarjeta actual (para medir cuánto tardaste).
+  final Stopwatch _cronometro = Stopwatch();
+
   @override
   void initState() {
     super.initState();
@@ -85,6 +91,9 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
         _errores = 0;
         _claveLienzo = GlobalKey();
       });
+      _cronometro
+        ..reset()
+        ..start();
     } finally {
       _pidiendo = false;
     }
@@ -99,8 +108,13 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
     final actual = _actual;
     if (actual == null || _guardando) return;
     setState(() => _guardando = true);
+    final detalle = DetallePractica(
+      duracion: _cronometro.elapsed,
+      fallos: _claveLienzo.currentState?.fallos ?? const [],
+      modoNovato: widget.modoNovato,
+    );
     try {
-      await _sesion.responder(actual, c);
+      await _sesion.responder(actual, c, detalle: detalle);
       if (!mounted) return;
       if (widget.filtro.esUnico) {
         Navigator.pop(context);

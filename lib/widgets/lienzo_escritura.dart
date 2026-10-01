@@ -37,6 +37,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/services.dart';
 
+import '../datos/modelos.dart' show FalloTrazo;
 import '../helpers/cache_trazos.dart';
 import '../helpers/evaluacion_trazo.dart';
 import '../painters/fondo_caracter_painter.dart';
@@ -118,8 +119,12 @@ class LienzoEscrituraState extends State<LienzoEscritura>
 
   final List<Timer> _temporizadores = [];
 
+  /// Trazos que fallaste en esta tarjeta, en orden (van al historial).
+  final List<FalloTrazo> _fallos = [];
+
   int get errores => _errores;
   bool get completo => _completo;
+  List<FalloTrazo> get fallos => List.unmodifiable(_fallos);
 
   @override
   void initState() {
@@ -154,6 +159,7 @@ class LienzoEscrituraState extends State<LienzoEscritura>
     _cancelarResortes();
     _tinta.limpiar();
     _guia.reset();
+    _fallos.clear();
     setState(() {
       _siguienteTrazo = 0;
       _errores = 0;
@@ -255,6 +261,7 @@ class LienzoEscrituraState extends State<LienzoEscritura>
       // Al revés, la animación del trazo correcto se muestra también en modo
       // experto: es la forma más clara de enseñar por dónde empieza.
       final mostrarGuia = widget.modoNovato || alReves;
+      _fallos.add(FalloTrazo(_siguienteTrazo, alReves: alReves));
       setState(() {
         _errores++;
         _mostrarPista = true;

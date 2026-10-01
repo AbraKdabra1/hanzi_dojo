@@ -2,6 +2,8 @@
 // main.dart — Punto de entrada de Hanzi Dojo
 //
 // Arranque:
+//   0. Se instala el registro de errores (registro_errores.dart): desde aquí,
+//      cualquier falla se guarda en el teléfono para el informe de errores.
 //   1. Se registra el texto de las licencias (pantalla de Créditos).
 //   2. Se muestra de inmediato una pantalla de carga (sin esperar a nada).
 //   3. Mientras tanto se abren las bases de datos (la primera vez se copia
@@ -15,14 +17,18 @@ import 'package:flutter/foundation.dart' show LicenseEntryWithLineBreaks, Licens
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:sqflite/sqflite.dart' show getDatabasesPath;
+
 import 'datos/base_datos.dart';
 import 'datos/datos_app.dart';
+import 'datos/registro_errores.dart';
 import 'datos/repositorio.dart';
 import 'screens/pantalla_inicio.dart';
 import 'widgets/fondo_tinta.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  RegistroErrores.instalar();
   _registrarLicencias();
   runApp(const HanziDojoApp());
 }
@@ -63,11 +69,13 @@ class _HanziDojoAppState extends State<HanziDojoApp> {
   Future<void> _abrirDatos() async {
     try {
       final fondo = precacheImage(const AssetImage(rutaFondoTemplo), context);
+      await RegistroErrores.iniciar(await getDatabasesPath());
       final base = await BaseDatos.abrir();
       await fondo;
       if (mounted) setState(() => _repo = Repositorio(base));
     } catch (e, pila) {
       debugPrint('Error al abrir la base de datos: $e\n$pila');
+      RegistroErrores.registrar('Inicio', e, pila);
       if (mounted) setState(() => _error = e);
     }
   }
@@ -135,6 +143,7 @@ class _PantallaCarga extends StatelessWidget {
 /// licencias de Flutter (Créditos → "Ver licencias completas").
 void _registrarLicencias() {
   const licencias = {
+    'Hanzi Dojo (código de la app)': 'assets/licencias/hanzi_dojo_GPL-3.0.txt',
     'CC-CEDICT (significados)': 'assets/licencias/cc_cedict_CC-BY-SA-4.0.txt',
     'Make Me a Hanzi – graphics.txt (trazos)': 'assets/licencias/make_me_a_hanzi_graphics_ARPHIC.txt',
     'Make Me a Hanzi – dictionary.txt (lecturas)': 'assets/licencias/make_me_a_hanzi_dictionary_LGPL.txt',

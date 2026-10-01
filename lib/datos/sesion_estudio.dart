@@ -23,7 +23,8 @@ abstract class FuenteSesion {
   Future<Caracter?> siguiente(FiltroEstudio filtro,
       {required bool permitirNuevos, required Set<int> excluir});
   Future<Caracter?> caracter(int id);
-  Future<void> registrarRespuesta(Caracter c, Calificacion calificacion);
+  Future<void> registrarRespuesta(Caracter c, Calificacion calificacion,
+      {DetallePractica detalle = const DetallePractica()});
   Future<int> nuevosHoy();
   Future<int> limiteNuevosPorDia();
   Future<bool> quedanNuevos(FiltroEstudio filtro);
@@ -41,8 +42,9 @@ class FuenteRepositorio implements FuenteSesion {
   @override
   Future<Caracter?> caracter(int id) => repo.caracter(id);
   @override
-  Future<void> registrarRespuesta(Caracter c, Calificacion calificacion) =>
-      repo.registrarRespuesta(c, calificacion);
+  Future<void> registrarRespuesta(Caracter c, Calificacion calificacion,
+          {DetallePractica detalle = const DetallePractica()}) =>
+      repo.registrarRespuesta(c, calificacion, detalle: detalle);
   @override
   Future<int> nuevosHoy() => repo.nuevosHoy();
   @override
@@ -133,14 +135,16 @@ class SesionEstudio {
     return null;
   }
 
-  /// Registra la calificación del carácter que acabas de practicar.
-  Future<void> responder(Caracter c, Calificacion calificacion) async {
+  /// Registra la calificación del carácter que acabas de practicar
+  /// (y, en el historial, cómo te fue: [detalle]).
+  Future<void> responder(Caracter c, Calificacion calificacion,
+      {DetallePractica detalle = const DetallePractica()}) async {
     if (c.progreso == null) {
       _nuevasEnSesion++;
     } else {
       _repasadasEnSesion++;
     }
-    await fuente.registrarRespuesta(c, calificacion);
+    await fuente.registrarRespuesta(c, calificacion, detalle: detalle);
     _mostradas++;
     if (!calificacion.aprobado && !filtro.esUnico) {
       _reaprender[c.id] = _mostradas + tarjetasAntesDeReaprender;

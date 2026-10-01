@@ -8,6 +8,7 @@
 //   Radical   → uno de los 214 radicales Kangxi y cuánto de su familia llevas.
 //   Ejemplo   → una oración de ejemplo con pinyin y traducción.
 //   Progreso  → cómo vas con un carácter (repaso espaciado).
+//   DetallePractica → cómo te fue al escribirlo (va al historial).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'dart:convert';
@@ -281,4 +282,65 @@ class AvanceNivel {
         estudiados: f['estudiados'] as int? ?? 0,
         dominados: f['dominados'] as int? ?? 0,
       );
+}
+
+/// Un trazo que salió mal mientras escribías un carácter.
+class FalloTrazo {
+  const FalloTrazo(this.indice, {this.alReves = false});
+
+  /// Número del trazo (0 = el primero).
+  final int indice;
+
+  /// true si la forma era la correcta pero lo hiciste en sentido contrario.
+  final bool alReves;
+
+  /// Cómo se guarda en el historial: "3" (error) o "3r" (al revés).
+  String get codigo => alReves ? '${indice}r' : '$indice';
+
+  /// Lee una lista guardada como "0,3r,3".
+  static List<FalloTrazo> leerLista(String texto) => [
+        for (final parte in texto.split(','))
+          if (int.tryParse(parte.replaceAll('r', '')) case final n?)
+            FalloTrazo(n, alReves: parte.endsWith('r')),
+      ];
+
+  static String escribirLista(List<FalloTrazo> fallos) => fallos.map((f) => f.codigo).join(',');
+
+  @override
+  bool operator ==(Object other) =>
+      other is FalloTrazo && other.indice == indice && other.alReves == alReves;
+
+  @override
+  int get hashCode => Object.hash(indice, alReves);
+
+  @override
+  String toString() => codigo;
+}
+
+/// Cómo te fue al practicar un carácter. Se guarda en la tabla `historial`
+/// (una fila por repaso), que es la base de las estadísticas.
+class DetallePractica {
+  const DetallePractica({
+    this.duracion = Duration.zero,
+    this.fallos = const [],
+    this.modoNovato = true,
+  });
+
+  /// Tiempo desde que apareció la tarjeta hasta que la calificaste.
+  final Duration duracion;
+
+  /// Los trazos que fallaste, en orden (un trazo puede aparecer varias veces).
+  final List<FalloTrazo> fallos;
+
+  final bool modoNovato;
+
+  int get errores => fallos.length;
+  int get alReves => fallos.where((f) => f.alReves).length;
+
+  /// Duración máxima que se guarda: si dejaste la tarjeta abierta y te fuiste,
+  /// no se cuenta como una hora de estudio.
+  static const duracionMaxima = Duration(minutes: 10);
+
+  int get duracionGuardadaMs =>
+      (duracion > duracionMaxima ? duracionMaxima : duracion).inMilliseconds;
 }
