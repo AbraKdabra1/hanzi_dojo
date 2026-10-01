@@ -16,6 +16,7 @@
 // Versiones del esquema de progreso.db:
 //   1  progreso + ajustes
 //   2  + historial (una fila por repaso: base de las estadísticas)
+//   3  + lectura (capítulos de la sección «Leer» que ya terminaste)
 //
 // Se abre una sola conexión a progreso.db y se "adjunta" contenido.db con el
 // alias `c`. Así una misma consulta puede unir ambas:
@@ -52,7 +53,7 @@ class BaseDatos {
 
   static const _archivoContenido = 'contenido.db';
   static const _archivoProgreso = 'progreso.db';
-  static const _versionEsquemaProgreso = 2;
+  static const _versionEsquemaProgreso = 3;
 
   /// Abre (y si hace falta, prepara) las bases de datos.
   ///
@@ -144,11 +145,26 @@ class BaseDatos {
       )
     ''');
     await _crearHistorial(db);
+    await _crearLectura(db);
   }
 
   /// Quien ya tenía la app: se agregan las tablas nuevas sin tocar su avance.
   static Future<void> _actualizarEsquemaProgreso(Database db, int anterior, int nueva) async {
     if (anterior < 2) await _crearHistorial(db);
+    if (anterior < 3) await _crearLectura(db);
+  }
+
+  /// Capítulos de «Leer» que terminaste. Se guardan con la CLAVE del libro
+  /// (no su número de fila), igual que el progreso se guarda por carácter.
+  static Future<void> _crearLectura(Database db) async {
+    await db.execute('''
+      CREATE TABLE lectura (
+        libro    TEXT    NOT NULL,   -- clave del libro (c.libros.clave)
+        capitulo INTEGER NOT NULL,   -- orden del capítulo (1, 2, 3…)
+        momento  INTEGER NOT NULL,   -- cuándo lo terminaste (segundos Unix)
+        PRIMARY KEY (libro, capitulo)
+      )
+    ''');
   }
 
   /// Una fila por cada vez que calificas un carácter.

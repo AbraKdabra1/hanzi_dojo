@@ -1,0 +1,185 @@
+clave: cuentos-para-ninos
+titulo: 中国小故事
+titulo_es: Cuentos chinos para niños
+nivel: 1
+tipo: adaptado
+descripcion: Cinco historias que casi todos los niños de China conocen, contadas con los caracteres de HSK 1.
+fuente: Anécdotas tradicionales de las dinastías Zhou, Han, Tang y Song (dominio público). Versión en chino graduado escrita para Hanzi Dojo.
+
+## 孔融让梨
+titulo_es: Kong Rong cede las peras
+origen: Dinastía Han del Este (siglo II). La anécdota aparece en textos antiguos sobre la infancia de Kong Rong, descendiente de Confucio.
+palabras: 梨 = pera; 让 = ceder, dejar a otro; 故事 = historia, cuento
+
+{孔融}四岁。他家有很多孩子：他有五个哥哥，还有一个弟弟。
+> Kong Rong tenía cuatro años. En su casa había muchos niños: tenía cinco hermanos mayores y también un hermano menor.
+
+一天，爸爸买回来很多梨。这些梨很大，看起来很好吃。
+> Un día, papá trajo a casa muchas peras. Eran grandes y se veían deliciosas.
+
+爸爸对孔融说："孔融，你先拿一个吧。"
+> Papá le dijo a Kong Rong: «Kong Rong, toma tú una primero».
+
+孔融看了看，拿了一个最小的。
+> Kong Rong las miró y tomó la más pequeña.
+
+爸爸问："这么多大的，你为什么拿小的？"
+> Papá le preguntó: «Con tantas grandes, ¿por qué tomas una pequeña?».
+
+孔融说："我小，我吃小的。哥哥们大，大的给哥哥们吃。"
+> Kong Rong respondió: «Yo soy pequeño, así que me como la pequeña. Mis hermanos mayores son grandes: las grandes son para ellos».
+
+爸爸再问："那弟弟呢？弟弟比你还小。"
+> Papá volvió a preguntar: «¿Y tu hermano menor? Es todavía más pequeño que tú».
+
+孔融说："我是哥哥，我也要给弟弟大的。"
+> Kong Rong dijo: «Yo soy su hermano mayor; a él también quiero darle una grande».
+
+爸爸听了很高兴。他笑着说："你真是一个好孩子！"
+> Al oírlo, papá se puso muy contento. Sonriendo, dijo: «¡De verdad eres un buen niño!».
+
+这就是"孔融让梨"的故事。在中国，很多爸爸妈妈都给孩子们讲这个故事。
+> Esta es la historia de «Kong Rong cede las peras». En China, muchos padres se la cuentan a sus hijos.
+
+## 司马光砸缸
+titulo_es: Sima Guang rompe la tinaja
+origen: Dinastía Song del Norte (siglo XI). Se cuenta en la «Historia de los Song» sobre la infancia del historiador Sima Guang.
+palabras: 水缸 = tinaja; 石头 = piedra; 破 = romperse; 聪明 = listo, inteligente
+
+很久以前，有一个小男孩，他叫{司马光}。
+> Hace mucho tiempo, había un niño que se llamaba Sima Guang.
+
+一天，司马光和几个朋友在花园里玩。花园里有一个大水缸，里面有很多水。
+> Un día, Sima Guang jugaba con unos amigos en un jardín. En el jardín había una gran tinaja llena de agua.
+
+一个孩子爬到水缸上面玩。他没站好，一下子掉进了水缸里！
+> Uno de los niños se subió a la tinaja para jugar. Perdió el equilibrio y, de repente, ¡cayó dentro!
+
+水缸很高，里面的水也很多。孩子们都很怕，有的大叫，有的哭着跑了。
+> La tinaja era alta y tenía mucha agua. Los niños se asustaron: unos gritaban y otros se fueron corriendo y llorando.
+
+司马光没有跑。他想："等大人来，就太晚了。我要快点儿想办法！"
+> Sima Guang no huyó. Pensó: «Si espero a que lleguen los adultos, será demasiado tarde. ¡Tengo que pensar algo rápido!».
+
+他看见地上有一块大石头，就拿起石头，用力打水缸。
+> Vio una piedra grande en el suelo, la levantó y golpeó la tinaja con todas sus fuerzas.
+
+一下，两下，三下……水缸破了一个大口子，水从里面流了出来。
+> Un golpe, dos, tres... La tinaja se rompió con un gran agujero y el agua salió a chorros.
+
+水流走了，水缸里的孩子没事了！
+> El agua se fue, ¡y el niño que estaba en la tinaja quedó a salvo!
+
+大家都说："司马光真聪明！"
+> Todos dijeron: «¡Qué listo es Sima Guang!».
+
+后来，司马光长[zhǎng]大了，是一个很有名的人，还写了很多书。
+> Con los años, Sima Guang creció, fue un hombre muy famoso y escribió muchos libros.
+
+## 曹冲称象
+titulo_es: Cao Chong pesa al elefante
+origen: Finales de la dinastía Han (siglo III). La historia está en las «Crónicas de los Tres Reinos».
+palabras: 大象 = elefante; 称 = pesar; 船 = barco; 线 = línea
+
+很久以前，有人送给{曹操}一头大象。
+> Hace mucho tiempo, alguien le regaló a Cao Cao un elefante.
+
+曹操很想知道：这头大象有多重[zhòng]？
+> Cao Cao tenía muchas ganas de saber cuánto pesaba el elefante.
+
+大人们想了很多办法。可是大象太大、太重[zhòng]了，谁也称不了。
+> Los adultos pensaron muchas maneras, pero el elefante era demasiado grande y pesado: nadie podía pesarlo.
+
+曹操的小儿子{曹冲}，那年才六岁。他说："我有办法！"
+> El hijo pequeño de Cao Cao, Cao Chong, tenía solo seis años. Dijo: «¡Yo sé cómo!».
+
+曹冲让人把大象带到河边，再让大象走上一条大船。船下去了一些。
+> Cao Chong hizo llevar al elefante a la orilla del río y lo hizo subir a un barco grande. El barco se hundió un poco.
+
+曹冲在船边画了一条线：水到哪里，线就画在哪里。
+> Cao Chong dibujó una línea en el costado del barco: justo hasta donde llegaba el agua.
+
+然后，他让大象走下船，再让人把很多石头放到船上。
+> Después hizo bajar al elefante y mandó poner muchas piedras en el barco.
+
+石头越放越多，船也一点一点下去了。水到了那条线，大家就不放了。
+> Pusieron más y más piedras, y el barco se fue hundiendo poco a poco. Cuando el agua llegó a la línea, dejaron de ponerlas.
+
+曹冲说："现在，这些石头和大象一样重[zhòng]。我们称一称石头，就知道大象有多重[zhòng]了！"
+> Cao Chong dijo: «Ahora estas piedras pesan lo mismo que el elefante. ¡Si pesamos las piedras, sabremos cuánto pesa el elefante!».
+
+石头很小，一块一块地称，很容易。大家称完了，就知道了大象有多重[zhòng]。
+> Las piedras eran pequeñas y fáciles de pesar una por una. Al terminar, todos supieron cuánto pesaba el elefante.
+
+曹操非常高兴，他说："我的儿子真聪明！"
+> Cao Cao se puso muy contento y dijo: «¡Qué listo es mi hijo!».
+
+## 孟母三迁
+titulo_es: Las tres mudanzas de la madre de Mencio
+origen: Dinastía Han (siglo I a. C.). Viene de las «Biografías de mujeres ejemplares» de Liu Xiang.
+palabras: 墓 = tumba; 市场 = mercado; 客气 = amable, cortés; 重要 = importante
+
+两千多年以前，有一个孩子叫{孟子}。他小的时候，家里没有爸爸，只有妈妈。
+> Hace más de dos mil años vivió un niño llamado Mencio. Cuando era pequeño, en su casa no había papá: solo estaba su mamá.
+
+他们先住的地方，旁边有很多墓。孟子天天看到人们在墓前哭，他也学着哭，还把这个当[dàng]游戏玩。
+> El primer lugar donde vivieron estaba junto a muchas tumbas. Mencio veía todos los días a la gente llorar ante las tumbas; él también imitaba el llanto, y hasta lo tomaba como un juego.
+
+妈妈想："这里对孩子不好。"她就带着孟子走了。
+> Su madre pensó: «Este lugar no es bueno para el niño». Así que se fue de allí con Mencio.
+
+第二次，他们住在市场旁边。那里天天都有很多人买东西、卖东西。
+> La segunda vez vivieron junto a un mercado. Allí, todos los días, mucha gente compraba y vendía cosas.
+
+孟子又开始学他们：大声说话，还跟朋友们玩买东西、卖东西的游戏。
+> Mencio empezó otra vez a imitarlos: hablaba a gritos y jugaba con sus amigos a comprar y vender.
+
+妈妈想："这里也不好。"她又带着孟子走了。
+> Su madre pensó: «Aquí tampoco está bien». Y otra vez se marchó con Mencio.
+
+第三次，他们住在一个学校旁边。学校里的人天天读书、写字，说话也很客气。
+> La tercera vez vivieron al lado de una escuela. La gente de la escuela leía y escribía todos los días, y hablaba con mucha cortesía.
+
+孟子也开始学他们：天天读书、写字，对人也很客气。
+> Mencio también empezó a imitarlos: leía y escribía cada día, y trataba a los demás con cortesía.
+
+妈妈高兴地说："这里才是孩子应该住的地方！"他们就在这里住了下来。
+> Su madre dijo, contenta: «¡Este sí es el lugar donde debe vivir un niño!». Y se quedaron a vivir allí.
+
+后来，孟子长[zhǎng]大了，是一个很有名的老师。这个故事告诉我们：住在什么地方，对孩子很重要。
+> Al crecer, Mencio fue un maestro muy famoso. Esta historia nos enseña que el lugar donde vive un niño es muy importante.
+
+## 铁杵磨成针
+titulo_es: La barra de hierro que se volvió aguja
+origen: Leyenda sobre la infancia del poeta Li Bai (dinastía Tang, siglo VIII), recogida en libros de la dinastía Song.
+palabras: 诗人 = poeta; 铁棒 = barra de hierro; 磨 = frotar, moler; 针 = aguja; 做成 = convertir en, lograr
+
+{李白}是中国很有名的诗人。可是他小的时候，不太喜欢学习。
+> Li Bai es uno de los poetas más famosos de China. Pero de pequeño no le gustaba mucho estudiar.
+
+一天，他没去上课，自己跑到外面去玩。
+> Un día no fue a clase y se escapó a jugar afuera.
+
+在河边，他看见一位老奶奶，正在一块大石头上用力地磨一根铁棒。
+> A la orilla del río vio a una anciana que frotaba con fuerza una barra de hierro sobre una gran piedra.
+
+李白问："奶奶，您在做什么？"
+> Li Bai le preguntó: «Abuela, ¿qué está haciendo?».
+
+老奶奶说："我在做一根针。"
+> La anciana respondió: «Estoy haciendo una aguja».
+
+李白笑了："这么大的铁棒，怎么能做成一根小小的针呢？"
+> Li Bai se rió: «¿Cómo va a convertir una barra de hierro tan grande en una agujita?».
+
+老奶奶说："今天磨，明天磨，天天都磨。铁棒会一天比一天小，最后就能做成针了。"
+> La anciana dijo: «La froto hoy, la froto mañana, la froto cada día. La barra será más pequeña cada día y, al final, podré hacer la aguja».
+
+李白听了，想了很久。他明白了：做什么事，都要天天做，不能怕难。
+> Li Bai se quedó pensando mucho tiempo. Lo entendió: para lograr cualquier cosa hay que trabajar en ella cada día, sin tenerle miedo a lo difícil.
+
+他马上跑回学校。从那天起，他天天都认真学习。
+> Volvió corriendo a la escuela. Desde ese día, estudió con dedicación todos los días.
+
+后来，李白写了很多很好的诗。中国人常说"铁杵磨成针"，意思是：只要天天努力，难的事也能做成。
+> Con el tiempo, Li Bai escribió muchísimos poemas extraordinarios. Los chinos suelen decir «una barra de hierro, a fuerza de frotarla, se vuelve aguja»: si te esfuerzas cada día, hasta lo difícil se puede lograr.

@@ -3,6 +3,7 @@
 //
 // - Resumen del día: repasos pendientes y nuevos que llevas vs. tu meta.
 // - Botón "Estudiar" → elegir modo (novato/experto) y qué estudiar.
+// - Botón "Leer" → libros graduados por nivel HSK (pantalla_biblioteca.dart).
 // - Estadísticas y Ajustes.
 // - Abajo, una frase que cambia cada 4 segundos con un giro suave.
 // - Fondo: ilustración del Templo del Cielo (ver fondo_tinta.dart).
@@ -16,6 +17,7 @@ import 'package:flutter/material.dart';
 import '../datos/datos_app.dart';
 import '../widgets/fondo_tinta.dart';
 import 'pantalla_ajustes.dart';
+import 'pantalla_biblioteca.dart';
 import 'pantalla_estadisticas.dart';
 import 'pantalla_modo.dart';
 
@@ -111,6 +113,32 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     padding: EdgeInsets.symmetric(horizontal: 44, vertical: 15),
                     child: Text('Estudiar',
                         style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w700)),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Botón secundario → «Leer» (libros graduados por nivel HSK)
+              Material(
+                color: const Color(0xCCFFFFFF),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  side: const BorderSide(color: Color(0xDE000000), width: 1.5),
+                ),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(30),
+                  onTap: () => _ir(const PantallaBiblioteca()),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 34, vertical: 12),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.menu_book_rounded, size: 20, color: Colors.black87),
+                        SizedBox(width: 8),
+                        Text('Leer',
+                            style: TextStyle(fontSize: 17, color: Colors.black87, fontWeight: FontWeight.w700)),
+                      ],
+                    ),
                   ),
                 ),
               ),

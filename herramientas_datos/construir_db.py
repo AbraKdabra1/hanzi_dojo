@@ -23,6 +23,8 @@ Qué fuente aporta qué:
                                        son palabra por sí solos (了 = le)
     Unihan           kRSUnicode      → radical Kangxi de cada carácter
     Propias          radicales_kangxi.tsv, traducciones/*.tsv
+                     libros/*.txt + libros_generado.json → sección «Leer»
+                     (ver libros.py; el pinyin lo agrega preparar_libros.py)
 
 Solo usa la biblioteca estándar de Python.
 """
@@ -473,7 +475,87 @@ CREATE TABLE ejemplos (
     ingles      TEXT
 );
 CREATE INDEX idx_ejemplos_caracter ON ejemplos (caracter_id, orden);
+
+-- Sección «Leer»: libros graduados por nivel HSK (ver libros.py).
+CREATE TABLE libros (
+    id            INTEGER PRIMARY KEY,
+    clave         TEXT    NOT NULL UNIQUE,  -- "cuentos-para-ninos" (el progreso de lectura usa esta clave)
+    titulo        TEXT    NOT NULL,
+    titulo_pinyin TEXT    NOT NULL,         -- sílabas separadas por espacio
+    titulo_es     TEXT    NOT NULL,
+    nivel_hsk     INTEGER NOT NULL,         -- 1-6; 7 = niveles 7-9
+    tipo          TEXT    NOT NULL,         -- adaptado | original
+    descripcion   TEXT    NOT NULL,
+    fuente        TEXT    NOT NULL,         -- de dónde viene y su licencia
+    cobertura     REAL    NOT NULL,         -- fracción de caracteres que conoce alguien de ese nivel
+    caracteres    INTEGER NOT NULL          -- caracteres chinos en total
+);
+
+CREATE TABLE capitulos (
+    id            INTEGER PRIMARY KEY,
+    libro_id      INTEGER NOT NULL REFERENCES libros (id),
+    orden         INTEGER NOT NULL,         -- 1, 2, 3…
+    titulo        TEXT    NOT NULL,
+    titulo_pinyin TEXT    NOT NULL,
+    titulo_es     TEXT    NOT NULL,
+    origen        TEXT    NOT NULL,         -- de qué obra o época viene la historia
+    palabras      TEXT    NOT NULL          -- JSON: [{"chino", "pinyin", "espanol"}] vocabulario del capítulo
+);
+CREATE INDEX idx_capitulos_libro ON capitulos (libro_id, orden);
+
+CREATE TABLE parrafos (
+    id            INTEGER PRIMARY KEY,
+    capitulo_id   INTEGER NOT NULL REFERENCES capitulos (id),
+    orden         INTEGER NOT NULL,
+    chino         TEXT    NOT NULL,
+    pinyin        TEXT    NOT NULL,         -- JSON: una sílaba por carácter de `chino` ("" si no es chino)
+    nombres       TEXT    NOT NULL,         -- JSON: [[inicio, fin], …] nombres propios (se subrayan)
+    espanol       TEXT    NOT NULL
+);
+CREATE INDEX idx_parrafos_capitulo ON parrafos (capitulo_id, orden);
 """
+
+
+def filas_de_libros(nivel_de):
+    """Libros, capítulos y párrafos listos para insertar."""
+    import libros as L
+    generado = {}
+    if os.path.exists(L.GENERADO):
+        with open(L.GENERADO, encoding="utf-8") as f:
+            generado = json.load(f)
+    libros, capitulos, parrafos = [], [], []
+    for lid, libro in enumerate(L.todos_los_libros(), 1):
+        g = generado.get(libro["clave"])
+        if g is None or g["huella"] != libro["huella"]:
+            sys.exit(f"El libro {libro['archivo']} cambió: corre antes "
+                     "python herramientas_datos/preparar_libros.py")
+        fraccion, _ = L.cobertura(libro, nivel_de)
+        total = sum(1 for _ in L.caracteres_contables(libro))
+        libros.append({
+            "id": lid, "clave": libro["clave"], "titulo": libro["titulo"],
+            "titulo_pinyin": " ".join(x for x in g["titulo"] if x),
+            "titulo_es": libro["titulo_es"], "nivel_hsk": libro["nivel"], "tipo": libro["tipo"],
+            "descripcion": libro["descripcion"], "fuente": libro["fuente"],
+            "cobertura": round(fraccion, 4), "caracteres": total,
+        })
+        for orden, (cap, gc) in enumerate(zip(libro["capitulos"], g["capitulos"]), 1):
+            cid = len(capitulos) + 1
+            capitulos.append({
+                "id": cid, "libro_id": lid, "orden": orden, "titulo": cap["titulo"],
+                "titulo_pinyin": " ".join(x for x in gc["titulo"] if x),
+                "titulo_es": cap["titulo_es"], "origen": cap["origen"],
+                "palabras": json.dumps([
+                    {"chino": p["chino"], "pinyin": " ".join(x for x in py if x), "espanol": p["espanol"]}
+                    for p, py in zip(cap["palabras"], gc["palabras"])
+                ], ensure_ascii=False),
+            })
+            for po, (par, py) in enumerate(zip(cap["parrafos"], gc["parrafos"]), 1):
+                parrafos.append({
+                    "id": len(parrafos) + 1, "capitulo_id": cid, "orden": po,
+                    "chino": par["chino"], "pinyin": json.dumps(py, ensure_ascii=False),
+                    "nombres": json.dumps(par["nombres"]), "espanol": par["espanol"],
+                })
+    return libros, capitulos, parrafos
 
 
 # ═════════════════════════════════════════════════════════════════════════════
@@ -621,11 +703,17 @@ def construir():
     insertar("caracteres", filas)
     insertar("radicales", filas_radicales)
     insertar("ejemplos", filas_ejemplos)
+    filas_libros, filas_capitulos, filas_parrafos = filas_de_libros(
+        {f["caracter"]: f["nivel_hsk"] for f in filas})
+    insertar("libros", filas_libros)
+    insertar("capitulos", filas_capitulos)
+    insertar("parrafos", filas_parrafos)
 
     # Versión = huella del contenido: si cambia cualquier dato, cambia la
     # versión y la app sabe que debe copiar la base nueva.
     huella = hashlib.sha1()
-    for tabla, orden_sql in (("caracteres", "id"), ("radicales", "numero"), ("ejemplos", "id")):
+    for tabla, orden_sql in (("caracteres", "id"), ("radicales", "numero"), ("ejemplos", "id"),
+                             ("libros", "id"), ("capitulos", "id"), ("parrafos", "id")):
         for fila in con.execute(f"SELECT * FROM {tabla} ORDER BY {orden_sql}"):
             huella.update(repr(fila).encode("utf-8"))
     version = huella.hexdigest()[:12]
@@ -660,6 +748,7 @@ def construir():
     hsk_es = sum(1 for f in filas if f["nivel_hsk"] > 0 and f["significado_es"])
     print(f"  significados en español (HSK): {hsk_es} de {len(hsk)}")
     print(f"  radicales: {len(filas_radicales)}  | ejemplos: {len(filas_ejemplos)}")
+    print(f"  libros: {len(filas_libros)}  | capítulos: {len(filas_capitulos)}  | párrafos: {len(filas_parrafos)}")
     if problemas:
         print(f"  avisos ({len(problemas)}):")
         for p in problemas[:30]:

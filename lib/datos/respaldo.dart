@@ -14,6 +14,7 @@
 //     "creado":    "2026-09-30T21:40:00.000",
 //     "progreso":  [ {"caracter": "好", "intervalo": 6, "factor": 2.5, …}, … ],
 //     "historial": [ {"caracter": "好", "momento": 1790000000, …}, … ],
+//     "lectura":   [ {"libro": "cuentos-para-ninos", "capitulo": 1, "momento": …}, … ],
 //     "ajustes":   { "nuevos_por_dia": "15", … }
 //   }
 //
@@ -49,12 +50,16 @@ class DatosRespaldo {
     required this.creado,
     required this.progreso,
     required this.historial,
+    this.lectura = const [],
     required this.ajustes,
   });
 
   final DateTime? creado;
   final List<Map<String, Object>> progreso;
   final List<Map<String, Object>> historial;
+
+  /// Capítulos leídos en «Leer».
+  final List<Map<String, Object>> lectura;
   final Map<String, String> ajustes;
 
   int get caracteres => progreso.length;
@@ -103,6 +108,12 @@ class Respaldo {
     'intervalo': _Tipo.entero,
   };
 
+  static const _columnasLectura = {
+    'libro': _Tipo.texto,
+    'capitulo': _Tipo.entero,
+    'momento': _Tipo.entero,
+  };
+
   /// Nombre sugerido para el archivo: hanzi_dojo_2026-09-30.hanzidojo
   static String nombreSugerido(DateTime fecha) {
     String dos(int n) => n.toString().padLeft(2, '0');
@@ -119,6 +130,8 @@ class Respaldo {
         'SELECT ${_columnasProgreso.keys.join(', ')} FROM progreso ORDER BY caracter');
     final historial = await db.rawQuery(
         'SELECT ${_columnasHistorial.keys.join(', ')} FROM historial ORDER BY momento, id');
+    final lectura = await db.rawQuery(
+        'SELECT ${_columnasLectura.keys.join(', ')} FROM lectura ORDER BY libro, capitulo');
     final ajustes = await db.rawQuery('SELECT clave, valor FROM ajustes ORDER BY clave');
     final json = <String, Object?>{
       'formato': formato,
@@ -126,6 +139,7 @@ class Respaldo {
       'creado': (ahora ?? DateTime.now()).toIso8601String(),
       'progreso': progreso,
       'historial': historial,
+      'lectura': lectura,
       'ajustes': {
         for (final f in ajustes)
           if (!_ajustesLocales.contains(f['clave'])) f['clave'] as String: f['valor'] as String,
@@ -176,6 +190,7 @@ class Respaldo {
       creado: switch (json['creado']) { final String t => DateTime.tryParse(t), _ => null },
       progreso: _filas(json['progreso'], _columnasProgreso, 'progreso'),
       historial: _filas(json['historial'] ?? const [], _columnasHistorial, 'historial'),
+      lectura: _filas(json['lectura'] ?? const [], _columnasLectura, 'lectura'),
       ajustes: ajustes,
     );
   }
@@ -234,6 +249,7 @@ class Respaldo {
     await db.transaction((txn) async {
       await txn.delete('progreso');
       await txn.delete('historial');
+      await txn.delete('lectura');
       final locales = _ajustesLocales.map((_) => '?').join(', ');
       await txn.rawDelete('DELETE FROM ajustes WHERE clave NOT IN ($locales)', _ajustesLocales.toList());
 
@@ -243,6 +259,9 @@ class Respaldo {
       }
       for (final fila in datos.historial) {
         lote.insert('historial', fila);
+      }
+      for (final fila in datos.lectura) {
+        lote.insert('lectura', fila, conflictAlgorithm: ConflictAlgorithm.replace);
       }
       for (final MapEntry(:key, :value) in datos.ajustes.entries) {
         lote.insert('ajustes', {'clave': key, 'valor': value}, conflictAlgorithm: ConflictAlgorithm.replace);

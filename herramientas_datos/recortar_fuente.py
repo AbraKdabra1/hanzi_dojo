@@ -9,6 +9,7 @@ Qué caracteres se conservan:
     - latín básico y extendido (español, pinyin con tonos, signos)
     - todos los caracteres HSK 3.0 y todas las formas de radical
     - todos los caracteres que aparecen en las oraciones de ejemplo
+    - todos los caracteres de los libros de «Leer»
 Si la app muestra un carácter que no está aquí (p. ej. uno raro en una
 búsqueda), Flutter usa automáticamente la fuente china del teléfono.
 
@@ -53,6 +54,9 @@ def caracteres_necesarios():
     for forma, variantes in con.execute("SELECT forma_principal, variantes FROM radicales"):
         texto.update(forma + variantes.replace(" ", ""))
     for (chino,) in con.execute("SELECT chino FROM ejemplos"):
+        texto.update(chino)
+    for (chino,) in con.execute("SELECT chino FROM parrafos UNION ALL SELECT titulo FROM capitulos "
+                                "UNION ALL SELECT titulo FROM libros UNION ALL SELECT palabras FROM capitulos"):
         texto.update(chino)
     # Texto de la interfaz y significados (por si algún signo no está en los rangos).
     for (s,) in con.execute("SELECT significado_es FROM caracteres WHERE significado_es IS NOT NULL"):

@@ -25,6 +25,7 @@ rastreo. La app no pide permiso de internet.
 | Repetición espaciada | SM-2. Calificas "Difícil / Medio / Fácil"; la app sugiere una según tus errores. Lo "Difícil" vuelve a salir a las 3 tarjetas. |
 | Límite diario | Nuevos por día configurable (5 a 50, 15 por defecto) en Ajustes. |
 | Ejemplos | 1 o 2 oraciones por carácter con pinyin y traducción al español. |
+| Leer | Libros graduados por nivel HSK con pinyin encima de cada carácter (se puede ocultar), traducción por párrafo, voz y nombres propios subrayados. Toca un carácter para ver su ficha y practicar su escritura. Marca los capítulos que terminas. |
 | Voz | Pronunciación con el motor de voz del teléfono (chino mandarín). |
 | Estadísticas | Caracteres estudiados, dominados, repasos para hoy y avance por nivel. |
 | Historial | Cada repaso queda registrado: cuánto tardaste, qué trazos fallaste (y si fue al revés), en qué modo y con qué calificación. Es la base de las estadísticas que vienen. |
@@ -68,6 +69,24 @@ que se copia al teléfono la primera vez (por eso la app abre rápido).
 | Pinyin | Lista oficial HSK (palabras) + CC-CEDICT | Lecturas de polífonos según las palabras oficiales (好 hǎo / hào) |
 | Significado en español | Traducido de CC-CEDICT para los 3,000 HSK | 3,000 de 3,000 |
 | Ejemplos | Oraciones de [Tatoeba](https://tatoeba.org) (vía krmanik/chinese-example-sentences), traducidas al español | 4,518 ejemplos para 2,755 caracteres; cada ejemplo contiene su carácter |
+| Libros de «Leer» | Historias clásicas chinas de dominio público, contadas de nuevo para la app (`herramientas_datos/fuentes/libros/`) | Pinyin al día; cada carácter tiene una sílaba válida; los adaptados cumplen la cobertura mínima de su nivel |
+
+### Los libros de «Leer»
+
+Lo que es de dominio público en chino es casi todo chino clásico, y solo se lee
+con comodidad en HSK 7-9 (medido: el *Clásico de tres caracteres* o las
+*Analectas* tienen apenas un 53 % de caracteres de HSK 1-2). Por eso:
+
+- **HSK 1 a 5: historias adaptadas.** Las historias son clásicas y de dominio
+  público (mitos, fábulas, leyendas, anécdotas históricas); el texto en chino
+  moderno está escrito para Hanzi Dojo con el vocabulario de cada nivel.
+- **HSK 6 y 7-9: textos originales** con su traducción.
+
+Cada libro es un archivo de texto fácil de editar (el formato está explicado en
+`herramientas_datos/libros.py`). `preparar_libros.py` le agrega el pinyin y
+dice qué tan difícil es: qué porcentaje de sus caracteres ya conoce alguien de
+ese nivel (sin contar nombres propios y contando las palabras que se explican
+al inicio de cada capítulo). Los adaptados deben llegar al 90 %.
 
 Los caracteres que no son HSK (unos 6,500) también están, con significado en
 inglés, para que las familias de radicales estén completas.
@@ -79,6 +98,9 @@ Necesitas Python 3.
 ```bash
 # 1. (Opcional) volver a elegir ejemplos. Requiere: pip install pypinyin
 python herramientas_datos/seleccionar_ejemplos.py
+
+# 1b. (Si editaste un libro de «Leer») pinyin y dificultad. Requiere pypinyin
+python herramientas_datos/preparar_libros.py
 
 # 2. Construir la base y el archivo de versión
 python herramientas_datos/construir_db.py
@@ -148,15 +170,17 @@ lib/
 ├── painters/                     Dibujo del lienzo (cuadrícula, silueta, tinta, pistas)
 ├── widgets/
 │   ├── lienzo_escritura.dart     El lienzo donde escribes (eventos táctiles crudos)
+│   ├── texto_lectura.dart        Párrafo con pinyin encima y ficha del carácter tocado
 │   ├── boton_voz.dart            Pronunciación (flutter_tts)
 │   └── comunes.dart, …           Piezas de interfaz reutilizables
 └── screens/                      Inicio, modo, selección, radicales, familia,
-                                  estudio, estadísticas, ajustes, errores, créditos
+                                  estudio, estadísticas, ajustes, errores, créditos,
+                                  biblioteca, libro y lectura («Leer»)
 android/app/src/main/kotlin/…/MainActivity.kt   Archivos (guardar/abrir) y tasa de refresco más alta
 herramientas_datos/               Scripts de Python que arman la base (ver arriba)
 herramientas_arte/                Dibuja la ilustración del Templo del Cielo del inicio
 test/                             Pruebas: SM-2, sesión, trazos, caligrafía, base de datos real,
-                                  historial, respaldo e informe de errores
+                                  historial, respaldo, informe de errores y lector
 ```
 
 ### Fluidez
