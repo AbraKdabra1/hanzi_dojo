@@ -55,6 +55,12 @@ class PantallaCreditos extends StatelessWidget {
       'Noto Sans SC (Google), recortada a los caracteres de la app.',
       'SIL Open Font License 1.1',
     ),
+    (
+      'Ilustración de inicio',
+      'Salón de Oración por la Buena Cosecha (祈年殿) del Templo del Cielo, Pekín. '
+          'Ilustración original hecha para Hanzi Dojo (herramientas_arte/templo_del_cielo.py).',
+      'Original',
+    ),
   ];
 
   @override

@@ -5,6 +5,7 @@
 // - Botón "Estudiar" → elegir modo (novato/experto) y qué estudiar.
 // - Estadísticas y Ajustes.
 // - Abajo, una frase que cambia cada 4 segundos con un giro suave.
+// - Fondo: ilustración del Templo del Cielo (ver fondo_tinta.dart).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'dart:async';
@@ -75,6 +76,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
   @override
   Widget build(BuildContext context) {
     return FondoTintaChina(
+      templo: true,
       child: Scaffold(
         body: SafeArea(
           child: Column(
@@ -114,8 +116,13 @@ class _PantallaInicioState extends State<PantallaInicio> {
               ),
               const SizedBox(height: 16),
 
-              // Botón estadísticas
+              // Botón estadísticas (con fondo de papel translúcido: en pantallas
+              // cortas queda encima del templo y así se sigue leyendo bien).
               TextButton.icon(
+                style: TextButton.styleFrom(
+                  backgroundColor: const Color(0x99FFFFFF),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                ),
                 icon: Icon(Icons.pie_chart_outline, color: Colors.grey.shade800, size: 20),
                 label: Text('Ver mis estadísticas',
                     style: TextStyle(color: Colors.grey.shade800, fontSize: 15, fontWeight: FontWeight.w500)),
@@ -148,7 +155,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                       _frases[_indiceFrase],
                       key: ValueKey<int>(_indiceFrase),
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey.shade500, fontStyle: FontStyle.italic, fontSize: 14),
+                      style: TextStyle(color: Colors.grey.shade700, fontStyle: FontStyle.italic, fontSize: 14),
                     ),
                   ),
                 ),

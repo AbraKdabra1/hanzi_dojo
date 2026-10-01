@@ -127,7 +127,8 @@ lib/
                                   estudio, estadísticas, ajustes, créditos
 android/app/src/main/kotlin/…/MainActivity.kt   Pide la tasa de refresco más alta de la pantalla
 herramientas_datos/               Scripts de Python que arman la base (ver arriba)
-test/                             Pruebas: SM-2, sesión, trazos, base de datos real
+herramientas_arte/                Dibuja la ilustración del Templo del Cielo del inicio
+test/                             Pruebas: SM-2, sesión, trazos, caligrafía, base de datos real
 ```
 
 ### Fluidez
