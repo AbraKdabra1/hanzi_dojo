@@ -47,6 +47,9 @@ app.*.map.json
 # Salidas de flutter analyze/test que genera el script de migración
 registros_locales/
 
+# Scripts de ayuda que solo sirven en la PC de desarrollo (p. ej. preparar el emulador)
+herramientas_locales/
+
 # La base de contenido (assets/db/contenido.db) SÍ se sube al repo, para que
 # la app compile sin tener Python. Se regenera con herramientas_datos/construir_db.py.
 assets/db/*.tmp
