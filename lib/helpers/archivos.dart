@@ -13,8 +13,6 @@
 // agrega dependencias y la app sigue sin pedir permiso de internet.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import 'dart:typed_data';
-
 import 'package:flutter/services.dart';
 
 /// Un archivo elegido por el usuario.
