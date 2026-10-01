@@ -93,10 +93,11 @@ class LienzoEscritura extends StatefulWidget {
 class LienzoEscrituraState extends State<LienzoEscritura>
     with TickerProviderStateMixin {
   final ControladorTrazos _tinta = ControladorTrazos();
-  late final AnimationController _guia = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 1200),
-  );
+
+  /// Animación de la guía azul. Se crea en initState (no "perezosa"): si se
+  /// creara la primera vez que se usa y eso fuera en dispose(), Flutter
+  /// fallaría al buscar el TickerMode de un widget que ya se está quitando.
+  late final AnimationController _guia;
 
   late List<Path> _contornos;
   int _siguienteTrazo = 0;
@@ -123,6 +124,7 @@ class LienzoEscrituraState extends State<LienzoEscritura>
   @override
   void initState() {
     super.initState();
+    _guia = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200));
     _contornos = CacheTrazos.contornos(widget.caracter, widget.trazosSvg);
     _completo = widget.medianas.isEmpty; // sin datos de trazo: nada que dibujar
   }
