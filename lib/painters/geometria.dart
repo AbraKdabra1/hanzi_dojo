@@ -10,6 +10,7 @@
 // si no coincidieran, lo que ves y lo que se evalúa no estarían alineados.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import 'dart:typed_data';
 import 'dart:ui';
 
 class GeometriaLienzo {
@@ -41,6 +42,20 @@ class GeometriaLienzo {
     final e = escala(s);
     return Offset(s.width * margen + p.dx * e, s.height * margen + (techo - p.dy) * e);
   }
+
+  /// La misma transformación que [aplicar], como matriz para Path.transform.
+  static Float64List matriz(Size s) {
+    final e = escala(s);
+    return Float64List.fromList([
+      e, 0, 0, 0, //
+      0, -e, 0, 0, //
+      0, 0, 1, 0, //
+      s.width * margen, s.height * margen + techo * e, 0, 1,
+    ]);
+  }
+
+  /// Convierte un contorno (Path de make-me-a-hanzi) a píxeles del lienzo.
+  static Path pathALienzo(Path p, Size s) => p.transform(matriz(s));
 
   /// Convierte un trazo (lista de puntos) completo.
   static List<Offset> trazoALienzo(List<Offset> puntos, Size s) =>

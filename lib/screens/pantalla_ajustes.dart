@@ -1,8 +1,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // pantalla_ajustes.dart — Ajustes y acceso a Créditos
 //
-// Por ahora un solo ajuste: cuántos caracteres NUEVOS quieres por día. Los
-// repasos no tienen límite (siempre conviene hacer los que tocan).
+// · Cuántos caracteres NUEVOS quieres por día. Los repasos no tienen límite
+//   (siempre conviene hacer los que tocan).
+// · Ajuste caligráfico: si cada trazo correcto se acomoda (con un rebote
+//   suave) en la forma exacta del pincel, o se queda como lo dibujaste.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
@@ -22,13 +24,21 @@ class PantallaAjustes extends StatefulWidget {
 
 class _PantallaAjustesState extends State<PantallaAjustes> {
   int? _limite;
+  bool? _ajuste;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final n = await DatosApp.de(context).limiteNuevosPorDia();
-      if (mounted) setState(() => _limite = n);
+      final repo = DatosApp.de(context);
+      final n = await repo.limiteNuevosPorDia();
+      final ajuste = await repo.ajusteCaligrafico();
+      if (mounted) {
+        setState(() {
+          _limite = n;
+          _ajuste = ajuste;
+        });
+      }
     });
   }
 
@@ -76,6 +86,26 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                       ],
                     ),
                 ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            TarjetaVidrio(
+              child: SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Acomodar mis trazos a la caligrafía',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                subtitle: Text(
+                  'Cada trazo correcto se transforma, con un rebote suave, en la forma '
+                  'exacta del pincel. Apágalo si prefieres ver tu trazo tal cual.',
+                  style: TextStyle(fontSize: 13, color: Colors.grey.shade700, height: 1.3),
+                ),
+                value: _ajuste ?? true,
+                onChanged: _ajuste == null
+                    ? null
+                    : (v) {
+                        setState(() => _ajuste = v);
+                        DatosApp.de(context).guardarAjusteCaligrafico(v);
+                      },
               ),
             ),
             const SizedBox(height: 12),

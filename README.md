@@ -17,7 +17,8 @@ espaciada (SM-2) y permite estudiar **por nivel HSK** o **por radical**.
 | Estudio por radical | Los 214 radicales Kangxi; cada uno muestra su familia de caracteres agrupada por nivel. |
 | Búsqueda | Por carácter, pinyin sin tonos (`hao`, `nv`) o significado en español/inglés. |
 | Modo novato / experto | Novato: silueta gris y pista del trazo. Experto: cuadrícula vacía. |
-| Revisión de trazos | Compara tu trazo con el correcto (DTW). Si fallas, el trazo se pinta de rojo y se borra. |
+| Revisión de trazos | Compara tu trazo con el correcto (DTW) y revisa el sentido: si va al revés te lo dice y muestra por dónde empieza. Si fallas, el trazo se pinta de rojo y se borra. |
+| Ajuste caligráfico | Cada trazo correcto se transforma, con un rebote de resorte, en la forma exacta del pincel (kaishu). Se puede apagar en Ajustes. |
 | Repetición espaciada | SM-2. Calificas "Difícil / Medio / Fácil"; la app sugiere una según tus errores. Lo "Difícil" vuelve a salir a las 3 tarjetas. |
 | Límite diario | Nuevos por día configurable (5 a 50, 15 por defecto) en Ajustes. |
 | Ejemplos | 1 o 2 oraciones por carácter con pinyin y traducción al español. |
@@ -126,7 +127,8 @@ lib/
                                   estudio, estadísticas, ajustes, créditos
 android/app/src/main/kotlin/…/MainActivity.kt   Pide la tasa de refresco más alta de la pantalla
 herramientas_datos/               Scripts de Python que arman la base (ver arriba)
-test/                             Pruebas: SM-2, sesión, trazos, base de datos real
+herramientas_arte/                Dibuja la ilustración del Templo del Cielo del inicio
+test/                             Pruebas: SM-2, sesión, trazos, caligrafía, base de datos real
 ```
 
 ### Fluidez

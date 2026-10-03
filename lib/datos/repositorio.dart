@@ -322,4 +322,10 @@ class Repositorio {
       int.tryParse(await base.leerAjuste('nuevos_por_dia') ?? '') ?? limitePorDefecto;
 
   Future<void> guardarLimiteNuevosPorDia(int n) => base.guardarAjuste('nuevos_por_dia', '$n');
+
+  /// ¿Los trazos correctos se acomodan en su forma caligráfica? (Activo por defecto.)
+  Future<bool> ajusteCaligrafico() async => await base.leerAjuste('ajuste_caligrafico') != '0';
+
+  Future<void> guardarAjusteCaligrafico(bool activo) =>
+      base.guardarAjuste('ajuste_caligrafico', activo ? '1' : '0');
 }

@@ -46,6 +46,8 @@ flutter:
     - assets/db/contenido.db
     # Textos de licencia de las fuentes de datos y de la tipografía.
     - assets/licencias/
+    # Ilustración del Templo del Cielo (herramientas_arte/templo_del_cielo.py).
+    - assets/imagenes/fondo_templo.jpg
 
   fonts:
     # Noto Sans SC recortada a los caracteres de la app

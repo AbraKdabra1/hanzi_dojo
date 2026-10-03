@@ -48,11 +48,18 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
   bool _completado = false;
   bool _guardando = false;
   int _errores = 0;
+  /// Ajuste caligráfico (de Ajustes); se lee una vez al abrir la sesión.
+  bool _ajusteCaligrafico = true;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _cargarSiguiente());
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final ajuste = await _repo.ajusteCaligrafico();
+      if (!mounted) return;
+      _ajusteCaligrafico = ajuste;
+      await _cargarSiguiente();
+    });
   }
 
   /// true mientras se pide la siguiente tarjeta (evita pedir dos a la vez si
@@ -239,6 +246,7 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
                 trazosSvg: _trazosSvg,
                 medianas: _medianas,
                 modoNovato: widget.modoNovato,
+                ajusteCaligrafico: _ajusteCaligrafico,
                 onCompletado: (errores) => setState(() {
                   _completado = true;
                   _errores = errores;

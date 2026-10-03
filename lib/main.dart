@@ -4,8 +4,10 @@
 // Arranque:
 //   1. Se registra el texto de las licencias (pantalla de Créditos).
 //   2. Se muestra de inmediato una pantalla de carga (sin esperar a nada).
-//   3. Mientras tanto se abren las bases de datos. La primera vez se copia
-//      la base de contenido (~1 s); las siguientes es instantáneo.
+//   3. Mientras tanto se abren las bases de datos (la primera vez se copia
+//      la base de contenido, ~1 s; las siguientes es instantáneo) y se
+//      decodifica la ilustración del Templo del Cielo, para que el fondo
+//      aparezca completo desde el primer cuadro.
 //   4. Al terminar, se muestra la pantalla de inicio.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -54,12 +56,15 @@ class _HanziDojoAppState extends State<HanziDojoApp> {
   @override
   void initState() {
     super.initState();
-    _abrirDatos();
+    // Después del primer cuadro: precacheImage necesita el contexto ya listo.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _abrirDatos());
   }
 
   Future<void> _abrirDatos() async {
     try {
+      final fondo = precacheImage(const AssetImage(rutaFondoTemplo), context);
       final base = await BaseDatos.abrir();
+      await fondo;
       if (mounted) setState(() => _repo = Repositorio(base));
     } catch (e, pila) {
       debugPrint('Error al abrir la base de datos: $e\n$pila');
