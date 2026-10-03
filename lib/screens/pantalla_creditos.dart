@@ -58,6 +58,19 @@ class PantallaCreditos extends StatelessWidget {
       'CC BY 2.0 FR',
     ),
     (
+      'Libros de «Leer»',
+      'Historias clásicas chinas de dominio público, contadas de nuevo para Hanzi Dojo (HSK 1 a 5). '
+          'Textos originales del Zengguang Xianwen y poemas Tang tomados de '
+          'github.com/chinese-poetry/chinese-poetry. Traducciones al español escritas para la app.',
+      'MIT (textos clásicos)',
+    ),
+    (
+      'Tradicional → simplificado',
+      'OpenCC (github.com/BYVoid/OpenCC): para consultar los caracteres de libros propios '
+          'escritos en caracteres tradicionales.',
+      'Apache 2.0',
+    ),
+    (
       'Tipografía',
       'Noto Sans SC (Google), recortada a los caracteres de la app.',
       'SIL Open Font License 1.1',

@@ -9,6 +9,7 @@
 //   Ejemplo   → una oración de ejemplo con pinyin y traducción.
 //   Progreso  → cómo vas con un carácter (repaso espaciado).
 //   DetallePractica → cómo te fue al escribirlo (va al historial).
+//   Libro, CapituloLibro, ParrafoLibro → la sección «Leer».
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'dart:convert';
@@ -343,4 +344,212 @@ class DetallePractica {
 
   int get duracionGuardadaMs =>
       (duracion > duracionMaxima ? duracionMaxima : duracion).inMilliseconds;
+}
+
+// ─── Sección «Leer» ──────────────────────────────────────────────────────────
+
+/// Un libro de «Leer» y cuánto llevas leído: uno de la app (tabla
+/// c.libros) o uno que agregaste tú (tabla mis_libros, [propio]).
+class Libro {
+  const Libro({
+    required this.id,
+    required this.clave,
+    required this.titulo,
+    required this.tituloPinyin,
+    required this.tituloEs,
+    required this.nivelHsk,
+    required this.adaptado,
+    required this.descripcion,
+    required this.fuente,
+    required this.cobertura,
+    required this.caracteres,
+    required this.capitulos,
+    required this.capitulosLeidos,
+    this.propio = false,
+    this.formato = '',
+  });
+
+  final int id;
+
+  /// true si lo agregaste tú (TXT, EPUB o texto pegado).
+  final bool propio;
+
+  /// Libros propios: txt | epub | texto.
+  final String formato;
+
+  /// Identificador estable (el progreso de lectura se guarda con esta clave).
+  final String clave;
+  final String titulo;
+  final String tituloPinyin;
+  final String tituloEs;
+
+  /// 1-6, o 7 = HSK 7-9.
+  final int nivelHsk;
+
+  /// true: historia clásica contada de nuevo para la app con vocabulario de
+  /// su nivel. false: texto clásico original.
+  final bool adaptado;
+  final String descripcion;
+
+  /// De dónde viene la historia o el texto, y su licencia.
+  final String fuente;
+
+  /// Fracción de caracteres que ya conoce alguien de ese nivel.
+  final double cobertura;
+  final int caracteres;
+  final int capitulos;
+  final int capitulosLeidos;
+
+  double get avance => capitulos == 0 ? 0 : capitulosLeidos / capitulos;
+
+  /// Clave con la que se guarda lo leído de un libro propio.
+  static String clavePropia(int id) => 'propio-$id';
+
+  /// Un libro que agregaste tú (fila de mis_libros con num_capitulos y leidos).
+  factory Libro.propioDesdeFila(Map<String, Object?> f) {
+    final archivo = f['archivo'] as String? ?? '';
+    final formato = f['formato'] as String? ?? 'texto';
+    return Libro(
+      id: f['id'] as int,
+      clave: clavePropia(f['id'] as int),
+      titulo: f['titulo'] as String,
+      tituloPinyin: '',
+      tituloEs: '',
+      nivelHsk: f['nivel'] as int? ?? 0,
+      adaptado: false,
+      descripcion: '',
+      fuente: archivo.isEmpty ? 'Texto que pegaste.' : 'Agregado por ti desde «$archivo».',
+      cobertura: (f['cobertura'] as num?)?.toDouble() ?? 0,
+      caracteres: f['caracteres'] as int? ?? 0,
+      capitulos: f['num_capitulos'] as int? ?? 0,
+      capitulosLeidos: f['leidos'] as int? ?? 0,
+      propio: true,
+      formato: formato,
+    );
+  }
+
+  factory Libro.desdeFila(Map<String, Object?> f) => Libro(
+        id: f['id'] as int,
+        clave: f['clave'] as String,
+        titulo: f['titulo'] as String,
+        tituloPinyin: f['titulo_pinyin'] as String? ?? '',
+        tituloEs: f['titulo_es'] as String,
+        nivelHsk: f['nivel_hsk'] as int,
+        adaptado: f['tipo'] == 'adaptado',
+        descripcion: f['descripcion'] as String? ?? '',
+        fuente: f['fuente'] as String? ?? '',
+        cobertura: (f['cobertura'] as num?)?.toDouble() ?? 0,
+        caracteres: f['caracteres'] as int? ?? 0,
+        capitulos: f['num_capitulos'] as int? ?? 0,
+        capitulosLeidos: f['leidos'] as int? ?? 0,
+      );
+}
+
+/// Una palabra del vocabulario que se explica al empezar un capítulo.
+class PalabraVocabulario {
+  const PalabraVocabulario({required this.chino, required this.pinyin, required this.espanol});
+  final String chino;
+  final String pinyin;
+  final String espanol;
+}
+
+/// Un capítulo de un libro.
+class CapituloLibro {
+  const CapituloLibro({
+    required this.id,
+    required this.orden,
+    required this.titulo,
+    required this.tituloPinyin,
+    required this.tituloEs,
+    required this.origen,
+    required this.palabras,
+    required this.leido,
+  });
+
+  final int id;
+
+  /// 1, 2, 3…
+  final int orden;
+  final String titulo;
+  final String tituloPinyin;
+  final String tituloEs;
+
+  /// De qué obra o época viene la historia.
+  final String origen;
+  final List<PalabraVocabulario> palabras;
+  final bool leido;
+
+  /// Capítulo de un libro propio (fila de mis_capitulos con `leido`).
+  factory CapituloLibro.propioDesdeFila(Map<String, Object?> f) => CapituloLibro(
+        id: f['id'] as int,
+        orden: f['orden'] as int,
+        titulo: f['titulo'] as String,
+        tituloPinyin: '',
+        tituloEs: '',
+        origen: '',
+        palabras: const [],
+        leido: (f['leido'] as int? ?? 0) == 1,
+      );
+
+  factory CapituloLibro.desdeFila(Map<String, Object?> f) => CapituloLibro(
+        id: f['id'] as int,
+        orden: f['orden'] as int,
+        titulo: f['titulo'] as String,
+        tituloPinyin: f['titulo_pinyin'] as String? ?? '',
+        tituloEs: f['titulo_es'] as String? ?? '',
+        origen: f['origen'] as String? ?? '',
+        palabras: [
+          for (final p in jsonDecode(f['palabras'] as String? ?? '[]') as List)
+            PalabraVocabulario(
+              chino: p['chino'] as String,
+              pinyin: p['pinyin'] as String? ?? '',
+              espanol: p['espanol'] as String? ?? '',
+            ),
+        ],
+        leido: (f['leido'] as int? ?? 0) == 1,
+      );
+}
+
+/// Un párrafo: el texto chino, una sílaba de pinyin por carácter, dónde hay
+/// nombres propios y la traducción.
+class ParrafoLibro {
+  const ParrafoLibro({
+    required this.chino,
+    required this.caracteres,
+    required this.pinyin,
+    required this.nombres,
+    required this.espanol,
+  });
+
+  final String chino;
+
+  /// [chino] partido en caracteres (por código Unicode, no por unidades
+  /// UTF-16: así cuadra con el pinyin aunque haya caracteres poco comunes).
+  final List<String> caracteres;
+
+  /// Una entrada por cada uno de [caracteres] ("" para puntuación).
+  final List<String> pinyin;
+
+  /// Rangos [inicio, fin) de nombres propios, en posiciones de [caracteres].
+  final List<(int, int)> nombres;
+  final String espanol;
+
+  bool esNombre(int indice) => nombres.any((n) => indice >= n.$1 && indice < n.$2);
+
+  factory ParrafoLibro.desdeFila(Map<String, Object?> f) {
+    final chino = f['chino'] as String;
+    final caracteres = [for (final r in chino.runes) String.fromCharCode(r)];
+    final pinyin = [for (final s in jsonDecode(f['pinyin'] as String) as List) s as String];
+    return ParrafoLibro(
+      chino: chino,
+      caracteres: caracteres,
+      // Se protege contra datos desalineados: sin pinyin antes que uno equivocado.
+      pinyin: pinyin.length == caracteres.length ? pinyin : List.filled(caracteres.length, ''),
+      nombres: [
+        for (final n in jsonDecode(f['nombres'] as String? ?? '[]') as List? ?? const [])
+          ((n as List)[0] as int, n[1] as int),
+      ],
+      espanol: f['espanol'] as String? ?? '',
+    );
+  }
 }

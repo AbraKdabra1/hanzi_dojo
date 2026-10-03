@@ -21,6 +21,10 @@ Qué comprueba:
     7. Ejemplos: cada ejemplo contiene su carácter, su pinyin tiene una sílaba
        por carácter chino y hay cobertura mínima en HSK.
     8. La versión de la base coincide con lib/datos/version_contenido.dart.
+    9. Libros de «Leer»: el pinyin está al día (preparar_libros.py), cada
+       carácter chino tiene una sílaba válida, los caracteres se pueden
+       consultar en la app y los libros ADAPTADOS cumplen la cobertura
+       mínima de su nivel (libros.COBERTURA_MINIMA).
 """
 
 import csv
@@ -176,6 +180,44 @@ def main():
         msg = f"{sin_traducir} ejemplos sin traducción al español"
         (aviso if PERMITIR_INCOMPLETO else error)(msg)
 
+    # 9. Libros ──────────────────────────────────────────────────────────
+    import libros as L
+    existentes = {c for (c,) in q("SELECT caracter FROM caracteres")}
+    try:
+        fuentes_libros = {l["clave"]: l for l in L.todos_los_libros()}
+    except L.ErrorLibro as e:
+        error(f"Libro mal escrito: {e}")
+        fuentes_libros = {}
+    generado = json.load(open(L.GENERADO, encoding="utf-8")) if os.path.exists(L.GENERADO) else {}
+    for clave, libro in fuentes_libros.items():
+        if generado.get(clave, {}).get("huella") != libro["huella"]:
+            error(f"El pinyin de {libro['archivo']} no está al día: corre preparar_libros.py")
+    en_db_libros = {clave: (nivel, tipo, cob) for clave, nivel, tipo, cob in
+                    q("SELECT clave, nivel_hsk, tipo, cobertura FROM libros")}
+    if set(en_db_libros) != set(fuentes_libros):
+        error("Los libros de la base no coinciden con las fuentes (vuelve a correr construir_db.py)")
+    for clave, (nivel, tipo, cob) in en_db_libros.items():
+        if tipo == "adaptado" and cob < L.COBERTURA_MINIMA:
+            error(f"Libro {clave} (HSK {nivel}): cobertura {cob:.1%} < {L.COBERTURA_MINIMA:.0%}")
+    total_parrafos = 0
+    for clave, chino, pinyin_json in q(
+            "SELECT l.clave, p.chino, p.pinyin FROM parrafos p "
+            "JOIN capitulos c ON c.id = p.capitulo_id JOIN libros l ON l.id = c.libro_id"):
+        total_parrafos += 1
+        silabas = json.loads(pinyin_json)
+        if len(silabas) != len(chino):
+            error(f"Libro {clave}: pinyin desalineado en «{chino[:15]}…»")
+            continue
+        for c, sil in zip(chino, silabas):
+            if not L.es_han(c):
+                continue
+            plana = re.sub(r"\d", "", acentos_a_num(sil)) if sil else ""
+            if plana not in validas:
+                error(f"Libro {clave}: «{c}» con pinyin inválido {sil!r} en «{chino[:15]}…»")
+            if c not in existentes:
+                (aviso if en_db_libros.get(clave, (0, "original"))[1] == "original" else error)(
+                    f"Libro {clave}: «{c}» no está en la base (no se podrá consultar)")
+
     # 8. Versión ──────────────────────────────────────────────────────────
     version_db = q("SELECT valor FROM meta WHERE clave = 'version'")[0][0]
     texto = open(VERSION_DART, encoding="utf-8").read() if os.path.exists(VERSION_DART) else ""
@@ -185,7 +227,8 @@ def main():
     # ── Resultado ────────────────────────────────────────────────────────
     total = q("SELECT count(*) FROM caracteres")[0][0]
     print(f"contenido.db versión {version_db}: {total} caracteres, "
-          f"{len(en_db)} HSK, {con_ejemplo} con ejemplos, {3000 - len(sin_es)} con español")
+          f"{len(en_db)} HSK, {con_ejemplo} con ejemplos, {3000 - len(sin_es)} con español, "
+          f"{len(en_db_libros)} libros ({total_parrafos} párrafos)")
     for a in avisos:
         print("  AVISO:", a)
     for e in errores:

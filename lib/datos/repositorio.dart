@@ -4,12 +4,17 @@
 // Las pantallas nunca escriben SQL: le piden datos al Repositorio.
 // Tablas (ver base_datos.dart):
 //   c.caracteres, c.radicales, c.ejemplos  → contenido (solo lectura)
-//   progreso, historial, ajustes            → tu avance
+//   c.libros, c.capitulos, c.parrafos      → sección «Leer» (solo lectura)
+//   progreso, historial, lectura, ajustes   → tu avance
+//   mis_libros, mis_capitulos, mis_parrafos → libros que agregaste tú
 // ─────────────────────────────────────────────────────────────────────────────
+
+import 'dart:convert';
 
 import 'package:sqflite/sqflite.dart';
 
 import 'base_datos.dart';
+import 'importar_libro.dart';
 import 'modelos.dart';
 import 'srs.dart';
 
@@ -271,6 +276,172 @@ class Repositorio {
     return filas.map(Ejemplo.desdeFila).toList();
   }
 
+  /// Un carácter por su texto (para consultarlo al tocarlo en un libro).
+  /// Sin trazos: solo lo necesario para mostrar su ficha.
+  Future<Caracter?> caracterPorTexto(String texto) async {
+    final filas =
+        await _db.rawQuery('SELECT $_basicas, $_progreso $_desde WHERE x.caracter = ?', [texto]);
+    return filas.isEmpty ? null : Caracter.desdeFila(filas.first);
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // Leer
+  // ═══════════════════════════════════════════════════════════════════════
+
+  static const _consultaLibros = '''
+    SELECT l.*,
+      (SELECT count(*) FROM c.capitulos k WHERE k.libro_id = l.id) AS num_capitulos,
+      (SELECT count(*) FROM lectura r JOIN c.capitulos k ON k.libro_id = l.id AND k.orden = r.capitulo
+        WHERE r.libro = l.clave) AS leidos
+    FROM c.libros l
+  ''';
+
+  /// Todos los libros, del nivel más bajo al más alto, con cuánto llevas.
+  Future<List<Libro>> libros() async {
+    final filas = await _db.rawQuery('$_consultaLibros ORDER BY l.nivel_hsk, l.id');
+    return filas.map(Libro.desdeFila).toList();
+  }
+
+  Future<Libro?> libro(int id) async {
+    final filas = await _db.rawQuery('$_consultaLibros WHERE l.id = ?', [id]);
+    return filas.isEmpty ? null : Libro.desdeFila(filas.first);
+  }
+
+  /// Capítulos de un libro, en orden, marcando los que ya terminaste.
+  Future<List<CapituloLibro>> capitulos(Libro libro) async {
+    if (libro.propio) {
+      final filas = await _db.rawQuery('''
+        SELECT k.*,
+          EXISTS (SELECT 1 FROM lectura r WHERE r.libro = ? AND r.capitulo = k.orden) AS leido
+        FROM mis_capitulos k WHERE k.libro_id = ? ORDER BY k.orden
+      ''', [libro.clave, libro.id]);
+      return filas.map(CapituloLibro.propioDesdeFila).toList();
+    }
+    final filas = await _db.rawQuery('''
+      SELECT k.*,
+        EXISTS (SELECT 1 FROM lectura r WHERE r.libro = ? AND r.capitulo = k.orden) AS leido
+      FROM c.capitulos k WHERE k.libro_id = ? ORDER BY k.orden
+    ''', [libro.clave, libro.id]);
+    return filas.map(CapituloLibro.desdeFila).toList();
+  }
+
+  /// Párrafos de un capítulo ([propio]: de un libro que agregaste tú).
+  Future<List<ParrafoLibro>> parrafos(int capituloId, {bool propio = false}) async {
+    final filas = await _db.rawQuery(
+        propio
+            ? "SELECT chino, pinyin, '[]' AS nombres, '' AS espanol FROM mis_parrafos "
+                'WHERE capitulo_id = ? ORDER BY orden'
+            : 'SELECT chino, pinyin, nombres, espanol FROM c.parrafos WHERE capitulo_id = ? ORDER BY orden',
+        [capituloId]);
+    return filas.map(ParrafoLibro.desdeFila).toList();
+  }
+
+  // ── Mis libros ────────────────────────────────────────────────────────
+
+  /// Los libros que agregaste tú, del más reciente al más antiguo.
+  Future<List<Libro>> misLibros() async {
+    final filas = await _db.rawQuery('''
+      SELECT m.*,
+        (SELECT count(*) FROM mis_capitulos k WHERE k.libro_id = m.id) AS num_capitulos,
+        (SELECT count(*) FROM lectura r JOIN mis_capitulos k ON k.libro_id = m.id AND k.orden = r.capitulo
+          WHERE r.libro = 'propio-' || m.id) AS leidos
+      FROM mis_libros m ORDER BY m.agregado DESC, m.id DESC
+    ''');
+    return filas.map(Libro.propioDesdeFila).toList();
+  }
+
+  Future<Libro?> miLibro(int id) async =>
+      (await misLibros()).where((l) => l.id == id).firstOrNull;
+
+  /// Lo que necesita el importador: pinyin y nivel de cada carácter, y la
+  /// tabla de tradicional a simplificado.
+  Future<DiccionarioLectura> diccionarioLectura() async {
+    final pinyin = <String, String>{};
+    final nivel = <String, int>{};
+    for (final f in await _db.rawQuery('SELECT caracter, pinyin, nivel_hsk FROM c.caracteres')) {
+      final c = f['caracter'] as String;
+      pinyin[c] = f['pinyin'] as String;
+      nivel[c] = f['nivel_hsk'] as int;
+    }
+    final simplificado = {
+      for (final f in await _db.rawQuery('SELECT trad, simp FROM c.tradicional'))
+        f['trad'] as String: f['simp'] as String,
+    };
+    return DiccionarioLectura(pinyin: pinyin, nivel: nivel, simplificado: simplificado);
+  }
+
+  /// Tabla para leer archivos TXT en GBK (ver importar_libro.dart).
+  Future<String> tablaGbk() async {
+    final filas = await _db.rawQuery("SELECT tabla FROM c.decodificacion WHERE nombre = 'gbk'");
+    return filas.isEmpty ? '' : filas.first['tabla'] as String;
+  }
+
+  /// Guarda un libro preparado y devuelve su id.
+  Future<int> guardarLibroPropio(LibroPreparado p, {required String archivo, DateTime? ahora}) {
+    return _db.transaction((txn) async {
+      final id = await txn.insert('mis_libros', {
+        'titulo': p.libro.titulo,
+        'archivo': archivo,
+        'formato': p.libro.formato,
+        'nivel': p.nivelEstimado,
+        'cobertura': p.cobertura,
+        'caracteres': p.caracteres,
+        'agregado': _segundos(ahora ?? DateTime.now()),
+      });
+      for (final (i, cap) in p.libro.capitulos.indexed) {
+        final capId = await txn.insert('mis_capitulos', {'libro_id': id, 'orden': i + 1, 'titulo': cap.titulo});
+        final lote = txn.batch();
+        for (final (j, texto) in cap.parrafos.indexed) {
+          lote.insert('mis_parrafos', {
+            'capitulo_id': capId,
+            'orden': j + 1,
+            'chino': texto,
+            'pinyin': jsonEncode(p.pinyin[i][j]),
+          });
+        }
+        await lote.commit(noResult: true);
+      }
+      return id;
+    });
+  }
+
+  /// Borra un libro propio con sus capítulos, párrafos y lo leído.
+  Future<void> borrarLibroPropio(int id) async {
+    await _db.transaction((txn) async {
+      await txn.rawDelete(
+          'DELETE FROM mis_parrafos WHERE capitulo_id IN (SELECT id FROM mis_capitulos WHERE libro_id = ?)', [id]);
+      await txn.delete('mis_capitulos', where: 'libro_id = ?', whereArgs: [id]);
+      await txn.delete('mis_libros', where: 'id = ?', whereArgs: [id]);
+      await txn.delete('lectura', where: 'libro = ?', whereArgs: [Libro.clavePropia(id)]);
+    });
+  }
+
+  /// Marca un capítulo como leído (o lo desmarca).
+  Future<void> marcarCapitulo(String libro, int capitulo, {bool leido = true, DateTime? ahora}) async {
+    if (leido) {
+      await _db.rawInsert(
+        'INSERT OR REPLACE INTO lectura (libro, capitulo, momento) VALUES (?, ?, ?)',
+        [libro, capitulo, _segundos(ahora ?? DateTime.now())],
+      );
+    } else {
+      await _db.rawDelete('DELETE FROM lectura WHERE libro = ? AND capitulo = ?', [libro, capitulo]);
+    }
+  }
+
+  /// Cómo prefieres leer (se recuerda entre sesiones).
+  Future<AjustesLectura> ajustesLectura() async => AjustesLectura(
+        pinyin: await base.leerAjuste('lectura_pinyin') != '0',
+        traduccion: await base.leerAjuste('lectura_traduccion') == '1',
+        tamano: double.tryParse(await base.leerAjuste('lectura_tamano') ?? '') ??
+            AjustesLectura.tamanoPorDefecto,
+      );
+
+  Future<void> guardarAjustesLectura(AjustesLectura a) async {
+    await base.guardarAjuste('lectura_pinyin', a.pinyin ? '1' : '0');
+    await base.guardarAjuste('lectura_traduccion', a.traduccion ? '1' : '0');
+    await base.guardarAjuste('lectura_tamano', '${a.tamano}');
+  }
+
   // ═══════════════════════════════════════════════════════════════════════
   // Radicales
   // ═══════════════════════════════════════════════════════════════════════
@@ -357,4 +528,35 @@ class Repositorio {
 
   Future<void> guardarAjusteCaligrafico(bool activo) =>
       base.guardarAjuste('ajuste_caligrafico', activo ? '1' : '0');
+}
+
+/// Preferencias del lector.
+class AjustesLectura {
+  const AjustesLectura({this.pinyin = true, this.traduccion = false, this.tamano = tamanoPorDefecto});
+
+  static const tamanoPorDefecto = 26.0;
+
+  /// Tamaños de letra que se van alternando con el botón "Aa".
+  static const tamanos = [22.0, 26.0, 30.0, 34.0];
+
+  /// Pinyin arriba de cada carácter.
+  final bool pinyin;
+
+  /// Traducción debajo de cada párrafo.
+  final bool traduccion;
+
+  /// Tamaño de los caracteres.
+  final double tamano;
+
+  AjustesLectura copia({bool? pinyin, bool? traduccion, double? tamano}) => AjustesLectura(
+        pinyin: pinyin ?? this.pinyin,
+        traduccion: traduccion ?? this.traduccion,
+        tamano: tamano ?? this.tamano,
+      );
+
+  /// El siguiente tamaño de [tamanos] (vuelve al primero después del último).
+  double get siguienteTamano {
+    final i = tamanos.indexWhere((t) => t > tamano);
+    return i < 0 ? tamanos.first : tamanos[i];
+  }
 }

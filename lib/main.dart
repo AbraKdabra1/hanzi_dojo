@@ -151,6 +151,8 @@ void _registrarLicencias() {
     'Lista HSK 3.0 (ivankra/hsk30)': 'assets/licencias/hsk30_MIT.txt',
     'Tatoeba (oraciones de ejemplo)': 'assets/licencias/tatoeba_CC-BY-2.0-FR.txt',
     'Noto Sans SC (tipografía)': 'assets/licencias/noto_sans_sc_OFL.txt',
+    'OpenCC (tradicional → simplificado)': 'assets/licencias/opencc_APACHE-2.0.txt',
+    'chinese-poetry (textos clásicos de «Leer»)': 'assets/licencias/chinese_poetry_MIT.txt',
   };
   LicenseRegistry.addLicense(() async* {
     for (final entrada in licencias.entries) {
