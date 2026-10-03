@@ -97,9 +97,20 @@ class _PantallaLecturaState extends State<PantallaLectura> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => FichaCaracterLectura(texto: p.caracteres[posicion], pinyinEnTexto: p.pinyin[posicion]),
+      builder: (_) => FichaCaracterLectura(
+        texto: p.caracteres[posicion],
+        pinyinEnTexto: p.pinyin[posicion],
+        donde: widget.libro.propio ? null : _dondeReporte(p),
+      ),
     );
     if (mounted) setState(() => _seleccion = null);
+  }
+
+  /// "Libro «Mitos chinos», capítulo 2 · párrafo «盘古以后，地上有了山和河…»"
+  String _dondeReporte(ParrafoLibro p) {
+    final titulo = widget.libro.tituloEs.isEmpty ? widget.libro.titulo : widget.libro.tituloEs;
+    final inicio = p.chino.length > 16 ? '${p.chino.substring(0, 16)}…' : p.chino;
+    return 'Libro «$titulo», capítulo ${_capitulo.orden} · párrafo «$inicio»';
   }
 
   Future<void> _terminar() async {

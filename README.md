@@ -176,6 +176,7 @@ lib/
 │   ├── respaldo.dart             Exportar / importar el progreso (.hanzidojo)
 │   ├── registro_errores.dart     Errores guardados en el teléfono (informe)
 │   ├── importar_libro.dart       Mis libros: TXT/EPUB → capítulos, pinyin y nivel
+│   ├── reporte.dart              Reporte de problema (formulario de GitHub prellenado)
 │   ├── modelos.dart              Caracter, Radical, Ejemplo, Progreso, DetallePractica…
 │   ├── datos_app.dart            Da acceso al repositorio desde cualquier pantalla
 │   └── version_contenido.dart    (generado) versión de contenido.db
@@ -208,6 +209,17 @@ test/                             Pruebas: SM-2, sesión, trazos, caligrafía, b
 - Los contornos de cada carácter se convierten a `Path` una sola vez (caché).
 - Sin desenfoque (`BackdropFilter`) en listas: era lo que más frenaba el scroll.
 - `MainActivity` pide a Android el modo de pantalla con más Hz disponible.
+
+---
+
+## Reportar problemas y colaborar
+
+En la app: Ajustes → **Reportar un problema**. Se abre el formulario del
+repositorio en GitHub ya lleno (versión, teléfono e informe de errores, si lo
+quieres adjuntar); también se puede copiar el reporte y mandarlo por otro medio.
+Hay formularios para *errores de la app*, *errores en el contenido* y
+*sugerencias* (`.github/ISSUE_TEMPLATE/`). Cómo corregir traducciones, libros o
+código: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 

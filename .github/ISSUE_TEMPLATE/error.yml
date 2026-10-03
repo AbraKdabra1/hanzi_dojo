@@ -1,0 +1,36 @@
+name: Error de la app
+description: Algo no funciona como debería (se cierra, se ve mal, no guarda…).
+title: "[Error] "
+labels: ["error"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por reportarlo. Si lo envías desde la app (Ajustes → **Reportar un problema**),
+        este formulario se llena solo con la versión y el informe de errores.
+  - type: textarea
+    id: descripcion
+    attributes:
+      label: ¿Qué pasó?
+      description: Qué estabas haciendo, qué esperabas y qué pasó en cambio.
+    validations:
+      required: true
+  - type: textarea
+    id: pasos
+    attributes:
+      label: ¿Cómo hacer que vuelva a pasar? (opcional)
+      placeholder: |
+        1. Abrir Estudiar → HSK 2
+        2. Escribir el primer trazo al revés
+        3. …
+  - type: input
+    id: dispositivo
+    attributes:
+      label: Versión de la app y teléfono
+      placeholder: Hanzi Dojo 2.0.0 (2) · HUAWEI ALN-AL80 · Android 12
+  - type: textarea
+    id: informe
+    attributes:
+      label: Informe de errores (opcional)
+      description: En la app, Ajustes → Informe de errores → copiar.
+      render: text
