@@ -1,0 +1,6 @@
+commit: adb906fdedd395262cb4f9aefda3e2382ca45b68
+rama: v2
+validar_db: success
+analyze: success
+test: success
+apk: success
