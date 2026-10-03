@@ -509,7 +509,10 @@ class ImportadorLibros {
       final tono = _tono(sig);
       if (c == '不') {
         salida[i] = sig.isNotEmpty && tono == 4 ? 'bú' : 'bù';
-      } else if (sig.isEmpty || _numeros.contains(antes) || _numeros.contains(despues) || '月号'.contains(despues)) {
+      } else if (sig.isEmpty ||
+          (antes.isNotEmpty && _numeros.contains(antes)) ||
+          (despues.isNotEmpty && (_numeros.contains(despues) || '月号'.contains(despues)))) {
+        // Ojo: ''.contains('') es true; por eso se revisa que no estén vacíos.
         salida[i] = 'yī';
       } else {
         salida[i] = (tono == 4 || tono == 5) ? 'yí' : 'yì';

@@ -118,7 +118,7 @@ def _sandhi(texto, salida):
                 salida[k] = "bú" if sig and _tono(sig) == 4 else "bù"
             continue
         # 一: número suelto, en cifras, ordinal o fechas → yī
-        if (not sig or antes in _NUMEROS or despues in _NUMEROS or despues in "月号"):
+        if (not sig or antes in _NUMEROS or despues in _NUMEROS or despues in set("月号")):
             salida[k] = "yī"
         else:
             salida[k] = "yí" if _tono(sig) in (4, 5) else "yì"
@@ -158,18 +158,18 @@ def pinyin_de(texto, lecturas=None):
         antes = texto[k - 1] if k > 0 else ""
         despues = texto[k + 1] if k + 1 < len(texto) else ""
         if c in "得地" and k not in en_palabra:
-            if c == "地" and (antes in "和与跟或" or despues in "和与跟或、边"):
+            if c == "地" and (antes in set("和与跟或") or despues in set("和与跟或、边") or not despues):
                 salida[k] = "dì"                          # 天和地, 地边
             else:
                 salida[k] = _lectura_particula(c, antes, despues)
-        elif c == "都" and despues not in "市城" and antes not in "首成古国京":
+        elif c == "都" and despues not in set("市城") and antes not in set("首成古国京"):
             salida[k] = "dōu"
         elif c == "只" and antes in _ANTES_DE_ZHI:
             salida[k] = "zhī"                             # 两只鸟, 这只猫
-        elif c == "佛" and antes not in "仿彷":
+        elif c == "佛" and antes not in set("仿彷"):
             salida[k] = "fó"                              # 佛经, 成佛 (no "fú")
         elif c == "更" and k not in en_palabra:
-            salida[k] = "gēng" if despues in "新换改正衣" else "gèng"
+            salida[k] = "gēng" if despues in set("新换改正衣") else "gèng"
         elif c == "似" and despues != "的":
             salida[k] = "sì"                              # 好似, 人情似纸 (pero 似的 = shìde)
         elif c == "谁":
