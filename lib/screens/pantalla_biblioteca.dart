@@ -322,7 +322,7 @@ class _Encabezado extends StatelessWidget {
             child: Text(texto,
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, letterSpacing: 1, color: color)),
           ),
-          if (accion case final a?) a,
+          ?accion,
         ],
       ),
     );
