@@ -1,0 +1,10 @@
+Tatoeba — oraciones de ejemplo en chino
+https://tatoeba.org
+
+Licencia: Creative Commons Attribution 2.0 France (CC BY 2.0 FR)
+https://creativecommons.org/licenses/by/2.0/fr/
+
+Las oraciones en chino de los ejemplos vienen de Tatoeba, a través del
+conjunto "Chinese Example Sentences" (github.com/krmanik/chinese-example-sentences),
+que agregó el pinyin automáticamente. Las traducciones al español de Hanzi Dojo
+se hicieron a partir del chino.

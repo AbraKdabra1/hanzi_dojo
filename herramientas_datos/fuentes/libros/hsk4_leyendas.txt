@@ -1,0 +1,171 @@
+clave: leyendas-populares
+titulo: 中国民间传说
+titulo_es: Leyendas populares chinas
+nivel: 4
+tipo: adaptado
+descripcion: Cuatro leyendas que todo el mundo conoce en China: dos historias de amor entre el cielo y la tierra, una de amor imposible y la de la joven que fue a la guerra en lugar de su padre.
+fuente: Leyendas tradicionales de transmisión oral, escritas en distintas épocas: el «Poema de Mulan» (siglos V–VI), relatos de la dinastía Tang y las «Historias para advertir al mundo» de Feng Menglong, dinastía Ming (dominio público). Versión en chino graduado escrita para Hanzi Dojo.
+
+## 牛郎织女
+titulo_es: El pastor y la tejedora
+origen: Leyenda de hace más de dos mil años; ya aparece en poemas de la dinastía Han. Es el origen de la fiesta del Qixi.
+palabras: 仙女 = hada; 织布 = tejer tela; 银河 = Vía Láctea; 喜鹊 = urraca; 七夕节 = Qixi, el «San Valentín chino»
+
+很久以前，有一个年轻人，父母很早就去世了。他每天跟着一头老牛在地里干活，大家都叫他{牛郎}。
+> Hace mucho tiempo vivía un joven cuyos padres habían muerto cuando era pequeño. Todos los días trabajaba el campo junto a un viejo buey, y la gente lo llamaba «el Pastor».
+
+其实，老牛以前是天上的神仙。它很喜欢这个心地好、爱干活的年轻人。
+> En realidad, el viejo buey había sido un ser celestial. Le tenía mucho cariño a aquel joven de buen corazón y trabajador.
+
+有一天，老牛突然开口说话了："明天，天上的仙女们会到河边洗澡。你去把那件红色的衣服拿走，穿那件衣服的仙女就会成为你的妻子。"
+> Un día, el buey de repente habló: «Mañana, las hadas del cielo vendrán a bañarse al río. Toma el vestido rojo; el hada que lo usa se convertirá en tu esposa».
+
+第二天，牛郎照老牛说的做了。那位仙女叫{织女}，是{王母娘娘}的孙女，最会织布，天上的云就是她织的。
+> Al día siguiente, el Pastor hizo lo que el buey le dijo. Aquella hada se llamaba la Tejedora; era nieta de la Reina Madre del Oeste y la mejor tejedora de todas: las nubes del cielo eran obra suya.
+
+织女看到牛郎这么老实、这么能干，也喜欢上了他。他们结了婚，生了一个儿子和一个女儿，生活得很幸福。
+> La Tejedora vio que el Pastor era honrado y trabajador, y también se enamoró de él. Se casaron, tuvieron un hijo y una hija, y vivieron muy felices.
+
+可是，王母娘娘知道了这件事，非常生气。她派人把织女抓回了天上。
+> Pero la Reina Madre se enteró y se enojó muchísimo. Mandó a sus guardias a llevarse a la Tejedora de vuelta al cielo.
+
+牛郎急坏了。这时，老牛对他说："我快要死了。我死了以后，你穿上我的皮，就能飞上天去找织女。"
+> El Pastor estaba desesperado. Entonces el buey le dijo: «Estoy a punto de morir. Cuando muera, ponte mi piel y podrás volar al cielo a buscar a la Tejedora».
+
+老牛死后，牛郎穿上牛皮，带着两个孩子，飞上了天。
+> Cuando el buey murió, el Pastor se puso su piel y, con sus dos hijos, voló hacia el cielo.
+
+眼看就要追上织女了，王母娘娘用手在天上一划，一条又宽又长[cháng]的银河出现了。
+> Cuando ya estaba a punto de alcanzar a la Tejedora, la Reina Madre trazó una línea en el cielo con la mano, y apareció la Vía Láctea, ancha y larguísima.
+
+牛郎和织女一个在河这边，一个在河那边，只能远远地看着对方，哭个不停。
+> El Pastor quedó de un lado del río y la Tejedora del otro; solo podían mirarse de lejos, llorando sin parar.
+
+喜鹊们被他们的爱感动了。每年七月七日，成千上万只喜鹊飞到银河上，用自己的身体连成一座桥，让牛郎和织女在桥上见面。
+> Las urracas se conmovieron con su amor. Cada año, el séptimo día del séptimo mes, miles y miles de urracas vuelan sobre la Vía Láctea y forman un puente con sus cuerpos para que el Pastor y la Tejedora se encuentren en él.
+
+这座桥叫"鹊桥"。七月七日也成了中国的七夕节，是中国人的情人节。
+> Ese puente se llama «el Puente de las Urracas». Y el séptimo día del séptimo mes se convirtió en la fiesta del Qixi, el día de los enamorados en China.
+
+夏天的晚上，天气好的时候，你可以在天上看到两颗很亮的星星，一颗在银河这边，一颗在银河那边。人们说，那就是牛郎星和织女星。
+> En las noches de verano, cuando el cielo está despejado, se ven dos estrellas muy brillantes, una a cada lado de la Vía Láctea. Dicen que son la estrella del Pastor y la estrella de la Tejedora.
+
+## 白蛇传[zhuàn]
+titulo_es: La leyenda de la Serpiente Blanca
+origen: Leyenda de la región de Hangzhou; Feng Menglong la escribió en el siglo XVII (dinastía Ming).
+palabras: 修炼 = cultivarse en artes mágicas; 伞 = paraguas; 和尚 = monje budista; 妖怪 = monstruo, demonio; 塔 = pagoda
+
+很久以前，有一条白蛇在山里修炼了一千年，变成了一位美丽的女子，叫{白素贞}。她还有一个好朋友，是一条青蛇，变成了一个小姑娘，叫{小青}。
+> Hace mucho tiempo, una serpiente blanca se cultivó en las montañas durante mil años y se convirtió en una hermosa mujer llamada Bai Suzhen. Tenía una buena amiga, una serpiente verde, que se convirtió en una muchacha llamada Xiaoqing.
+
+一年春天，她们来到了{杭州}，在西湖边玩。那天下着小雨，在湖边的桥上，白素贞遇到了一个年轻人，叫{许仙}。
+> Una primavera llegaron a Hangzhou y pasearon por el Lago del Oeste. Ese día lloviznaba, y en un puente junto al lago Bai Suzhen conoció a un joven llamado Xu Xian.
+
+许仙看她们没有伞，就把自己的伞借给了她们。白素贞觉得许仙是一个好人，后来就跟他结了婚。
+> Xu Xian vio que no tenían paraguas y les prestó el suyo. Bai Suzhen pensó que era un buen hombre y, con el tiempo, se casó con él.
+
+他们开了一家药店。白素贞医术很好，常常不要钱给穷人看病，大家都很喜欢她。
+> Abrieron una botica. Bai Suzhen era una gran curandera y a menudo atendía gratis a los pobres; todos la querían mucho.
+
+可是，{金山寺}里有一个和尚，叫{法海}。他知道白素贞是蛇变的，就对许仙说："你的妻子是妖怪！"
+> Pero en el templo de Jinshan había un monje llamado Fahai. Sabía que Bai Suzhen era una serpiente y le dijo a Xu Xian: «¡Tu esposa es un demonio!».
+
+端午节那天，许仙听了法海的话，让白素贞喝了一种特别的酒。白素贞喝了酒，变回了一条大白蛇。许仙一看，吓得昏了过去。
+> El día de la Fiesta del Bote de Dragón, Xu Xian siguió el consejo de Fahai e hizo que Bai Suzhen bebiera un vino especial. Al beberlo, ella volvió a ser una gran serpiente blanca. Xu Xian la vio y se desmayó del susto.
+
+为了救许仙，白素贞不怕危险，到很远的山上找来了仙草，许仙才活了过来。
+> Para salvar a Xu Xian, Bai Suzhen desafió el peligro y fue hasta una montaña lejana a buscar una hierba mágica; solo así Xu Xian volvió a la vida.
+
+法海还是不放过他们。他把许仙关在了金山寺里。白素贞和小青去金山寺要人，法海不给。她们就叫来了大水，要把金山寺淹了。
+> Fahai no los dejó en paz. Encerró a Xu Xian en el templo de Jinshan. Bai Suzhen y Xiaoqing fueron a reclamarlo, pero Fahai se negó. Entonces ellas invocaron una gran inundación para anegar el templo.
+
+最后，法海用他的法力，把白素贞压在了西湖边的{雷峰塔}下面。
+> Al final, Fahai usó sus poderes y encerró a Bai Suzhen bajo la pagoda Leifeng, a la orilla del Lago del Oeste.
+
+很多年以后，小青学好了本领，打败了法海，救出了白素贞。
+> Muchos años después, Xiaoqing perfeccionó sus artes, derrotó a Fahai y liberó a Bai Suzhen.
+
+这个故事在中国流传了很多年。今天，西湖边还有一座雷峰塔，每年都有很多人去那里看一看。
+> Esta historia se ha contado en China durante siglos. Hoy todavía hay una pagoda Leifeng junto al Lago del Oeste, y cada año mucha gente va a visitarla.
+
+## 梁山伯与祝英台
+titulo_es: Liang Shanbo y Zhu Yingtai
+origen: Leyenda de la dinastía Jin del Este (siglo IV); aparece por escrito en la dinastía Tang.
+palabras: 墓 = tumba; 嫁 = casarse (una mujer); 蝴蝶 = mariposa; 爱情 = amor
+
+古时候，女孩子不能去学校读书。可是有一个女孩子叫{祝英台}，她非常想读书。
+> Antiguamente, las niñas no podían ir a la escuela. Pero había una muchacha llamada Zhu Yingtai que deseaba muchísimo estudiar.
+
+她穿上男人的衣服，去了很远的地方上学。在路上，她认识了一个年轻的读书人，叫{梁山伯}。
+> Se vistió de hombre y se fue a estudiar a un lugar lejano. En el camino conoció a un joven estudiante llamado Liang Shanbo.
+
+他们在同一个学校读书，一起学习，一起生活，成了最好的朋友。三年里，梁山伯一直不知道祝英台是一个女孩子。
+> Estudiaron en la misma escuela, aprendían y vivían juntos, y se hicieron grandes amigos. En tres años, Liang Shanbo nunca supo que Zhu Yingtai era una muchacha.
+
+三年以后，祝英台的父亲让她回家。梁山伯送了她很远很远。路上，祝英台一次又一次地告诉他自己是女孩子，可是梁山伯太老实了，一直没听懂。
+> Tres años después, el padre de Zhu Yingtai la mandó volver a casa. Liang Shanbo la acompañó un larguísimo trecho. En el camino, ella le insinuó una y otra vez que era mujer, pero él era tan ingenuo que nunca lo entendió.
+
+最后，祝英台说："我家里有一个妹妹，跟我长[zhǎng]得一样。你早点儿来我家，问我父亲能不能娶她吧。"
+> Al final, Zhu Yingtai le dijo: «En casa tengo una hermana menor idéntica a mí. Ven pronto a mi casa y pídele a mi padre su mano».
+
+后来，梁山伯终于知道了祝英台是女孩子，非常高兴，马上去了祝家。可是太晚了：祝英台的父亲已经决定让她嫁给一个有钱人家[jiā]的儿子，叫{马文才}。
+> Más tarde, Liang Shanbo por fin supo que Zhu Yingtai era una mujer; feliz, fue enseguida a casa de los Zhu. Pero era demasiado tarde: el padre ya había decidido casarla con el hijo de una familia rica, un tal Ma Wencai.
+
+梁山伯回家以后，很快就病倒了，没[méi]过多久就死了。
+> Liang Shanbo volvió a su casa, enfermó al poco tiempo y no tardó en morir.
+
+祝英台出嫁那天，经过梁山伯的墓。她让大家停下来，走到墓前大哭。
+> El día de su boda, el cortejo de Zhu Yingtai pasó junto a la tumba de Liang Shanbo. Ella pidió que se detuvieran, se acercó a la tumba y lloró desconsolada.
+
+突然，天上下起了大雨，打起了雷，墓一下子打开了。祝英台跳了进去，墓又合上了。
+> De pronto empezó a llover a cántaros y a tronar, y la tumba se abrió. Zhu Yingtai saltó adentro y la tumba se cerró de nuevo.
+
+雨停了以后，人们看见墓上飞出了两只美丽的蝴蝶。它们一起飞向远方，再也不分开了。
+> Cuando paró la lluvia, la gente vio salir de la tumba dos hermosas mariposas. Volaron juntas hacia lo lejos y nunca más se separaron.
+
+这就是中国最有名的爱情故事之一。很多人把它叫作"中国的《罗密欧与朱丽叶》"。
+> Esta es una de las historias de amor más famosas de China. Mucha gente la llama «el Romeo y Julieta chino».
+
+## 花木兰
+titulo_es: Mulan
+origen: Basada en el «Poema de Mulan», escrito entre los siglos V y VI.
+palabras: 皇帝 = emperador; 打仗 = combatir, ir a la guerra; 当兵 = hacerse soldado; 军队 = ejército; 英雄 = héroe, heroína
+
+很久以前，北方有一个女孩子，叫{花木兰}。她每天在家里织布，帮父母干活。
+> Hace mucho tiempo, en el norte, vivía una muchacha llamada Hua Mulan. Todos los días tejía en casa y ayudaba a sus padres.
+
+有一天，她坐在窗前，一句话也不说，看起来很不开心。
+> Un día se sentó junto a la ventana sin decir una palabra; se le veía muy triste.
+
+原来，国家要打仗了，皇帝要每家出一个男人去当兵。木兰的父亲年纪大了，身体也不好；弟弟还太小。
+> Resulta que el país iba a entrar en guerra y el emperador exigía que cada familia enviara a un hombre como soldado. El padre de Mulan era viejo y estaba enfermo; su hermano menor era todavía muy pequeño.
+
+{木兰}想："我不能让父亲去。我去！"
+> Mulan pensó: «No puedo dejar que vaya mi padre. ¡Iré yo!».
+
+她买了一匹好马，换上男人的衣服，告别了父母，跟着军队走了。
+> Compró un buen caballo, se vistió de hombre, se despidió de sus padres y se marchó con el ejército.
+
+她骑着马走了很远很远，过了{黄河}，到了北方的大山。晚上，她听不到父母叫她的声音，只听到河水的声音和远处的马叫声。
+> Cabalgó larguísimas distancias, cruzó el río Amarillo y llegó a las montañas del norte. De noche ya no oía a sus padres llamarla: solo el rumor del río y los relinchos de caballos a lo lejos.
+
+木兰在军队里打了十二年的仗。她非常勇敢，立了很多功。
+> Mulan combatió doce años en el ejército. Fue muy valiente y logró muchas hazañas.
+
+战争结束以后，皇帝要给她很大的官，还要给她很多钱。木兰都不要。她说："我只想骑着快马，回到我的家。"
+> Al terminar la guerra, el emperador quiso darle un alto cargo y mucho dinero. Mulan no aceptó nada. Dijo: «Solo quiero un caballo veloz para volver a mi casa».
+
+木兰回到家，父母、姐姐、弟弟都非常高兴。
+> Cuando Mulan volvió, sus padres, su hermana mayor y su hermano menor se pusieron felicísimos.
+
+她走进自己的房间，换下军队的衣服，穿上漂亮的衣服，把头发弄好，走出来见一起回来的朋友们。
+> Entró en su habitación, se quitó el uniforme, se puso un vestido bonito, se arregló el cabello y salió a ver a los compañeros que habían vuelto con ella.
+
+朋友们都吓了一跳："我们一起打了十二年的仗，可是谁都不知道你是一个女孩子！"
+> Sus compañeros se quedaron pasmados: «¡Combatimos juntos doce años y ninguno supo que eras una mujer!».
+
+木兰笑着说："两只兔子在地上一起跑，谁能看出来哪只是男的、哪只是女的呢？"
+> Mulan sonrió y dijo: «Cuando dos conejos corren juntos por el suelo, ¿quién puede distinguir cuál es macho y cuál es hembra?».
+
+今天，花木兰是中国最有名的女英雄之一。
+> Hoy, Hua Mulan es una de las heroínas más famosas de China.

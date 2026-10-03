@@ -1,0 +1,251 @@
+clave: poemas-tang
+titulo: 唐诗选
+titulo_es: Poemas de la dinastía Tang
+nivel: 7
+tipo: original
+descripcion: Veintidós de los poemas más famosos de la dinastía Tang (618–907), la época de oro de la poesía china: los que los niños chinos aprenden de memoria. Texto original con traducción.
+fuente: Poemas de Li Bai, Du Fu, Wang Wei y otros poetas Tang (dominio público). Texto de las antologías «Trescientos poemas Tang» y «Poemas de mil poetas», tomado de github.com/chinese-poetry/chinese-poetry (MIT) y convertido a caracteres simplificados. Traducción al español escrita para Hanzi Dojo.
+
+## 思乡
+titulo_es: Nostalgia del hogar
+origen: Poemas de quienes están lejos de casa y de su familia.
+palabras: 故乡 = tierra natal; 佳节 = día de fiesta; 慈母 = madre amorosa; 乡音 = acento del pueblo
+
+《静夜思》{李白}
+> «Pensamiento en una noche tranquila», de Li Bai (701–762)
+
+床前明月光，疑是地上[shàng]霜。
+> Ante mi cama, la luz clara de la luna: parece escarcha sobre el suelo.
+
+举头望明月，低头思故乡。
+> Alzo la cabeza y contemplo la luna; bajo la cabeza y pienso en mi tierra.
+
+《九月九日忆山东兄弟》{王维}
+> «El día nueve del noveno mes, recordando a mis hermanos al este de la montaña», de Wang Wei (701–761)
+
+独在异乡为[wéi]异客，每逢佳节倍思亲。
+> Solo, forastero en tierra extraña: en cada fiesta extraño el doble a los míos.
+
+遥知兄弟登高处，遍插茱萸少一人。
+> Desde lejos sé que mis hermanos han subido a la colina; todos llevan ramas de cornejo, y falta uno.
+
+《游子[zǐ]吟》{孟郊}
+> «Canción del hijo que se va», de Meng Jiao (751–814)
+
+慈母手中线，游子[zǐ]身上[shàng]衣。
+> El hilo en la mano de la madre amorosa, la ropa sobre el cuerpo del hijo que parte.
+
+临行密密缝[féng]，意恐迟迟归。
+> Antes de la partida cose puntadas apretadas, temiendo que él tarde en volver.
+
+谁言寸草心，报得[dé]三春晖。
+> ¿Quién dice que el corazón de una pequeña hierba puede pagar el sol de toda la primavera?
+
+《回乡偶书》{贺知章}
+> «Escrito al volver a mi pueblo», de He Zhizhang (659–744)
+
+少小离家老大回，乡音无改鬓毛衰[cuī]。
+> Me fui de casa siendo niño y vuelvo ya viejo; mi acento no ha cambiado, pero mis sienes se han vuelto ralas.
+
+儿童相见不相识，笑问客从何处来。
+> Los niños me ven y no me conocen; sonriendo preguntan: «Forastero, ¿de dónde viene usted?».
+
+## 山水
+titulo_es: Montañas y ríos
+origen: Paisajes de la China de la dinastía Tang.
+palabras: 黄河 = río Amarillo; 青苔 = musgo; 孤舟 = barca solitaria; 猿 = mono; 钟声 = toque de campana
+
+《登鹳雀楼》{王之涣}
+> «Subiendo a la torre de las Cigüeñas», de Wang Zhihuan (688–742)
+
+白日依山尽[jìn]，黄河入海流。
+> El sol blanco se oculta tras los montes; el río Amarillo corre hacia el mar.
+
+欲穷千里目，更上一层楼。
+> Si quieres ver hasta mil leguas, sube un piso más.
+
+《鹿柴[zhài]》{王维}
+> «El cercado de los ciervos», de Wang Wei
+
+空山不见人，但闻人语响。
+> En la montaña vacía no se ve a nadie; solo se oye el eco de unas voces.
+
+返景[yǐng]入深林，复照青苔上。
+> La luz del atardecer entra en el bosque profundo y vuelve a brillar sobre el musgo verde.
+
+《江雪》{柳宗元}
+> «Nieve en el río», de Liu Zongyuan (773–819)
+
+千山鸟飞绝，万径人踪灭。
+> En mil montañas ya no vuela un pájaro; en diez mil senderos no queda huella humana.
+
+孤舟蓑笠翁，独钓寒江雪。
+> En una barca solitaria, un viejo con capa de paja y sombrero de bambú pesca solo en el río helado bajo la nieve.
+
+《早发白帝城》{李白}
+> «Saliendo al alba de la ciudad del Emperador Blanco», de Li Bai
+
+朝[zhāo]辞白帝彩云间，千里江陵一日还[huán]。
+> Al alba dejo la ciudad del Emperador Blanco entre nubes de colores; mil leguas hasta Jiangling, y en un solo día llego.
+
+两岸猿声啼不住，轻舟已过万重[chóng]山。
+> En ambas orillas los monos no dejan de chillar, y mi barca ligera ya ha pasado diez mil montañas.
+
+《枫桥夜泊》{张继}
+> «Anclado de noche junto al puente de los Arces», de Zhang Ji (siglo VIII)
+
+月落乌啼霜满天，江枫渔火对愁眠。
+> Cae la luna, graznan los cuervos, la escarcha llena el cielo; frente a los arces del río y las luces de los pescadores, me duermo con mi tristeza.
+
+姑苏城外寒山寺，夜半钟声到客船。
+> Fuera de la ciudad de Gusu, desde el templo de Hanshan, la campana de medianoche llega hasta el barco del viajero.
+
+## 四季
+titulo_es: Las estaciones
+origen: La primavera, la lluvia de Qingming, la hierba que renace y el sol del atardecer.
+palabras: 清明 = fiesta de Qingming (día de los difuntos); 酒家 = taberna; 枯荣 = secarse y reverdecer; 夕阳 = sol poniente
+
+《春晓》{孟浩然}
+> «Amanecer de primavera», de Meng Haoran (689–740)
+
+春眠不觉晓，处处闻啼鸟。
+> En el sueño de primavera no noto el amanecer; por todas partes oigo cantar a los pájaros.
+
+夜来风雨声，花落知多少[shǎo]。
+> Anoche hubo viento y lluvia: ¿quién sabe cuántas flores cayeron?
+
+《清明》{杜牧}
+> «Qingming», de Du Mu (803–852)
+
+清明时节雨纷纷，路上行人欲断魂。
+> En la fiesta de Qingming la lluvia cae sin cesar; los caminantes van con el alma rota.
+
+借问酒家何处有，牧童遥指杏花村。
+> Pregunto dónde hay una taberna; un pastorcillo señala a lo lejos la aldea de los Albaricoqueros en Flor.
+
+《赋得[dé]古原草送别》{白居易}
+> «La hierba de la vieja llanura: despedida», de Bai Juyi (772–846)
+
+离离原上草，一岁一枯荣。
+> Espesa hierba de la llanura: cada año se seca y vuelve a reverdecer.
+
+野火烧不尽，春风吹又生。
+> El fuego salvaje no logra acabar con ella; sopla el viento de primavera y renace.
+
+远芳侵古道，晴翠接荒城。
+> Su fragancia lejana invade el viejo camino; su verde soleado llega hasta la ciudad en ruinas.
+
+又送王孙去，萋萋满别情。
+> Otra vez despido a un amigo que se marcha; la hierba frondosa rebosa de tristeza por la partida.
+
+《登乐游原》{李商隐}
+> «Subiendo a la llanura de Leyou», de Li Shangyin (813–858)
+
+向晚意不适，驱车登古原。
+> Al caer la tarde me siento inquieto; conduzco mi carro hasta la antigua llanura.
+
+夕阳无限好，只是近黄昏。
+> El sol poniente es infinitamente hermoso; lástima que ya se acerque el anochecer.
+
+## 送别
+titulo_es: Despedidas
+origen: Amigos que se separan, a veces para siempre.
+palabras: 故人 = viejo amigo; 帆 = vela (de barco); 劝 = invitar, animar; 相思 = añoranza; 隐者 = ermitaño
+
+《黄鹤楼送孟浩然之广陵》{李白}
+> «En la torre de la Grulla Amarilla despido a Meng Haoran, que parte a Guangling», de Li Bai
+
+故人西辞黄鹤楼，烟花三月下扬州。
+> Mi viejo amigo se despide al oeste, en la torre de la Grulla Amarilla; en el tercer mes, entre bruma y flores, baja a Yangzhou.
+
+孤帆远影碧空尽[jìn]，唯见长[cháng]江天际流。
+> La silueta de la vela solitaria se pierde en el azul del cielo; solo veo el Yangtsé correr hasta el horizonte.
+
+《送元二使安西》{王维}
+> «Despidiendo a Yuan Er, enviado a Anxi», de Wang Wei
+
+渭城朝[zhāo]雨浥轻尘，客舍[shè]青青柳色新。
+> La lluvia de la mañana en Weicheng moja el polvo fino; junto a la posada, los sauces lucen un verde nuevo.
+
+劝君更尽[jìn]一杯酒，西出阳关无故人。
+> Te ruego que apures otra copa: al oeste del paso de Yang ya no tendrás viejos amigos.
+
+《相思》{王维}
+> «Añoranza», de Wang Wei
+
+红豆生南国，春来发几枝。
+> Las semillas rojas crecen en el sur; ¿cuántas ramas habrán brotado esta primavera?
+
+愿君多采撷，此物最相思。
+> Ojalá recojas muchas: nada guarda mejor la añoranza.
+
+《寻隐者不遇》{贾岛}
+> «Buscando al ermitaño sin encontrarlo», de Jia Dao (779–843)
+
+松下问童子[zǐ]，言师采药去。
+> Bajo el pino le pregunto al muchacho; dice que su maestro fue a recoger hierbas medicinales.
+
+只在此山中，云深不知处。
+> «Está en esta montaña, pero las nubes son tan densas que no sé dónde».
+
+## 边塞与家国
+titulo_es: Fronteras y patria
+origen: La vida de los soldados en la frontera y la guerra que destroza el país.
+palabras: 关 = paso fronterizo; 琵琶 = pipa (laúd chino); 沙场 = campo de batalla; 烽火 = hogueras de alarma; 家书 = carta de casa
+
+《出塞》{王昌龄}
+> «Más allá de la frontera», de Wang Changling (698–757)
+
+秦时明月汉时关，万里长征人未还[huán]。
+> La luna clara de los Qin, los pasos de los Han; marcharon diez mil leguas y aún no han vuelto.
+
+但使龙城飞将[jiàng]在，不教胡马度阴山。
+> Si viviera el General Volador de Longcheng, no dejaría que los caballos bárbaros cruzaran los montes Yin.
+
+《凉州词》{王翰}
+> «Canción de Liangzhou», de Wang Han (siglo VIII)
+
+葡萄美酒夜光杯，欲饮琵琶马上催。
+> Buen vino de uva en copas que brillan de noche; al ir a beber, la pipa llama a montar.
+
+醉卧沙场君莫笑，古来征战几人回？
+> Si caigo ebrio en el campo de batalla, no te rías: desde siempre, ¿cuántos han vuelto de la guerra?
+
+《凉州词》{王之涣}
+> «Canción de Liangzhou», de Wang Zhihuan
+
+黄河远上白云间，一片孤城万仞山。
+> El río Amarillo sube a lo lejos entre nubes blancas; una ciudad solitaria entre montañas altísimas.
+
+羌笛何须怨杨柳，春风不度玉门关。
+> ¿Para qué lamenta la flauta qiang la canción del sauce? El viento de primavera no cruza el paso de la Puerta de Jade.
+
+《春望》{杜甫}
+> «Mirada de primavera», de Du Fu (712–770)
+
+国破山河在，城春草木深。
+> El reino está roto; quedan montes y ríos. Es primavera en la ciudad y la hierba y los árboles crecen espesos.
+
+感时花溅泪，恨别鸟惊心。
+> Afligido por estos tiempos, las flores me arrancan lágrimas; triste por la separación, el canto de los pájaros me sobresalta.
+
+烽火连三月，家书抵万金。
+> Las hogueras de guerra arden desde hace tres meses; una carta de casa vale diez mil monedas de oro.
+
+白头搔更短，浑欲不胜[shēng]簪。
+> Me rasco la cabeza blanca y el pelo es cada vez más corto: ya casi no sostiene el alfiler.
+
+《登高》{杜甫}
+> «Subiendo a lo alto», de Du Fu
+
+风急天高猿啸哀，渚清沙白鸟飞回。
+> Viento fuerte, cielo alto, aullido triste de los monos; islote claro, arena blanca, pájaros que vuelan en círculos.
+
+无边落木萧萧下，不尽长江滚滚来。
+> Sin fin caen las hojas de los árboles, susurrando; sin fin llega el Yangtsé, rodando.
+
+万里悲秋常作客，百年多病独登台。
+> A diez mil leguas de casa, triste en otoño, siempre forastero; enfermo toda la vida, subo solo a la terraza.
+
+艰难苦恨繁霜鬓，潦倒新停浊酒杯。
+> Penas y amarguras han cubierto mis sienes de escarcha; abatido, acabo de dejar la copa de vino turbio.

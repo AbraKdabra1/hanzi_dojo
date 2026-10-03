@@ -1,23 +1,32 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// pista_roja_painter.dart — Muestra en rojo el trazo que tocaba
+//
+// Aparece un instante cuando el trazo que dibujaste no coincide con el que
+// sigue, para que veas dónde y cómo iba.
+// ─────────────────────────────────────────────────────────────────────────────
+
 import 'package:flutter/material.dart';
-import 'package:path_drawing/path_drawing.dart';
+
+import 'geometria.dart';
 
 class PistaRojaPainter extends CustomPainter {
-  final String trazoSvg;
-  const PistaRojaPainter(this.trazoSvg);
+  const PistaRojaPainter(this.contorno);
+
+  /// Contorno del trazo esperado (coordenadas de 1024×1024).
+  final Path contorno;
+
+  static final Paint _pintura = Paint()
+    ..color = const Color(0x66F44336)
+    ..style = PaintingStyle.fill;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = const Color(0x66F44336)
-      ..style = PaintingStyle.fill;
-    final scaleX = (size.width * 0.9) / 1024;
-    final scaleY = (size.height * 0.9) / 1024;
-    canvas.translate(size.width * 0.05, size.height * 0.05);
-    canvas.scale(scaleX, -scaleY);
-    canvas.translate(0, -1024);
-    canvas.drawPath(parseSvgPathData(trazoSvg), paint);
+    canvas.save();
+    GeometriaLienzo.aplicar(canvas, size);
+    canvas.drawPath(contorno, _pintura);
+    canvas.restore();
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(PistaRojaPainter old) => !identical(old.contorno, contorno);
 }

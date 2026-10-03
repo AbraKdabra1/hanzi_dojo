@@ -1,0 +1,150 @@
+clave: proverbios-zengguang
+titulo: 增广贤文
+titulo_es: Proverbios del Zengguang Xianwen
+nivel: 6
+tipo: original
+descripcion: Una selección de los refranes más citados del «Zengguang Xianwen», el libro de sabiduría popular con el que aprendían los niños en la China imperial. Texto original con traducción.
+fuente: «Zengguang Xianwen» (dinastía Ming, autor anónimo; dominio público). Texto tomado de github.com/chinese-poetry/chinese-poetry (MIT), convertido a caracteres simplificados. Traducción al español escrita para Hanzi Dojo.
+
+## 时间与学习
+titulo_es: El tiempo y el estudio
+origen: Sobre aprovechar la juventud, leer y aprender de los demás.
+palabras: 光阴 = el tiempo (lit. luz y sombra); 勤学 = estudiar con empeño; 寒窗 = «ventana fría»: años de estudio duro
+
+一年之计在于春，一日之计在于寅。
+> El plan del año se hace en primavera; el del día, al amanecer. (Lo importante se empieza temprano.)
+
+一寸光阴一寸金，寸金难买寸光阴。
+> Un instante de tiempo vale una pulgada de oro, pero con una pulgada de oro no se compra un instante de tiempo.
+
+少壮不努力，老大徒伤悲。
+> Quien no se esfuerza de joven, de viejo se lamentará en vano.
+
+黑发不知勤学早，转眼便是白头翁。
+> Con el cabello negro no sabes que hay que estudiar pronto; en un abrir y cerrar de ojos ya eres un viejo de cabeza blanca.
+
+读书须用意，一字值千金。
+> Al leer hay que poner atención: una sola palabra puede valer mil monedas de oro.
+
+听君一席话，胜读十年书。
+> Una conversación contigo vale más que diez años de lecturas.
+
+有田不耕仓廪虚，有书不读子孙愚。
+> Si tienes campos y no los aras, el granero queda vacío; si tienes libros y no los lees, tus descendientes serán ignorantes.
+
+十年寒窗无人问，一举成名天下知。
+> Diez años estudiando junto a una ventana fría y nadie pregunta por ti; aprueba el examen de un solo golpe y todo el mundo sabrá tu nombre.
+
+三人行必有我师焉。
+> Cuando caminan tres personas juntas, entre ellas seguro hay alguien que puede ser mi maestro. (Confucio)
+
+择其善者而从之，其不善者而改之。
+> Elijo lo bueno de los demás para seguirlo, y lo malo para corregirlo en mí. (Confucio)
+
+观今宜鉴古，无古不成今。
+> Para entender el presente conviene mirar el pasado: sin pasado no habría presente.
+
+长江后浪推前浪，世上新人赶旧人。
+> En el río Yangtsé, las olas de atrás empujan a las de adelante; en el mundo, la gente nueva alcanza a la vieja.
+
+## 识人
+titulo_es: Conocer a las personas
+origen: Sobre la confianza, las apariencias y los chismes.
+palabras: 知己 = amigo íntimo; 是非 = chismes, lo bueno y lo malo; 将心比心 = ponerse en el lugar del otro
+
+画虎画皮难画骨，知人知面不知心。
+> Al pintar un tigre se pinta la piel, pero no los huesos; de una persona se conoce la cara, pero no el corazón.
+
+路遥知马力，日久见人心。
+> En un camino largo se conoce la fuerza del caballo; con el tiempo se conoce el corazón de las personas.
+
+知己知彼，将心比心。
+> Conócete a ti y conoce al otro; ponte en su lugar.
+
+相识满天下，知心能几人？
+> Conocidos tengo por todo el mundo, pero ¿cuántos conocen de verdad mi corazón?
+
+逢人且说三分话，未可全抛一片心。
+> Con quien acabas de conocer, di solo una parte de lo que piensas; no le entregues todo tu corazón.
+
+来说是非者，便是是非人。
+> Quien viene a contarte chismes es, él mismo, un chismoso.
+
+谁人背后无人说，哪个人前不说人？
+> ¿De quién no se habla a sus espaldas? ¿Y quién no habla de otros cuando está con la gente?
+
+是非终日有，不听自然无。
+> Los chismes están todo el día; si no los escuchas, para ti desaparecen solos.
+
+道吾好者是吾贼，道吾恶者是吾师。
+> Quien solo me halaga me hace daño; quien me señala mis defectos es mi maestro.
+
+## 人情世事
+titulo_es: La gente y el mundo
+origen: Sobre los vecinos, la familia, el dinero y la suerte.
+palabras: 邻 = vecino; 楼台 = pabellón; 恩 = bondad, deuda de gratitud; 世事 = los asuntos del mundo
+
+远水难救近火，远亲不如近邻。
+> El agua lejana no apaga el fuego cercano; un pariente lejano vale menos que un vecino cercano.
+
+贫居闹市无人问，富在深山有远亲。
+> Si eres pobre, aunque vivas en el mercado más bullicioso nadie pregunta por ti; si eres rico, aunque vivas en lo profundo de la montaña te salen parientes lejanos.
+
+近水楼台先得[dé]月，向阳花木早逢春。
+> El pabellón junto al agua es el primero en recibir la luna; las plantas que miran al sol son las primeras en ver la primavera. (Quien está cerca tiene ventaja.)
+
+有意栽花花不发，无心插柳柳成荫。
+> Plantas flores con esmero y no florecen; clavas una rama de sauce sin pensarlo y te da sombra.
+
+好事不出门，坏事传千里。
+> Las buenas noticias no salen de casa; las malas viajan mil leguas.
+
+送君千里，终有一别。
+> Aunque te acompañe mil leguas, al final tendremos que despedirnos.
+
+当家才知盐米贵，养子[zǐ]方知父母恩。
+> Solo al llevar una casa sabes lo caros que son la sal y el arroz; solo al criar hijos entiendes lo que te dieron tus padres.
+
+树欲静而风不止，子[zǐ]欲养而亲不待。
+> El árbol quiere estar quieto, pero el viento no para; el hijo quiere cuidar a sus padres, pero ellos ya no están para esperarlo.
+
+人情似纸张张薄，世事如棋局局新。
+> Los afectos de la gente son como el papel: cada hoja, delgada; los asuntos del mundo son como el ajedrez: cada partida, nueva.
+
+## 做人
+titulo_es: Cómo vivir
+origen: Sobre la palabra dada, la conciencia tranquila y la prudencia.
+palabras: 驷马 = carro de cuatro caballos; 亏心事 = algo que pesa en la conciencia; 毫厘 = una minucia; 远虑 = previsión
+
+宁可人负我，切莫我负人。
+> Prefiero que otros me fallen a mí antes que fallarle yo a alguien.
+
+一言既出，驷马难追。
+> Una vez dicha una palabra, ni un carro de cuatro caballos la alcanza. (Lo prometido es deuda.)
+
+若要人不知，除非己莫为[wéi]。
+> Si no quieres que nadie se entere, no lo hagas.
+
+为人不做亏心事，半夜敲门心不惊。
+> Quien no hace nada de qué avergonzarse no se asusta aunque llamen a su puerta a medianoche.
+
+忍得[dé]一时之气，免得百日之忧。
+> Aguantar un momento de enojo te ahorra cien días de preocupación.
+
+种[zhòng]麻得[dé]麻，种[zhòng]豆得[dé]豆。
+> Quien siembra cáñamo cosecha cáñamo; quien siembra frijol cosecha frijol. (Cosechas lo que siembras.)
+
+差之毫厘，失之千里。
+> Un error pequeñísimo al principio termina a mil leguas del blanco.
+
+三思而行，再思可矣。
+> Piénsalo tres veces antes de actuar; aunque, con dos, ya basta.
+
+人无远虑，必有近忧。
+> Quien no piensa en el futuro tendrá problemas muy pronto. (Confucio)
+
+莫道君行早，更有早行人。
+> No digas que tú saliste temprano: siempre hay alguien que salió antes.
+
+救人一命，胜造七级浮屠。
+> Salvar una vida vale más que construir una pagoda de siete pisos.

@@ -1,4 +1,14 @@
-import 'dart:ui';
+// ─────────────────────────────────────────────────────────────────────────────
+// pantalla_modo.dart — ¿Cómo quieres estudiar?
+//
+// 1. Nivel de experiencia:
+//    Novato  → ves la silueta del carácter y, si te equivocas, una animación
+//              del trazo correcto.
+//    Experto → sin silueta ni animación: escribes de memoria (la pista roja
+//              del trazo correcto sí aparece al equivocarte).
+// 2. Qué estudiar: niveles HSK oficiales o radicales Kangxi y sus familias.
+// ─────────────────────────────────────────────────────────────────────────────
+
 import 'package:flutter/material.dart';
 import '../widgets/fondo_tinta.dart';
 import 'pantalla_seleccion.dart';
@@ -73,7 +83,7 @@ class _PantallaModoState extends State<PantallaModo> {
                         seleccionado: _modoNovato == true,
                         icono: Icons.school_rounded,
                         titulo: "Soy novato",
-                        subtitulo: "Con guía de trazos",
+                        subtitulo: "Silueta y guía de trazos",
                         onTap: () => setState(() => _modoNovato = true),
                       ),
                     ),
@@ -83,7 +93,7 @@ class _PantallaModoState extends State<PantallaModo> {
                         seleccionado: _modoNovato == false,
                         icono: Icons.psychology_rounded,
                         titulo: "Tengo experiencia",
-                        subtitulo: "Sin pistas de trazos",
+                        subtitulo: "De memoria, sin silueta",
                         onTap: () => setState(() => _modoNovato = false),
                       ),
                     ),
@@ -101,7 +111,7 @@ class _PantallaModoState extends State<PantallaModo> {
                   icono: "📚",
                   titulo: "Niveles HSK",
                   subtitulo:
-                      "Vocabulario oficial del examen de chino estándar",
+                      "Los 3,000 caracteres de la lista oficial HSK 3.0",
                   detalle: "HSK 1 → HSK 7-9",
                   colorFondo:      const Color(0x0F1565C0),
                   colorBorde:      const Color(0x4D1565C0), // azul 30%
@@ -118,8 +128,8 @@ class _PantallaModoState extends State<PantallaModo> {
                   icono: "🔑",
                   titulo: "Radicales Kangxi",
                   subtitulo:
-                      "Los 214 componentes base de todos los caracteres chinos",
-                  detalle: "Orden por radical",
+                      "Los 214 radicales y la familia de caracteres de cada uno",
+                  detalle: "Radical → familia",
                   colorFondo:      const Color(0x0F6A1B9A),
                   colorBorde:      const Color(0x4D6A1B9A), // morado 30%
                   colorDetalleFondo: const Color(0x1A6A1B9A), // morado 10%
@@ -135,13 +145,13 @@ class _PantallaModoState extends State<PantallaModo> {
                   const _NotaInfo(
                     icono: Icons.lightbulb_outline,
                     texto:
-                        "Modo novato: verás una animación del trazo esperado cuando cometas un error.",
+                        "Modo novato: verás la silueta del carácter y una animación del trazo correcto cuando te equivoques.",
                   ),
                 if (_modoNovato == false)
                   const _NotaInfo(
                     icono: Icons.fitness_center,
                     texto:
-                        "Modo experto: sin pistas. Confías en tu memoria muscular.",
+                        "Modo experto: sin silueta. Escribes de memoria; solo al equivocarte ves en rojo el trazo que tocaba.",
                   ),
 
                 const SizedBox(height: 24),
@@ -156,6 +166,7 @@ class _PantallaModoState extends State<PantallaModo> {
 
 // ─── Widgets auxiliares ───────────────────────────────────────────────────────
 
+/// Título pequeño de sección.
 class _Seccion extends StatelessWidget {
   final String titulo;
   const _Seccion({required this.titulo});
@@ -171,6 +182,7 @@ class _Seccion extends StatelessWidget {
   }
 }
 
+/// Botón de "Soy novato" / "Tengo experiencia".
 class _BotonSelector extends StatelessWidget {
   final bool     seleccionado;
   final IconData icono;
@@ -234,6 +246,7 @@ class _BotonSelector extends StatelessWidget {
   }
 }
 
+/// Tarjeta grande para elegir qué estudiar (HSK o radicales).
 class _TarjetaEstudio extends StatelessWidget {
   final String icono;
   final String titulo;
@@ -266,14 +279,11 @@ class _TarjetaEstudio extends StatelessWidget {
       child: AnimatedOpacity(
         opacity: activo ? 1.0 : 0.4,
         duration: const Duration(milliseconds: 300),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(18),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-            child: Container(
+        // Sin BackdropFilter (desenfoque): ver widgets/tarjeta_vidrio.dart.
+        child: Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: colorFondo,
+                color: Color.alphaBlend(colorFondo, const Color(0xB3FFFFFF)),
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(color: colorBorde, width: 1.5),
               ),
@@ -316,13 +326,12 @@ class _TarjetaEstudio extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-        ),
       ),
     );
   }
 }
 
+/// Nota amarilla que explica el modo elegido.
 class _NotaInfo extends StatelessWidget {
   final IconData icono;
   final String   texto;
