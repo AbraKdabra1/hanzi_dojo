@@ -6,11 +6,15 @@
 //   c.caracteres, c.radicales, c.ejemplos  → contenido (solo lectura)
 //   c.libros, c.capitulos, c.parrafos      → sección «Leer» (solo lectura)
 //   progreso, historial, lectura, ajustes   → tu avance
+//   mis_libros, mis_capitulos, mis_parrafos → libros que agregaste tú
 // ─────────────────────────────────────────────────────────────────────────────
+
+import 'dart:convert';
 
 import 'package:sqflite/sqflite.dart';
 
 import 'base_datos.dart';
+import 'importar_libro.dart';
 import 'modelos.dart';
 import 'srs.dart';
 
@@ -305,6 +309,14 @@ class Repositorio {
 
   /// Capítulos de un libro, en orden, marcando los que ya terminaste.
   Future<List<CapituloLibro>> capitulos(Libro libro) async {
+    if (libro.propio) {
+      final filas = await _db.rawQuery('''
+        SELECT k.*,
+          EXISTS (SELECT 1 FROM lectura r WHERE r.libro = ? AND r.capitulo = k.orden) AS leido
+        FROM mis_capitulos k WHERE k.libro_id = ? ORDER BY k.orden
+      ''', [libro.clave, libro.id]);
+      return filas.map(CapituloLibro.propioDesdeFila).toList();
+    }
     final filas = await _db.rawQuery('''
       SELECT k.*,
         EXISTS (SELECT 1 FROM lectura r WHERE r.libro = ? AND r.capitulo = k.orden) AS leido
@@ -313,11 +325,95 @@ class Repositorio {
     return filas.map(CapituloLibro.desdeFila).toList();
   }
 
-  Future<List<ParrafoLibro>> parrafos(int capituloId) async {
+  /// Párrafos de un capítulo ([propio]: de un libro que agregaste tú).
+  Future<List<ParrafoLibro>> parrafos(int capituloId, {bool propio = false}) async {
     final filas = await _db.rawQuery(
-        'SELECT chino, pinyin, nombres, espanol FROM c.parrafos WHERE capitulo_id = ? ORDER BY orden',
+        propio
+            ? "SELECT chino, pinyin, '[]' AS nombres, '' AS espanol FROM mis_parrafos "
+                'WHERE capitulo_id = ? ORDER BY orden'
+            : 'SELECT chino, pinyin, nombres, espanol FROM c.parrafos WHERE capitulo_id = ? ORDER BY orden',
         [capituloId]);
     return filas.map(ParrafoLibro.desdeFila).toList();
+  }
+
+  // ── Mis libros ────────────────────────────────────────────────────────
+
+  /// Los libros que agregaste tú, del más reciente al más antiguo.
+  Future<List<Libro>> misLibros() async {
+    final filas = await _db.rawQuery('''
+      SELECT m.*,
+        (SELECT count(*) FROM mis_capitulos k WHERE k.libro_id = m.id) AS num_capitulos,
+        (SELECT count(*) FROM lectura r JOIN mis_capitulos k ON k.libro_id = m.id AND k.orden = r.capitulo
+          WHERE r.libro = 'propio-' || m.id) AS leidos
+      FROM mis_libros m ORDER BY m.agregado DESC, m.id DESC
+    ''');
+    return filas.map(Libro.propioDesdeFila).toList();
+  }
+
+  Future<Libro?> miLibro(int id) async =>
+      (await misLibros()).where((l) => l.id == id).firstOrNull;
+
+  /// Lo que necesita el importador: pinyin y nivel de cada carácter, y la
+  /// tabla de tradicional a simplificado.
+  Future<DiccionarioLectura> diccionarioLectura() async {
+    final pinyin = <String, String>{};
+    final nivel = <String, int>{};
+    for (final f in await _db.rawQuery('SELECT caracter, pinyin, nivel_hsk FROM c.caracteres')) {
+      final c = f['caracter'] as String;
+      pinyin[c] = f['pinyin'] as String;
+      nivel[c] = f['nivel_hsk'] as int;
+    }
+    final simplificado = {
+      for (final f in await _db.rawQuery('SELECT trad, simp FROM c.tradicional'))
+        f['trad'] as String: f['simp'] as String,
+    };
+    return DiccionarioLectura(pinyin: pinyin, nivel: nivel, simplificado: simplificado);
+  }
+
+  /// Tabla para leer archivos TXT en GBK (ver importar_libro.dart).
+  Future<String> tablaGbk() async {
+    final filas = await _db.rawQuery("SELECT tabla FROM c.decodificacion WHERE nombre = 'gbk'");
+    return filas.isEmpty ? '' : filas.first['tabla'] as String;
+  }
+
+  /// Guarda un libro preparado y devuelve su id.
+  Future<int> guardarLibroPropio(LibroPreparado p, {required String archivo, DateTime? ahora}) {
+    return _db.transaction((txn) async {
+      final id = await txn.insert('mis_libros', {
+        'titulo': p.libro.titulo,
+        'archivo': archivo,
+        'formato': p.libro.formato,
+        'nivel': p.nivelEstimado,
+        'cobertura': p.cobertura,
+        'caracteres': p.caracteres,
+        'agregado': _segundos(ahora ?? DateTime.now()),
+      });
+      for (final (i, cap) in p.libro.capitulos.indexed) {
+        final capId = await txn.insert('mis_capitulos', {'libro_id': id, 'orden': i + 1, 'titulo': cap.titulo});
+        final lote = txn.batch();
+        for (final (j, texto) in cap.parrafos.indexed) {
+          lote.insert('mis_parrafos', {
+            'capitulo_id': capId,
+            'orden': j + 1,
+            'chino': texto,
+            'pinyin': jsonEncode(p.pinyin[i][j]),
+          });
+        }
+        await lote.commit(noResult: true);
+      }
+      return id;
+    });
+  }
+
+  /// Borra un libro propio con sus capítulos, párrafos y lo leído.
+  Future<void> borrarLibroPropio(int id) async {
+    await _db.transaction((txn) async {
+      await txn.rawDelete(
+          'DELETE FROM mis_parrafos WHERE capitulo_id IN (SELECT id FROM mis_capitulos WHERE libro_id = ?)', [id]);
+      await txn.delete('mis_capitulos', where: 'libro_id = ?', whereArgs: [id]);
+      await txn.delete('mis_libros', where: 'id = ?', whereArgs: [id]);
+      await txn.delete('lectura', where: 'libro = ?', whereArgs: [Libro.clavePropia(id)]);
+    });
   }
 
   /// Marca un capítulo como leído (o lo desmarca).

@@ -1,6 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // pantalla_libro.dart — Un libro: de qué trata, qué tan difícil es y sus
-// capítulos (con ✓ en los que ya leíste).
+// capítulos (con ✓ en los que ya leíste). Sirve igual para los libros de la
+// app y para los que agregaste tú (nivel estimado a partir de sus caracteres).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
@@ -56,7 +57,10 @@ class _PantallaLibroState extends State<PantallaLibro> {
     final siguiente = capitulos?.indexWhere((c) => !c.leido) ?? -1;
     return FondoTintaChina(
       child: Scaffold(
-        appBar: BarraSuperior(titulo: libro.tituloEs, subtitulo: nombreDeNivel(libro.nivelHsk)),
+        appBar: BarraSuperior(
+          titulo: libro.propio ? libro.titulo : libro.tituloEs,
+          subtitulo: libro.propio ? 'Mis libros' : nombreDeNivel(libro.nivelHsk),
+        ),
         body: ListView(
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 32),
           children: [
@@ -72,26 +76,29 @@ class _PantallaLibroState extends State<PantallaLibro> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(libro.tituloPinyin, style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
-                            Text(libro.titulo, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w600)),
+                            if (libro.tituloPinyin.isNotEmpty)
+                              Text(libro.tituloPinyin, style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                            Text(libro.titulo,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: libro.propio ? 20 : 26, fontWeight: FontWeight.w600)),
                             const SizedBox(height: 4),
                             Wrap(spacing: 6, runSpacing: 4, children: [
                               EtiquetaNivel(nivel: libro.nivelHsk),
-                              Text(libro.adaptado ? 'Adaptado' : 'Texto original',
-                                  style: TextStyle(fontSize: 12, color: Colors.grey.shade700)),
+                              Text(tipoDeLibro(libro), style: TextStyle(fontSize: 12, color: Colors.grey.shade700)),
                             ]),
                           ],
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  Text(libro.descripcion, style: const TextStyle(fontSize: 14, height: 1.4)),
+                  if (libro.descripcion.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    Text(libro.descripcion, style: const TextStyle(fontSize: 14, height: 1.4)),
+                  ],
                   const SizedBox(height: 10),
                   Text(
-                    'Si dominas ${nombreDeNivel(libro.nivelHsk)}, ya conoces el '
-                    '${(libro.cobertura * 100).round()} % de sus ${libro.caracteres} caracteres '
-                    '(contando las palabras que se explican en cada capítulo).',
+                    explicacionDificultad(libro),
                     style: TextStyle(fontSize: 12.5, color: Colors.grey.shade700, height: 1.35),
                   ),
                   const SizedBox(height: 8),
@@ -155,4 +162,31 @@ class _PantallaLibroState extends State<PantallaLibro> {
       ),
     );
   }
+}
+
+/// "Adaptado", "Texto original", "EPUB", "TXT", "Texto pegado".
+String tipoDeLibro(Libro libro) {
+  if (!libro.propio) return libro.adaptado ? 'Adaptado' : 'Texto original';
+  return switch (libro.formato) {
+    'epub' => 'EPUB',
+    'txt' => 'TXT',
+    _ => 'Texto pegado',
+  };
+}
+
+/// Qué tan difícil es el libro, en palabras.
+String explicacionDificultad(Libro libro) {
+  final porciento = (libro.cobertura * 100).round();
+  if (!libro.propio) {
+    return 'Si dominas ${nombreDeNivel(libro.nivelHsk)}, ya conoces el $porciento % de sus '
+        '${libro.caracteres} caracteres (contando las palabras que se explican en cada capítulo).';
+  }
+  if (libro.nivelHsk == 0) {
+    return 'Nivel estimado: más difícil que HSK 7-9. Aun dominando todo el HSK conocerías el '
+        '$porciento % de sus ${libro.caracteres} caracteres. El pinyin es automático y puede '
+        'fallar en caracteres con varias lecturas.';
+  }
+  return 'Nivel estimado: ${nombreDeNivel(libro.nivelHsk)}. Si lo dominas, conoces el $porciento % '
+      'de sus ${libro.caracteres} caracteres. El pinyin es automático y puede fallar en caracteres '
+      'con varias lecturas.';
 }

@@ -25,6 +25,9 @@ Qué fuente aporta qué:
     Propias          radicales_kangxi.tsv, traducciones/*.tsv
                      libros/*.txt + libros_generado.json → sección «Leer»
                      (ver libros.py; el pinyin lo agrega preparar_libros.py)
+    OpenCC           TSCharacters.txt → tradicional → simplificado (para
+                                       consultar caracteres de libros propios)
+    Python (stdlib)  códec gb18030    → tabla para leer archivos TXT en GBK
 
 Solo usa la biblioteca estándar de Python.
 """
@@ -59,6 +62,7 @@ ORACIONES = os.path.join(FUENTES, "oraciones", "cmn_sen_db_2.tsv")
 EJEMPLOS_SELECCION = os.path.join(FUENTES, "traducciones", "ejemplos_seleccion.tsv")
 EJEMPLOS_ES = os.path.join(FUENTES, "traducciones", "ejemplos_es.tsv")
 EJEMPLOS_PINYIN = os.path.join(FUENTES, "traducciones", "ejemplos_pinyin.tsv")
+OPENCC_TS = os.path.join(FUENTES, "opencc", "TSCharacters.txt")
 
 # Caracteres del bloque "CJK Radicals Supplement" (formas de radical sin
 # código propio en Unihan): se asignan a mano a su radical Kangxi.
@@ -513,7 +517,53 @@ CREATE TABLE parrafos (
     espanol       TEXT    NOT NULL
 );
 CREATE INDEX idx_parrafos_capitulo ON parrafos (capitulo_id, orden);
+
+-- Tradicional → simplificado, carácter por carácter (OpenCC). Sirve para
+-- consultar los caracteres de libros propios escritos en tradicional.
+CREATE TABLE tradicional (
+    trad  TEXT PRIMARY KEY,
+    simp  TEXT NOT NULL
+);
+
+-- Tablas para decodificar texto. "gbk": un carácter por cada par de bytes
+-- (primer byte 0x81-0xFE, segundo 0x40-0xFE): posición (b1-0x81)*191 + (b2-0x40).
+-- U+FFFD donde no hay carácter. Así la app lee archivos TXT chinos en GBK.
+CREATE TABLE decodificacion (
+    nombre TEXT PRIMARY KEY,
+    tabla  TEXT NOT NULL
+);
 """
+
+
+def leer_tradicional():
+    """Pares (tradicional, simplificado) de un solo carácter, de OpenCC."""
+    pares = []
+    with open(OPENCC_TS, encoding="utf-8") as f:
+        for linea in f:
+            if linea.startswith("#") or "\t" not in linea:
+                continue
+            trad, simps = linea.rstrip("\n").split("\t", 1)
+            simp = simps.split(" ")[0]
+            if len(trad) == 1 and len(simp) == 1 and trad != simp:
+                pares.append({"trad": trad, "simp": simp})
+    return pares
+
+
+def tabla_gbk():
+    """Tabla de 126 × 191 caracteres para los pares de bytes de GBK/GB18030."""
+    tabla = []
+    for b1 in range(0x81, 0xFF):
+        for b2 in range(0x40, 0xFF):
+            c = "\ufffd"
+            if b2 != 0x7F:
+                try:
+                    d = bytes([b1, b2]).decode("gb18030")
+                    if len(d) == 1 and ord(d) <= 0xFFFF:
+                        c = d
+                except UnicodeDecodeError:
+                    pass
+            tabla.append(c)
+    return "".join(tabla)
 
 
 def filas_de_libros(nivel_de):
@@ -708,12 +758,16 @@ def construir():
     insertar("libros", filas_libros)
     insertar("capitulos", filas_capitulos)
     insertar("parrafos", filas_parrafos)
+    filas_trad = leer_tradicional()
+    insertar("tradicional", filas_trad)
+    insertar("decodificacion", [{"nombre": "gbk", "tabla": tabla_gbk()}])
 
     # Versión = huella del contenido: si cambia cualquier dato, cambia la
     # versión y la app sabe que debe copiar la base nueva.
     huella = hashlib.sha1()
     for tabla, orden_sql in (("caracteres", "id"), ("radicales", "numero"), ("ejemplos", "id"),
-                             ("libros", "id"), ("capitulos", "id"), ("parrafos", "id")):
+                             ("libros", "id"), ("capitulos", "id"), ("parrafos", "id"),
+                             ("tradicional", "trad"), ("decodificacion", "nombre")):
         for fila in con.execute(f"SELECT * FROM {tabla} ORDER BY {orden_sql}"):
             huella.update(repr(fila).encode("utf-8"))
     version = huella.hexdigest()[:12]
@@ -749,6 +803,7 @@ def construir():
     print(f"  significados en español (HSK): {hsk_es} de {len(hsk)}")
     print(f"  radicales: {len(filas_radicales)}  | ejemplos: {len(filas_ejemplos)}")
     print(f"  libros: {len(filas_libros)}  | capítulos: {len(filas_capitulos)}  | párrafos: {len(filas_parrafos)}")
+    print(f"  tradicional → simplificado: {len(filas_trad)} caracteres")
     if problemas:
         print(f"  avisos ({len(problemas)}):")
         for p in problemas[:30]:

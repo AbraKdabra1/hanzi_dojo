@@ -26,6 +26,7 @@ rastreo. La app no pide permiso de internet.
 | Límite diario | Nuevos por día configurable (5 a 50, 15 por defecto) en Ajustes. |
 | Ejemplos | 1 o 2 oraciones por carácter con pinyin y traducción al español. |
 | Leer | Libros graduados por nivel HSK con pinyin encima de cada carácter (se puede ocultar), traducción por párrafo, voz y nombres propios subrayados. Toca un carácter para ver su ficha y practicar su escritura. Marca los capítulos que terminas. |
+| Mis libros | Agrega tus propios textos: TXT (UTF-8, UTF-16 o GBK), EPUB sin DRM o texto pegado. La app los parte en capítulos, calcula el pinyin y estima su nivel HSK. Se quedan solo en el teléfono (no van en el respaldo). Los caracteres tradicionales se consultan como simplificados. |
 | Voz | Pronunciación con el motor de voz del teléfono (chino mandarín). |
 | Estadísticas | Caracteres estudiados, dominados, repasos para hoy y avance por nivel. |
 | Historial | Cada repaso queda registrado: cuánto tardaste, qué trazos fallaste (y si fue al revés), en qué modo y con qué calificación. Es la base de las estadísticas que vienen. |
@@ -69,6 +70,7 @@ que se copia al teléfono la primera vez (por eso la app abre rápido).
 | Pinyin | Lista oficial HSK (palabras) + CC-CEDICT | Lecturas de polífonos según las palabras oficiales (好 hǎo / hào) |
 | Significado en español | Traducido de CC-CEDICT para los 3,000 HSK | 3,000 de 3,000 |
 | Ejemplos | Oraciones de [Tatoeba](https://tatoeba.org) (vía krmanik/chinese-example-sentences), traducidas al español | 4,518 ejemplos para 2,755 caracteres; cada ejemplo contiene su carácter |
+| Tradicional → simplificado | [OpenCC](https://github.com/BYVoid/OpenCC) `TSCharacters.txt` (para consultar libros propios) | — |
 | Libros de «Leer» | Historias clásicas chinas de dominio público, contadas de nuevo para la app (`herramientas_datos/fuentes/libros/`) | Pinyin al día; cada carácter tiene una sílaba válida; los adaptados cumplen la cobertura mínima de su nivel |
 
 ### Los libros de «Leer»
@@ -173,6 +175,7 @@ lib/
 │   ├── srs.dart                  Algoritmo SM-2
 │   ├── respaldo.dart             Exportar / importar el progreso (.hanzidojo)
 │   ├── registro_errores.dart     Errores guardados en el teléfono (informe)
+│   ├── importar_libro.dart       Mis libros: TXT/EPUB → capítulos, pinyin y nivel
 │   ├── modelos.dart              Caracter, Radical, Ejemplo, Progreso, DetallePractica…
 │   ├── datos_app.dart            Da acceso al repositorio desde cualquier pantalla
 │   └── version_contenido.dart    (generado) versión de contenido.db
@@ -180,6 +183,7 @@ lib/
 │   ├── dtw_helper.dart           Compara tu trazo con el correcto
 │   ├── cache_trazos.dart         Convierte los contornos SVG a Path una sola vez
 │   ├── archivos.dart             Diálogos "Guardar como" / "Abrir" de Android
+│   ├── zip_simple.dart           Lector mínimo de ZIP (para EPUB)
 │   └── pinyin_helper.dart        Colores por tono
 ├── painters/                     Dibujo del lienzo (cuadrícula, silueta, tinta, pistas)
 ├── widgets/
@@ -234,6 +238,8 @@ Los datos y la fuente tienen sus propias licencias (el texto completo está en
 | hsk30 (ivankra) | MIT |
 | Tatoeba (oraciones) | CC BY 2.0 FR |
 | Noto Sans SC | SIL Open Font License 1.1 |
+| OpenCC | Apache 2.0 |
+| chinese-poetry (textos clásicos de «Leer») | MIT |
 
 Las traducciones al español de significados y ejemplos derivan de CC-CEDICT y
 Tatoeba, por lo que se comparten bajo sus mismas licencias.

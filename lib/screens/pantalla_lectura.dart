@@ -79,7 +79,7 @@ class _PantallaLecturaState extends State<PantallaLectura> {
       _invertidos.clear();
       _seleccion = null;
     });
-    final parrafos = await DatosApp.de(context).parrafos(_capitulo.id);
+    final parrafos = await DatosApp.de(context).parrafos(_capitulo.id, propio: widget.libro.propio);
     if (!mounted) return;
     setState(() => _parrafos = parrafos);
     if (_desplazamiento.hasClients) _desplazamiento.jumpTo(0);
@@ -116,6 +116,41 @@ class _PantallaLecturaState extends State<PantallaLectura> {
     _cargar();
   }
 
+  /// "Terminé este capítulo" y el botón al siguiente.
+  Widget _pie(bool hayMas) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: Column(
+        children: [
+          _leido
+              ? Row(mainAxisSize: MainAxisSize.min, children: [
+                  Icon(Icons.check_circle, color: EtiquetaNivel.colorDe(widget.libro.nivelHsk)),
+                  const SizedBox(width: 6),
+                  const Text('Capítulo leído', style: TextStyle(fontWeight: FontWeight.w600)),
+                ])
+              : FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: const Color(0xDE000000),
+                    padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 14),
+                  ),
+                  icon: const Icon(Icons.check),
+                  label: const Text('Terminé este capítulo'),
+                  onPressed: _terminar,
+                ),
+          if (hayMas) ...[
+            const SizedBox(height: 14),
+            OutlinedButton.icon(
+              icon: const Icon(Icons.arrow_forward),
+              label: Text('Siguiente: ${widget.capitulos[_indice + 1].titulo}',
+                  maxLines: 1, overflow: TextOverflow.ellipsis),
+              onPressed: () => _irA(_indice + 1),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final cap = _capitulo;
@@ -133,15 +168,17 @@ class _PantallaLecturaState extends State<PantallaLectura> {
               onTap: () => _cambiarAjustes(_ajustes.copia(pinyin: !_ajustes.pinyin)),
               child: const Text('拼', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
             ),
-            _BotonAjuste(
-              activo: _ajustes.traduccion,
-              tooltip: 'Traducción',
-              onTap: () {
-                _invertidos.clear();
-                _cambiarAjustes(_ajustes.copia(traduccion: !_ajustes.traduccion));
-              },
-              child: const Icon(Icons.translate, size: 20),
-            ),
+            // Los libros propios no traen traducción.
+            if (!widget.libro.propio)
+              _BotonAjuste(
+                activo: _ajustes.traduccion,
+                tooltip: 'Traducción',
+                onTap: () {
+                  _invertidos.clear();
+                  _cambiarAjustes(_ajustes.copia(traduccion: !_ajustes.traduccion));
+                },
+                child: const Icon(Icons.translate, size: 20),
+              ),
             _BotonAjuste(
               activo: false,
               tooltip: 'Tamaño de letra',
@@ -152,15 +189,25 @@ class _PantallaLecturaState extends State<PantallaLectura> {
         ),
         body: parrafos == null
             ? const Center(child: CircularProgressIndicator(color: Colors.black54))
-            : ListView(
+            // Lista perezosa: un capítulo de un libro propio puede tener
+            // cientos de párrafos y solo se construyen los que se ven.
+            : ListView.builder(
                 controller: _desplazamiento,
                 padding: const EdgeInsets.fromLTRB(16, 4, 16, 40),
-                children: [
-                  _Encabezado(capitulo: cap, tamano: _ajustes.tamano),
-                  const SizedBox(height: 12),
-                  for (final (i, p) in parrafos.indexed) ...[
-                    ParrafoLectura(
-                      parrafo: p,
+                itemCount: parrafos.length + 2,
+                itemBuilder: (context, k) {
+                  if (k == 0) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: _Encabezado(capitulo: cap, tamano: _ajustes.tamano),
+                    );
+                  }
+                  if (k == parrafos.length + 1) return _pie(hayMas);
+                  final i = k - 1;
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: ParrafoLectura(
+                      parrafo: parrafos[i],
                       tamano: _ajustes.tamano,
                       mostrarPinyin: _ajustes.pinyin,
                       mostrarTraduccion: _ajustes.traduccion != _invertidos.contains(i),
@@ -170,37 +217,8 @@ class _PantallaLecturaState extends State<PantallaLectura> {
                       seleccionado: _seleccion?.$1 == i ? _seleccion?.$2 : null,
                       onTocarCaracter: (posicion) => _tocarCaracter(i, posicion),
                     ),
-                    const SizedBox(height: 8),
-                  ],
-                  const SizedBox(height: 12),
-                  Center(
-                    child: _leido
-                        ? Row(mainAxisSize: MainAxisSize.min, children: [
-                            Icon(Icons.check_circle, color: EtiquetaNivel.colorDe(widget.libro.nivelHsk)),
-                            const SizedBox(width: 6),
-                            const Text('Capítulo leído', style: TextStyle(fontWeight: FontWeight.w600)),
-                          ])
-                        : FilledButton.icon(
-                            style: FilledButton.styleFrom(
-                              backgroundColor: const Color(0xDE000000),
-                              padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 14),
-                            ),
-                            icon: const Icon(Icons.check),
-                            label: const Text('Terminé este capítulo'),
-                            onPressed: _terminar,
-                          ),
-                  ),
-                  if (hayMas) ...[
-                    const SizedBox(height: 14),
-                    Center(
-                      child: OutlinedButton.icon(
-                        icon: const Icon(Icons.arrow_forward),
-                        label: Text('Siguiente: ${widget.capitulos[_indice + 1].titulo}'),
-                        onPressed: () => _irA(_indice + 1),
-                      ),
-                    ),
-                  ],
-                ],
+                  );
+                },
               ),
       ),
     );
@@ -219,14 +237,17 @@ class _Encabezado extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(capitulo.tituloPinyin,
-            textAlign: TextAlign.center, style: TextStyle(fontSize: 13, color: Colors.grey.shade600)),
+        if (capitulo.tituloPinyin.isNotEmpty)
+          Text(capitulo.tituloPinyin,
+              textAlign: TextAlign.center, style: TextStyle(fontSize: 13, color: Colors.grey.shade600)),
         Text(capitulo.titulo,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: tamano + 6, fontWeight: FontWeight.w600, letterSpacing: 2)),
-        const SizedBox(height: 2),
-        Text(capitulo.tituloEs,
-            textAlign: TextAlign.center, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
+        if (capitulo.tituloEs.isNotEmpty) ...[
+          const SizedBox(height: 2),
+          Text(capitulo.tituloEs,
+              textAlign: TextAlign.center, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
+        ],
         if (capitulo.origen.isNotEmpty) ...[
           const SizedBox(height: 6),
           Text(capitulo.origen,

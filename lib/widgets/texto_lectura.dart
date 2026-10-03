@@ -143,7 +143,7 @@ class ParrafoLectura extends StatelessWidget {
         AnimatedSize(
           duration: const Duration(milliseconds: 200),
           alignment: Alignment.topCenter,
-          child: mostrarTraduccion
+          child: mostrarTraduccion && p.espanol.isNotEmpty
               ? Padding(
                   padding: const EdgeInsets.only(top: 6),
                   child: Text(
@@ -157,16 +157,17 @@ class ParrafoLectura extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             BotonVoz(texto: p.chino, tamano: 16),
-            IconButton(
-              visualDensity: VisualDensity.compact,
-              tooltip: mostrarTraduccion ? 'Ocultar traducción' : 'Ver traducción',
-              icon: Icon(
-                mostrarTraduccion ? Icons.translate : Icons.translate_outlined,
-                size: 18,
-                color: mostrarTraduccion ? Colors.black87 : Colors.black38,
+            if (p.espanol.isNotEmpty)
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                tooltip: mostrarTraduccion ? 'Ocultar traducción' : 'Ver traducción',
+                icon: Icon(
+                  mostrarTraduccion ? Icons.translate : Icons.translate_outlined,
+                  size: 18,
+                  color: mostrarTraduccion ? Colors.black87 : Colors.black38,
+                ),
+                onPressed: onAlternarTraduccion,
               ),
-              onPressed: onAlternarTraduccion,
-            ),
           ],
         ),
       ],

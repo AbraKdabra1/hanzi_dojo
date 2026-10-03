@@ -348,7 +348,8 @@ class DetallePractica {
 
 // ─── Sección «Leer» ──────────────────────────────────────────────────────────
 
-/// Un libro graduado (tabla c.libros) y cuánto llevas leído.
+/// Un libro de «Leer» y cuánto llevas leído: uno de la app (tabla
+/// c.libros) o uno que agregaste tú (tabla mis_libros, [propio]).
 class Libro {
   const Libro({
     required this.id,
@@ -364,9 +365,17 @@ class Libro {
     required this.caracteres,
     required this.capitulos,
     required this.capitulosLeidos,
+    this.propio = false,
+    this.formato = '',
   });
 
   final int id;
+
+  /// true si lo agregaste tú (TXT, EPUB o texto pegado).
+  final bool propio;
+
+  /// Libros propios: txt | epub | texto.
+  final String formato;
 
   /// Identificador estable (el progreso de lectura se guarda con esta clave).
   final String clave;
@@ -392,6 +401,32 @@ class Libro {
   final int capitulosLeidos;
 
   double get avance => capitulos == 0 ? 0 : capitulosLeidos / capitulos;
+
+  /// Clave con la que se guarda lo leído de un libro propio.
+  static String clavePropia(int id) => 'propio-$id';
+
+  /// Un libro que agregaste tú (fila de mis_libros con num_capitulos y leidos).
+  factory Libro.propioDesdeFila(Map<String, Object?> f) {
+    final archivo = f['archivo'] as String? ?? '';
+    final formato = f['formato'] as String? ?? 'texto';
+    return Libro(
+      id: f['id'] as int,
+      clave: clavePropia(f['id'] as int),
+      titulo: f['titulo'] as String,
+      tituloPinyin: '',
+      tituloEs: '',
+      nivelHsk: f['nivel'] as int? ?? 0,
+      adaptado: false,
+      descripcion: '',
+      fuente: archivo.isEmpty ? 'Texto que pegaste.' : 'Agregado por ti desde «$archivo».',
+      cobertura: (f['cobertura'] as num?)?.toDouble() ?? 0,
+      caracteres: f['caracteres'] as int? ?? 0,
+      capitulos: f['num_capitulos'] as int? ?? 0,
+      capitulosLeidos: f['leidos'] as int? ?? 0,
+      propio: true,
+      formato: formato,
+    );
+  }
 
   factory Libro.desdeFila(Map<String, Object?> f) => Libro(
         id: f['id'] as int,
@@ -443,6 +478,18 @@ class CapituloLibro {
   final String origen;
   final List<PalabraVocabulario> palabras;
   final bool leido;
+
+  /// Capítulo de un libro propio (fila de mis_capitulos con `leido`).
+  factory CapituloLibro.propioDesdeFila(Map<String, Object?> f) => CapituloLibro(
+        id: f['id'] as int,
+        orden: f['orden'] as int,
+        titulo: f['titulo'] as String,
+        tituloPinyin: '',
+        tituloEs: '',
+        origen: '',
+        palabras: const [],
+        leido: (f['leido'] as int? ?? 0) == 1,
+      );
 
   factory CapituloLibro.desdeFila(Map<String, Object?> f) => CapituloLibro(
         id: f['id'] as int,
@@ -499,7 +546,7 @@ class ParrafoLibro {
       // Se protege contra datos desalineados: sin pinyin antes que uno equivocado.
       pinyin: pinyin.length == caracteres.length ? pinyin : List.filled(caracteres.length, ''),
       nombres: [
-        for (final n in jsonDecode(f['nombres'] as String? ?? '[]') as List)
+        for (final n in jsonDecode(f['nombres'] as String? ?? '[]') as List? ?? const [])
           ((n as List)[0] as int, n[1] as int),
       ],
       espanol: f['espanol'] as String? ?? '',

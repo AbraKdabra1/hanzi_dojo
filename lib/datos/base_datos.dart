@@ -17,6 +17,7 @@
 //   1  progreso + ajustes
 //   2  + historial (una fila por repaso: base de las estadísticas)
 //   3  + lectura (capítulos de la sección «Leer» que ya terminaste)
+//   4  + mis_libros, mis_capitulos, mis_parrafos (libros que agregaste tú)
 //
 // Se abre una sola conexión a progreso.db y se "adjunta" contenido.db con el
 // alias `c`. Así una misma consulta puede unir ambas:
@@ -53,7 +54,7 @@ class BaseDatos {
 
   static const _archivoContenido = 'contenido.db';
   static const _archivoProgreso = 'progreso.db';
-  static const _versionEsquemaProgreso = 3;
+  static const _versionEsquemaProgreso = 4;
 
   /// Abre (y si hace falta, prepara) las bases de datos.
   ///
@@ -146,12 +147,50 @@ class BaseDatos {
     ''');
     await _crearHistorial(db);
     await _crearLectura(db);
+    await _crearMisLibros(db);
   }
 
   /// Quien ya tenía la app: se agregan las tablas nuevas sin tocar su avance.
   static Future<void> _actualizarEsquemaProgreso(Database db, int anterior, int nueva) async {
     if (anterior < 2) await _crearHistorial(db);
     if (anterior < 3) await _crearLectura(db);
+    if (anterior < 4) await _crearMisLibros(db);
+  }
+
+  /// Libros que agregaste tú (TXT, EPUB o texto pegado). Solo viven en el
+  /// teléfono y no van en el respaldo (tienes el archivo original).
+  static Future<void> _crearMisLibros(Database db) async {
+    await db.execute('''
+      CREATE TABLE mis_libros (
+        id         INTEGER PRIMARY KEY AUTOINCREMENT,
+        titulo     TEXT    NOT NULL,
+        archivo    TEXT    NOT NULL,   -- nombre del archivo original ('' si fue texto pegado)
+        formato    TEXT    NOT NULL,   -- txt | epub | texto
+        nivel      INTEGER NOT NULL,   -- nivel HSK estimado (1-7; 0 = más difícil que 7-9)
+        cobertura  REAL    NOT NULL,   -- fracción de caracteres conocidos en ese nivel
+        caracteres INTEGER NOT NULL,   -- caracteres chinos en total
+        agregado   INTEGER NOT NULL    -- segundos Unix
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE mis_capitulos (
+        id       INTEGER PRIMARY KEY AUTOINCREMENT,
+        libro_id INTEGER NOT NULL,
+        orden    INTEGER NOT NULL,
+        titulo   TEXT    NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE mis_parrafos (
+        id          INTEGER PRIMARY KEY AUTOINCREMENT,
+        capitulo_id INTEGER NOT NULL,
+        orden       INTEGER NOT NULL,
+        chino       TEXT    NOT NULL,
+        pinyin      TEXT    NOT NULL   -- JSON: una sílaba por carácter
+      )
+    ''');
+    await db.execute('CREATE INDEX idx_mis_capitulos ON mis_capitulos (libro_id, orden)');
+    await db.execute('CREATE INDEX idx_mis_parrafos ON mis_parrafos (capitulo_id, orden)');
   }
 
   /// Capítulos de «Leer» que terminaste. Se guardan con la CLAVE del libro
