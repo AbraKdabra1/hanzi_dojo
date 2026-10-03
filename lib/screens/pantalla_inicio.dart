@@ -1,7 +1,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // pantalla_inicio.dart — Pantalla principal
 //
-// - Resumen del día: repasos pendientes y nuevos que llevas vs. tu meta.
+// - Resumen del día: repasos pendientes, nuevos que llevas vs. tu meta y tu
+//   racha de días seguidos (🔥).
 // - Botón "Estudiar" → elegir modo (novato/experto) y qué estudiar.
 // - Botón "Leer" → libros graduados por nivel HSK (pantalla_biblioteca.dart).
 // - Estadísticas y Ajustes.
@@ -15,6 +16,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../datos/datos_app.dart';
+import '../datos/estadisticas.dart';
 import '../widgets/fondo_tinta.dart';
 import 'pantalla_ajustes.dart';
 import 'pantalla_biblioteca.dart';
@@ -41,6 +43,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
   int? _pendientes;
   int? _nuevosHoy;
   int? _meta;
+  int _racha = 0;
 
   @override
   void initState() {
@@ -62,11 +65,13 @@ class _PantallaInicioState extends State<PantallaInicio> {
     final pendientes = await repo.repasosPendientes();
     final nuevos = await repo.nuevosHoy();
     final meta = await repo.limiteNuevosPorDia();
+    final actividad = await repo.actividadPorDia();
     if (!mounted) return;
     setState(() {
       _pendientes = pendientes;
       _nuevosHoy = nuevos;
       _meta = meta;
+      _racha = Estadisticas.racha(actividad.map((d) => d.dia), DateTime.now()).actual;
     });
   }
 
@@ -96,7 +101,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
               const SizedBox(height: 4),
               Text('Hanzi Dojo', style: TextStyle(fontSize: 14, color: Colors.grey.shade600, letterSpacing: 2)),
               const SizedBox(height: 28),
-              _ResumenDelDia(pendientes: _pendientes, nuevosHoy: _nuevosHoy, meta: _meta),
+              _ResumenDelDia(pendientes: _pendientes, nuevosHoy: _nuevosHoy, meta: _meta, racha: _racha),
               const SizedBox(height: 28),
 
               // Botón principal → PantallaModo
@@ -199,11 +204,14 @@ class _PantallaInicioState extends State<PantallaInicio> {
 
 /// "12 repasos pendientes · 3 de 15 nuevos hoy"
 class _ResumenDelDia extends StatelessWidget {
-  const _ResumenDelDia({required this.pendientes, required this.nuevosHoy, required this.meta});
+  const _ResumenDelDia({required this.pendientes, required this.nuevosHoy, required this.meta, this.racha = 0});
 
   final int? pendientes;
   final int? nuevosHoy;
   final int? meta;
+
+  /// Días seguidos estudiando (0 = no se muestra).
+  final int racha;
 
   @override
   Widget build(BuildContext context) {
@@ -226,6 +234,10 @@ class _ResumenDelDia extends StatelessWidget {
           const Icon(Icons.fiber_new_outlined, size: 18, color: Colors.black54),
           const SizedBox(width: 4),
           Text('$nuevosHoy de $meta nuevos', style: estilo),
+          if (racha > 0) ...[
+            const SizedBox(width: 14),
+            Text('🔥 $racha', style: estilo.copyWith(fontWeight: FontWeight.w700)),
+          ],
         ],
       ),
     );
