@@ -8,10 +8,14 @@
 //                 cuando una actualización trae contenido nuevo, se copia a la
 //                 carpeta de datos del teléfono. Nunca se modifica.
 //
-//   progreso.db   Tu avance (repaso espaciado) y tus ajustes. Se crea vacío y
-//                 solo lo modifica la app. Como el progreso se guarda por
-//                 CARÁCTER (no por número de fila), al actualizar el
-//                 contenido no se pierde nada.
+//   progreso.db   Tu avance (repaso espaciado), tu historial de repasos y
+//                 tus ajustes. Se crea vacío y solo lo modifica la app. Como
+//                 todo se guarda por CARÁCTER (no por número de fila), al
+//                 actualizar el contenido no se pierde nada.
+//
+// Versiones del esquema de progreso.db:
+//   1  progreso + ajustes
+//   2  + historial (una fila por repaso: base de las estadísticas)
 //
 // Se abre una sola conexión a progreso.db y se "adjunta" contenido.db con el
 // alias `c`. Así una misma consulta puede unir ambas:
@@ -37,14 +41,18 @@ typedef CargadorContenido = Future<ByteData> Function();
 Future<ByteData> _cargarDesdeAssets() => rootBundle.load('assets/db/contenido.db');
 
 class BaseDatos {
-  BaseDatos._(this.db);
+  BaseDatos._(this.db, this.carpeta);
 
   /// Conexión principal (progreso.db con contenido.db adjunta como `c`).
   final Database db;
 
+  /// Carpeta donde viven las bases (ahí también se guardan el respaldo
+  /// previo a una importación y el registro de errores).
+  final String carpeta;
+
   static const _archivoContenido = 'contenido.db';
   static const _archivoProgreso = 'progreso.db';
-  static const _versionEsquemaProgreso = 1;
+  static const _versionEsquemaProgreso = 2;
 
   /// Abre (y si hace falta, prepara) las bases de datos.
   ///
@@ -63,6 +71,7 @@ class BaseDatos {
       p.join(dir, _archivoProgreso),
       version: _versionEsquemaProgreso,
       onCreate: _crearEsquemaProgreso,
+      onUpgrade: _actualizarEsquemaProgreso,
     );
 
     // 2. ¿Hay que copiar (o reemplazar) la base de contenido?
@@ -88,7 +97,7 @@ class BaseDatos {
     if (!adjunta) {
       await db.execute('ATTACH DATABASE ? AS c', [rutaContenido]);
     }
-    return BaseDatos._(db);
+    return BaseDatos._(db, dir);
   }
 
   /// ¿La conexión ya tiene adjunta la base de contenido como `c`?
@@ -109,7 +118,7 @@ class BaseDatos {
     await temporal.rename(destino);
   }
 
-  /// Tablas de progreso.db.
+  /// Tablas de progreso.db (instalación nueva: ya con la última versión).
   static Future<void> _crearEsquemaProgreso(Database db, int version) async {
     // Una fila por carácter que hayas estudiado al menos una vez.
     await db.execute('''
@@ -134,6 +143,33 @@ class BaseDatos {
         valor TEXT NOT NULL
       )
     ''');
+    await _crearHistorial(db);
+  }
+
+  /// Quien ya tenía la app: se agregan las tablas nuevas sin tocar su avance.
+  static Future<void> _actualizarEsquemaProgreso(Database db, int anterior, int nueva) async {
+    if (anterior < 2) await _crearHistorial(db);
+  }
+
+  /// Una fila por cada vez que calificas un carácter.
+  static Future<void> _crearHistorial(Database db) async {
+    await db.execute('''
+      CREATE TABLE historial (
+        id           INTEGER PRIMARY KEY AUTOINCREMENT,
+        caracter     TEXT    NOT NULL,
+        momento      INTEGER NOT NULL,             -- segundos Unix
+        duracion_ms  INTEGER NOT NULL,             -- de que apareció la tarjeta a calificarla
+        calificacion INTEGER NOT NULL,             -- q de SM-2: 0 difícil, 3 medio, 5 fácil
+        errores      INTEGER NOT NULL,             -- trazos fallados (incluye al revés)
+        al_reves     INTEGER NOT NULL,             -- de esos, cuántos fueron al revés
+        fallos       TEXT    NOT NULL DEFAULT '',  -- qué trazos: "0,3r,3" (r = al revés)
+        modo_novato  INTEGER NOT NULL,             -- 1 novato, 0 experto
+        nuevo        INTEGER NOT NULL,             -- 1 si era la primera vez
+        intervalo    INTEGER NOT NULL              -- días hasta el siguiente repaso
+      )
+    ''');
+    await db.execute('CREATE INDEX idx_historial_momento ON historial (momento)');
+    await db.execute('CREATE INDEX idx_historial_caracter ON historial (caracter)');
   }
 
   static Future<String?> _leerAjuste(Database db, String clave) async {

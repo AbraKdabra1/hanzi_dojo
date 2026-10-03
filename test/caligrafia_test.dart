@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hanzi_dojo/datos/modelos.dart' show FalloTrazo;
 import 'package:hanzi_dojo/helpers/ajuste_trazo.dart';
 import 'package:hanzi_dojo/helpers/evaluacion_trazo.dart';
 import 'package:hanzi_dojo/widgets/lienzo_escritura.dart';
@@ -100,7 +101,7 @@ void main() {
 
     int? errores;
 
-    Future<void> montar(WidgetTester tester, {bool ajuste = true}) async {
+    Future<void> montar(WidgetTester tester, {bool ajuste = true, Key? clave}) async {
       errores = null;
       // La vibración va a la plataforma; en las pruebas se responde "ok".
       tester.binding.defaultBinaryMessenger
@@ -112,6 +113,7 @@ void main() {
             width: 400,
             height: 400,
             child: LienzoEscritura(
+              key: clave,
               caracter: 'prueba',
               trazosSvg: svg,
               medianas: mediana,
@@ -165,6 +167,24 @@ void main() {
       await tester.pump(const Duration(seconds: 2)); // se apagan el aviso y la guía
       await tester.pumpAndSettle();
       expect(opacidadAviso(tester), 0);
+    });
+
+    testWidgets('los trazos fallados quedan anotados para el historial', (tester) async {
+      final clave = GlobalKey<LienzoEscrituraState>();
+      await montar(tester, clave: clave);
+      await trazar(tester, fin, inicio); // al revés
+      await tester.pump(const Duration(seconds: 2));
+      await trazar(tester, const Offset(55, 380), const Offset(336, 380)); // otro lugar
+      await tester.pump(const Duration(seconds: 2));
+      expect(clave.currentState!.fallos, const [FalloTrazo(0, alReves: true), FalloTrazo(0)]);
+
+      await trazar(tester, inicio, fin);
+      await tester.pumpAndSettle();
+      expect(errores, 2);
+
+      clave.currentState!.reiniciar();
+      expect(clave.currentState!.fallos, isEmpty);
+      await tester.pump(const Duration(seconds: 2));
     });
 
     testWidgets('reiniciar a mitad del resorte no truena', (tester) async {

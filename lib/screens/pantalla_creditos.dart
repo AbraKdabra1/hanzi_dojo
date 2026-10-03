@@ -18,6 +18,13 @@ class PantallaCreditos extends StatelessWidget {
 
   static const _fuentes = [
     (
+      'Código de Hanzi Dojo',
+      'Software libre: puedes usarlo, estudiarlo, modificarlo y compartirlo. Las versiones '
+          'modificadas que se distribuyan deben seguir siendo libres y publicar su código. '
+          'Código fuente: github.com/AbraKdabra1/hanzi_dojo.',
+      'GPL-3.0',
+    ),
+    (
       'Niveles HSK 3.0',
       'Lista oficial de caracteres del estándar GF 0025-2021 (Ministerio de Educación de China), '
           'tomada de github.com/ivankra/hsk30.',
@@ -94,7 +101,8 @@ class PantallaCreditos extends StatelessWidget {
                 onPressed: () => showLicensePage(
                   context: context,
                   applicationName: 'Hanzi Dojo',
-                  applicationLegalese: 'Datos: CC-CEDICT, Make Me a Hanzi, Unihan, HSK 3.0, Tatoeba.',
+                  applicationLegalese: 'Código: GPL-3.0 o posterior.\n'
+                      'Datos: CC-CEDICT, Make Me a Hanzi, Unihan, HSK 3.0, Tatoeba.',
                 ),
                 child: const Text('Ver licencias completas'),
               ),

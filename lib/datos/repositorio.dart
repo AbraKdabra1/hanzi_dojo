@@ -4,7 +4,7 @@
 // Las pantallas nunca escriben SQL: le piden datos al Repositorio.
 // Tablas (ver base_datos.dart):
 //   c.caracteres, c.radicales, c.ejemplos  → contenido (solo lectura)
-//   progreso, ajustes                       → tu avance
+//   progreso, historial, ajustes            → tu avance
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:sqflite/sqflite.dart';
@@ -151,12 +151,18 @@ class Repositorio {
     return filas.isNotEmpty;
   }
 
-  /// Guarda el resultado de practicar un carácter (repaso espaciado).
+  /// Guarda el resultado de practicar un carácter: actualiza su repaso
+  /// espaciado y agrega una fila al historial con [detalle].
   ///
   /// El estado anterior se lee de la base DENTRO de la transacción (no de
   /// [c].progreso, que es una foto de cuando se cargó la tarjeta): si mientras
   /// tanto practicaste el mismo carácter en otra pantalla, no se pisa ese avance.
-  Future<void> registrarRespuesta(Caracter c, Calificacion calificacion, {DateTime? ahora}) async {
+  Future<void> registrarRespuesta(
+    Caracter c,
+    Calificacion calificacion, {
+    DetallePractica detalle = const DetallePractica(),
+    DateTime? ahora,
+  }) async {
     final t = ahora ?? DateTime.now();
     await _db.transaction((txn) async {
       final filas = await txn.rawQuery(
@@ -201,7 +207,30 @@ class Repositorio {
           _segundos(t),
         ]);
       }
+
+      await txn.rawInsert('''
+        INSERT INTO historial (caracter, momento, duracion_ms, calificacion, errores, al_reves,
+                               fallos, modo_novato, nuevo, intervalo)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ''', [
+        c.caracter,
+        _segundos(t),
+        detalle.duracionGuardadaMs,
+        calificacion.q,
+        detalle.errores,
+        detalle.alReves,
+        FalloTrazo.escribirLista(detalle.fallos),
+        detalle.modoNovato ? 1 : 0,
+        anterior == null ? 1 : 0,
+        estado.intervaloDias,
+      ]);
     });
+  }
+
+  /// Cuántos repasos hay en el historial.
+  Future<int> totalRepasos() async {
+    final filas = await _db.rawQuery('SELECT count(*) AS n FROM historial');
+    return filas.first['n'] as int? ?? 0;
   }
 
   /// Búsqueda por carácter, pinyin (con o sin tonos) o significado.

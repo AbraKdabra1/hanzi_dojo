@@ -4,6 +4,9 @@ App de Android (Flutter) para **aprender a escribir caracteres chinos** trazo po
 trazo. Revisa cada trazo mientras escribes, programa los repasos con repetición
 espaciada (SM-2) y permite estudiar **por nivel HSK** o **por radical**.
 
+Es **software libre** (GPL-3.0): gratis, sin anuncios, sin cuentas y sin
+rastreo. La app no pide permiso de internet.
+
 - Identificador de la app: `com.abrakdabra.hanzidojo`
 - Versión: 2.0.0
 
@@ -24,9 +27,30 @@ espaciada (SM-2) y permite estudiar **por nivel HSK** o **por radical**.
 | Ejemplos | 1 o 2 oraciones por carácter con pinyin y traducción al español. |
 | Voz | Pronunciación con el motor de voz del teléfono (chino mandarín). |
 | Estadísticas | Caracteres estudiados, dominados, repasos para hoy y avance por nivel. |
+| Historial | Cada repaso queda registrado: cuánto tardaste, qué trazos fallaste (y si fue al revés), en qué modo y con qué calificación. Es la base de las estadísticas que vienen. |
+| Exportar / importar | Ajustes → Tus datos. Guarda tu progreso en un archivo `.hanzidojo` y recupéralo en otro teléfono. Antes de importar se guarda una copia para poder deshacerlo. |
+| Informe de errores | Ajustes → Informe de errores. Si algo falla, los detalles se guardan en el teléfono (los últimos 50) para copiarlos al reportar un problema. No se envía nada solo. |
 
 El progreso se guarda **solo en el teléfono** (`progreso.db`). Las actualizaciones
-del contenido no lo borran.
+del contenido no lo borran. En teléfonos sin servicios de Google (por ejemplo,
+Huawei) no existe el respaldo automático de Android: usa **Exportar progreso**.
+
+### El archivo `.hanzidojo`
+
+Es un JSON comprimido con gzip (se puede abrir con cualquier descompresor):
+
+```json
+{
+  "formato": "hanzi-dojo-respaldo",
+  "version": 1,
+  "creado": "2026-09-30T21:40:00.000",
+  "progreso":  [{"caracter": "好", "intervalo": 6, "factor": 2.5, "...": "..."}],
+  "historial": [{"caracter": "好", "momento": 1790000000, "fallos": "0,3r", "...": "..."}],
+  "ajustes":   {"nuevos_por_dia": "15"}
+}
+```
+
+Todo va por carácter, así que un respaldo sirve aunque cambie el contenido de la app.
 
 ---
 
@@ -111,12 +135,15 @@ lib/
 │   ├── repositorio.dart          Todas las consultas: siguiente tarjeta, búsqueda, radicales…
 │   ├── sesion_estudio.dart       Orden de las tarjetas en una sesión (repasos, nuevos, "Difícil")
 │   ├── srs.dart                  Algoritmo SM-2
-│   ├── modelos.dart              Caracter, Radical, Ejemplo, Progreso…
+│   ├── respaldo.dart             Exportar / importar el progreso (.hanzidojo)
+│   ├── registro_errores.dart     Errores guardados en el teléfono (informe)
+│   ├── modelos.dart              Caracter, Radical, Ejemplo, Progreso, DetallePractica…
 │   ├── datos_app.dart            Da acceso al repositorio desde cualquier pantalla
 │   └── version_contenido.dart    (generado) versión de contenido.db
 ├── helpers/
 │   ├── dtw_helper.dart           Compara tu trazo con el correcto
 │   ├── cache_trazos.dart         Convierte los contornos SVG a Path una sola vez
+│   ├── archivos.dart             Diálogos "Guardar como" / "Abrir" de Android
 │   └── pinyin_helper.dart        Colores por tono
 ├── painters/                     Dibujo del lienzo (cuadrícula, silueta, tinta, pistas)
 ├── widgets/
@@ -124,11 +151,12 @@ lib/
 │   ├── boton_voz.dart            Pronunciación (flutter_tts)
 │   └── comunes.dart, …           Piezas de interfaz reutilizables
 └── screens/                      Inicio, modo, selección, radicales, familia,
-                                  estudio, estadísticas, ajustes, créditos
-android/app/src/main/kotlin/…/MainActivity.kt   Pide la tasa de refresco más alta de la pantalla
+                                  estudio, estadísticas, ajustes, errores, créditos
+android/app/src/main/kotlin/…/MainActivity.kt   Archivos (guardar/abrir) y tasa de refresco más alta
 herramientas_datos/               Scripts de Python que arman la base (ver arriba)
 herramientas_arte/                Dibuja la ilustración del Templo del Cielo del inicio
-test/                             Pruebas: SM-2, sesión, trazos, caligrafía, base de datos real
+test/                             Pruebas: SM-2, sesión, trazos, caligrafía, base de datos real,
+                                  historial, respaldo e informe de errores
 ```
 
 ### Fluidez
@@ -151,9 +179,13 @@ los resultados se publican además en la rama `ci-registros`.
 
 ## Licencias
 
-El código de la app es del autor. Los datos y la fuente tienen sus propias
-licencias (el texto completo está en `assets/licencias/` y dentro de la app, en
-**Créditos**):
+El **código** de Hanzi Dojo es software libre bajo la
+[GNU GPL versión 3 o posterior](LICENSE) (GPL-3.0-or-later): puedes usarlo,
+estudiarlo, modificarlo y compartirlo, siempre que las versiones que distribuyas
+también sean libres y publiquen su código.
+
+Los datos y la fuente tienen sus propias licencias (el texto completo está en
+`assets/licencias/` y dentro de la app, en **Créditos**):
 
 | Recurso | Licencia |
 |---|---|

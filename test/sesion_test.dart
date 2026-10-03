@@ -53,7 +53,8 @@ class FuenteFalsa implements FuenteSesion {
   Future<Caracter?> caracter(int id) async => _car(id, visto: true);
 
   @override
-  Future<void> registrarRespuesta(Caracter c, Calificacion calificacion) async {
+  Future<void> registrarRespuesta(Caracter c, Calificacion calificacion,
+      {DetallePractica detalle = const DetallePractica()}) async {
     respuestas.add((c.id, calificacion));
     if (_pendientes.remove(c.id)) _nuevosHoy++;
   }
