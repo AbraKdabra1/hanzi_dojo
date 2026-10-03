@@ -14,6 +14,7 @@ import 'dart:convert';
 import 'package:sqflite/sqflite.dart';
 
 import 'base_datos.dart';
+import 'estadisticas.dart';
 import 'importar_libro.dart';
 import 'modelos.dart';
 import 'srs.dart';
@@ -230,6 +231,88 @@ class Repositorio {
         estado.intervaloDias,
       ]);
     });
+  }
+
+  /// Un carácter con sus trazos, por su texto (miniaturas de trazos fallados).
+  Future<Caracter?> caracterConTrazos(String texto) async {
+    final filas = await _db.rawQuery(
+        'SELECT $_basicas, x.trazos_svg, x.medianas, $_progreso $_desde WHERE x.caracter = ?', [texto]);
+    return filas.isEmpty ? null : Caracter.desdeFila(filas.first);
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // Estadísticas (sobre el historial)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// Repasos y tiempo de cada día que estudiaste, del más antiguo al más
+  /// reciente. Los días se cuentan en la hora local del teléfono.
+  Future<List<DiaActividad>> actividadPorDia({DateTime? ahora}) async {
+    final desfase = (ahora ?? DateTime.now()).timeZoneOffset.inSeconds;
+    final filas = await _db.rawQuery('''
+      SELECT date(momento + ?, 'unixepoch') AS dia, count(*) AS n, sum(duracion_ms) AS ms
+      FROM historial GROUP BY dia ORDER BY dia
+    ''', [desfase]);
+    return [
+      for (final f in filas)
+        DiaActividad(DateTime.parse(f['dia'] as String), f['n'] as int, ((f['ms'] as int? ?? 0) / 1000).round()),
+    ];
+  }
+
+  /// Los caracteres en los que más trazos fallas (en promedio por repaso).
+  Future<List<CaracterDificil>> caracteresDificiles({int limite = 8}) async {
+    final filas = await _db.rawQuery('''
+      SELECT caracter, count(*) AS veces, avg(errores) AS promedio,
+             sum(CASE WHEN calificacion = 0 THEN 1 ELSE 0 END) AS dificiles
+      FROM historial GROUP BY caracter
+      HAVING promedio > 0
+      ORDER BY promedio DESC, dificiles DESC, veces DESC
+      LIMIT ?
+    ''', [limite]);
+    final salida = <CaracterDificil>[];
+    for (final f in filas) {
+      final c = await caracterPorTexto(f['caracter'] as String);
+      if (c == null) continue;
+      salida.add(CaracterDificil(
+        caracter: c,
+        veces: f['veces'] as int,
+        erroresPromedio: (f['promedio'] as num).toDouble(),
+        dificiles: f['dificiles'] as int? ?? 0,
+      ));
+    }
+    return salida;
+  }
+
+  /// Los trazos concretos que más fallas (y cuántas veces fue al revés).
+  Future<List<TrazoFallado>> trazosFallados({int limite = 5}) async {
+    final filas = await _db.rawQuery("SELECT caracter, fallos FROM historial WHERE fallos != ''");
+    return Estadisticas.trazosFallados(
+      [for (final f in filas) (f['caracter'] as String, f['fallos'] as String)],
+      limite: limite,
+    );
+  }
+
+  /// Repasos sin ningún trazo fallado desde [desde] (por defecto, 30 días).
+  Future<Precision> precision({DateTime? ahora, int dias = 30}) async {
+    final t = ahora ?? DateTime.now();
+    final desde = _segundos(DateTime(t.year, t.month, t.day - dias));
+    final filas = await _db.rawQuery('''
+      SELECT modo_novato, count(*) AS n, sum(CASE WHEN errores = 0 THEN 1 ELSE 0 END) AS limpios
+      FROM historial WHERE momento >= ? GROUP BY modo_novato
+    ''', [desde]);
+    var repasos = 0, limpios = 0;
+    double? novato, experto;
+    for (final f in filas) {
+      final n = f['n'] as int;
+      final l = f['limpios'] as int? ?? 0;
+      repasos += n;
+      limpios += l;
+      if (f['modo_novato'] == 1) {
+        novato = l / n;
+      } else {
+        experto = l / n;
+      }
+    }
+    return Precision(repasos: repasos, limpios: limpios, novato: novato, experto: experto);
   }
 
   /// Cuántos repasos hay en el historial.
