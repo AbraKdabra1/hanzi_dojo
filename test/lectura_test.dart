@@ -59,6 +59,16 @@ void main() {
       expect(capitulos.first.palabras.first.pinyin, isNotEmpty);
     });
 
+    test('un libro por nivel: adaptados del 1 al 5, originales en 6 y 7-9', () async {
+      final libros = await repo.libros();
+      expect(libros.map((l) => l.nivelHsk), [1, 2, 3, 4, 5, 6, 7]);
+      for (final l in libros) {
+        expect(l.adaptado, l.nivelHsk <= 5, reason: l.clave);
+        expect(l.capitulos, greaterThanOrEqualTo(4), reason: l.clave);
+        if (l.adaptado) expect(l.cobertura, greaterThanOrEqualTo(0.9), reason: l.clave);
+      }
+    });
+
     test('cada párrafo trae una sílaba por carácter y sus nombres propios', () async {
       final cuentos = (await repo.libros()).firstWhere((l) => l.clave == 'cuentos-para-ninos');
       for (final cap in await repo.capitulos(cuentos)) {

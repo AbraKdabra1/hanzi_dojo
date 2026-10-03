@@ -82,6 +82,20 @@ con comodidad en HSK 7-9 (medido: el *Clásico de tres caracteres* o las
   moderno está escrito para Hanzi Dojo con el vocabulario de cada nivel.
 - **HSK 6 y 7-9: textos originales** con su traducción.
 
+| Nivel | Libro | Tipo | Capítulos |
+|---|---|---|---|
+| HSK 1 | 中国小故事 · Cuentos chinos para niños (孔融让梨, 司马光砸缸, 曹冲称象…) | Adaptado | 5 |
+| HSK 2 | 中国神话 · Mitos chinos (盘古, 女娲, 后羿, 嫦娥, 精卫) | Adaptado | 5 |
+| HSK 3 | 成语故事 · Historias de chengyu (守株待兔, 画蛇添足, 狐假虎威…) | Adaptado | 6 |
+| HSK 4 | 中国民间传说 · Leyendas populares (牛郎织女, 白蛇传, 梁祝, 花木兰) | Adaptado | 4 |
+| HSK 5 | 西游记 · Viaje al Oeste | Adaptado | 6 |
+| HSK 6 | 增广贤文 · Proverbios del Zengguang Xianwen (41 refranes) | Original | 4 |
+| HSK 7-9 | 唐诗选 · Poemas de la dinastía Tang (22 poemas) | Original | 5 |
+
+Los textos originales vienen de [chinese-poetry](https://github.com/chinese-poetry/chinese-poetry)
+(MIT), convertidos a simplificados. Todas las traducciones al español y las
+versiones graduadas están escritas para Hanzi Dojo.
+
 Cada libro es un archivo de texto fácil de editar (el formato está explicado en
 `herramientas_datos/libros.py`). `preparar_libros.py` le agrega el pinyin y
 dice qué tan difícil es: qué porcentaje de sus caracteres ya conoce alguien de

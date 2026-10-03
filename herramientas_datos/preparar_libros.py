@@ -50,6 +50,16 @@ DB = os.path.join(L.RAIZ, "assets", "db", "contenido.db")
 _VALIDAS = None
 _HSK = None
 _NUMEROS = set("零一二三四五六七八九十百千万两几第")
+# Palabras HSK que confunden la búsqueda de la palabra más larga
+# (个儿 "estatura" se comería el 儿 de 一个儿子).
+_HSK_IGNORAR = {"个儿"}
+# 只 como clasificador (zhī) después de un número o demostrativo: 两只鸟.
+_ANTES_DE_ZHI = set("一二两三四五六七八九十百千万几这那哪每多")
+# 儿 que se pega a la sílaba anterior (erhua) cuando la lista HSK no lo resolvió.
+_ERHUA = set("点会块边哪这那玩事")
+# Verbo + 不 + resultado: el 不 es neutro (看不见, 找不到, 称不了, 填不平).
+_VERBOS_POTENCIAL = set("看听找想做吃睡买拿走跑飞称填起说回进出用学写打搬放站坐活关开记认")
+_RESULTADOS = set("到了见下起完平动开住出来去懂清好过")
 
 
 def _hsk():
@@ -59,7 +69,7 @@ def _hsk():
         _VALIDAS = silabas_validas(leer_cedict())
         _HSK = {}
         for palabra, py in cargar_pinyin_hsk().items():
-            if 2 <= len(palabra) <= 4:
+            if 2 <= len(palabra) <= 4 and palabra not in _HSK_IGNORAR:
                 silabas = partir_pinyin(py, len(palabra), _VALIDAS)
                 if silabas:
                     _HSK[palabra] = [_acentos(x) for x in silabas]
@@ -89,15 +99,23 @@ def _sandhi(texto, salida):
         antes = texto[k - 1] if k > 0 else ""
         despues = texto[k + 1] if k + 1 < len(texto) else ""
         sig = salida[k + 1] if k + 1 < len(texto) else ""
-        # 看一看, 是不是 (pero no 一点一点 ni 一块一块: ahí cada 一 es un número)
+        despues2 = texto[k + 2] if k + 2 < len(texto) else ""
+        # 看一看, 补一补 (pero no 一天一天 ni 一天比一天: ahí 一 es un número)
         antes2 = texto[k - 2] if k > 1 else ""
-        if antes and antes == despues and L.es_han(antes) and antes2 != c:
-            salida[k] = "yi" if c == "一" else "bu"
+        if (c == "一" and antes == despues and L.es_han(antes)
+                and antes2 != "一" and despues2 != "比"):
+            salida[k] = "yi"
             continue
         if c == "不":
-            if salida[k] == "bu":                         # 对不起: neutro, se queda
-                continue
-            salida[k] = "bú" if sig and _tono(sig) == 4 else "bù"
+            if (antes == despues and L.es_han(antes) and antes != "得"
+                    and despues2 != "了"):
+                salida[k] = "bu"                          # 是不是, 好不好
+            elif antes in _VERBOS_POTENCIAL and despues in _RESULTADOS:
+                salida[k] = "bu"                          # 看不见, 找不到
+            elif salida[k] == "bu":
+                pass                                      # 对不起: neutro, se queda
+            else:
+                salida[k] = "bú" if sig and _tono(sig) == 4 else "bù"
             continue
         # 一: número suelto, en cifras, ordinal o fechas → yī
         if (not sig or antes in _NUMEROS or despues in _NUMEROS or despues in "月号"):
@@ -135,12 +153,29 @@ def pinyin_de(texto, lecturas=None):
                 break
         else:
             i += 1
-    # 3. Partículas 得 / 地 sueltas.
+    # 3. Partículas 得 / 地 sueltas, y 都 (casi siempre "dōu", no "dū").
     for k, c in enumerate(texto):
+        antes = texto[k - 1] if k > 0 else ""
+        despues = texto[k + 1] if k + 1 < len(texto) else ""
         if c in "得地" and k not in en_palabra:
-            antes = texto[k - 1] if k > 0 else ""
-            despues = texto[k + 1] if k + 1 < len(texto) else ""
-            salida[k] = _lectura_particula(c, antes, despues)
+            if c == "地" and (antes in "和与跟或" or despues in "和与跟或、边"):
+                salida[k] = "dì"                          # 天和地, 地边
+            else:
+                salida[k] = _lectura_particula(c, antes, despues)
+        elif c == "都" and despues not in "市城" and antes not in "首成古国京":
+            salida[k] = "dōu"
+        elif c == "只" and antes in _ANTES_DE_ZHI:
+            salida[k] = "zhī"                             # 两只鸟, 这只猫
+        elif c == "佛" and antes not in "仿彷":
+            salida[k] = "fó"                              # 佛经, 成佛 (no "fú")
+        elif c == "更" and k not in en_palabra:
+            salida[k] = "gēng" if despues in "新换改正衣" else "gèng"
+        elif c == "似" and despues != "的":
+            salida[k] = "sì"                              # 好似, 人情似纸 (pero 似的 = shìde)
+        elif c == "谁":
+            salida[k] = "shéi"                            # como en la lista HSK
+        elif c == "儿" and antes in _ERHUA and salida[k] in ("ér", "er"):
+            salida[k] = "r"                               # 有点儿, 一会儿
     # 4. 一 y 不.
     _sandhi(texto, salida)
     # 5. Correcciones a mano.
@@ -160,7 +195,7 @@ def main():
         capitulos = []
         for cap in libro["capitulos"]:
             capitulos.append({
-                "titulo": pinyin_de(cap["titulo"]),
+                "titulo": pinyin_de(cap["titulo"], cap["lecturas_titulo"]),
                 "palabras": [pinyin_de(p["chino"]) for p in cap["palabras"]],
                 "parrafos": [pinyin_de(p["chino"], p["lecturas"]) for p in cap["parrafos"]],
             })

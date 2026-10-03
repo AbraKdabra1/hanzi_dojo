@@ -154,8 +154,9 @@ def leer_libro(ruta):
             continue
         if linea.startswith("## "):
             cerrar_parrafo()
-            capitulo = {"titulo": linea[3:].strip(), "titulo_es": "", "origen": "",
-                        "palabras": [], "parrafos": []}
+            titulo, _, lecturas_titulo = _parsear_chino(linea[3:].strip(), donde)
+            capitulo = {"titulo": titulo, "lecturas_titulo": lecturas_titulo, "titulo_es": "",
+                        "origen": "", "palabras": [], "parrafos": []}
             libro["capitulos"].append(capitulo)
             continue
         campo = re.match(r"^([a-z_]+):\s*(.*)$", linea)
