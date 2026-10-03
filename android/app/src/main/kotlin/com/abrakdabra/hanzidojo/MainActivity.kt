@@ -20,8 +20,10 @@ import io.flutter.plugin.common.MethodChannel
  *
  *  1. Archivos (canal "hanzi_dojo/archivos", ver lib/helpers/archivos.dart):
  *     los diálogos "Guardar como…" y "Abrir" del sistema, para exportar e
- *     importar el progreso. Usan el Storage Access Framework: el usuario
- *     elige el archivo y la app no necesita permisos de almacenamiento.
+ *     importar el progreso y agregar libros. Usan el Storage Access
+ *     Framework: el usuario elige el archivo y la app no necesita permisos de
+ *     almacenamiento. También abre enlaces en el navegador (reportar un
+ *     problema en GitHub) sin que la app necesite permiso de internet.
  *
  *  2. Pedirle a Android el modo de pantalla con la tasa de
  *     refresco más alta disponible (por ejemplo 120 Hz en el Huawei Pura 70).
@@ -64,6 +66,15 @@ class MainActivity : FlutterActivity() {
 
     private fun atenderArchivos(llamada: MethodCall, resultado: MethodChannel.Result) {
         when (llamada.method) {
+            "abrirEnlace" -> {
+                val url = llamada.argument<String>("url")
+                try {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                    resultado.success(true)
+                } catch (e: Exception) {
+                    resultado.success(false) // no hay navegador
+                }
+            }
             "info" -> try {
                 resultado.success(infoDispositivo())
             } catch (e: Exception) {

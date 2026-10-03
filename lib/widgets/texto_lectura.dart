@@ -19,7 +19,9 @@ import 'package:flutter/material.dart';
 import '../datos/datos_app.dart';
 import '../datos/modelos.dart';
 import '../datos/repositorio.dart';
+import '../datos/reporte.dart' show TipoReporte;
 import '../screens/pantalla_estudio.dart';
+import '../screens/pantalla_reporte.dart';
 import 'boton_voz.dart';
 import 'comunes.dart';
 
@@ -177,7 +179,7 @@ class ParrafoLectura extends StatelessWidget {
 
 /// Hoja inferior con la ficha de un carácter tocado en un libro.
 class FichaCaracterLectura extends StatelessWidget {
-  const FichaCaracterLectura({super.key, required this.texto, required this.pinyinEnTexto});
+  const FichaCaracterLectura({super.key, required this.texto, required this.pinyinEnTexto, this.donde});
 
   /// El carácter tocado.
   final String texto;
@@ -185,6 +187,10 @@ class FichaCaracterLectura extends StatelessWidget {
   /// Cómo se lee en esta oración (puede ser distinto de su lectura principal:
   /// 长 = zhǎng en 长大).
   final String pinyinEnTexto;
+
+  /// Libro, capítulo y párrafo donde está (para "Reportar un error"). null en
+  /// los libros propios: su texto no es de la app.
+  final String? donde;
 
   @override
   Widget build(BuildContext context) {
@@ -272,6 +278,26 @@ class FichaCaracterLectura extends StatelessWidget {
                       );
                     },
                   ),
+                ),
+              ],
+              if (donde case final lugar?) ...[
+                const SizedBox(height: 4),
+                TextButton.icon(
+                  icon: const Icon(Icons.flag_outlined, size: 18),
+                  label: const Text('Reportar un error'),
+                  onPressed: () {
+                    final navegador = Navigator.of(context);
+                    navegador.pop();
+                    navegador.push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => PantallaReporte(
+                          tipo: TipoReporte.contenido,
+                          donde: '$lugar · carácter $texto',
+                          queEstaMal: 'Texto o traducción de un libro',
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ],

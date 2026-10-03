@@ -19,12 +19,14 @@ import '../datos/datos_app.dart';
 import '../datos/modelos.dart';
 import '../datos/repositorio.dart';
 import '../datos/sesion_estudio.dart';
+import '../datos/reporte.dart' show TipoReporte;
 import '../datos/srs.dart';
 import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/lienzo_escritura.dart';
 import 'pantalla_familia_radical.dart';
+import 'pantalla_reporte.dart';
 
 class PantallaEstudio extends StatefulWidget {
   const PantallaEstudio({super.key, required this.filtro, required this.modoNovato});
@@ -146,6 +148,20 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
           titulo: widget.filtro.titulo,
           subtitulo: widget.modoNovato ? '🐣 Novato' : '🥋 Experto',
           acciones: [
+            if (c != null)
+              IconButton(
+                icon: const Icon(Icons.flag_outlined, color: Colors.black54),
+                tooltip: 'Reportar un error en este carácter',
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (_) => PantallaReporte(
+                      tipo: TipoReporte.contenido,
+                      donde: 'Carácter ${c.caracter} (${c.pinyin}) · ${nombreDeNivel(c.nivelHsk)}',
+                    ),
+                  ),
+                ),
+              ),
             if (c != null)
               IconButton(
                 icon: const Icon(Icons.refresh, color: Colors.black54),

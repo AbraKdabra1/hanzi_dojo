@@ -14,6 +14,7 @@ import '../helpers/archivos.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
+import 'pantalla_reporte.dart';
 
 class PantallaErrores extends StatefulWidget {
   const PantallaErrores({super.key});
@@ -78,6 +79,14 @@ class _PantallaErroresState extends State<PantallaErrores> {
         appBar: BarraSuperior(
           titulo: 'Informe de errores',
           acciones: [
+            IconButton(
+              icon: const Icon(Icons.flag_outlined, color: Colors.black54),
+              tooltip: 'Reportar un problema',
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute<void>(builder: (_) => const PantallaReporte()),
+              ),
+            ),
             if (errores != null)
               IconButton(
                 icon: const Icon(Icons.copy_rounded, color: Colors.black54),

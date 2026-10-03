@@ -7,7 +7,8 @@
 //   suave) en la forma exacta del pincel, o se queda como lo dibujaste.
 // · Tus datos: exportar e importar el progreso (respaldo.dart) y deshacer la
 //   última importación.
-// · Informe de errores (pantalla_errores.dart).
+// · Reportar un problema (pantalla_reporte.dart) e Informe de errores
+//   (pantalla_errores.dart).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
 import 'pantalla_creditos.dart';
 import 'pantalla_errores.dart';
+import 'pantalla_reporte.dart';
 
 class PantallaAjustes extends StatefulWidget {
   const PantallaAjustes({super.key});
@@ -243,6 +245,21 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                       subtitulo: 'Vuelve al progreso que tenías antes',
                       onTap: _ocupado ? null : _deshacer,
                     ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            TarjetaVidrio(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute<void>(builder: (_) => const PantallaReporte()),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.feedback_outlined),
+                  SizedBox(width: 12),
+                  Expanded(child: Text('Reportar un problema o sugerir algo', style: TextStyle(fontSize: 15))),
+                  Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
                 ],
               ),
             ),
