@@ -31,6 +31,7 @@ import 'helpers/energia.dart';
 import 'painters/rama_ciruelo.dart';
 import 'screens/pantalla_inicio.dart';
 import 'tema.dart';
+import 'widgets/boton_voz.dart';
 import 'widgets/fondo_tinta.dart';
 
 void main() {
@@ -82,6 +83,7 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
       final base = await BaseDatos.abrir();
       final repo = Repositorio(base);
       await Energia.iniciar(await repo.fluidezMaxima() ? ModoFluidez.maxima : ModoFluidez.automatica);
+      await Voz.cambiarLento(await repo.audioLento());
       Apariencia.modo.value = Apariencia.desdeTexto(await repo.apariencia());
       await fondo;
       if (mounted) setState(() => _repo = repo);

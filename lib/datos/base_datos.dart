@@ -54,7 +54,7 @@ class BaseDatos {
 
   static const _archivoContenido = 'contenido.db';
   static const _archivoProgreso = 'progreso.db';
-  static const _versionEsquemaProgreso = 4;
+  static const _versionEsquemaProgreso = 5;
 
   /// Abre (y si hace falta, prepara) las bases de datos.
   ///
@@ -148,6 +148,7 @@ class BaseDatos {
     await _crearHistorial(db);
     await _crearLectura(db);
     await _crearMisLibros(db);
+    await _crearSesiones(db);
   }
 
   /// Quien ya tenía la app: se agregan las tablas nuevas sin tocar su avance.
@@ -155,6 +156,33 @@ class BaseDatos {
     if (anterior < 2) await _crearHistorial(db);
     if (anterior < 3) await _crearLectura(db);
     if (anterior < 4) await _crearMisLibros(db);
+    if (anterior < 5) await _crearSesiones(db);
+  }
+
+  /// Sesiones de práctica que no son de escritura (oído: tonos, escucha,
+  /// pinyin; y las que vengan), para la racha, la meta del día y los logros.
+  /// Y los aciertos de la práctica de oído por tipo (p. ej. por tono).
+  static Future<void> _crearSesiones(Database db) async {
+    await db.execute('''
+      CREATE TABLE sesiones (
+        id        INTEGER PRIMARY KEY AUTOINCREMENT,
+        tipo      TEXT    NOT NULL,   -- tonos | escucha | pinyin | …
+        inicio    INTEGER NOT NULL,   -- segundos Unix
+        segundos  INTEGER NOT NULL,   -- duración
+        preguntas INTEGER NOT NULL,
+        aciertos  INTEGER NOT NULL
+      )
+    ''');
+    await db.execute('CREATE INDEX idx_sesiones_inicio ON sesiones (inicio)');
+    await db.execute('''
+      CREATE TABLE practica_oido (
+        tipo     TEXT    NOT NULL,    -- tono
+        clave    TEXT    NOT NULL,    -- '1'…'4' (el tono correcto)
+        aciertos INTEGER NOT NULL,
+        intentos INTEGER NOT NULL,
+        PRIMARY KEY (tipo, clave)
+      )
+    ''');
   }
 
   /// Libros que agregaste tú (TXT, EPUB o texto pegado). Solo viven en el

@@ -15,8 +15,14 @@
 //     "progreso":  [ {"caracter": "好", "intervalo": 6, "factor": 2.5, …}, … ],
 //     "historial": [ {"caracter": "好", "momento": 1790000000, …}, … ],
 //     "lectura":   [ {"libro": "cuentos-para-ninos", "capitulo": 1, "momento": …}, … ],
-//     "ajustes":   { "nuevos_por_dia": "15", … }
+//     "ajustes":   { "nuevos_por_dia": "15", … },
+//     "sesiones":  [ {"tipo": "tonos", "inicio": …, "preguntas": 10, …}, … ],
+//     …y las demás tablas de Respaldo._tablasExtra
 //   }
+//
+// Las tablas nuevas se agregan a Respaldo._tablasExtra: un respaldo viejo (sin ellas)
+// se sigue pudiendo importar, y una versión vieja de la app ignora las que
+// no conoce.
 //
 // Todo se guarda por CARÁCTER (no por número de fila), así que un respaldo
 // sirve aunque cambie el contenido de la app. Es un formato abierto:
@@ -52,6 +58,7 @@ class DatosRespaldo {
     required this.historial,
     this.lectura = const [],
     required this.ajustes,
+    this.extras = const {},
   });
 
   final DateTime? creado;
@@ -61,6 +68,9 @@ class DatosRespaldo {
   /// Capítulos leídos en «Leer».
   final List<Map<String, Object>> lectura;
   final Map<String, String> ajustes;
+
+  /// Filas de las tablas de Respaldo._tablasExtra, por nombre de tabla.
+  final Map<String, List<Map<String, Object>>> extras;
 
   int get caracteres => progreso.length;
   int get repasos => historial.length;
@@ -114,6 +124,25 @@ class Respaldo {
     'momento': _Tipo.entero,
   };
 
+  /// Tablas que se agregaron después del formato original: (columnas, orden).
+  /// Para respaldar una tabla nueva basta con agregarla aquí.
+  static const _tablasExtra = <String, (Map<String, _Tipo>, String)>{
+    'sesiones': (
+      {
+        'tipo': _Tipo.texto,
+        'inicio': _Tipo.entero,
+        'segundos': _Tipo.entero,
+        'preguntas': _Tipo.entero,
+        'aciertos': _Tipo.entero,
+      },
+      'inicio, id'
+    ),
+    'practica_oido': (
+      {'tipo': _Tipo.texto, 'clave': _Tipo.texto, 'aciertos': _Tipo.entero, 'intentos': _Tipo.entero},
+      'tipo, clave'
+    ),
+  };
+
   /// Nombre sugerido para el archivo: hanzi_dojo_2026-09-30.hanzidojo
   static String nombreSugerido(DateTime fecha) {
     String dos(int n) => n.toString().padLeft(2, '0');
@@ -133,6 +162,10 @@ class Respaldo {
     final lectura = await db.rawQuery(
         'SELECT ${_columnasLectura.keys.join(', ')} FROM lectura ORDER BY libro, capitulo');
     final ajustes = await db.rawQuery('SELECT clave, valor FROM ajustes ORDER BY clave');
+    final extras = {
+      for (final MapEntry(key: tabla, value: (columnas, orden)) in _tablasExtra.entries)
+        tabla: await db.rawQuery('SELECT ${columnas.keys.join(', ')} FROM $tabla ORDER BY $orden'),
+    };
     final json = <String, Object?>{
       'formato': formato,
       'version': version,
@@ -144,6 +177,7 @@ class Respaldo {
         for (final f in ajustes)
           if (!_ajustesLocales.contains(f['clave'])) f['clave'] as String: f['valor'] as String,
       },
+      ...extras,
     };
     return Uint8List.fromList(gzip.encode(utf8.encode(jsonEncode(json))));
   }
@@ -192,6 +226,10 @@ class Respaldo {
       historial: _filas(json['historial'] ?? const [], _columnasHistorial, 'historial'),
       lectura: _filas(json['lectura'] ?? const [], _columnasLectura, 'lectura'),
       ajustes: ajustes,
+      extras: {
+        for (final MapEntry(key: tabla, value: (columnas, _)) in _tablasExtra.entries)
+          tabla: _filas(json[tabla] ?? const [], columnas, tabla),
+      },
     );
   }
 
@@ -250,6 +288,9 @@ class Respaldo {
       await txn.delete('progreso');
       await txn.delete('historial');
       await txn.delete('lectura');
+      for (final tabla in _tablasExtra.keys) {
+        await txn.delete(tabla);
+      }
       final locales = _ajustesLocales.map((_) => '?').join(', ');
       await txn.rawDelete('DELETE FROM ajustes WHERE clave NOT IN ($locales)', _ajustesLocales.toList());
 
@@ -265,6 +306,11 @@ class Respaldo {
       }
       for (final MapEntry(:key, :value) in datos.ajustes.entries) {
         lote.insert('ajustes', {'clave': key, 'valor': value}, conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (final MapEntry(key: tabla, value: filas) in datos.extras.entries) {
+        for (final fila in filas) {
+          lote.insert(tabla, fila, conflictAlgorithm: ConflictAlgorithm.replace);
+        }
       }
       await lote.commit(noResult: true);
     });

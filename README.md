@@ -27,6 +27,7 @@ rastreo. La app no pide permiso de internet.
 | Ejemplos | 1 o 2 oraciones por carácter con pinyin y traducción al español. |
 | Leer | Libros graduados por nivel HSK con pinyin encima de cada carácter (se puede ocultar), traducción por párrafo, voz y nombres propios subrayados. Toca un carácter para ver su ficha y practicar su escritura. Marca los capítulos que terminas. |
 | Mis libros | Agrega tus propios textos: TXT (UTF-8, UTF-16 o GBK), EPUB sin DRM o texto pegado. La app los parte en capítulos, calcula el pinyin y estima su nivel HSK. Se quedan solo en el teléfono (no van en el respaldo). Los caracteres tradicionales se consultan como simplificados. |
+| Práctica de oído | Inicio → Oído. Rondas de 10: **Tonos** (suena una sílaba y eliges su tono; se puede empezar solo con 1 y 4, o con 2 y 3, los que más se confunden), **Escucha** (suena un carácter y eliges cuál es; las opciones nunca son homófonas) y **Pinyin** (escribes cómo se lee: `hao3` o `hǎo`). Muestra qué tanto aciertas cada tono y cuenta para tu racha. Opción de audio más lento (75 %). |
 | Voz | Grabaciones de hablantes nativos incluidas en la app (sílabas y ~8,500 palabras HSK): suenan en cualquier teléfono, sin internet. En oraciones largas usa la voz del teléfono si la tiene. |
 | Estadísticas | Caracteres estudiados, dominados, repasos para hoy y avance por nivel. |
 | Historial | Cada repaso queda registrado: cuánto tardaste, qué trazos fallaste (y si fue al revés), en qué modo y con qué calificación. Es la base de las estadísticas que vienen. |
@@ -50,11 +51,15 @@ Es un JSON comprimido con gzip (se puede abrir con cualquier descompresor):
   "creado": "2026-09-30T21:40:00.000",
   "progreso":  [{"caracter": "好", "intervalo": 6, "factor": 2.5, "...": "..."}],
   "historial": [{"caracter": "好", "momento": 1790000000, "fallos": "0,3r", "...": "..."}],
-  "ajustes":   {"nuevos_por_dia": "15"}
+  "ajustes":   {"nuevos_por_dia": "15"},
+  "sesiones":  [{"tipo": "tonos", "inicio": 1790000000, "preguntas": 10, "aciertos": 8, "...": "..."}],
+  "practica_oido": [{"tipo": "tono", "clave": "3", "aciertos": 14, "intentos": 20}]
 }
 ```
 
 Todo va por carácter, así que un respaldo sirve aunque cambie el contenido de la app.
+Las tablas nuevas se agregan como claves nuevas: un respaldo viejo (sin ellas)
+se sigue pudiendo importar.
 
 ---
 
@@ -187,6 +192,7 @@ lib/
 │   ├── importar_libro.dart       Mis libros: TXT/EPUB → capítulos, pinyin y nivel
 │   ├── reporte.dart              Reporte de problema (formulario de GitHub prellenado)
 │   ├── audio.dart                Qué grabaciones tocar para un texto (sílabas y palabras)
+│   ├── oido.dart                 Práctica de oído: qué preguntar (tonos, escucha, pinyin)
 │   ├── modelos.dart              Caracter, Radical, Ejemplo, Progreso, DetallePractica…
 │   ├── datos_app.dart            Da acceso al repositorio desde cualquier pantalla
 │   └── version_contenido.dart    (generado) versión de contenido.db
@@ -196,7 +202,7 @@ lib/
 │   ├── archivos.dart             Diálogos "Guardar como" / "Abrir" de Android
 │   ├── energia.dart              Batería: 120 Hz bajo demanda, ahorro de batería, medir consumo
 │   ├── zip_simple.dart           Lector mínimo de ZIP (para EPUB)
-│   └── pinyin_helper.dart        Colores por tono
+│   └── pinyin_helper.dart        Colores por tono y acentos (ma + 3 → mǎ)
 ├── painters/                     Dibujo del lienzo (cuadrícula, silueta, tinta, pistas)
 │   ├── rama_ciruelo.dart         Rama de ciruelo en flor del fondo (viento y pétalos)
 │   └── capa_fija.dart            Dibuja una vez en imagen lo que no cambia (cuadrícula, silueta)
@@ -208,11 +214,11 @@ lib/
 │   └── comunes.dart, …           Piezas de interfaz reutilizables
 └── screens/                      Inicio, modo, selección, radicales, familia,
                                   estudio, estadísticas, ajustes, errores, créditos,
-                                  biblioteca, libro y lectura («Leer»)
+                                  biblioteca, libro y lectura («Leer»), oído
 android/app/src/main/kotlin/…/MainActivity.kt   Archivos (guardar/abrir) y energía (tasa de refresco, batería)
 herramientas_datos/               Scripts de Python que arman la base (ver arriba)
 test/                             Pruebas: SM-2, sesión, trazos, caligrafía, base de datos real,
-                                  historial, respaldo, informe de errores y lector
+                                  historial, respaldo, informe de errores, lector y oído
 ```
 
 ### Fluidez

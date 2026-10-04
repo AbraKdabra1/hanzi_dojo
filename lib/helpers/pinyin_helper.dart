@@ -37,6 +37,36 @@ class PinyinHelper {
     return m == null ? 5 : int.parse(m.group(1)!);
   }
 
+  /// Sílaba sin tono + tono → con su acento: ('ma', 3) → 'mǎ', ('lv', 4) → 'lǜ',
+  /// ('gui', 4) → 'guì', ('zhou', 1) → 'zhōu'. Tono 5 (neutro) va sin acento.
+  /// Regla del pinyin: el acento va en la a o la e si las hay; en "ou", en la
+  /// o; si no, en la última vocal.
+  static String conTono(String base, int tono) {
+    final s = base.replaceAll('v', 'ü');
+    if (tono < 1 || tono > 4) return s;
+    const marcas = {
+      'a': 'āáǎà', 'e': 'ēéěè', 'i': 'īíǐì', 'o': 'ōóǒò', 'u': 'ūúǔù', 'ü': 'ǖǘǚǜ',
+    };
+    int pos;
+    if (s.contains('a')) {
+      pos = s.indexOf('a');
+    } else if (s.contains('e')) {
+      pos = s.indexOf('e');
+    } else if (s.contains('ou')) {
+      pos = s.indexOf('o');
+    } else {
+      pos = -1;
+      for (var i = s.length - 1; i >= 0; i--) {
+        if (marcas.containsKey(s[i])) {
+          pos = i;
+          break;
+        }
+      }
+    }
+    if (pos < 0) return s;
+    return s.substring(0, pos) + marcas[s[pos]]![tono - 1] + s.substring(pos + 1);
+  }
+
   /// Tono a partir del pinyin con acentos: "hǎo" → 3, "ma" → 5.
   static int tonoDeAcentos(String silaba) {
     const tonos = {

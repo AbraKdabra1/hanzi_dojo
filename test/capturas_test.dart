@@ -16,19 +16,23 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hanzi_dojo/datos/base_datos.dart';
 import 'package:hanzi_dojo/datos/datos_app.dart';
+import 'package:hanzi_dojo/datos/oido.dart';
 import 'package:hanzi_dojo/datos/repositorio.dart';
 import 'package:hanzi_dojo/painters/rama_ciruelo.dart';
 import 'package:hanzi_dojo/screens/pantalla_ajustes.dart';
 import 'package:hanzi_dojo/screens/pantalla_bateria.dart';
 import 'package:hanzi_dojo/screens/pantalla_biblioteca.dart';
+import 'package:hanzi_dojo/screens/pantalla_ejercicio_oido.dart';
 import 'package:hanzi_dojo/screens/pantalla_estadisticas.dart';
 import 'package:hanzi_dojo/screens/pantalla_estudio.dart';
 import 'package:hanzi_dojo/screens/pantalla_inicio.dart';
 import 'package:hanzi_dojo/screens/pantalla_lectura.dart';
 import 'package:hanzi_dojo/screens/pantalla_modo.dart';
+import 'package:hanzi_dojo/screens/pantalla_oido.dart';
 import 'package:hanzi_dojo/screens/pantalla_radicales.dart';
 import 'package:hanzi_dojo/screens/pantalla_seleccion.dart';
 import 'package:hanzi_dojo/tema.dart';
+import 'package:hanzi_dojo/widgets/boton_voz.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 final _pedidas = Platform.environment.containsKey('CAPTURAS');
@@ -73,7 +77,7 @@ void main() {
   /// Muestra [pantalla], deja que cargue sus datos (consultas reales) y guarda
   /// la captura como build/capturas/[nombre]_{claro,oscuro}.png.
   Future<void> capturar(WidgetTester tester, String nombre, Widget pantalla,
-      {Future<void> Function(WidgetTester)? accion}) async {
+      {Future<void> Function(WidgetTester)? accion, bool esperarTrasAccion = true}) async {
     for (final oscuro in [false, true]) {
       await tester.pumpWidget(RepaintBoundary(
         key: _clave,
@@ -97,7 +101,12 @@ void main() {
       await esperar();
       if (accion != null) {
         await accion(tester);
-        await esperar();
+        if (esperarTrasAccion) {
+          await esperar();
+        } else {
+          // Solo la animación de la respuesta (antes de que pase sola a la siguiente).
+          await tester.pump(const Duration(milliseconds: 250));
+        }
       }
       final caja = tester.renderObject<RenderRepaintBoundary>(find.byKey(_clave));
       await tester.runAsync(() async {
@@ -151,5 +160,29 @@ void main() {
     await capturar(tester, '08_estadisticas', const PantallaEstadisticas());
     await capturar(tester, '09_ajustes', const PantallaAjustes());
     await capturar(tester, '10_bateria', const PantallaBateria());
+
+    // Práctica de oído (con algo de historial para ver los aciertos por tono).
+    Voz.mudo = true;
+    await tester.runAsync(() async {
+      for (final (tono, aciertos, errores) in const [(1, 9, 1), (2, 6, 4), (3, 5, 5), (4, 8, 2)]) {
+        for (var i = 0; i < aciertos; i++) {
+          await repo.registrarOido('tono', '$tono', true);
+        }
+        for (var i = 0; i < errores; i++) {
+          await repo.registrarOido('tono', '$tono', false);
+        }
+      }
+    });
+    await capturar(tester, '11_oido', const PantallaOido());
+    await capturar(tester, '12_tonos', const PantallaEjercicioOido(ejercicio: EjercicioOido.tonos));
+    await capturar(tester, '13_escucha', const PantallaEjercicioOido(ejercicio: EjercicioOido.escucha),
+        accion: (t) => t.tap(find.descendant(of: find.byType(GridView), matching: find.byType(InkWell)).first,
+            warnIfMissed: false),
+        esperarTrasAccion: false);
+    await capturar(tester, '14_pinyin', const PantallaEjercicioOido(ejercicio: EjercicioOido.pinyin, nivelMax: 1),
+        accion: (t) async {
+      await t.enterText(find.byType(TextField), 'shi4');
+      await t.tap(find.text('Comprobar'));
+    }, esperarTrasAccion: false);
   }, skip: !_pedidas);
 }

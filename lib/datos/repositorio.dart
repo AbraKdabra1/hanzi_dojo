@@ -248,10 +248,17 @@ class Repositorio {
   /// reciente. Los días se cuentan en la hora local del teléfono.
   Future<List<DiaActividad>> actividadPorDia({DateTime? ahora}) async {
     final desfase = (ahora ?? DateTime.now()).timeZoneOffset.inSeconds;
+    // Repasos de escritura (historial) + sesiones de otras prácticas (oído…):
+    // cada pregunta de una sesión cuenta como un repaso.
     final filas = await _db.rawQuery('''
-      SELECT date(momento + ?, 'unixepoch') AS dia, count(*) AS n, sum(duracion_ms) AS ms
-      FROM historial GROUP BY dia ORDER BY dia
-    ''', [desfase]);
+      SELECT dia, sum(n) AS n, sum(ms) AS ms FROM (
+        SELECT date(momento + ?, 'unixepoch') AS dia, count(*) AS n, sum(duracion_ms) AS ms
+        FROM historial GROUP BY dia
+        UNION ALL
+        SELECT date(inicio + ?, 'unixepoch') AS dia, sum(preguntas) AS n, sum(segundos) * 1000 AS ms
+        FROM sesiones GROUP BY dia
+      ) GROUP BY dia ORDER BY dia
+    ''', [desfase, desfase]);
     return [
       for (final f in filas)
         DiaActividad(DateTime.parse(f['dia'] as String), f['n'] as int, ((f['ms'] as int? ?? 0) / 1000).round()),
@@ -611,6 +618,69 @@ class Repositorio {
 
   Future<void> guardarAjusteCaligrafico(bool activo) =>
       base.guardarAjuste('ajuste_caligrafico', activo ? '1' : '0');
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // Sesiones y práctica de oído
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// Guarda una sesión de práctica (oído…): cuenta para la racha y la meta.
+  Future<void> guardarSesion({
+    required String tipo,
+    required DateTime inicio,
+    required int segundos,
+    required int preguntas,
+    required int aciertos,
+  }) =>
+      _db.insert('sesiones', {
+        'tipo': tipo,
+        'inicio': _segundos(inicio),
+        'segundos': segundos,
+        'preguntas': preguntas,
+        'aciertos': aciertos,
+      });
+
+  /// Suma un intento (y un acierto, si lo fue) a [tipo]/[clave].
+  /// (Sin "UPSERT": Android 7 trae un SQLite que no lo conoce.)
+  Future<void> registrarOido(String tipo, String clave, bool acierto) async {
+    final cambiadas = await _db.rawUpdate(
+      'UPDATE practica_oido SET intentos = intentos + 1, aciertos = aciertos + ? WHERE tipo = ? AND clave = ?',
+      [acierto ? 1 : 0, tipo, clave],
+    );
+    if (cambiadas == 0) {
+      await _db.insert('practica_oido', {'tipo': tipo, 'clave': clave, 'aciertos': acierto ? 1 : 0, 'intentos': 1});
+    }
+  }
+
+  /// clave → (aciertos, intentos) de un tipo de práctica.
+  Future<Map<String, (int, int)>> estadisticasOido(String tipo) async {
+    final filas = await _db.query('practica_oido', where: 'tipo = ?', whereArgs: [tipo]);
+    return {for (final f in filas) f['clave'] as String: (f['aciertos'] as int, f['intentos'] as int)};
+  }
+
+  /// Cuántos caracteres HSK (niveles 1 a [nivelMax]) usan cada sílaba sin tono.
+  Future<Map<String, int>> frecuenciaSilabas({int nivelMax = 6}) async {
+    final filas = await _db
+        .rawQuery('SELECT pinyin_num FROM c.caracteres WHERE nivel_hsk BETWEEN 1 AND ?', [nivelMax]);
+    final cuenta = <String, int>{};
+    for (final f in filas) {
+      final base = (f['pinyin_num'] as String? ?? '').replaceAll(RegExp(r'[0-9]'), '').replaceAll('u:', 'v');
+      if (base.isNotEmpty) cuenta[base] = (cuenta[base] ?? 0) + 1;
+    }
+    return cuenta;
+  }
+
+  /// Caracteres de los niveles HSK 1 a [nivelMax] (para la práctica de oído).
+  Future<List<Caracter>> caracteresDeNiveles(int nivelMax) async {
+    final filas = await _db.rawQuery(
+        'SELECT $_basicas, $_progreso $_desde WHERE x.nivel_hsk BETWEEN 1 AND ? ORDER BY x.orden_oficial',
+        [nivelMax]);
+    return filas.map(Caracter.desdeFila).toList();
+  }
+
+  /// ¿Audio de las grabaciones más lento? (Ajustes y práctica de oído.)
+  Future<bool> audioLento() async => await base.leerAjuste('audio_lento') == '1';
+
+  Future<void> guardarAudioLento(bool lento) => base.guardarAjuste('audio_lento', lento ? '1' : '0');
 
   /// ¿Pantalla a la tasa de refresco máxima todo el tiempo? (Por defecto no:
   /// solo al tocar o desplazar, para ahorrar batería; ver helpers/energia.dart.)

@@ -41,6 +41,35 @@ class Voz {
   /// Cada toque nuevo interrumpe al anterior.
   static int _turno = 0;
 
+  /// Audio más lento (Ajustes y práctica de oído): las grabaciones a 0.75×
+  /// (sin cambiar el tono de la voz) y la voz del teléfono más pausada.
+  static bool _lento = false;
+  static bool get lento => _lento;
+
+  static Future<void> cambiarLento(bool lento) async {
+    _lento = lento;
+    if (_ttsChino != null) await _tts.setSpeechRate(lento ? 0.3 : 0.42);
+  }
+
+  /// Palabras y sílabas grabadas (las mismas listas que usa decir()).
+  static Future<(Set<String>, Set<String>)> listas() => _cargarListas();
+
+  /// Pruebas de pantallas: no toca nada (en las pruebas no hay reproductor).
+  @visibleForTesting
+  static bool mudo = false;
+
+  /// Toca una sílaba grabada ('ma3'). Para la práctica de oído.
+  static Future<void> tocarSilaba(String clave) async {
+    if (mudo) return;
+    final turno = ++_turno;
+    await _detenerSonido();
+    try {
+      await _tocar([Clip.silaba(clave)], turno);
+    } catch (e, pila) {
+      RegistroErrores.registrar('Voz', e, pila);
+    }
+  }
+
   static AudioPlayer get _audio => _reproductor ??= AudioPlayer();
 
   /// Palabras y sílabas grabadas (se leen una sola vez).
@@ -66,7 +95,7 @@ class Voz {
         final disponible = await _tts.isLanguageAvailable('zh-CN');
         if (disponible != true) return false;
         final listo = await _tts.setLanguage('zh-CN');
-        await _tts.setSpeechRate(0.42); // un poco más lento que lo normal
+        await _tts.setSpeechRate(_lento ? 0.3 : 0.42); // un poco más lento que lo normal
         await _tts.setPitch(1.0);
         await _tts.setVolume(1.0);
         return listo == 1 || listo == true;
@@ -85,6 +114,7 @@ class Voz {
   /// [pinyinPorPalabras] es la alternativa cuando el pinyin viene escrito por
   /// palabras ('wǒ xǐhuan…', como en las oraciones de ejemplo).
   static Future<ResultadoVoz> decir(String texto, {List<String>? pinyin, String? pinyinPorPalabras}) async {
+    if (mudo) return ResultadoVoz.grabacion;
     final turno = ++_turno;
     await _detenerSonido();
     try {
@@ -114,6 +144,7 @@ class Voz {
   static Future<void> _tocar(List<Clip> clips, int turno) async {
     final audio = _audio;
     try {
+      await audio.setSpeed(_lento ? 0.75 : 1.0);
       for (final clip in clips) {
         if (turno != _turno) return;
         if (clip.esPausa) {
