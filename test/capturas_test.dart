@@ -21,11 +21,13 @@ import 'package:hanzi_dojo/painters/rama_ciruelo.dart';
 import 'package:hanzi_dojo/screens/pantalla_ajustes.dart';
 import 'package:hanzi_dojo/screens/pantalla_bateria.dart';
 import 'package:hanzi_dojo/screens/pantalla_biblioteca.dart';
+import 'package:hanzi_dojo/screens/pantalla_compartir.dart';
 import 'package:hanzi_dojo/screens/pantalla_estadisticas.dart';
 import 'package:hanzi_dojo/screens/pantalla_escucha.dart';
 import 'package:hanzi_dojo/screens/pantalla_estudio.dart';
 import 'package:hanzi_dojo/screens/pantalla_inicio.dart';
 import 'package:hanzi_dojo/screens/pantalla_lectura.dart';
+import 'package:hanzi_dojo/screens/pantalla_logros.dart';
 import 'package:hanzi_dojo/screens/pantalla_modo.dart';
 import 'package:hanzi_dojo/screens/pantalla_pinyin.dart';
 import 'package:hanzi_dojo/screens/pantalla_practica.dart';
@@ -169,5 +171,7 @@ void main() {
     await capturar(tester, '15_pinyin', const PantallaPinyin(nivel: 1), accion: (t) async {
       await t.enterText(find.byType(TextField), 'ni3hao');
     });
+    await capturar(tester, '16_logros', const PantallaLogros());
+    await capturar(tester, '17_compartir', const PantallaCompartir());
   }, skip: !_pedidas);
 }

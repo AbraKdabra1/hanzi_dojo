@@ -3,6 +3,7 @@
 //
 // · Cuántos caracteres NUEVOS quieres por día. Los repasos no tienen límite
 //   (siempre conviene hacer los que tocan).
+// · Tu hábito: meta diaria (repasos y ejercicios) y recordatorio diario.
 // · Práctica con audio: voz lenta y cuántas palabras nuevas por día.
 // · Ajuste caligráfico: si cada trazo correcto se acomoda (con un rebote
 //   suave) en la forma exacta del pincel, o se queda como lo dibujaste.
@@ -16,9 +17,11 @@ import 'package:flutter/material.dart';
 
 import '../datos/datos_app.dart';
 import '../datos/registro_errores.dart';
+import '../datos/repositorio_habito.dart';
 import '../datos/repositorio_practica.dart';
 import '../datos/respaldo.dart';
 import '../helpers/archivos.dart';
+import '../helpers/habito.dart';
 import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
@@ -41,6 +44,10 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
   bool? _ajuste;
   int? _limitePalabras;
   bool? _vozLenta;
+  int? _metaDiaria;
+
+  /// Hora del recordatorio (null = apagado).
+  (int, int)? _recordatorio;
 
   /// ¿Hay una importación que se pueda deshacer?
   bool _hayPrevio = false;
@@ -60,6 +67,8 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
     final ajuste = await repo.ajusteCaligrafico();
     final limitePalabras = await repo.limitePalabrasPorDia();
     final vozLenta = await repo.vozLenta();
+    final metaDiaria = await repo.metaDiaria();
+    final recordatorio = await repo.recordatorio();
     final previo = await Respaldo.hayRespaldoPrevio(repo.base);
     if (mounted) {
       setState(() {
@@ -67,6 +76,8 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
         _ajuste = ajuste;
         _limitePalabras = limitePalabras;
         _vozLenta = vozLenta;
+        _metaDiaria = metaDiaria;
+        _recordatorio = recordatorio;
         _hayPrevio = previo;
       });
     }
@@ -158,6 +169,37 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
         _aviso('Listo: volviste a tu progreso anterior.');
       });
 
+  /// Enciende el recordatorio a [hora] (pide permiso de notificaciones).
+  Future<void> _ponerRecordatorio((int, int) hora) async {
+    final repo = DatosApp.de(context);
+    final ok = await Habito.programarRecordatorio(hora.$1, hora.$2);
+    if (!ok) {
+      _aviso('Sin permiso de notificaciones no puedo recordarte. Actívalo en los ajustes del teléfono.');
+      return;
+    }
+    await repo.guardarRecordatorio(hora);
+    if (mounted) setState(() => _recordatorio = hora);
+  }
+
+  Future<void> _quitarRecordatorio() async {
+    await Habito.cancelarRecordatorio();
+    if (!mounted) return;
+    await DatosApp.de(context).guardarRecordatorio(null);
+    if (mounted) setState(() => _recordatorio = null);
+  }
+
+  Future<void> _elegirHora() async {
+    final actual = _recordatorio ?? (20, 0);
+    final elegida = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay(hour: actual.$1, minute: actual.$2),
+      helpText: '¿A qué hora te recuerdo?',
+    );
+    if (elegida != null) await _ponerRecordatorio((elegida.hour, elegida.minute));
+  }
+
+  static String _textoHora((int, int) h) => '${h.$1}:${h.$2.toString().padLeft(2, '0')}';
+
   @override
   Widget build(BuildContext context) {
     final limite = _limite;
@@ -205,6 +247,68 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                       ),
                     ),
                   ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            TarjetaVidrio(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Tu hábito', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Meta diaria: cuántos repasos y ejercicios quieres hacer al día. '
+                    'La ves como un anillo en el inicio.',
+                    style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.3),
+                  ),
+                  const SizedBox(height: 10),
+                  if (_metaDiaria != null)
+                    SizedBox(
+                      width: double.infinity,
+                      child: SegmentedButton<int>(
+                        showSelectedIcon: false,
+                        style: SegmentedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 2),
+                          textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 13),
+                        ),
+                        segments: [
+                          for (final (n, nombre) in HabitoRepositorio.opcionesMeta)
+                            ButtonSegment(value: n, label: Text('$nombre\n$n', textAlign: TextAlign.center)),
+                        ],
+                        selected: {
+                          HabitoRepositorio.opcionesMeta.any((o) => o.$1 == _metaDiaria)
+                              ? _metaDiaria!
+                              : HabitoRepositorio.metaPorDefecto,
+                        },
+                        onSelectionChanged: (elegido) {
+                          setState(() => _metaDiaria = elegido.first);
+                          DatosApp.de(context).guardarMetaDiaria(elegido.first);
+                        },
+                      ),
+                    ),
+                  const SizedBox(height: 6),
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Recordatorio diario', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                    subtitle: Text(
+                      _recordatorio == null
+                          ? 'Un aviso al día, solo si aún no cumples tu meta.'
+                          : 'Todos los días a las ${_textoHora(_recordatorio!)} (si aún no cumples tu meta).',
+                      style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.3),
+                    ),
+                    value: _recordatorio != null,
+                    onChanged: (v) => v ? _elegirHora() : _quitarRecordatorio(),
+                  ),
+                  if (_recordatorio != null)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                        onPressed: _elegirHora,
+                        icon: const Icon(Icons.schedule_rounded, size: 18),
+                        label: Text('Cambiar hora (${_textoHora(_recordatorio!)})'),
+                      ),
+                    ),
                 ],
               ),
             ),

@@ -22,6 +22,7 @@ import '../datos/estadisticas.dart';
 import '../datos/modelos.dart';
 import '../datos/practica.dart';
 import '../datos/repositorio.dart';
+import '../datos/repositorio_habito.dart';
 import '../datos/repositorio_practica.dart';
 import '../helpers/cache_trazos.dart';
 import '../painters/geometria.dart';
@@ -64,6 +65,7 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
   List<ResumenEjercicio> _ejercicios = const [];
   List<ConfusionTono> _confusiones = const [];
   Map<int, AvancePalabras> _palabras = const {};
+  Set<DateTime> _protegidos = const {};
 
   @override
   void initState() {
@@ -86,6 +88,8 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
     final ejercicios = await repo.resumenEjercicios();
     final confusiones = await repo.confusionTonos();
     final palabras = {for (final a in await repo.avancePalabras()) a.nivel: a};
+    final racha = await repo.rachaConProtector(ahora: hoy);
+    final protegidos = (await repo.diasProtegidos()).toSet();
     if (!mounted) return;
     setState(() {
       _ejercicios = ejercicios;
@@ -95,7 +99,8 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
       _total = total;
       _pendientes = pendientes;
       _actividad = actividad;
-      _racha = Estadisticas.racha(actividad.map((d) => d.dia), hoy);
+      _racha = racha;
+      _protegidos = protegidos;
       _precision = precision;
       _dificiles = dificiles;
       _trazos = trazos;
@@ -166,7 +171,7 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
                   else ...[
                     _Seccion(
                       titulo: 'Tu calendario',
-                      child: _Calendario(actividad: _actividad, hoy: hoy),
+                      child: _Calendario(actividad: _actividad, hoy: hoy, protegidos: _protegidos),
                     ),
                     _Seccion(
                       titulo: 'Últimos 7 días',
@@ -354,10 +359,13 @@ class _Seccion extends StatelessWidget {
 /// Calendario tipo mapa de calor: columnas = semanas (lunes arriba), las
 /// últimas [semanas]. Cada cuadrito tiene su tooltip con el detalle del día.
 class _Calendario extends StatelessWidget {
-  const _Calendario({required this.actividad, required this.hoy});
+  const _Calendario({required this.actividad, required this.hoy, this.protegidos = const {}});
 
   final List<DiaActividad> actividad;
   final DateTime hoy;
+
+  /// Días que cubrió el protector de racha (se marcan con un borde azul).
+  final Set<DateTime> protegidos;
 
   static const semanas = 18;
   static const separacion = 2.0;
@@ -407,9 +415,10 @@ class _Calendario extends StatelessWidget {
                   if (dia.isAfter(hoyDia)) return SizedBox(width: lado + separacion);
                   final a = porDia[dia];
                   final n = a?.repasos ?? 0;
+                  final protegido = protegidos.contains(dia);
                   return Tooltip(
                     message: n == 0
-                        ? '${_fecha(dia)} · sin repasos'
+                        ? '${_fecha(dia)} · ${protegido ? 'protegido 🛡️' : 'sin repasos'}'
                         : '${_fecha(dia)} · $n ${n == 1 ? 'repaso' : 'repasos'} · ${a!.minutos} min',
                     triggerMode: TooltipTriggerMode.tap,
                     child: Container(
@@ -419,7 +428,11 @@ class _Calendario extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: _rampaDe(context)[Estadisticas.nivelCalendario(n)],
                         borderRadius: BorderRadius.circular(3),
-                        border: dia == hoyDia ? Border.all(color: context.colores.icono, width: 1.2) : null,
+                        border: dia == hoyDia
+                            ? Border.all(color: context.colores.icono, width: 1.2)
+                            : protegido
+                                ? Border.all(color: const Color(0xFF42A5F5), width: 1.4)
+                                : null,
                       ),
                     ),
                   );

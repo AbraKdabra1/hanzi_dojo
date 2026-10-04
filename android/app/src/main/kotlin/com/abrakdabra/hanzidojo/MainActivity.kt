@@ -1,9 +1,12 @@
 package com.abrakdabra.hanzidojo
 
+import android.Manifest
 import android.app.Activity
+import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.BatteryManager
 import android.os.Build
@@ -14,6 +17,7 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import java.io.File
 
 /**
  * Actividad principal de Android.
@@ -38,6 +42,11 @@ import io.flutter.plugin.common.MethodChannel
  *     · "ahorro": si el teléfono tiene activado el ahorro de batería.
  *     · "bateria": nivel, corriente y temperatura (pantalla "Consumo de
  *       batería" en Ajustes, para medir cuánto gasta la app).
+ *
+ *  3. Hábito (canal "hanzi_dojo/habito", ver lib/helpers/habito.dart y
+ *     Habito.kt): programar o quitar el recordatorio diario (pide el permiso
+ *     de notificaciones en Android 13+), actualizar el widget y compartir la
+ *     imagen de progreso.
  */
 class MainActivity : FlutterActivity() {
 
@@ -46,6 +55,8 @@ class MainActivity : FlutterActivity() {
     private companion object {
         const val CANAL_ARCHIVOS = "hanzi_dojo/archivos"
         const val CANAL_ENERGIA = "hanzi_dojo/energia"
+        const val CANAL_HABITO = "hanzi_dojo/habito"
+        const val PEDIR_NOTIFICACIONES = 4103
         const val PEDIR_GUARDAR = 4101
         const val PEDIR_ABRIR = 4102
     }
@@ -56,12 +67,91 @@ class MainActivity : FlutterActivity() {
     /** Lo que se va a escribir cuando el usuario elija dónde guardar. */
     private var bytesPorGuardar: ByteArray? = null
 
+    /** Respuesta y hora pendientes mientras se pide el permiso de notificaciones. */
+    private var pendientePermiso: MethodChannel.Result? = null
+    private var horaPendiente: Pair<Int, Int> = Pair(20, 0)
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CANAL_ARCHIVOS)
             .setMethodCallHandler { llamada, resultado -> atenderArchivos(llamada, resultado) }
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CANAL_ENERGIA)
             .setMethodCallHandler { llamada, resultado -> atenderEnergia(llamada, resultado) }
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CANAL_HABITO)
+            .setMethodCallHandler { llamada, resultado -> atenderHabito(llamada, resultado) }
+    }
+
+    // ── Hábito ──────────────────────────────────────────────────────────────
+
+    private fun atenderHabito(llamada: MethodCall, resultado: MethodChannel.Result) {
+        try {
+            when (llamada.method) {
+                "programarRecordatorio" -> {
+                    val hora = llamada.argument<Int>("hora") ?: 20
+                    val minuto = llamada.argument<Int>("minuto") ?: 0
+                    val faltaPermiso = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                        checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+                    if (!faltaPermiso) {
+                        Recordatorios.programar(this, hora, minuto)
+                        resultado.success(true)
+                    } else if (pendientePermiso != null) {
+                        resultado.success(false)
+                    } else {
+                        pendientePermiso = resultado
+                        horaPendiente = Pair(hora, minuto)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), PEDIR_NOTIFICACIONES)
+                        }
+                    }
+                }
+                "cancelarRecordatorio" -> {
+                    Recordatorios.cancelar(this)
+                    resultado.success(null)
+                }
+                "actualizarWidget" -> {
+                    WidgetHanzi.actualizar(this)
+                    resultado.success(null)
+                }
+                "compartirImagen" -> compartirImagen(llamada, resultado)
+                else -> resultado.notImplemented()
+            }
+        } catch (e: Exception) {
+            resultado.error("habito", e.message, null)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode != PEDIR_NOTIFICACIONES) return
+        val resultado = pendientePermiso ?: return
+        pendientePermiso = null
+        val concedido = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
+        if (concedido) Recordatorios.programar(this, horaPendiente.first, horaPendiente.second)
+        resultado.success(concedido)
+    }
+
+    /** Guarda la imagen en la caché y abre el menú "Compartir" de Android. */
+    private fun compartirImagen(llamada: MethodCall, resultado: MethodChannel.Result) {
+        val png = llamada.argument<ByteArray>("png")
+        if (png == null) {
+            resultado.success(false)
+            return
+        }
+        val carpeta = File(cacheDir, "compartir")
+        carpeta.mkdirs()
+        val archivo = File(carpeta, "hanzi_dojo_progreso.png")
+        archivo.writeBytes(png)
+        val uri = Uri.parse("content://$packageName.archivos/${archivo.name}")
+        val envio = Intent(Intent.ACTION_SEND).apply {
+            type = "image/png"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            val texto = llamada.argument<String>("texto")
+            if (!texto.isNullOrEmpty()) putExtra(Intent.EXTRA_TEXT, texto)
+            clipData = ClipData.newRawUri("", uri)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        startActivity(Intent.createChooser(envio, "Compartir mi progreso"))
+        resultado.success(true)
     }
 
     // ── Energía ─────────────────────────────────────────────────────────────

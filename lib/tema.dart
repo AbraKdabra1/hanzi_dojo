@@ -190,6 +190,33 @@ ThemeData temaHanziDojo([Brightness brillo = Brightness.light]) {
       systemOverlayStyle: oscuro ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
     ),
     dividerColor: c.separador,
+    // Botones principales en tinta (negro de día, papel de noche), como el
+    // botón «Estudiar» del inicio; sin el rosa que daría el color semilla.
+    filledButtonTheme: FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        backgroundColor: c.boton,
+        foregroundColor: c.textoBoton,
+        disabledBackgroundColor: c.separador,
+        disabledForegroundColor: c.tenue,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: c.tinta,
+        side: BorderSide(color: c.tinta.withValues(alpha: 0.6)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: c.suave)),
+    segmentedButtonTheme: SegmentedButtonThemeData(
+      style: SegmentedButton.styleFrom(
+        selectedBackgroundColor: c.boton,
+        selectedForegroundColor: c.textoBoton,
+        foregroundColor: c.tinta,
+        side: BorderSide(color: c.bordeLienzo),
+      ),
+    ),
   );
 }
 

@@ -29,6 +29,12 @@ rastreo. La app no pide permiso de internet.
 | Mis libros | Agrega tus propios textos: TXT (UTF-8, UTF-16 o GBK), EPUB sin DRM o texto pegado. La app los parte en capítulos, calcula el pinyin y estima su nivel HSK. Se quedan solo en el teléfono (no van en el respaldo). Los caracteres tradicionales se consultan como simplificados. |
 | Voz | Grabaciones de hablantes nativos incluidas en la app (sílabas y ~8,500 palabras HSK): suenan en cualquier teléfono, sin internet. En oraciones largas usa la voz del teléfono si la tiene. |
 | Practicar con audio | Inicio → Practicar. **Tonos**: oye una sílaba y elige su tono entre cuatro botones que dibujan su curva (o los dos tonos de una palabra). **Escucha**: oye una palabra y elige su carácter o su significado. **Vocabulario**: repaso espaciado de las ~10,900 palabras HSK (no solo caracteres), empezando por las que usan caracteres que ya estudiaste. **Pinyin**: escribe cómo se lee una palabra (`ni3hao3` o `nǐhǎo`). Mantén presionado un botón de sonido para oírlo lento, o activa «Voz lenta» en Ajustes. |
+| Meta diaria | Ajustes → Tu hábito: 10, 20, 40 o 60 repasos y ejercicios al día. En el inicio se ve como un anillo que se llena; al cumplirla, la app lo celebra. |
+| Recordatorio | Ajustes → Tu hábito: un aviso al día a la hora que elijas, solo si todavía no cumples tu meta. Lo programa Android (sin servicios de Google: funciona en Huawei) y sobrevive a reinicios. |
+| Racha y protector | Los días seguidos practicando (escritura o audio). Un protector por semana cubre un día sin práctica para que la racha no se rompa (🛡️ en el inicio y en el calendario). |
+| Logros | Inicio → 🏆. Rachas de 7, 30 y 100 días, cada nivel HSK completo, 100 a 3,000 caracteres, palabras, «Oído fino» (10 tonos seguidos), libros terminados… Se desbloquean solos y se pueden compartir. |
+| Tarjeta para compartir | Una imagen 1080 × 1350 con tu racha o un logro, tus cifras y el avance por nivel, para enviarla por WhatsApp, Instagram, etc. o guardarla. |
+| Widget | En la pantalla de inicio del teléfono: carácter del día (de los que ya estudiaste), repasos pendientes y avance de hoy. Se actualiza al salir de la app y cada 3 horas. |
 | Estadísticas | Caracteres estudiados, dominados, repasos para hoy, avance por nivel (caracteres y vocabulario), aciertos de cada ejercicio con audio y los tonos que más confundes. |
 | Historial | Cada repaso queda registrado: cuánto tardaste, qué trazos fallaste (y si fue al revés), en qué modo y con qué calificación. Es la base de las estadísticas que vienen. |
 | Exportar / importar | Ajustes → Tus datos. Guarda tu progreso en un archivo `.hanzidojo` y recupéralo en otro teléfono. Antes de importar se guarda una copia para poder deshacerlo. |
@@ -183,6 +189,8 @@ lib/
 │   ├── base_datos.dart           Abre progreso.db y adjunta contenido.db (ATTACH)
 │   ├── repositorio.dart          Todas las consultas: siguiente tarjeta, búsqueda, radicales…
 │   ├── repositorio_practica.dart Consultas de la práctica con audio (vocabulario, ejercicios)
+│   ├── repositorio_habito.dart   Meta diaria, protector de racha, logros y recordatorio
+│   ├── logros.dart               Los logros y cuánto llevas de cada uno
 │   ├── practica.dart             Palabra, preguntas, entrenador de tonos y sesión de vocabulario
 │   ├── sesion_estudio.dart       Orden de las tarjetas en una sesión (repasos, nuevos, "Difícil")
 │   ├── srs.dart                  Algoritmo SM-2
@@ -201,6 +209,7 @@ lib/
 │   ├── energia.dart              Batería: 120 Hz bajo demanda, ahorro de batería, medir consumo
 │   ├── zip_simple.dart           Lector mínimo de ZIP (para EPUB)
 │   ├── pinyin_entrada.dart       Lee el pinyin que escribes (números, acentos, sin tono)
+│   ├── habito.dart               Recordatorio, widget y compartir (canal con Android)
 │   └── pinyin_helper.dart        Colores por tono
 ├── painters/                     Dibujo del lienzo (cuadrícula, silueta, tinta, pistas)
 │   ├── rama_ciruelo.dart         Rama de ciruelo en flor del fondo (viento y pétalos)
@@ -215,8 +224,9 @@ lib/
 └── screens/                      Inicio, modo, selección, radicales, familia,
                                   estudio, estadísticas, ajustes, errores, créditos,
                                   biblioteca, libro y lectura («Leer»), práctica,
-                                  tonos, escucha, vocabulario y pinyin
-android/app/src/main/kotlin/…/MainActivity.kt   Archivos (guardar/abrir) y energía (tasa de refresco, batería)
+                                  tonos, escucha, vocabulario y pinyin, logros y compartir
+android/app/src/main/kotlin/…/MainActivity.kt   Archivos (guardar/abrir), energía (tasa de refresco, batería) y hábito
+android/app/src/main/kotlin/…/Habito.kt         Recordatorio diario, widget de inicio y compartir imagen
 herramientas_datos/               Scripts de Python que arman la base (ver arriba)
 test/                             Pruebas: SM-2, sesión, trazos, caligrafía, base de datos real,
                                   historial, respaldo, informe de errores y lector
