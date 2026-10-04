@@ -179,7 +179,8 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                         // Poco relleno: "Automática" cabe en una línea en teléfonos angostos.
                         style: SegmentedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(horizontal: 4),
-                          textStyle: const TextStyle(fontSize: 14),
+                          // Con la tipografía de la app (un TextStyle suelto perdería la fuente).
+                          textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 14),
                         ),
                         segments: const [
                           ButtonSegment(value: ThemeMode.system, label: Text('Automática')),
