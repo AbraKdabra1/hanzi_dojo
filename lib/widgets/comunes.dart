@@ -85,14 +85,13 @@ class BarraAvance extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: ClipRRect(
+          // borderRadius propio en vez de ClipRRect: sin capa de recorte en listas.
+          child: LinearProgressIndicator(
+            value: fraccion,
+            minHeight: 6,
             borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
-              value: fraccion,
-              minHeight: 6,
-              backgroundColor: const Color(0x14000000),
-              color: color ?? Colors.black87,
-            ),
+            backgroundColor: const Color(0x14000000),
+            color: color ?? Colors.black87,
           ),
         ),
         const SizedBox(width: 8),

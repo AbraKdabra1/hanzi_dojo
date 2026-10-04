@@ -1,0 +1,20 @@
+audio-cmn — Grabaciones de pronunciación del chino mandarín
+https://github.com/hugolpz/audio-cmn
+
+Voces:
+  · 1,707 sílabas con tono: Chen Wang.
+  · Palabras y caracteres de la lista HSK: Yue Tan (colección Shtooka, cmn-caen-tan).
+Proyecto, compresión y nombres de archivo: Hugo Lopez (PLIDAM, INALCO).
+Programa de grabación: Nicolas Vion.
+
+Licencia: Creative Commons Atribución-CompartirIgual (CC BY-SA), como indica el
+proyecto audio-cmn para ambas voces.
+Resumen: puedes copiar, redistribuir y adaptar estas grabaciones, incluso con
+fines comerciales, siempre que des crédito a sus autores y compartas tus
+adaptaciones con la misma licencia.
+Texto completo: https://creativecommons.org/licenses/by-sa/4.0/legalcode.es
+
+Cambios hechos para Hanzi Dojo (herramientas_datos/preparar_audio.py):
+se recortó el silencio de antes y después de cada grabación, se igualó el
+volumen y se convirtieron a formato Opus. Las grabaciones así modificadas
+(carpeta assets/audio/) se distribuyen bajo la misma licencia CC BY-SA.

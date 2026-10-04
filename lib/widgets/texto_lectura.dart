@@ -120,13 +120,14 @@ class ParrafoLectura extends StatelessWidget {
       return GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => onTocarCaracter(i),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
+        // Container simple (no AnimatedContainer): cada AnimatedContainer crea
+        // su propio animador, y un párrafo tiene cientos de caracteres; eso
+        // pesaba al aparecer párrafos durante el scroll.
+        child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 1),
-          decoration: BoxDecoration(
-            color: marcado ? const Color(0x40FFC107) : Colors.transparent,
-            borderRadius: BorderRadius.circular(4),
-          ),
+          decoration: marcado
+              ? BoxDecoration(color: const Color(0x40FFC107), borderRadius: BorderRadius.circular(4))
+              : null,
           child: columna,
         ),
       );
@@ -158,7 +159,7 @@ class ParrafoLectura extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            BotonVoz(texto: p.chino, tamano: 16),
+            BotonVoz(texto: p.chino, pinyin: p.pinyin, tamano: 16),
             if (p.espanol.isNotEmpty)
               IconButton(
                 visualDensity: VisualDensity.compact,
@@ -239,7 +240,7 @@ class FichaCaracterLectura extends StatelessWidget {
                       ],
                     ),
                   ),
-                  BotonVoz(texto: texto),
+                  BotonVoz(texto: texto, pinyin: [pinyinEnTexto]),
                 ],
               ),
               const SizedBox(height: 14),

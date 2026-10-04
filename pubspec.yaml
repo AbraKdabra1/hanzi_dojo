@@ -28,6 +28,8 @@ dependencies:
   perfect_freehand: ^2.5.2+1
   # Pronunciación en voz alta (usa el motor de voz del teléfono).
   flutter_tts: ^4.2.5
+  # Grabaciones de pronunciación que trae la app (assets/audio/, en Opus).
+  just_audio: ^0.10.4
   # Íconos estilo iOS (se usan en algunos botones).
   cupertino_icons: ^1.0.8
 
@@ -46,8 +48,10 @@ flutter:
     - assets/db/contenido.db
     # Textos de licencia de las fuentes de datos y de la tipografía.
     - assets/licencias/
-    # Ilustración del Templo del Cielo (herramientas_arte/templo_del_cielo.py).
-    - assets/imagenes/fondo_templo.jpg
+    # Grabaciones de pronunciación (herramientas_datos/preparar_audio.py, CC BY-SA).
+    - assets/audio/
+    - assets/audio/silabas/
+    - assets/audio/palabras/
 
   fonts:
     # Noto Sans SC recortada a los caracteres de la app

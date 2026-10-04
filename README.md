@@ -27,7 +27,7 @@ rastreo. La app no pide permiso de internet.
 | Ejemplos | 1 o 2 oraciones por carácter con pinyin y traducción al español. |
 | Leer | Libros graduados por nivel HSK con pinyin encima de cada carácter (se puede ocultar), traducción por párrafo, voz y nombres propios subrayados. Toca un carácter para ver su ficha y practicar su escritura. Marca los capítulos que terminas. |
 | Mis libros | Agrega tus propios textos: TXT (UTF-8, UTF-16 o GBK), EPUB sin DRM o texto pegado. La app los parte en capítulos, calcula el pinyin y estima su nivel HSK. Se quedan solo en el teléfono (no van en el respaldo). Los caracteres tradicionales se consultan como simplificados. |
-| Voz | Pronunciación con el motor de voz del teléfono (chino mandarín). |
+| Voz | Grabaciones de hablantes nativos incluidas en la app (sílabas y ~8,500 palabras HSK): suenan en cualquier teléfono, sin internet. En oraciones largas usa la voz del teléfono si la tiene. |
 | Estadísticas | Caracteres estudiados, dominados, repasos para hoy y avance por nivel. |
 | Historial | Cada repaso queda registrado: cuánto tardaste, qué trazos fallaste (y si fue al revés), en qué modo y con qué calificación. Es la base de las estadísticas que vienen. |
 | Exportar / importar | Ajustes → Tus datos. Guarda tu progreso en un archivo `.hanzidojo` y recupéralo en otro teléfono. Antes de importar se guarda una copia para poder deshacerlo. |
@@ -72,6 +72,7 @@ que se copia al teléfono la primera vez (por eso la app abre rápido).
 | Ejemplos | Oraciones de [Tatoeba](https://tatoeba.org) (vía krmanik/chinese-example-sentences), traducidas al español | 4,518 ejemplos para 2,755 caracteres; cada ejemplo contiene su carácter |
 | Tradicional → simplificado | [OpenCC](https://github.com/BYVoid/OpenCC) `TSCharacters.txt` (para consultar libros propios) | — |
 | Libros de «Leer» | Historias clásicas chinas de dominio público, contadas de nuevo para la app (`herramientas_datos/fuentes/libros/`) | Pinyin al día; cada carácter tiene una sílaba válida; los adaptados cumplen la cobertura mínima de su nivel |
+| Pronunciación (audio) | [audio-cmn](https://github.com/hugolpz/audio-cmn): 1,707 sílabas (voz de Chen Wang) y 8,569 palabras HSK (voz de Yue Tan), en `assets/audio/` (Opus, ~23 MB) | `test/audio_test.dart`: cada palabra de la lista tiene su archivo |
 
 ### Los libros de «Leer»
 
@@ -127,6 +128,11 @@ python herramientas_datos/validar_db.py
 # 4. (Opcional) recortar la fuente si aparecieron caracteres nuevos.
 #    Requiere: pip install fonttools  y la fuente variable NotoSansSC-VF.ttf
 python herramientas_datos/recortar_fuente.py ruta/a/NotoSansSC-VF.ttf
+
+# 5. (Opcional) volver a preparar las grabaciones. Requiere ffmpeg y numpy
+git clone --filter=blob:none --sparse https://github.com/hugolpz/audio-cmn /tmp/audio-cmn
+(cd /tmp/audio-cmn && git sparse-checkout set 64k)
+python herramientas_datos/preparar_audio.py /tmp/audio-cmn/64k
 ```
 
 Para **corregir una traducción**, edita la línea en
@@ -177,6 +183,7 @@ lib/
 │   ├── registro_errores.dart     Errores guardados en el teléfono (informe)
 │   ├── importar_libro.dart       Mis libros: TXT/EPUB → capítulos, pinyin y nivel
 │   ├── reporte.dart              Reporte de problema (formulario de GitHub prellenado)
+│   ├── audio.dart                Qué grabaciones tocar para un texto (sílabas y palabras)
 │   ├── modelos.dart              Caracter, Radical, Ejemplo, Progreso, DetallePractica…
 │   ├── datos_app.dart            Da acceso al repositorio desde cualquier pantalla
 │   └── version_contenido.dart    (generado) versión de contenido.db
@@ -187,17 +194,18 @@ lib/
 │   ├── zip_simple.dart           Lector mínimo de ZIP (para EPUB)
 │   └── pinyin_helper.dart        Colores por tono
 ├── painters/                     Dibujo del lienzo (cuadrícula, silueta, tinta, pistas)
+│   └── rama_ciruelo.dart         Rama de ciruelo en flor del fondo (viento y pétalos)
 ├── widgets/
 │   ├── lienzo_escritura.dart     El lienzo donde escribes (eventos táctiles crudos)
 │   ├── texto_lectura.dart        Párrafo con pinyin encima y ficha del carácter tocado
-│   ├── boton_voz.dart            Pronunciación (flutter_tts)
+│   ├── boton_voz.dart            Pronunciación: grabaciones (just_audio) o voz del teléfono
+│   ├── fondo_tinta.dart          Fondo de papel; en el inicio la rama se mece ~30 s y se apaga
 │   └── comunes.dart, …           Piezas de interfaz reutilizables
 └── screens/                      Inicio, modo, selección, radicales, familia,
                                   estudio, estadísticas, ajustes, errores, créditos,
                                   biblioteca, libro y lectura («Leer»)
 android/app/src/main/kotlin/…/MainActivity.kt   Archivos (guardar/abrir) y tasa de refresco más alta
 herramientas_datos/               Scripts de Python que arman la base (ver arriba)
-herramientas_arte/                Dibuja la ilustración del Templo del Cielo del inicio
 test/                             Pruebas: SM-2, sesión, trazos, caligrafía, base de datos real,
                                   historial, respaldo, informe de errores y lector
 ```
@@ -252,6 +260,9 @@ Los datos y la fuente tienen sus propias licencias (el texto completo está en
 | Noto Sans SC | SIL Open Font License 1.1 |
 | OpenCC | Apache 2.0 |
 | chinese-poetry (textos clásicos de «Leer») | MIT |
+| audio-cmn (grabaciones de pronunciación) | CC BY-SA |
 
 Las traducciones al español de significados y ejemplos derivan de CC-CEDICT y
-Tatoeba, por lo que se comparten bajo sus mismas licencias.
+Tatoeba, por lo que se comparten bajo sus mismas licencias. Igual las grabaciones
+de `assets/audio/` (recortadas, con volumen igualado y en Opus): CC BY-SA, como
+el original.

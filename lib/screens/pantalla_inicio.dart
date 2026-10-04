@@ -7,7 +7,8 @@
 // - Botón "Leer" → libros graduados por nivel HSK (pantalla_biblioteca.dart).
 // - Estadísticas y Ajustes.
 // - Abajo, una frase que cambia cada 4 segundos con un giro suave.
-// - Fondo: ilustración del Templo del Cielo (ver fondo_tinta.dart).
+// - Fondo: rama de ciruelo en flor que se mece con el viento y suelta pétalos
+//   (ver fondo_tinta.dart y painters/rama_ciruelo.dart).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'dart:async';
@@ -83,7 +84,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
   @override
   Widget build(BuildContext context) {
     return FondoTintaChina(
-      templo: true,
+      ramaAnimada: true,
       child: Scaffold(
         body: SafeArea(
           child: Column(
@@ -149,8 +150,8 @@ class _PantallaInicioState extends State<PantallaInicio> {
               ),
               const SizedBox(height: 16),
 
-              // Botón estadísticas (con fondo de papel translúcido: en pantallas
-              // cortas queda encima del templo y así se sigue leyendo bien).
+              // Botón estadísticas (con fondo de papel translúcido: si un pétalo
+              // pasa por detrás, el texto se sigue leyendo bien).
               TextButton.icon(
                 style: TextButton.styleFrom(
                   backgroundColor: const Color(0x99FFFFFF),
