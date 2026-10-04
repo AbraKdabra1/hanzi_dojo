@@ -20,6 +20,7 @@ import '../helpers/archivos.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
+import 'pantalla_bateria.dart';
 import 'pantalla_creditos.dart';
 import 'pantalla_errores.dart';
 import 'pantalla_reporte.dart';
@@ -211,6 +212,30 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                         setState(() => _ajuste = v);
                         DatosApp.de(context).guardarAjusteCaligrafico(v);
                       },
+              ),
+            ),
+            const SizedBox(height: 12),
+            TarjetaVidrio(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute<void>(builder: (_) => const PantallaBateria()),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.battery_saver_outlined),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Batería y fluidez', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                        Text('120 Hz solo cuando hace falta y cuánto gasta la app',
+                            style: TextStyle(fontSize: 13, color: Colors.black54)),
+                      ],
+                    ),
+                  ),
+                  Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+                ],
               ),
             ),
             const SizedBox(height: 12),

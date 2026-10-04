@@ -16,8 +16,9 @@
 //   · ~30 cuadros por segundo (no 120): el movimiento es lento y se ve igual.
 //   · La brisa dura 30 s; luego se calma y la animación se APAGA (cero
 //     consumo). Al tocar la pantalla o al volver al inicio vuelve a soplar.
-//   · Se pausa si otra pantalla la tapa, si la app pasa a segundo plano o si
-//     el teléfono tiene activado "quitar animaciones" (accesibilidad).
+//   · Se pausa si otra pantalla la tapa, si la app pasa a segundo plano, si
+//     el teléfono tiene activado "quitar animaciones" (accesibilidad) o el
+//     ahorro de batería (helpers/energia.dart).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'dart:async';
@@ -26,6 +27,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
+import '../helpers/energia.dart';
 import '../painters/rama_ciruelo.dart';
 
 /// Envuelve una pantalla con el fondo de papel y tinta.
@@ -120,9 +122,15 @@ class _PintorRamaQuieta extends CustomPainter {
       final c = Canvas(grabadora)..scale(dpr);
       dibujarRama(c, size, tenue: true);
       _imagen?.dispose();
-      _imagen = grabadora
-          .endRecording()
-          .toImageSync((region.width * dpr).ceil(), (region.height * dpr).ceil());
+      try {
+        _imagen = grabadora
+            .endRecording()
+            .toImageSync((region.width * dpr).ceil(), (region.height * dpr).ceil());
+      } catch (_) {
+        _imagen = null;
+        dibujarRama(canvas, size, tenue: true);
+        return;
+      }
       _tamanoImagen = region;
       _dprImagen = dpr;
     }
@@ -167,12 +175,13 @@ class _RamaAnimadaState extends State<_RamaAnimada> with WidgetsBindingObserver 
   bool _enPrimerPlano = true;
   bool _sinAnimaciones = false;
 
-  bool get _puedeAnimar => _visible && _enPrimerPlano && !_sinAnimaciones;
+  bool get _puedeAnimar => _visible && _enPrimerPlano && !_sinAnimaciones && !Energia.ahorro.value;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    Energia.ahorro.addListener(_actualizar);
     _calmaEn = DateTime.now().add(_duracionBrisa);
   }
 
@@ -199,6 +208,7 @@ class _RamaAnimadaState extends State<_RamaAnimada> with WidgetsBindingObserver 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    Energia.ahorro.removeListener(_actualizar);
     _reloj?.cancel();
     _viento.dispose();
     super.dispose();

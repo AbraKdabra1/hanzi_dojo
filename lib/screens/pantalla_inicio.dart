@@ -6,7 +6,9 @@
 // - Botón "Estudiar" → elegir modo (novato/experto) y qué estudiar.
 // - Botón "Leer" → libros graduados por nivel HSK (pantalla_biblioteca.dart).
 // - Estadísticas y Ajustes.
-// - Abajo, una frase que cambia cada 4 segundos con un giro suave.
+// - Abajo, una frase que cambia cada 4 segundos con un giro suave (solo
+//   mientras la pantalla se ve: con otra pantalla encima o la app en segundo
+//   plano el reloj se detiene, para no gastar batería).
 // - Fondo: rama de ciruelo en flor que se mece con el viento y suelta pétalos
 //   (ver fondo_tinta.dart y painters/rama_ciruelo.dart).
 // ─────────────────────────────────────────────────────────────────────────────
@@ -31,7 +33,7 @@ class PantallaInicio extends StatefulWidget {
   State<PantallaInicio> createState() => _PantallaInicioState();
 }
 
-class _PantallaInicioState extends State<PantallaInicio> {
+class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObserver {
   static const _frases = [
     'El viaje de mil millas comienza con un solo paso.',
     'Aprender es un tesoro que seguirá a su dueño a todas partes.',
@@ -46,19 +48,48 @@ class _PantallaInicioState extends State<PantallaInicio> {
   int? _meta;
   int _racha = 0;
 
+  bool _visible = true;
+  bool _enPrimerPlano = true;
+
   @override
   void initState() {
     super.initState();
-    _temporizador = Timer.periodic(const Duration(seconds: 4), (_) {
-      if (mounted) setState(() => _indiceFrase = (_indiceFrase + 1) % _frases.length);
-    });
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) => _cargarResumen());
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // false mientras otra pantalla está encima.
+    _visible = ModalRoute.of(context)?.isCurrent ?? true;
+    _actualizarFrases();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _enPrimerPlano = state == AppLifecycleState.resumed;
+    _actualizarFrases();
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _temporizador?.cancel();
     super.dispose();
+  }
+
+  /// El reloj de las frases corre solo mientras la pantalla se ve.
+  void _actualizarFrases() {
+    final correr = _visible && _enPrimerPlano;
+    if (correr && _temporizador == null) {
+      _temporizador = Timer.periodic(const Duration(seconds: 4), (_) {
+        if (mounted) setState(() => _indiceFrase = (_indiceFrase + 1) % _frases.length);
+      });
+    } else if (!correr && _temporizador != null) {
+      _temporizador!.cancel();
+      _temporizador = null;
+    }
   }
 
   Future<void> _cargarResumen() async {

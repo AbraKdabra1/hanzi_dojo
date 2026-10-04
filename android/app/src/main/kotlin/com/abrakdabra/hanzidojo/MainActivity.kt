@@ -1,10 +1,13 @@
 package com.abrakdabra.hanzidojo
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
+import android.os.BatteryManager
 import android.os.Build
-import android.os.Bundle
+import android.os.PowerManager
 import android.provider.OpenableColumns
 import android.view.Display
 import io.flutter.embedding.android.FlutterActivity
@@ -25,29 +28,24 @@ import io.flutter.plugin.common.MethodChannel
  *     almacenamiento. También abre enlaces en el navegador (reportar un
  *     problema en GitHub) sin que la app necesite permiso de internet.
  *
- *  2. Pedirle a Android el modo de pantalla con la tasa de
- *     refresco más alta disponible (por ejemplo 120 Hz en el Huawei Pura 70).
- *
- * ¿Por qué? Varios fabricantes dejan a las apps en 60 Hz a menos que la app
- * pida otra cosa. Flutter dibuja al ritmo que marque la pantalla, así que al
- * pedir el modo más rápido la animación se adapta sola a cada teléfono:
- * 60, 90, 120 o 144 Hz.
- *
- * Costo: mientras la app está en pantalla, el teléfono se queda en ese modo
- * aunque nada se mueva, así que gasta algo más de batería que a 60 Hz. Al
- * salir de la app el sistema vuelve a su frecuencia automática.
+ *  2. Energía (canal "hanzi_dojo/energia", ver lib/helpers/energia.dart):
+ *     · "fluidez": pide el modo de pantalla con la tasa de refresco más alta
+ *       (p. ej. 120 Hz en el Huawei Pura 70) o la suelta para que el sistema
+ *       decida. Varios fabricantes dejan a las apps en 60 Hz si no piden
+ *       otra cosa; pero 120 Hz todo el tiempo gasta batería aunque nada se
+ *       mueva. Por eso la app la pide SOLO mientras tocas o se desplaza algo,
+ *       y la suelta en cuanto la pantalla se queda quieta.
+ *     · "ahorro": si el teléfono tiene activado el ahorro de batería.
+ *     · "bateria": nivel, corriente y temperatura (pantalla "Consumo de
+ *       batería" en Ajustes, para medir cuánto gasta la app).
  */
 class MainActivity : FlutterActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        pedirTasaDeRefrescoMaxima()
-    }
 
     // ── Archivos ────────────────────────────────────────────────────────────
 
     private companion object {
         const val CANAL_ARCHIVOS = "hanzi_dojo/archivos"
+        const val CANAL_ENERGIA = "hanzi_dojo/energia"
         const val PEDIR_GUARDAR = 4101
         const val PEDIR_ABRIR = 4102
     }
@@ -62,6 +60,60 @@ class MainActivity : FlutterActivity() {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CANAL_ARCHIVOS)
             .setMethodCallHandler { llamada, resultado -> atenderArchivos(llamada, resultado) }
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CANAL_ENERGIA)
+            .setMethodCallHandler { llamada, resultado -> atenderEnergia(llamada, resultado) }
+    }
+
+    // ── Energía ─────────────────────────────────────────────────────────────
+
+    private fun atenderEnergia(llamada: MethodCall, resultado: MethodChannel.Result) {
+        try {
+            when (llamada.method) {
+                "fluidez" -> {
+                    if (llamada.argument<Boolean>("alta") == true) pedirTasaDeRefrescoMaxima()
+                    else soltarTasaDeRefresco()
+                    resultado.success(null)
+                }
+                "ahorro" -> {
+                    val energia = getSystemService(Context.POWER_SERVICE) as PowerManager
+                    resultado.success(energia.isPowerSaveMode)
+                }
+                "bateria" -> resultado.success(estadoBateria())
+                else -> resultado.notImplemented()
+            }
+        } catch (e: Exception) {
+            resultado.error("energia", e.message, null)
+        }
+    }
+
+    /**
+     * Estado de la batería. "corriente" es la que reporta el teléfono tal cual
+     * (casi siempre en microamperios; el signo cambia según el fabricante):
+     * lib/helpers/energia.dart la interpreta.
+     */
+    private fun estadoBateria(): Map<String, Any?> {
+        val bateria = getSystemService(Context.BATTERY_SERVICE) as BatteryManager
+        // Aviso "pegajoso" del sistema: se lee sin registrar ningún receptor.
+        val filtro = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+        val aviso = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(null, filtro, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(null, filtro)
+        }
+        val corriente = bateria.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
+        val contador = bateria.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER)
+        val cargando = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) bateria.isCharging
+            else (aviso?.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0) ?: 0) != 0
+        return mapOf(
+            "nivel" to bateria.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY),
+            // Integer.MIN_VALUE = el teléfono no lo informa.
+            "corriente" to if (corriente == Int.MIN_VALUE) null else corriente,
+            "contador" to if (contador == Int.MIN_VALUE || contador <= 0) null else contador,
+            "cargando" to cargando,
+            "voltaje" to aviso?.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0),
+            "temperatura" to aviso?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0),
+            "tasa" to (obtenerPantalla()?.refreshRate ?: 0f).toDouble(),
+        )
     }
 
     private fun atenderArchivos(llamada: MethodCall, resultado: MethodChannel.Result) {
@@ -199,7 +251,17 @@ class MainActivity : FlutterActivity() {
             ?: return
 
         val atributos = window.attributes
+        if (atributos.preferredDisplayModeId == mejorModo.modeId) return
         atributos.preferredDisplayModeId = mejorModo.modeId
+        window.attributes = atributos
+    }
+
+    /** Quita la preferencia: el sistema vuelve a decidir (suele bajar a 60 Hz o menos). */
+    private fun soltarTasaDeRefresco() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
+        val atributos = window.attributes
+        if (atributos.preferredDisplayModeId == 0) return
+        atributos.preferredDisplayModeId = 0
         window.attributes = atributos
     }
 

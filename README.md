@@ -32,6 +32,7 @@ rastreo. La app no pide permiso de internet.
 | Historial | Cada repaso queda registrado: cuánto tardaste, qué trazos fallaste (y si fue al revés), en qué modo y con qué calificación. Es la base de las estadísticas que vienen. |
 | Exportar / importar | Ajustes → Tus datos. Guarda tu progreso en un archivo `.hanzidojo` y recupéralo en otro teléfono. Antes de importar se guarda una copia para poder deshacerlo. |
 | Informe de errores | Ajustes → Informe de errores. Si algo falla, los detalles se guardan en el teléfono (los últimos 50) para copiarlos al reportar un problema. No se envía nada solo. |
+| Batería y fluidez | Ajustes → Batería y fluidez. La pantalla va a 120 Hz solo mientras tocas o algo se desplaza (o siempre, si lo eliges). Con el ahorro de batería del teléfono la app no anima nada. Muestra el consumo del momento y puede medir el promedio de una sesión. |
 
 El progreso se guarda **solo en el teléfono** (`progreso.db`). Las actualizaciones
 del contenido no lo borran. En teléfonos sin servicios de Google (por ejemplo,
@@ -191,10 +192,12 @@ lib/
 │   ├── dtw_helper.dart           Compara tu trazo con el correcto
 │   ├── cache_trazos.dart         Convierte los contornos SVG a Path una sola vez
 │   ├── archivos.dart             Diálogos "Guardar como" / "Abrir" de Android
+│   ├── energia.dart              Batería: 120 Hz bajo demanda, ahorro de batería, medir consumo
 │   ├── zip_simple.dart           Lector mínimo de ZIP (para EPUB)
 │   └── pinyin_helper.dart        Colores por tono
 ├── painters/                     Dibujo del lienzo (cuadrícula, silueta, tinta, pistas)
-│   └── rama_ciruelo.dart         Rama de ciruelo en flor del fondo (viento y pétalos)
+│   ├── rama_ciruelo.dart         Rama de ciruelo en flor del fondo (viento y pétalos)
+│   └── capa_fija.dart            Dibuja una vez en imagen lo que no cambia (cuadrícula, silueta)
 ├── widgets/
 │   ├── lienzo_escritura.dart     El lienzo donde escribes (eventos táctiles crudos)
 │   ├── texto_lectura.dart        Párrafo con pinyin encima y ficha del carácter tocado
@@ -204,7 +207,7 @@ lib/
 └── screens/                      Inicio, modo, selección, radicales, familia,
                                   estudio, estadísticas, ajustes, errores, créditos,
                                   biblioteca, libro y lectura («Leer»)
-android/app/src/main/kotlin/…/MainActivity.kt   Archivos (guardar/abrir) y tasa de refresco más alta
+android/app/src/main/kotlin/…/MainActivity.kt   Archivos (guardar/abrir) y energía (tasa de refresco, batería)
 herramientas_datos/               Scripts de Python que arman la base (ver arriba)
 test/                             Pruebas: SM-2, sesión, trazos, caligrafía, base de datos real,
                                   historial, respaldo, informe de errores y lector
