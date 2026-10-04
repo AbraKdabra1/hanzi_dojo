@@ -611,6 +611,12 @@ class Repositorio {
 
   Future<void> guardarAjusteCaligrafico(bool activo) =>
       base.guardarAjuste('ajuste_caligrafico', activo ? '1' : '0');
+
+  /// ¿Pantalla a la tasa de refresco máxima todo el tiempo? (Por defecto no:
+  /// solo al tocar o desplazar, para ahorrar batería; ver helpers/energia.dart.)
+  Future<bool> fluidezMaxima() async => await base.leerAjuste('fluidez_maxima') == '1';
+
+  Future<void> guardarFluidezMaxima(bool maxima) => base.guardarAjuste('fluidez_maxima', maxima ? '1' : '0');
 }
 
 /// Preferencias del lector.

@@ -3,8 +3,8 @@
 //
 // Capas (de abajo hacia arriba), cada una en su propio RepaintBoundary para
 // que solo se repinte la que cambia:
-//   1. Cuadrícula 米字格                              (nunca cambia)
-//   2. Silueta gris del carácter (solo modo novato)   (cambia con el carácter)
+//   1. Cuadrícula 米字格 y silueta gris del carácter (la silueta solo en modo
+//      novato), dibujadas una vez en imagen (capa_fija.dart).
 //   3. Pista roja del trazo esperado al equivocarte   (un instante)
 //   4. Animación del trazo correcto (modo novato)
 //   5. Destello verde al acertar
@@ -40,6 +40,7 @@ import 'package:flutter/services.dart';
 import '../datos/modelos.dart' show FalloTrazo;
 import '../helpers/cache_trazos.dart';
 import '../helpers/evaluacion_trazo.dart';
+import '../painters/capa_fija.dart';
 import '../painters/fondo_caracter_painter.dart';
 import '../painters/geometria.dart';
 import '../painters/grid_painter.dart';
@@ -335,11 +336,18 @@ class LienzoEscrituraState extends State<LienzoEscritura>
         child: Stack(
           fit: StackFit.expand,
           children: [
-            const RepaintBoundary(child: CustomPaint(painter: GridPainter())),
-            if (widget.modoNovato)
-              RepaintBoundary(
-                child: CustomPaint(painter: FondoCaracterPainter(_contornos)),
+            // Cuadrícula y silueta: nunca cambian mientras escribes, así que se
+            // dibujan una vez en imagen y en cada cuadro solo se copian
+            // (painters/capa_fija.dart): menos batería al practicar.
+            RepaintBoundary(
+              child: CapaFija(
+                clave: (widget.modoNovato, _contornos),
+                pintor: PintoresJuntos([
+                  const GridPainter(),
+                  if (widget.modoNovato) FondoCaracterPainter(_contornos),
+                ]),
               ),
+            ),
             if (hayTrazoPendiente)
               RepaintBoundary(
                 child: AnimatedOpacity(

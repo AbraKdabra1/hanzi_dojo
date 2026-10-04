@@ -11,6 +11,10 @@
 //      dibujan las flores de la rama de ciruelo del fondo (unos ms), para que
 //      aparezcan completas desde el primer cuadro.
 //   4. Al terminar, se muestra la pantalla de inicio.
+//
+// Batería (helpers/energia.dart): DetectorActividad, en el builder de
+// MaterialApp, sube la pantalla a 120 Hz solo mientras tocas o algo se
+// desplaza; en segundo plano se suelta todo.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/foundation.dart' show LicenseEntryWithLineBreaks, LicenseRegistry;
@@ -23,6 +27,7 @@ import 'datos/base_datos.dart';
 import 'datos/datos_app.dart';
 import 'datos/registro_errores.dart';
 import 'datos/repositorio.dart';
+import 'helpers/energia.dart';
 import 'painters/rama_ciruelo.dart';
 import 'screens/pantalla_inicio.dart';
 import 'widgets/fondo_tinta.dart';
@@ -56,14 +61,32 @@ class HanziDojoApp extends StatefulWidget {
   State<HanziDojoApp> createState() => _HanziDojoAppState();
 }
 
-class _HanziDojoAppState extends State<HanziDojoApp> {
+class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver {
   Repositorio? _repo;
   Object? _error;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) => _abrirDatos());
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  /// Batería: en segundo plano se sueltan los 120 Hz; al volver se revisa si
+  /// el teléfono activó el ahorro de batería mientras tanto.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      Energia.alVolver();
+    } else if (state == AppLifecycleState.paused || state == AppLifecycleState.hidden) {
+      Energia.enPausa();
+    }
   }
 
   Future<void> _abrirDatos() async {
@@ -71,8 +94,10 @@ class _HanziDojoAppState extends State<HanziDojoApp> {
       final fondo = SpritesCiruelo.cargar();
       await RegistroErrores.iniciar(await getDatabasesPath());
       final base = await BaseDatos.abrir();
+      final repo = Repositorio(base);
+      await Energia.iniciar(await repo.fluidezMaxima() ? ModoFluidez.maxima : ModoFluidez.automatica);
       await fondo;
-      if (mounted) setState(() => _repo = Repositorio(base));
+      if (mounted) setState(() => _repo = repo);
     } catch (e, pila) {
       debugPrint('Error al abrir la base de datos: $e\n$pila');
       RegistroErrores.registrar('Inicio', e, pila);
@@ -98,6 +123,8 @@ class _HanziDojoAppState extends State<HanziDojoApp> {
         title: 'Hanzi Dojo',
         debugShowCheckedModeBanner: false,
         theme: temaHanziDojo(),
+        // Cada toque o desplazamiento sube la pantalla a 120 Hz un momento.
+        builder: (context, child) => DetectorActividad(child: child ?? const SizedBox()),
         home: const PantallaInicio(),
       ),
     );
