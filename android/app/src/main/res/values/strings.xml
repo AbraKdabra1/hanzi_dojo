@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_nombre">Carácter del día</string>
+    <string name="widget_titulo">Carácter del día</string>
+    <string name="widget_descripcion">Carácter del día, repasos pendientes y tu avance de hoy</string>
+</resources>

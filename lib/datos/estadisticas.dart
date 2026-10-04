@@ -144,4 +144,47 @@ class Estadisticas {
 
   /// Lunes de la semana de [t] (el calendario empieza en lunes).
   static DateTime lunes(DateTime t) => DateTime(t.year, t.month, t.day - (t.weekday - DateTime.monday));
+
+  /// Protector de racha: los días sin práctica que se cubren para que no se
+  /// rompa la racha. Hay UN protector por semana (de lunes a domingo).
+  ///
+  /// Se revisan los días entre el último con práctica (o ya protegido) y
+  /// ayer. Si todos se pueden cubrir (ninguno cae en una semana que ya usó su
+  /// protector), se devuelven para guardarlos; si alguno no se puede, no se
+  /// gasta ninguno (la racha se rompe de todos modos). Solo se protege una
+  /// racha de al menos [rachaMinima] días.
+  static List<DateTime> diasAProteger(
+    Iterable<DateTime> activos,
+    Iterable<DateTime> protegidos,
+    DateTime hoy, {
+    int rachaMinima = 2,
+  }) {
+    final dias = {for (final d in activos) _dia(d), for (final d in protegidos) _dia(d)};
+    if (dias.isEmpty) return const [];
+    final ultimo = dias.reduce((a, b) => a.isAfter(b) ? a : b);
+    final ayer = DateTime(hoy.year, hoy.month, hoy.day - 1);
+    if (!ultimo.isBefore(ayer)) return const [];
+    if (racha(dias, ultimo).actual < rachaMinima) return const [];
+
+    final semanasUsadas = {for (final d in protegidos) lunes(_dia(d))};
+    final nuevos = <DateTime>[];
+    var d = DateTime(ultimo.year, ultimo.month, ultimo.day + 1);
+    while (!d.isAfter(ayer)) {
+      if (!semanasUsadas.add(lunes(d))) return const [];
+      nuevos.add(d);
+      d = DateTime(d.year, d.month, d.day + 1);
+    }
+    return nuevos;
+  }
+
+  /// La serie más larga de aciertos seguidos (en orden).
+  static int mejorSerie(Iterable<bool> resultados) {
+    var mejor = 0;
+    var actual = 0;
+    for (final bien in resultados) {
+      actual = bien ? actual + 1 : 0;
+      if (actual > mejor) mejor = actual;
+    }
+    return mejor;
+  }
 }

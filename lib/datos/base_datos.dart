@@ -20,6 +20,8 @@
 //   4  + mis_libros, mis_capitulos, mis_parrafos (libros que agregaste tú)
 //   5  + progreso_palabras (repaso espaciado del vocabulario) y ejercicios
 //        (cada respuesta de tonos, escucha y pinyin: base de sus estadísticas)
+//   6  + logros (los que desbloqueaste y cuándo) y protecciones (días que
+//        cubrió el protector de racha)
 //
 // Se abre una sola conexión a progreso.db y se "adjunta" contenido.db con el
 // alias `c`. Así una misma consulta puede unir ambas:
@@ -56,7 +58,7 @@ class BaseDatos {
 
   static const _archivoContenido = 'contenido.db';
   static const _archivoProgreso = 'progreso.db';
-  static const _versionEsquemaProgreso = 5;
+  static const _versionEsquemaProgreso = 6;
 
   /// Abre (y si hace falta, prepara) las bases de datos.
   ///
@@ -151,6 +153,7 @@ class BaseDatos {
     await _crearLectura(db);
     await _crearMisLibros(db);
     await _crearPractica(db);
+    await _crearHabito(db);
   }
 
   /// Quien ya tenía la app: se agregan las tablas nuevas sin tocar su avance.
@@ -159,6 +162,24 @@ class BaseDatos {
     if (anterior < 3) await _crearLectura(db);
     if (anterior < 4) await _crearMisLibros(db);
     if (anterior < 5) await _crearPractica(db);
+    if (anterior < 6) await _crearHabito(db);
+  }
+
+  /// Hábito (fase 6): logros desbloqueados y días cubiertos por el protector
+  /// de racha ('2026-10-04', en la hora local del teléfono).
+  static Future<void> _crearHabito(Database db) async {
+    await db.execute('''
+      CREATE TABLE logros (
+        clave   TEXT PRIMARY KEY,   -- ver datos/logros.dart
+        momento INTEGER NOT NULL    -- cuándo se desbloqueó (segundos Unix)
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE protecciones (
+        dia     TEXT PRIMARY KEY,   -- día cubierto, 'AAAA-MM-DD'
+        momento INTEGER NOT NULL    -- cuándo se aplicó
+      )
+    ''');
   }
 
   /// Práctica con audio (fase 5): repaso de palabras y ejercicios.

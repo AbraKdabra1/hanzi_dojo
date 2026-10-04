@@ -27,8 +27,10 @@ import 'datos/base_datos.dart';
 import 'datos/datos_app.dart';
 import 'datos/registro_errores.dart';
 import 'datos/repositorio.dart';
+import 'datos/repositorio_habito.dart';
 import 'datos/repositorio_practica.dart';
 import 'helpers/energia.dart';
+import 'helpers/habito.dart';
 import 'painters/rama_ciruelo.dart';
 import 'screens/pantalla_inicio.dart';
 import 'tema.dart';
@@ -74,6 +76,8 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
       Energia.alVolver();
     } else if (state == AppLifecycleState.paused || state == AppLifecycleState.hidden) {
       Energia.enPausa();
+      // El widget de la pantalla de inicio refleja lo que acabas de practicar.
+      if (state == AppLifecycleState.paused) Habito.actualizarWidget();
     }
   }
 
@@ -86,6 +90,10 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
       await Energia.iniciar(await repo.fluidezMaxima() ? ModoFluidez.maxima : ModoFluidez.automatica);
       Apariencia.modo.value = Apariencia.desdeTexto(await repo.apariencia());
       Voz.velocidad = await repo.vozLenta() ? 0.75 : 1.0;
+      // El recordatorio lo programa Android; se vuelve a poner por si la app se
+      // reinstaló o se importó un respaldo (si ya estaba, no cambia nada).
+      final recordatorio = await repo.recordatorio();
+      if (recordatorio != null) Habito.programarRecordatorio(recordatorio.$1, recordatorio.$2);
       await fondo;
       if (mounted) setState(() => _repo = repo);
     } catch (e, pila) {

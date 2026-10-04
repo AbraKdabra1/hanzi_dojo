@@ -1,8 +1,11 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // pantalla_inicio.dart — Pantalla principal
 //
-// - Resumen del día: repasos pendientes, nuevos que llevas vs. tu meta y tu
-//   racha de días seguidos (🔥).
+// - Resumen del día: anillo con lo que llevas de tu meta diaria, repasos
+//   pendientes (caracteres y palabras), nuevos de hoy y tu racha (🔥; 🛡️ si
+//   el protector la salvó).
+// - Al volver de estudiar: aplica el protector de racha si hace falta, avisa
+//   si cumpliste la meta y muestra los logros nuevos (fase 6).
 // - Botón "Estudiar" → elegir modo (novato/experto) y qué estudiar.
 // - Botón "Leer" → libros graduados por nivel HSK (pantalla_biblioteca.dart).
 // - Botón "Practicar" → ejercicios con audio (pantalla_practica.dart).
@@ -20,12 +23,16 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../datos/datos_app.dart';
-import '../datos/estadisticas.dart';
+import '../datos/repositorio_habito.dart';
+import '../datos/repositorio_practica.dart';
+import '../helpers/habito.dart';
 import '../tema.dart';
 import '../widgets/fondo_tinta.dart';
+import '../widgets/logro_dialogo.dart';
 import 'pantalla_ajustes.dart';
 import 'pantalla_biblioteca.dart';
 import 'pantalla_estadisticas.dart';
+import 'pantalla_logros.dart';
 import 'pantalla_modo.dart';
 import 'pantalla_practica.dart';
 
@@ -50,6 +57,11 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
   int? _nuevosHoy;
   int? _meta;
   int _racha = 0;
+  int _hoy = 0;
+  int _metaDiaria = HabitoRepositorio.metaPorDefecto;
+
+  /// La racha sigue gracias al protector (se ve un 🛡️).
+  bool _protegida = false;
 
   bool _visible = true;
   bool _enPrimerPlano = true;
@@ -97,17 +109,43 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
 
   Future<void> _cargarResumen() async {
     final repo = DatosApp.de(context);
-    final pendientes = await repo.repasosPendientes();
+    final cubiertos = await repo.aplicarProtector();
+    final pendientes = await repo.repasosPendientes() + await repo.palabrasPendientes();
     final nuevos = await repo.nuevosHoy();
     final meta = await repo.limiteNuevosPorDia();
-    final actividad = await repo.actividadPorDia();
+    final hoy = await repo.actividadHoy();
+    final metaDiaria = await repo.metaDiaria();
+    final racha = await repo.rachaConProtector();
+    final protegidos = await repo.diasProtegidos();
+    final logros = await repo.revisarLogros();
+    final celebrarMeta = hoy >= metaDiaria && !await repo.metaCelebradaHoy();
+    if (celebrarMeta) await repo.marcarMetaCelebrada();
+    Habito.actualizarWidget();
     if (!mounted) return;
+    final ayer = DateTime.now().subtract(const Duration(days: 1));
     setState(() {
       _pendientes = pendientes;
       _nuevosHoy = nuevos;
       _meta = meta;
-      _racha = Estadisticas.racha(actividad.map((d) => d.dia), DateTime.now()).actual;
+      _hoy = hoy;
+      _metaDiaria = metaDiaria;
+      _racha = racha.actual;
+      _protegida = racha.actual > 0 &&
+          protegidos.any((d) => d.year == ayer.year && d.month == ayer.month && d.day == ayer.day);
     });
+    final aviso = ScaffoldMessenger.of(context);
+    if (cubiertos.isNotEmpty) {
+      aviso.showSnackBar(SnackBar(
+        content: Text(cubiertos.length == 1
+            ? '🛡️ Tu protector de racha cubrió el día que no practicaste. Hay uno por semana.'
+            : '🛡️ Tus protectores de racha cubrieron ${cubiertos.length} días.'),
+        duration: const Duration(seconds: 5),
+      ));
+    }
+    if (celebrarMeta) {
+      aviso.showSnackBar(SnackBar(content: Text('🎯 ¡Meta del día cumplida! $hoy de $metaDiaria')));
+    }
+    if (logros.isNotEmpty) await mostrarLogrosNuevos(context, logros);
   }
 
   Future<void> _ir(Widget pantalla) async {
@@ -124,20 +162,35 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
         body: SafeArea(
           child: Column(
             children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  icon: Icon(Icons.settings_outlined, color: c.icono),
-                  tooltip: 'Ajustes y créditos',
-                  onPressed: () => _ir(const PantallaAjustes()),
-                ),
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.emoji_events_outlined, color: c.icono),
+                    tooltip: 'Logros',
+                    onPressed: () => _ir(const PantallaLogros()),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: Icon(Icons.settings_outlined, color: c.icono),
+                    tooltip: 'Ajustes y créditos',
+                    onPressed: () => _ir(const PantallaAjustes()),
+                  ),
+                ],
               ),
               const Spacer(),
               const Text('汉字道场', style: TextStyle(fontSize: 44, fontWeight: FontWeight.w400, letterSpacing: 4)),
               const SizedBox(height: 4),
               Text('Hanzi Dojo', style: TextStyle(fontSize: 14, color: c.tenue, letterSpacing: 2)),
               const SizedBox(height: 28),
-              _ResumenDelDia(pendientes: _pendientes, nuevosHoy: _nuevosHoy, meta: _meta, racha: _racha),
+              _ResumenDelDia(
+                pendientes: _pendientes,
+                nuevosHoy: _nuevosHoy,
+                meta: _meta,
+                racha: _racha,
+                protegida: _protegida,
+                hoy: _hoy,
+                metaDiaria: _metaDiaria,
+              ),
               const SizedBox(height: 28),
 
               // Botón principal → PantallaModo
@@ -268,9 +321,18 @@ class _BotonSecundario extends StatelessWidget {
   }
 }
 
-/// "12 repasos pendientes · 3 de 15 nuevos hoy"
+/// Anillo con lo que llevas hoy de tu meta y, al lado, repasos pendientes,
+/// nuevos de hoy y racha.
 class _ResumenDelDia extends StatelessWidget {
-  const _ResumenDelDia({required this.pendientes, required this.nuevosHoy, required this.meta, this.racha = 0});
+  const _ResumenDelDia({
+    required this.pendientes,
+    required this.nuevosHoy,
+    required this.meta,
+    this.racha = 0,
+    this.protegida = false,
+    this.hoy = 0,
+    this.metaDiaria = 20,
+  });
 
   final int? pendientes;
   final int? nuevosHoy;
@@ -278,34 +340,81 @@ class _ResumenDelDia extends StatelessWidget {
 
   /// Días seguidos estudiando (0 = no se muestra).
   final int racha;
+  final bool protegida;
+
+  /// Repasos y ejercicios de hoy, y la meta diaria.
+  final int hoy;
+  final int metaDiaria;
 
   @override
   Widget build(BuildContext context) {
-    if (pendientes == null) return const SizedBox(height: 40);
+    if (pendientes == null) return const SizedBox(height: 56);
     final c = context.colores;
     final estilo = TextStyle(fontSize: 13, color: c.suave);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      decoration: BoxDecoration(
-        color: c.translucido,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: c.bordeTarjeta),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.replay_rounded, size: 16, color: c.icono),
-          const SizedBox(width: 4),
-          Text('$pendientes ${pendientes == 1 ? 'repaso' : 'repasos'} hoy', style: estilo),
-          const SizedBox(width: 14),
-          Icon(Icons.fiber_new_outlined, size: 18, color: c.icono),
-          const SizedBox(width: 4),
-          Text('$nuevosHoy de $meta nuevos', style: estilo),
-          if (racha > 0) ...[
-            const SizedBox(width: 14),
-            Text('🔥 $racha', style: estilo.copyWith(fontWeight: FontWeight.w700)),
+    final cumplida = hoy >= metaDiaria;
+    final verde = c.oscuro ? const Color(0xFF81C784) : const Color(0xFF2E7D32);
+    return Semantics(
+      label: 'Hoy llevas $hoy de $metaDiaria. $pendientes repasos pendientes. Racha de $racha días.',
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(10, 8, 16, 8),
+        decoration: BoxDecoration(
+          color: c.translucido,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: c.bordeTarjeta),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: 46,
+              height: 46,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  CircularProgressIndicator(
+                    value: metaDiaria == 0 ? 1 : (hoy / metaDiaria).clamp(0.0, 1.0).toDouble(),
+                    strokeWidth: 4,
+                    strokeCap: StrokeCap.round,
+                    backgroundColor: c.separador,
+                    color: cumplida ? verde : c.tinta,
+                  ),
+                  Center(
+                    child: cumplida
+                        ? Icon(Icons.check_rounded, size: 22, color: verde)
+                        : Text('$hoy', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: c.tinta)),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(cumplida ? 'Meta de hoy cumplida' : 'Hoy: $hoy de $metaDiaria',
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: c.tinta)),
+                const SizedBox(height: 2),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.replay_rounded, size: 14, color: c.icono),
+                    const SizedBox(width: 3),
+                    Text('$pendientes', style: estilo),
+                    const SizedBox(width: 10),
+                    Icon(Icons.fiber_new_outlined, size: 16, color: c.icono),
+                    const SizedBox(width: 3),
+                    Text('$nuevosHoy/$meta', style: estilo),
+                    if (racha > 0) ...[
+                      const SizedBox(width: 10),
+                      Text('🔥 $racha${protegida ? ' 🛡️' : ''}',
+                          style: estilo.copyWith(fontWeight: FontWeight.w700)),
+                    ],
+                  ],
+                ),
+              ],
+            ),
           ],
-        ],
+        ),
       ),
     );
   }

@@ -17,6 +17,8 @@
 //     "lectura":   [ {"libro": "cuentos-para-ninos", "capitulo": 1, "momento": …}, … ],
 //     "progreso_palabras": [ {"palabra": "爸爸", "intervalo": 6, …}, … ],
 //     "ejercicios": [ {"tipo": "tono", "elemento": "ma3", "resultado": 1, …}, … ],
+//     "logros":    [ {"clave": "racha_7", "momento": …}, … ],
+//     "protecciones": [ {"dia": "2026-10-04", "momento": …}, … ],
 //     "ajustes":   { "nuevos_por_dia": "15", … }
 //   }
 //
@@ -55,6 +57,8 @@ class DatosRespaldo {
     this.lectura = const [],
     this.progresoPalabras = const [],
     this.ejercicios = const [],
+    this.logros = const [],
+    this.protecciones = const [],
     required this.ajustes,
   });
 
@@ -68,6 +72,10 @@ class DatosRespaldo {
   /// Repaso del vocabulario y respuestas de los ejercicios con audio.
   final List<Map<String, Object>> progresoPalabras;
   final List<Map<String, Object>> ejercicios;
+
+  /// Logros desbloqueados y días cubiertos por el protector de racha.
+  final List<Map<String, Object>> logros;
+  final List<Map<String, Object>> protecciones;
   final Map<String, String> ajustes;
 
   int get caracteres => progreso.length;
@@ -136,6 +144,16 @@ class Respaldo {
     'duracion_ms': _Tipo.entero,
   };
 
+  static const _columnasLogros = {
+    'clave': _Tipo.texto,
+    'momento': _Tipo.entero,
+  };
+
+  static const _columnasProtecciones = {
+    'dia': _Tipo.texto,
+    'momento': _Tipo.entero,
+  };
+
   static const _columnasLectura = {
     'libro': _Tipo.texto,
     'capitulo': _Tipo.entero,
@@ -164,6 +182,8 @@ class Respaldo {
         'SELECT ${_columnasProgresoPalabras.keys.join(', ')} FROM progreso_palabras ORDER BY palabra');
     final ejercicios = await db.rawQuery(
         'SELECT ${_columnasEjercicios.keys.join(', ')} FROM ejercicios ORDER BY momento, id');
+    final logros = await db.rawQuery('SELECT clave, momento FROM logros ORDER BY momento, clave');
+    final protecciones = await db.rawQuery('SELECT dia, momento FROM protecciones ORDER BY dia');
     final ajustes = await db.rawQuery('SELECT clave, valor FROM ajustes ORDER BY clave');
     final json = <String, Object?>{
       'formato': formato,
@@ -174,6 +194,8 @@ class Respaldo {
       'lectura': lectura,
       'progreso_palabras': progresoPalabras,
       'ejercicios': ejercicios,
+      'logros': logros,
+      'protecciones': protecciones,
       'ajustes': {
         for (final f in ajustes)
           if (!_ajustesLocales.contains(f['clave'])) f['clave'] as String: f['valor'] as String,
@@ -228,6 +250,8 @@ class Respaldo {
       progresoPalabras:
           _filas(json['progreso_palabras'] ?? const [], _columnasProgresoPalabras, 'vocabulario'),
       ejercicios: _filas(json['ejercicios'] ?? const [], _columnasEjercicios, 'ejercicios'),
+      logros: _filas(json['logros'] ?? const [], _columnasLogros, 'logros'),
+      protecciones: _filas(json['protecciones'] ?? const [], _columnasProtecciones, 'protecciones'),
       ajustes: ajustes,
     );
   }
@@ -289,6 +313,8 @@ class Respaldo {
       await txn.delete('lectura');
       await txn.delete('progreso_palabras');
       await txn.delete('ejercicios');
+      await txn.delete('logros');
+      await txn.delete('protecciones');
       final locales = _ajustesLocales.map((_) => '?').join(', ');
       await txn.rawDelete('DELETE FROM ajustes WHERE clave NOT IN ($locales)', _ajustesLocales.toList());
 
@@ -307,6 +333,12 @@ class Respaldo {
       }
       for (final fila in datos.ejercicios) {
         lote.insert('ejercicios', fila);
+      }
+      for (final fila in datos.logros) {
+        lote.insert('logros', fila, conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (final fila in datos.protecciones) {
+        lote.insert('protecciones', fila, conflictAlgorithm: ConflictAlgorithm.replace);
       }
       for (final MapEntry(:key, :value) in datos.ajustes.entries) {
         lote.insert('ajustes', {'clave': key, 'valor': value}, conflictAlgorithm: ConflictAlgorithm.replace);
