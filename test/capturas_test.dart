@@ -8,7 +8,6 @@
 //   CAPTURAS=1 flutter test test/capturas_test.dart
 
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';

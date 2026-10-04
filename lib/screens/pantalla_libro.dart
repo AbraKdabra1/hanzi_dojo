@@ -54,7 +54,7 @@ class _PantallaLibroState extends State<PantallaLibro> {
   Widget build(BuildContext context) {
     final libro = widget.libro;
     final capitulos = _capitulos;
-    final color = EtiquetaNivel.colorDe(libro.nivelHsk);
+    final color = EtiquetaNivel.colorPara(context, libro.nivelHsk);
     final siguiente = capitulos?.indexWhere((c) => !c.leido) ?? -1;
     return FondoTintaChina(
       child: Scaffold(

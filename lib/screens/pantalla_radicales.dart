@@ -168,7 +168,7 @@ class _CeldaRadical extends StatelessWidget {
       relleno: const EdgeInsets.fromLTRB(8, 6, 8, 8),
       color: visto
           ? (context.colores.oscuro ? const Color(0x332E7D32) : const Color(0xBFE8F5E9))
-          : context.colores.translucido,
+          : context.colores.tarjeta,
       colorBorde: visto
           ? (context.colores.oscuro ? const Color(0x664CAF50) : const Color(0xCCA5D6A7))
           : context.colores.bordeTarjeta,

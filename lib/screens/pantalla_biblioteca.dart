@@ -264,7 +264,7 @@ class _PantallaBibliotecaState extends State<PantallaBiblioteca> {
                   ),
                   for (final (i, libro) in libros.indexed) ...[
                     if (i == 0 || libros[i - 1].nivelHsk != libro.nivelHsk)
-                      _Encabezado(texto: nombreDeNivel(libro.nivelHsk), color: EtiquetaNivel.colorDe(libro.nivelHsk)),
+                      _Encabezado(texto: nombreDeNivel(libro.nivelHsk), color: EtiquetaNivel.colorPara(context, libro.nivelHsk)),
                     _TarjetaLibro(libro: libro, onTap: () => _abrir(libro)),
                     const SizedBox(height: 10),
                   ],

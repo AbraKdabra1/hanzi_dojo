@@ -194,7 +194,7 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
                                 style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
                           ]),
                           const SizedBox(height: 10),
-                          BarraAvance(valor: n.estudiados, total: n.total, color: EtiquetaNivel.colorDe(n.nivel)),
+                          BarraAvance(valor: n.estudiados, total: n.total, color: EtiquetaNivel.colorPara(context, n.nivel)),
                           const SizedBox(height: 4),
                           Text('${n.dominados} dominados',
                               style: TextStyle(fontSize: 11, color: context.colores.tenue)),

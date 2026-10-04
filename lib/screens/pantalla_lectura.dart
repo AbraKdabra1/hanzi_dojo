@@ -136,7 +136,7 @@ class _PantallaLecturaState extends State<PantallaLectura> {
         children: [
           _leido
               ? Row(mainAxisSize: MainAxisSize.min, children: [
-                  Icon(Icons.check_circle, color: EtiquetaNivel.colorDe(widget.libro.nivelHsk)),
+                  Icon(Icons.check_circle, color: EtiquetaNivel.colorPara(context, widget.libro.nivelHsk)),
                   const SizedBox(width: 6),
                   const Text('Capítulo leído', style: TextStyle(fontWeight: FontWeight.w600)),
                 ])

@@ -168,7 +168,7 @@ class _Ahora extends StatelessWidget {
       final ma = l.miliamperios;
       if (ma != null) filas.add(('Corriente', '${_numero(ma)} mA'));
       final ph = l.porcentajePorHora;
-      if (ph != null) filas.add(('A este ritmo', '−${_numero(ph, 1)} % por hora'));
+      if (ph != null) filas.add(('A este ritmo baja', '${_numero(ph, 1)} % por hora'));
       if (l.temperatura > 0) filas.add(('Temperatura', '${_numero(l.temperatura, 1)} °C'));
       if (l.tasaPantalla > 0) filas.add(('Pantalla', '${_numero(l.tasaPantalla)} Hz'));
     }
@@ -236,7 +236,7 @@ class _Medicion extends StatelessWidget {
               _Fila(nombre: 'Tiempo medido', valor: '${(m.segundosEnPantalla / 60).toStringAsFixed(1)} min'),
               if (m.promedioMa != null) _Fila(nombre: 'Corriente promedio', valor: '${_numero(m.promedioMa!)} mA'),
               if (m.porcentajePorHora != null)
-                _Fila(nombre: 'Equivale a', valor: '−${_numero(m.porcentajePorHora!, 1)} % por hora'),
+                _Fila(nombre: 'Equivale a bajar', valor: '${_numero(m.porcentajePorHora!, 1)} % por hora'),
               if (m.bajo != null) _Fila(nombre: 'Bajó la batería', valor: '${m.bajo} puntos'),
               if (m.huboCarga)
                 Text('⚠️ El teléfono estuvo cargando: esta medición no sirve. Reiníciala.', style: estiloSuave),

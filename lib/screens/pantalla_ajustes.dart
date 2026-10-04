@@ -177,9 +177,9 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                       child: SegmentedButton<ThemeMode>(
                         showSelectedIcon: false,
                         segments: const [
-                          ButtonSegment(value: ThemeMode.system, label: Text('Automática'), icon: Icon(Icons.brightness_auto_outlined)),
-                          ButtonSegment(value: ThemeMode.light, label: Text('Clara'), icon: Icon(Icons.light_mode_outlined)),
-                          ButtonSegment(value: ThemeMode.dark, label: Text('Oscura'), icon: Icon(Icons.dark_mode_outlined)),
+                          ButtonSegment(value: ThemeMode.system, label: Text('Automática')),
+                          ButtonSegment(value: ThemeMode.light, label: Text('Clara')),
+                          ButtonSegment(value: ThemeMode.dark, label: Text('Oscura')),
                         ],
                         selected: {modo},
                         onSelectionChanged: (elegido) {

@@ -140,12 +140,12 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
                 height: 52,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: EtiquetaNivel.colorDe(n.nivel).withValues(alpha: 0.10),
+                  color: EtiquetaNivel.colorPara(context, n.nivel).withValues(alpha: 0.10),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Text(n.nivel == 7 ? '7-9' : '${n.nivel}',
                     style: TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w700, color: EtiquetaNivel.colorDe(n.nivel))),
+                        fontSize: 20, fontWeight: FontWeight.w700, color: EtiquetaNivel.colorPara(context, n.nivel))),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -159,7 +159,7 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
                       style: TextStyle(fontSize: 12, color: context.colores.tenue),
                     ),
                     const SizedBox(height: 6),
-                    BarraAvance(valor: n.estudiados, total: n.total, color: EtiquetaNivel.colorDe(n.nivel)),
+                    BarraAvance(valor: n.estudiados, total: n.total, color: EtiquetaNivel.colorPara(context, n.nivel)),
                   ],
                 ),
               ),
