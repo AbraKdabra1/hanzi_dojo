@@ -158,7 +158,7 @@ class ParrafoLectura extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            BotonVoz(texto: p.chino, tamano: 16),
+            BotonVoz(texto: p.chino, pinyin: p.pinyin, tamano: 16),
             if (p.espanol.isNotEmpty)
               IconButton(
                 visualDensity: VisualDensity.compact,
@@ -239,7 +239,7 @@ class FichaCaracterLectura extends StatelessWidget {
                       ],
                     ),
                   ),
-                  BotonVoz(texto: texto),
+                  BotonVoz(texto: texto, pinyin: [pinyinEnTexto]),
                 ],
               ),
               const SizedBox(height: 14),

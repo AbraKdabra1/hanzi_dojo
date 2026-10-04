@@ -212,7 +212,7 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
             crossAxisAlignment: WrapCrossAlignment.center,
             alignment: WrapAlignment.center,
             children: [
-              BotonVoz(texto: c.caracter),
+              BotonVoz(texto: c.caracter, pinyin: [c.pinyin]),
               _Pastilla(
                 icono: Icons.menu_book_rounded,
                 texto: 'Ejemplos',
@@ -527,7 +527,7 @@ class _FilaEjemplo extends StatelessWidget {
                   ),
               ])),
             ),
-            BotonVoz(texto: ejemplo.chino, tamano: 16),
+            BotonVoz(texto: ejemplo.chino, pinyinPorPalabras: ejemplo.pinyin, tamano: 16),
           ],
         ),
         const SizedBox(height: 2),
