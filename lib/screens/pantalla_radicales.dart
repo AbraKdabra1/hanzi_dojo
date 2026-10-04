@@ -198,14 +198,13 @@ class _CeldaRadical extends StatelessWidget {
               style: TextStyle(fontSize: 11, color: Colors.grey.shade700)),
           const SizedBox(height: 4),
           if (r.totalHsk > 0)
-            ClipRRect(
+            // borderRadius propio en vez de ClipRRect: sin una capa de recorte por celda.
+            LinearProgressIndicator(
+              value: r.aprendidosHsk / r.totalHsk,
+              minHeight: 3,
               borderRadius: BorderRadius.circular(3),
-              child: LinearProgressIndicator(
-                value: r.aprendidosHsk / r.totalHsk,
-                minHeight: 3,
-                backgroundColor: const Color(0x14000000),
-                color: const Color(0xFF6A1B9A),
-              ),
+              backgroundColor: const Color(0x14000000),
+              color: const Color(0xFF6A1B9A),
             ),
         ],
       ),

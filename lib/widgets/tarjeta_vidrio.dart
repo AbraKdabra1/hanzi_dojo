@@ -9,6 +9,10 @@
 // Aquí el aspecto de vidrio se logra con un relleno blanco translúcido, un
 // borde claro y una sombra suave. Sobre el fondo claro de la app se ve casi
 // igual y cuesta prácticamente nada.
+//
+// Tampoco se recorta la tarjeta (clipBehavior): un recorte con antialias es
+// una capa extra por tarjeta en cada cuadro del scroll. El brillo al tocar
+// (InkWell) ya se limita solo a las esquinas redondeadas con borderRadius.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
@@ -51,9 +55,9 @@ class TarjetaVidrio extends StatelessWidget {
           borderRadius: forma,
           side: BorderSide(color: colorBorde, width: 1.2),
         ),
-        clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
+          borderRadius: forma,
           child: Padding(padding: relleno, child: child),
         ),
       ),
