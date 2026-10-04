@@ -12,6 +12,9 @@
 // funciona; si no, grabaciones palabra por palabra. Si no hay ninguna de las
 // dos, el botón lo dice en vez de quedarse callado.
 //
+// Velocidad: Voz.velocidad (1.0 normal; 0.75 con «Voz lenta» en Ajustes). Los
+// ejercicios tienen además un botón 🐢 para repetir algo más despacio.
+//
 // Batería: el reproductor se detiene (y suelta el decodificador) al terminar.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -41,7 +44,23 @@ class Voz {
   /// Cada toque nuevo interrumpe al anterior.
   static int _turno = 0;
 
+  /// Velocidad normal de las grabaciones (1.0; 0.75 con «Voz lenta»).
+  static double velocidad = 1.0;
+
+  /// Velocidad del botón 🐢 de los ejercicios.
+  static const velocidadLenta = 0.7;
+
+  /// Solo para las pruebas automáticas: no se intenta sonar nada (en la
+  /// computadora no hay reproductor de audio).
+  static bool desactivada = false;
+
+  /// Velocidad a la que quedó configurada la voz del teléfono.
+  static double _velocidadTts = 1.0;
+
   static AudioPlayer get _audio => _reproductor ??= AudioPlayer();
+
+  /// Palabras y sílabas grabadas: (palabras, sílabas).
+  static Future<(Set<String>, Set<String>)> listas() => _cargarListas();
 
   /// Palabras y sílabas grabadas (se leen una sola vez).
   static Future<(Set<String>, Set<String>)> _cargarListas() => _listas ??= () async {
@@ -84,7 +103,10 @@ class Voz {
   ///
   /// [pinyinPorPalabras] es la alternativa cuando el pinyin viene escrito por
   /// palabras ('wǒ xǐhuan…', como en las oraciones de ejemplo).
-  static Future<ResultadoVoz> decir(String texto, {List<String>? pinyin, String? pinyinPorPalabras}) async {
+  static Future<ResultadoVoz> decir(String texto,
+      {List<String>? pinyin, String? pinyinPorPalabras, double? rapidez}) async {
+    if (desactivada) return ResultadoVoz.sinSonido;
+    final v = rapidez ?? velocidad;
     final turno = ++_turno;
     await _detenerSonido();
     try {
@@ -97,12 +119,16 @@ class Voz {
 
       if (!grabacionCompleta && await _hayVozChina()) {
         if (turno != _turno) return ResultadoVoz.vozDelTelefono;
+        if (_velocidadTts != v) {
+          await _tts.setSpeechRate(0.42 * v);
+          _velocidadTts = v;
+        }
         final r = await _tts.speak(texto);
         if (r == 1 || r == true) return ResultadoVoz.vozDelTelefono;
         _ttsFallo = true;
       }
       if (plan.grabaciones == 0) return ResultadoVoz.sinSonido;
-      await _tocar(plan.clips, turno);
+      await _tocar(plan.clips, turno, v);
       return ResultadoVoz.grabacion;
     } catch (e, pila) {
       debugPrint('Voz: no se pudo leer "$texto": $e');
@@ -111,9 +137,25 @@ class Voz {
     }
   }
 
-  static Future<void> _tocar(List<Clip> clips, int turno) async {
+  /// Toca exactamente estas grabaciones (los ejercicios: una sílaba o una
+  /// palabra concreta, sin pasar por la voz del teléfono). false si falló.
+  static Future<bool> tocar(List<Clip> clips, {double? rapidez}) async {
+    if (desactivada) return false;
+    final turno = ++_turno;
+    await _detenerSonido();
+    try {
+      await _tocar(clips, turno, rapidez ?? velocidad);
+      return true;
+    } catch (e, pila) {
+      RegistroErrores.registrar('Voz', e, pila);
+      return false;
+    }
+  }
+
+  static Future<void> _tocar(List<Clip> clips, int turno, double rapidez) async {
     final audio = _audio;
     try {
+      await audio.setSpeed(rapidez);
       for (final clip in clips) {
         if (turno != _turno) return;
         if (clip.esPausa) {
@@ -163,11 +205,14 @@ class BotonVoz extends StatefulWidget {
 class _BotonVozState extends State<BotonVoz> {
   bool _activo = false;
 
-  Future<void> _hablar() async {
+  /// [lento]: mantener presionado el botón lo repite más despacio.
+  Future<void> _hablar({bool lento = false}) async {
     setState(() => _activo = true);
     final inicio = DateTime.now();
-    final resultado =
-        await Voz.decir(widget.texto, pinyin: widget.pinyin, pinyinPorPalabras: widget.pinyinPorPalabras);
+    final resultado = await Voz.decir(widget.texto,
+        pinyin: widget.pinyin,
+        pinyinPorPalabras: widget.pinyinPorPalabras,
+        rapidez: lento ? Voz.velocidadLenta : null);
     if (resultado == ResultadoVoz.sinSonido && mounted) {
       ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(
         content: Text('No hay grabación de esto y tu teléfono no tiene voz en chino. '
@@ -188,9 +233,10 @@ class _BotonVozState extends State<BotonVoz> {
     final c = context.colores;
     return Semantics(
       button: true,
-      label: 'Escuchar pronunciación',
+      label: 'Escuchar pronunciación (mantén presionado para oírla lento)',
       child: GestureDetector(
         onTap: _hablar,
+        onLongPress: () => _hablar(lento: true),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           width: 64,

@@ -10,8 +10,9 @@
 //   · Precisión: repasos sin ningún trazo fallado (novato y experto).
 //   · Los caracteres que más te cuestan, con un botón para practicarlos.
 //   · Los trazos que más fallas, dibujados en rojo dentro de su carácter.
-//   · Avance por nivel HSK.
-// Todo sale del historial de repasos (fase 1).
+//   · Práctica con audio: aciertos por ejercicio y qué tonos confundes.
+//   · Avance por nivel HSK (caracteres y vocabulario).
+// Todo sale del historial de repasos (fase 1) y de los ejercicios (fase 5).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
@@ -19,10 +20,13 @@ import 'package:flutter/material.dart';
 import '../datos/datos_app.dart';
 import '../datos/estadisticas.dart';
 import '../datos/modelos.dart';
+import '../datos/practica.dart';
 import '../datos/repositorio.dart';
+import '../datos/repositorio_practica.dart';
 import '../helpers/cache_trazos.dart';
 import '../painters/geometria.dart';
 import '../widgets/comunes.dart';
+import '../widgets/ejercicio.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
 import '../tema.dart';
@@ -57,6 +61,9 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
   Precision? _precision;
   List<CaracterDificil> _dificiles = const [];
   List<(TrazoFallado, Caracter?)> _trazos = const [];
+  List<ResumenEjercicio> _ejercicios = const [];
+  List<ConfusionTono> _confusiones = const [];
+  Map<int, AvancePalabras> _palabras = const {};
 
   @override
   void initState() {
@@ -76,8 +83,14 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
     final trazos = <(TrazoFallado, Caracter?)>[
       for (final t in await repo.trazosFallados()) (t, await repo.caracterConTrazos(t.caracter)),
     ];
+    final ejercicios = await repo.resumenEjercicios();
+    final confusiones = await repo.confusionTonos();
+    final palabras = {for (final a in await repo.avancePalabras()) a.nivel: a};
     if (!mounted) return;
     setState(() {
+      _ejercicios = ejercicios;
+      _confusiones = confusiones;
+      _palabras = palabras;
       _niveles = niveles;
       _total = total;
       _pendientes = pendientes;
@@ -180,6 +193,11 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
                           ],
                         ),
                       ),
+                    if (_ejercicios.any((e) => e.total > 0))
+                      _Seccion(
+                        titulo: 'Práctica con audio (últimos 30 días)',
+                        child: _VistaPractica(resumen: _ejercicios, confusiones: _confusiones),
+                      ),
                   ],
                   const SizedBox(height: 6),
                   for (final n in niveles) ...[
@@ -198,6 +216,16 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
                           const SizedBox(height: 4),
                           Text('${n.dominados} dominados',
                               style: TextStyle(fontSize: 11, color: context.colores.tenue)),
+                          if (_palabras[n.nivel] case final w? when w.estudiadas > 0) ...[
+                            const SizedBox(height: 8),
+                            Text('Vocabulario', style: TextStyle(fontSize: 11, color: context.colores.tenue)),
+                            const SizedBox(height: 4),
+                            BarraAvance(
+                              valor: w.estudiadas,
+                              total: w.total,
+                              color: EtiquetaNivel.colorPara(context, n.nivel).withValues(alpha: 0.6),
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -211,6 +239,71 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
 }
 
 // ─── Piezas ──────────────────────────────────────────────────────────────────
+
+/// Aciertos de cada ejercicio con audio y los tonos que más confundes.
+class _VistaPractica extends StatelessWidget {
+  const _VistaPractica({required this.resumen, required this.confusiones});
+
+  final List<ResumenEjercicio> resumen;
+  final List<ConfusionTono> confusiones;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colores;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final r in resumen)
+          if (r.total > 0)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: [
+                  SizedBox(width: 120, child: Text(TipoEjercicio.nombre(r.tipo), style: const TextStyle(fontSize: 13))),
+                  Expanded(
+                    child: LinearProgressIndicator(
+                      value: r.precision ?? 0,
+                      minHeight: 6,
+                      borderRadius: BorderRadius.circular(4),
+                      backgroundColor: c.separador,
+                      color: ColoresRespuesta.bien(context),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    width: 64,
+                    child: Text('${((r.precision ?? 0) * 100).round()} % de ${r.total}',
+                        textAlign: TextAlign.end, style: TextStyle(fontSize: 11, color: c.tenue)),
+                  ),
+                ],
+              ),
+            ),
+        if (confusiones.isNotEmpty) ...[
+          const SizedBox(height: 6),
+          Text('Tonos que confundes', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: c.suave)),
+          const SizedBox(height: 6),
+          for (final k in confusiones)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Row(
+                children: [
+                  ContornoTono(tono: k.esperado, ancho: 26, alto: 14),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      'Oyes el ${k.esperado}.º y eliges el ${k.elegido}.º (${k.veces} veces)',
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                  ),
+                  ContornoTono(tono: k.elegido, ancho: 26, alto: 14),
+                ],
+              ),
+            ),
+        ],
+      ],
+    );
+  }
+}
 
 class _Cifra extends StatelessWidget {
   const _Cifra({required this.valor, required this.etiqueta});

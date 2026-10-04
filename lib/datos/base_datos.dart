@@ -18,6 +18,8 @@
 //   2  + historial (una fila por repaso: base de las estadísticas)
 //   3  + lectura (capítulos de la sección «Leer» que ya terminaste)
 //   4  + mis_libros, mis_capitulos, mis_parrafos (libros que agregaste tú)
+//   5  + progreso_palabras (repaso espaciado del vocabulario) y ejercicios
+//        (cada respuesta de tonos, escucha y pinyin: base de sus estadísticas)
 //
 // Se abre una sola conexión a progreso.db y se "adjunta" contenido.db con el
 // alias `c`. Así una misma consulta puede unir ambas:
@@ -54,7 +56,7 @@ class BaseDatos {
 
   static const _archivoContenido = 'contenido.db';
   static const _archivoProgreso = 'progreso.db';
-  static const _versionEsquemaProgreso = 4;
+  static const _versionEsquemaProgreso = 5;
 
   /// Abre (y si hace falta, prepara) las bases de datos.
   ///
@@ -148,6 +150,7 @@ class BaseDatos {
     await _crearHistorial(db);
     await _crearLectura(db);
     await _crearMisLibros(db);
+    await _crearPractica(db);
   }
 
   /// Quien ya tenía la app: se agregan las tablas nuevas sin tocar su avance.
@@ -155,6 +158,40 @@ class BaseDatos {
     if (anterior < 2) await _crearHistorial(db);
     if (anterior < 3) await _crearLectura(db);
     if (anterior < 4) await _crearMisLibros(db);
+    if (anterior < 5) await _crearPractica(db);
+  }
+
+  /// Práctica con audio (fase 5): repaso de palabras y ejercicios.
+  /// Igual que el progreso de caracteres, todo se guarda por TEXTO (la palabra,
+  /// la sílaba), no por número de fila.
+  static Future<void> _crearPractica(Database db) async {
+    await db.execute('''
+      CREATE TABLE progreso_palabras (
+        palabra           TEXT PRIMARY KEY,
+        intervalo         INTEGER NOT NULL DEFAULT 0,
+        factor            REAL    NOT NULL DEFAULT 2.5,
+        aciertos_seguidos INTEGER NOT NULL DEFAULT 0,
+        veces_visto       INTEGER NOT NULL DEFAULT 0,
+        proximo_repaso    INTEGER NOT NULL DEFAULT 0,   -- segundos Unix
+        primera_vez       INTEGER NOT NULL,
+        ultima_vez        INTEGER NOT NULL
+      )
+    ''');
+    await db.execute('CREATE INDEX idx_progreso_palabras_repaso ON progreso_palabras (proximo_repaso)');
+    await db.execute('CREATE INDEX idx_progreso_palabras_primera ON progreso_palabras (primera_vez)');
+    await db.execute('''
+      CREATE TABLE ejercicios (
+        id          INTEGER PRIMARY KEY AUTOINCREMENT,
+        tipo        TEXT    NOT NULL,             -- tono | tonos_palabra | escucha | pinyin | palabra
+        elemento    TEXT    NOT NULL,             -- qué se preguntó: 'ma3', '图书馆'…
+        momento     INTEGER NOT NULL,             -- segundos Unix
+        resultado   INTEGER NOT NULL,             -- 1 acierto, 0 error (palabra: q de SM-2)
+        respuesta   TEXT    NOT NULL DEFAULT '',  -- lo que contestaste ('2', 'ni3hao3'…)
+        duracion_ms INTEGER NOT NULL DEFAULT 0
+      )
+    ''');
+    await db.execute('CREATE INDEX idx_ejercicios_momento ON ejercicios (momento)');
+    await db.execute('CREATE INDEX idx_ejercicios_tipo ON ejercicios (tipo, momento)');
   }
 
   /// Libros que agregaste tú (TXT, EPUB o texto pegado). Solo viven en el

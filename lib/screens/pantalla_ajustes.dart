@@ -3,6 +3,7 @@
 //
 // · Cuántos caracteres NUEVOS quieres por día. Los repasos no tienen límite
 //   (siempre conviene hacer los que tocan).
+// · Práctica con audio: voz lenta y cuántas palabras nuevas por día.
 // · Ajuste caligráfico: si cada trazo correcto se acomoda (con un rebote
 //   suave) en la forma exacta del pincel, o se queda como lo dibujaste.
 // · Tus datos: exportar e importar el progreso (respaldo.dart) y deshacer la
@@ -15,8 +16,10 @@ import 'package:flutter/material.dart';
 
 import '../datos/datos_app.dart';
 import '../datos/registro_errores.dart';
+import '../datos/repositorio_practica.dart';
 import '../datos/respaldo.dart';
 import '../helpers/archivos.dart';
+import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
@@ -36,6 +39,8 @@ class PantallaAjustes extends StatefulWidget {
 class _PantallaAjustesState extends State<PantallaAjustes> {
   int? _limite;
   bool? _ajuste;
+  int? _limitePalabras;
+  bool? _vozLenta;
 
   /// ¿Hay una importación que se pueda deshacer?
   bool _hayPrevio = false;
@@ -53,11 +58,15 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
     final repo = DatosApp.de(context);
     final n = await repo.limiteNuevosPorDia();
     final ajuste = await repo.ajusteCaligrafico();
+    final limitePalabras = await repo.limitePalabrasPorDia();
+    final vozLenta = await repo.vozLenta();
     final previo = await Respaldo.hayRespaldoPrevio(repo.base);
     if (mounted) {
       setState(() {
         _limite = n;
         _ajuste = ajuste;
+        _limitePalabras = limitePalabras;
+        _vozLenta = vozLenta;
         _hayPrevio = previo;
       });
     }
@@ -229,6 +238,56 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                         SizedBox(
                           width: 36,
                           child: Text('$limite',
+                              textAlign: TextAlign.end,
+                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            TarjetaVidrio(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Práctica con audio', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Voz lenta', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                    subtitle: Text(
+                      'Todas las grabaciones suenan un poco más despacio. Sin activarlo, '
+                      'mantén presionado un botón de sonido para oírlo lento.',
+                      style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.3),
+                    ),
+                    value: _vozLenta ?? false,
+                    onChanged: _vozLenta == null
+                        ? null
+                        : (v) {
+                            setState(() => _vozLenta = v);
+                            Voz.velocidad = v ? 0.75 : 1.0;
+                            DatosApp.de(context).guardarVozLenta(v);
+                          },
+                  ),
+                  Text('Palabras nuevas por día',
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: context.colores.tinta)),
+                  if (_limitePalabras != null)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Slider(
+                            value: _limitePalabras!.toDouble(),
+                            min: 5,
+                            max: 30,
+                            divisions: 5,
+                            label: '$_limitePalabras',
+                            onChanged: (v) => setState(() => _limitePalabras = v.round()),
+                            onChangeEnd: (v) => DatosApp.de(context).guardarLimitePalabrasPorDia(v.round()),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 36,
+                          child: Text('$_limitePalabras',
                               textAlign: TextAlign.end,
                               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                         ),

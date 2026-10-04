@@ -22,13 +22,19 @@ import 'package:hanzi_dojo/screens/pantalla_ajustes.dart';
 import 'package:hanzi_dojo/screens/pantalla_bateria.dart';
 import 'package:hanzi_dojo/screens/pantalla_biblioteca.dart';
 import 'package:hanzi_dojo/screens/pantalla_estadisticas.dart';
+import 'package:hanzi_dojo/screens/pantalla_escucha.dart';
 import 'package:hanzi_dojo/screens/pantalla_estudio.dart';
 import 'package:hanzi_dojo/screens/pantalla_inicio.dart';
 import 'package:hanzi_dojo/screens/pantalla_lectura.dart';
 import 'package:hanzi_dojo/screens/pantalla_modo.dart';
+import 'package:hanzi_dojo/screens/pantalla_pinyin.dart';
+import 'package:hanzi_dojo/screens/pantalla_practica.dart';
 import 'package:hanzi_dojo/screens/pantalla_radicales.dart';
 import 'package:hanzi_dojo/screens/pantalla_seleccion.dart';
+import 'package:hanzi_dojo/screens/pantalla_tonos.dart';
+import 'package:hanzi_dojo/screens/pantalla_vocabulario.dart';
 import 'package:hanzi_dojo/tema.dart';
+import 'package:hanzi_dojo/widgets/boton_voz.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 final _pedidas = Platform.environment.containsKey('CAPTURAS');
@@ -124,6 +130,7 @@ void main() {
       return null;
     });
 
+    Voz.desactivada = true; // en la computadora no hay reproductor de audio
     await tester.runAsync(() async {
       await _cargarFuentes();
       await SpritesCiruelo.cargar();
@@ -151,5 +158,16 @@ void main() {
     await capturar(tester, '08_estadisticas', const PantallaEstadisticas());
     await capturar(tester, '09_ajustes', const PantallaAjustes());
     await capturar(tester, '10_bateria', const PantallaBateria());
+    await capturar(tester, '11_practica', const PantallaPractica());
+    await capturar(tester, '12_tonos', const PantallaTonos(nivel: 1),
+        accion: (t) => t.tap(find.text('3.º tono'), warnIfMissed: false));
+    await capturar(tester, '12b_tonos_palabras', const PantallaTonos(nivel: 2),
+        accion: (t) => t.tap(find.text('Palabras'), warnIfMissed: false));
+    await capturar(tester, '13_escucha', const PantallaEscucha(nivel: 1));
+    await capturar(tester, '14_vocabulario', const PantallaVocabulario(nivel: 1),
+        accion: (t) => t.tap(find.text('Mostrar'), warnIfMissed: false));
+    await capturar(tester, '15_pinyin', const PantallaPinyin(nivel: 1), accion: (t) async {
+      await t.enterText(find.byType(TextField), 'ni3hao');
+    });
   }, skip: !_pedidas);
 }

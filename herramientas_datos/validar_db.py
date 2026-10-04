@@ -218,6 +218,30 @@ def main():
                 (aviso if en_db_libros.get(clave, (0, "original"))[1] == "original" else error)(
                     f"Libro {clave}: «{c}» no está en la base (no se podrá consultar)")
 
+    # 10. Vocabulario ─────────────────────────────────────────────────────
+    por_nivel = dict(q("SELECT nivel_hsk, count(*) FROM palabras GROUP BY nivel_hsk"))
+    if sum(por_nivel.values()) < 10500:
+        error(f"Solo {sum(por_nivel.values())} palabras HSK en la tabla palabras (se esperaban ~10,900)")
+    sin_es_pal = q("SELECT count(*) FROM palabras WHERE nivel_hsk <= 6 AND (significado_es IS NULL OR significado_es = '')")[0][0]
+    if sin_es_pal:
+        msg = f"{sin_es_pal} palabras de HSK 1-6 sin significado en español"
+        (aviso if PERMITIR_INCOMPLETO else error)(msg)
+    malas = []
+    for palabra, pinyin_num in q("SELECT palabra, pinyin_num FROM palabras"):
+        silabas = pinyin_num.split()
+        if len(silabas) != len(palabra):
+            malas.append(palabra)
+            continue
+        for c, sil in zip(palabra, silabas):
+            if sil == "_":
+                if c != "儿":
+                    malas.append(palabra)
+            elif re.sub(r"\d", "", sil) not in validas or not re.search(r"[1-5]$", sil):
+                malas.append(palabra)
+    if malas:
+        error(f"{len(malas)} palabras con pinyin_num mal alineado, p. ej.: {malas[:5]}")
+    total_palabras = sum(por_nivel.values())
+
     # 8. Versión ──────────────────────────────────────────────────────────
     version_db = q("SELECT valor FROM meta WHERE clave = 'version'")[0][0]
     texto = open(VERSION_DART, encoding="utf-8").read() if os.path.exists(VERSION_DART) else ""
@@ -228,7 +252,7 @@ def main():
     total = q("SELECT count(*) FROM caracteres")[0][0]
     print(f"contenido.db versión {version_db}: {total} caracteres, "
           f"{len(en_db)} HSK, {con_ejemplo} con ejemplos, {3000 - len(sin_es)} con español, "
-          f"{len(en_db_libros)} libros ({total_parrafos} párrafos)")
+          f"{len(en_db_libros)} libros ({total_parrafos} párrafos), {total_palabras} palabras")
     for a in avisos:
         print("  AVISO:", a)
     for e in errores:

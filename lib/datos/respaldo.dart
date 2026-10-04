@@ -15,6 +15,8 @@
 //     "progreso":  [ {"caracter": "好", "intervalo": 6, "factor": 2.5, …}, … ],
 //     "historial": [ {"caracter": "好", "momento": 1790000000, …}, … ],
 //     "lectura":   [ {"libro": "cuentos-para-ninos", "capitulo": 1, "momento": …}, … ],
+//     "progreso_palabras": [ {"palabra": "爸爸", "intervalo": 6, …}, … ],
+//     "ejercicios": [ {"tipo": "tono", "elemento": "ma3", "resultado": 1, …}, … ],
 //     "ajustes":   { "nuevos_por_dia": "15", … }
 //   }
 //
@@ -51,6 +53,8 @@ class DatosRespaldo {
     required this.progreso,
     required this.historial,
     this.lectura = const [],
+    this.progresoPalabras = const [],
+    this.ejercicios = const [],
     required this.ajustes,
   });
 
@@ -60,6 +64,10 @@ class DatosRespaldo {
 
   /// Capítulos leídos en «Leer».
   final List<Map<String, Object>> lectura;
+
+  /// Repaso del vocabulario y respuestas de los ejercicios con audio.
+  final List<Map<String, Object>> progresoPalabras;
+  final List<Map<String, Object>> ejercicios;
   final Map<String, String> ajustes;
 
   int get caracteres => progreso.length;
@@ -108,6 +116,26 @@ class Respaldo {
     'intervalo': _Tipo.entero,
   };
 
+  static const _columnasProgresoPalabras = {
+    'palabra': _Tipo.texto,
+    'intervalo': _Tipo.entero,
+    'factor': _Tipo.real,
+    'aciertos_seguidos': _Tipo.entero,
+    'veces_visto': _Tipo.entero,
+    'proximo_repaso': _Tipo.entero,
+    'primera_vez': _Tipo.entero,
+    'ultima_vez': _Tipo.entero,
+  };
+
+  static const _columnasEjercicios = {
+    'tipo': _Tipo.texto,
+    'elemento': _Tipo.texto,
+    'momento': _Tipo.entero,
+    'resultado': _Tipo.entero,
+    'respuesta': _Tipo.texto,
+    'duracion_ms': _Tipo.entero,
+  };
+
   static const _columnasLectura = {
     'libro': _Tipo.texto,
     'capitulo': _Tipo.entero,
@@ -132,6 +160,10 @@ class Respaldo {
         'SELECT ${_columnasHistorial.keys.join(', ')} FROM historial ORDER BY momento, id');
     final lectura = await db.rawQuery(
         'SELECT ${_columnasLectura.keys.join(', ')} FROM lectura ORDER BY libro, capitulo');
+    final progresoPalabras = await db.rawQuery(
+        'SELECT ${_columnasProgresoPalabras.keys.join(', ')} FROM progreso_palabras ORDER BY palabra');
+    final ejercicios = await db.rawQuery(
+        'SELECT ${_columnasEjercicios.keys.join(', ')} FROM ejercicios ORDER BY momento, id');
     final ajustes = await db.rawQuery('SELECT clave, valor FROM ajustes ORDER BY clave');
     final json = <String, Object?>{
       'formato': formato,
@@ -140,6 +172,8 @@ class Respaldo {
       'progreso': progreso,
       'historial': historial,
       'lectura': lectura,
+      'progreso_palabras': progresoPalabras,
+      'ejercicios': ejercicios,
       'ajustes': {
         for (final f in ajustes)
           if (!_ajustesLocales.contains(f['clave'])) f['clave'] as String: f['valor'] as String,
@@ -191,6 +225,9 @@ class Respaldo {
       progreso: _filas(json['progreso'], _columnasProgreso, 'progreso'),
       historial: _filas(json['historial'] ?? const [], _columnasHistorial, 'historial'),
       lectura: _filas(json['lectura'] ?? const [], _columnasLectura, 'lectura'),
+      progresoPalabras:
+          _filas(json['progreso_palabras'] ?? const [], _columnasProgresoPalabras, 'vocabulario'),
+      ejercicios: _filas(json['ejercicios'] ?? const [], _columnasEjercicios, 'ejercicios'),
       ajustes: ajustes,
     );
   }
@@ -250,6 +287,8 @@ class Respaldo {
       await txn.delete('progreso');
       await txn.delete('historial');
       await txn.delete('lectura');
+      await txn.delete('progreso_palabras');
+      await txn.delete('ejercicios');
       final locales = _ajustesLocales.map((_) => '?').join(', ');
       await txn.rawDelete('DELETE FROM ajustes WHERE clave NOT IN ($locales)', _ajustesLocales.toList());
 
@@ -262,6 +301,12 @@ class Respaldo {
       }
       for (final fila in datos.lectura) {
         lote.insert('lectura', fila, conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (final fila in datos.progresoPalabras) {
+        lote.insert('progreso_palabras', fila, conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (final fila in datos.ejercicios) {
+        lote.insert('ejercicios', fila);
       }
       for (final MapEntry(:key, :value) in datos.ajustes.entries) {
         lote.insert('ajustes', {'clave': key, 'valor': value}, conflictAlgorithm: ConflictAlgorithm.replace);

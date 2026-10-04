@@ -5,6 +5,7 @@
 //   racha de días seguidos (🔥).
 // - Botón "Estudiar" → elegir modo (novato/experto) y qué estudiar.
 // - Botón "Leer" → libros graduados por nivel HSK (pantalla_biblioteca.dart).
+// - Botón "Practicar" → ejercicios con audio (pantalla_practica.dart).
 // - Estadísticas y Ajustes.
 // - Abajo, una frase que cambia cada 4 segundos con un giro suave (solo
 //   mientras la pantalla se ve: con otra pantalla encima o la app en segundo
@@ -26,6 +27,7 @@ import 'pantalla_ajustes.dart';
 import 'pantalla_biblioteca.dart';
 import 'pantalla_estadisticas.dart';
 import 'pantalla_modo.dart';
+import 'pantalla_practica.dart';
 
 class PantallaInicio extends StatefulWidget {
   const PantallaInicio({super.key});
@@ -157,28 +159,23 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
               ),
               const SizedBox(height: 12),
 
-              // Botón secundario → «Leer» (libros graduados por nivel HSK)
-              Material(
-                color: c.tarjeta,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  side: BorderSide(color: c.tinta, width: 1.5),
-                ),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(30),
-                  onTap: () => _ir(const PantallaBiblioteca()),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 34, vertical: 12),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.menu_book_rounded, size: 20, color: c.tinta),
-                        const SizedBox(width: 8),
-                        Text('Leer', style: TextStyle(fontSize: 17, color: c.tinta, fontWeight: FontWeight.w700)),
-                      ],
-                    ),
+              // Botones secundarios → «Leer» (libros graduados) y «Practicar»
+              // (tonos, escucha, vocabulario y pinyin con audio).
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _BotonSecundario(
+                    icono: Icons.menu_book_rounded,
+                    texto: 'Leer',
+                    onTap: () => _ir(const PantallaBiblioteca()),
                   ),
-                ),
+                  const SizedBox(width: 12),
+                  _BotonSecundario(
+                    icono: Icons.headphones_rounded,
+                    texto: 'Practicar',
+                    onTap: () => _ir(const PantallaPractica()),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
 
@@ -227,6 +224,42 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
                 ),
               ),
               const SizedBox(height: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Botón con borde de tinta ("Leer", "Practicar").
+class _BotonSecundario extends StatelessWidget {
+  const _BotonSecundario({required this.icono, required this.texto, required this.onTap});
+
+  final IconData icono;
+  final String texto;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colores;
+    return Material(
+      color: c.tarjeta,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+        side: BorderSide(color: c.tinta, width: 1.5),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(30),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icono, size: 20, color: c.tinta),
+              const SizedBox(width: 8),
+              Text(texto, style: TextStyle(fontSize: 17, color: c.tinta, fontWeight: FontWeight.w700)),
             ],
           ),
         ),
