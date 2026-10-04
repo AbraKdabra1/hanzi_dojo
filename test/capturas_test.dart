@@ -72,7 +72,8 @@ void main() {
 
   /// Muestra [pantalla], deja que cargue sus datos (consultas reales) y guarda
   /// la captura como build/capturas/[nombre]_{claro,oscuro}.png.
-  Future<void> capturar(WidgetTester tester, String nombre, Widget pantalla) async {
+  Future<void> capturar(WidgetTester tester, String nombre, Widget pantalla,
+      {Future<void> Function(WidgetTester)? accion}) async {
     for (final oscuro in [false, true]) {
       await tester.pumpWidget(RepaintBoundary(
         key: _clave,
@@ -86,9 +87,17 @@ void main() {
         ),
       ));
       // Las consultas a la base son asíncronas de verdad: se les da tiempo.
-      for (var i = 0; i < 12; i++) {
-        await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 40)));
-        await tester.pump(const Duration(milliseconds: 100));
+      Future<void> esperar() async {
+        for (var i = 0; i < 12; i++) {
+          await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 40)));
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+      }
+
+      await esperar();
+      if (accion != null) {
+        await accion(tester);
+        await esperar();
       }
       final caja = tester.renderObject<RenderRepaintBoundary>(find.byKey(_clave));
       await tester.runAsync(() async {
@@ -130,12 +139,15 @@ void main() {
     }))!;
 
     await capturar(tester, '01_inicio', const PantallaInicio());
-    await capturar(tester, '02_modo', const PantallaModo());
+    await capturar(tester, '02_modo', const PantallaModo(),
+        accion: (t) => t.tap(find.text('Soy novato'), warnIfMissed: false));
     await capturar(tester, '03_niveles', const PantallaSeleccion(modoNovato: true));
     await capturar(tester, '04_estudio', PantallaEstudio(filtro: FiltroEstudio.unico(idHao), modoNovato: true));
     await capturar(tester, '05_radicales', const PantallaRadicales(modoNovato: true));
     await capturar(tester, '06_biblioteca', const PantallaBiblioteca());
     await capturar(tester, '07_lectura', PantallaLectura(libro: libro, capitulos: capitulos, indice: 0));
+    await capturar(tester, '07b_ficha', PantallaLectura(libro: libro, capitulos: capitulos, indice: 0),
+        accion: (t) => t.tap(find.text('四').first, warnIfMissed: false));
     await capturar(tester, '08_estadisticas', const PantallaEstadisticas());
     await capturar(tester, '09_ajustes', const PantallaAjustes());
     await capturar(tester, '10_bateria', const PantallaBateria());

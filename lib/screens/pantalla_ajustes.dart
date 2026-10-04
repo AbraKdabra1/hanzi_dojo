@@ -176,6 +176,11 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                       width: double.infinity,
                       child: SegmentedButton<ThemeMode>(
                         showSelectedIcon: false,
+                        // Poco relleno: "Automática" cabe en una línea en teléfonos angostos.
+                        style: SegmentedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          textStyle: const TextStyle(fontSize: 14),
+                        ),
                         segments: const [
                           ButtonSegment(value: ThemeMode.system, label: Text('Automática')),
                           ButtonSegment(value: ThemeMode.light, label: Text('Clara')),
