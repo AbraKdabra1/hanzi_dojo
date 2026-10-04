@@ -32,6 +32,7 @@ rastreo. La app no pide permiso de internet.
 | Historial | Cada repaso queda registrado: cuánto tardaste, qué trazos fallaste (y si fue al revés), en qué modo y con qué calificación. Es la base de las estadísticas que vienen. |
 | Exportar / importar | Ajustes → Tus datos. Guarda tu progreso en un archivo `.hanzidojo` y recupéralo en otro teléfono. Antes de importar se guarda una copia para poder deshacerlo. |
 | Informe de errores | Ajustes → Informe de errores. Si algo falla, los detalles se guardan en el teléfono (los últimos 50) para copiarlos al reportar un problema. No se envía nada solo. |
+| Modo oscuro «tinta» | Ajustes → Apariencia: Automática (la del teléfono), Clara u Oscura. En pantallas OLED la oscura gasta bastante menos batería. La rama del inicio se vuelve «ciruelo bajo la luna». |
 | Batería y fluidez | Ajustes → Batería y fluidez. La pantalla va a 120 Hz solo mientras tocas o algo se desplaza (o siempre, si lo eliges). Con el ahorro de batería del teléfono la app no anima nada. Muestra el consumo del momento y puede medir el promedio de una sesión. |
 
 El progreso se guarda **solo en el teléfono** (`progreso.db`). Las actualizaciones
@@ -174,7 +175,8 @@ descomprímelo y abre el `.apk` en el teléfono.
 
 ```
 lib/
-├── main.dart                     Arranque: abre la base, tema (Noto Sans SC) y licencias
+├── main.dart                     Arranque: abre la base, apariencia, energía y licencias
+├── tema.dart                     Colores claro/oscuro (ColoresTinta) y Apariencia
 ├── datos/
 │   ├── base_datos.dart           Abre progreso.db y adjunta contenido.db (ATTACH)
 │   ├── repositorio.dart          Todas las consultas: siguiente tarjeta, búsqueda, radicales…
@@ -237,8 +239,10 @@ código: [CONTRIBUTING.md](CONTRIBUTING.md).
 ## Integración continua
 
 `.github/workflows/ci.yml` hace en cada push: construir y validar la base,
-`flutter analyze`, `flutter test` y compilar el APK de perfil. En ramas de trabajo,
-los resultados se publican además en la rama `ci-registros`.
+`flutter analyze`, `flutter test`, capturas de las pantallas principales en claro
+y oscuro (`test/capturas_test.dart`, con la base y las fuentes reales) y compilar
+el APK de perfil. En ramas de trabajo, los resultados y las capturas
+(`capturas/*.png`) se publican además en la rama `ci-registros`.
 
 ---
 

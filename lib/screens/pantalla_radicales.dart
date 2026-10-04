@@ -18,6 +18,7 @@ import '../datos/repositorio.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
+import '../tema.dart';
 import 'pantalla_estudio.dart';
 import 'pantalla_familia_radical.dart';
 
@@ -89,7 +90,7 @@ class _PantallaRadicalesState extends State<PantallaRadicales> {
           subtitulo: _cargando ? null : '$vistos de 214 practicados',
         ),
         body: _cargando
-            ? const Center(child: CircularProgressIndicator(color: Colors.black54))
+            ? Center(child: CircularProgressIndicator(color: context.colores.icono))
             : Column(
                 children: [
                   Padding(
@@ -105,7 +106,7 @@ class _PantallaRadicalesState extends State<PantallaRadicales> {
                               prefixIcon: const Icon(Icons.search, size: 20),
                               isDense: true,
                               filled: true,
-                              fillColor: const Color(0xB3FFFFFF),
+                              fillColor: context.colores.tarjeta,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(14),
                                 borderSide: BorderSide.none,
@@ -165,8 +166,12 @@ class _CeldaRadical extends StatelessWidget {
       onTap: onTap,
       radio: 16,
       relleno: const EdgeInsets.fromLTRB(8, 6, 8, 8),
-      color: visto ? const Color(0xBFE8F5E9) : const Color(0x99FFFFFF),
-      colorBorde: visto ? const Color(0xCCA5D6A7) : const Color(0xB3FFFFFF),
+      color: visto
+          ? (context.colores.oscuro ? const Color(0x332E7D32) : const Color(0xBFE8F5E9))
+          : context.colores.tarjeta,
+      colorBorde: visto
+          ? (context.colores.oscuro ? const Color(0x664CAF50) : const Color(0xCCA5D6A7))
+          : context.colores.bordeTarjeta,
       child: Column(
         children: [
           Row(
@@ -175,7 +180,9 @@ class _CeldaRadical extends StatelessWidget {
                   style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
-                      color: visto ? const Color(0xFF2E7D32) : const Color(0xFF9E9E9E))),
+                      color: visto
+                          ? (context.colores.oscuro ? const Color(0xFF81C784) : const Color(0xFF2E7D32))
+                          : const Color(0xFF9E9E9E))),
               const Spacer(),
               if (visto) Icon(Icons.check_circle, size: 12, color: Colors.green.shade400),
             ],
@@ -187,7 +194,7 @@ class _CeldaRadical extends StatelessWidget {
                 if (r.variantes.isNotEmpty)
                   TextSpan(
                     text: ' ${r.variantes.first}',
-                    style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
+                    style: TextStyle(fontSize: 18, color: context.colores.tenue),
                   ),
               ])),
             ),
@@ -195,7 +202,7 @@ class _CeldaRadical extends StatelessWidget {
           Text(r.nombreEs,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 11, color: Colors.grey.shade700)),
+              style: TextStyle(fontSize: 11, color: context.colores.suave)),
           const SizedBox(height: 4),
           if (r.totalHsk > 0)
             // borderRadius propio en vez de ClipRRect: sin una capa de recorte por celda.
@@ -203,8 +210,8 @@ class _CeldaRadical extends StatelessWidget {
               value: r.aprendidosHsk / r.totalHsk,
               minHeight: 3,
               borderRadius: BorderRadius.circular(3),
-              backgroundColor: const Color(0x14000000),
-              color: const Color(0xFF6A1B9A),
+              backgroundColor: context.colores.separador,
+              color: (context.colores.oscuro ? const Color(0xFFCE93D8) : const Color(0xFF6A1B9A)),
             ),
         ],
       ),

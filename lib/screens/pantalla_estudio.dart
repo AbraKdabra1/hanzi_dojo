@@ -21,6 +21,7 @@ import '../datos/repositorio.dart';
 import '../datos/sesion_estudio.dart';
 import '../datos/reporte.dart' show TipoReporte;
 import '../datos/srs.dart';
+import '../tema.dart';
 import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
@@ -142,6 +143,7 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
   @override
   Widget build(BuildContext context) {
     final c = _actual;
+    final colores = context.colores;
     return FondoTintaChina(
       child: Scaffold(
         appBar: BarraSuperior(
@@ -150,7 +152,7 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
           acciones: [
             if (c != null)
               IconButton(
-                icon: const Icon(Icons.flag_outlined, color: Colors.black54),
+                icon: Icon(Icons.flag_outlined, color: colores.icono),
                 tooltip: 'Reportar un error en este carácter',
                 onPressed: () => Navigator.push(
                   context,
@@ -164,7 +166,7 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
               ),
             if (c != null)
               IconButton(
-                icon: const Icon(Icons.refresh, color: Colors.black54),
+                icon: Icon(Icons.refresh, color: colores.icono),
                 tooltip: 'Reiniciar trazos',
                 onPressed: () {
                   _claveLienzo.currentState?.reiniciar();
@@ -179,7 +181,7 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
         body: SafeArea(
           child: c == null
               ? (_cargando
-                  ? const Center(child: CircularProgressIndicator(color: Colors.black54))
+                  ? Center(child: CircularProgressIndicator(color: colores.icono))
                   : _vistaFin())
               : Column(
                   children: [
@@ -197,6 +199,7 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
 
   Widget _panelSuperior(Caracter c) {
     final r = _radical;
+    final colores = context.colores;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -216,14 +219,14 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
               _Pastilla(
                 icono: Icons.menu_book_rounded,
                 texto: 'Ejemplos',
-                color: const Color(0xFF1565C0),
+                color: colores.oscuro ? const Color(0xFF90CAF9) : const Color(0xFF1565C0),
                 onTap: () => _verEjemplos(c),
               ),
               if (r != null)
                 _Pastilla(
                   icono: Icons.account_tree_outlined,
                   texto: 'Radical ${r.formaPrincipal} ${r.nombreEs}',
-                  color: const Color(0xFF6A1B9A),
+                  color: colores.oscuro ? const Color(0xFFCE93D8) : const Color(0xFF6A1B9A),
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute<void>(
@@ -240,10 +243,10 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
               EtiquetaNivel(nivel: c.nivelHsk),
               if (c.nivelEscritura != null) ...[
                 const SizedBox(width: 6),
-                Text('✍ escritura oficial', style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+                Text('✍ escritura oficial', style: TextStyle(fontSize: 11, color: colores.tenue)),
               ],
               const SizedBox(width: 6),
-              Text('· ${c.numTrazos} trazos', style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+              Text('· ${c.numTrazos} trazos', style: TextStyle(fontSize: 11, color: colores.tenue)),
             ],
           ),
         ],
@@ -254,6 +257,7 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
   // ── Lienzo ───────────────────────────────────────────────────────────────
 
   Widget _lienzo(Caracter c) {
+    final colores = context.colores;
     // El margen va FUERA del AspectRatio: así el lienzo queda exactamente
     // cuadrado y la cuadrícula 米 coincide con el centro del carácter.
     return Padding(
@@ -263,10 +267,10 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
           aspectRatio: 1,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: colores.lienzo,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFFE0E0E0), width: 1.5),
-              boxShadow: const [BoxShadow(color: Color(0x1F000000), blurRadius: 18, offset: Offset(0, 8))],
+              border: Border.all(color: colores.bordeLienzo, width: 1.5),
+              boxShadow: [BoxShadow(color: colores.sombra, blurRadius: 18, offset: const Offset(0, 8))],
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(14),
@@ -292,11 +296,12 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
   // ── Panel inferior: calificación ─────────────────────────────────────────
 
   Widget _panelInferior() {
+    final colores = context.colores;
     if (!_completado) {
       return Center(
         child: Text(
           'Escribe el carácter trazo por trazo',
-          style: TextStyle(color: Colors.grey.shade500, fontSize: 15, fontStyle: FontStyle.italic),
+          style: TextStyle(color: colores.tenue, fontSize: 15, fontStyle: FontStyle.italic),
         ),
       );
     }
@@ -306,7 +311,7 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
       children: [
         Text(
           _errores == 0 ? 'Sin errores ✨' : '$_errores ${_errores == 1 ? 'error' : 'errores'} de trazo',
-          style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
+          style: TextStyle(fontSize: 13, color: colores.suave),
         ),
         const SizedBox(height: 10),
         Row(
@@ -415,22 +420,28 @@ class _BotonCalificacion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final oscuro = context.colores.oscuro;
+    // De noche: fondo del color muy apagado y texto claro (los pasteles de día
+    // deslumbrarían sobre negro).
+    final fondo = oscuro
+        ? color.shade900.withValues(alpha: resaltado ? 0.75 : 0.45)
+        : (resaltado ? color.shade100 : color.shade50);
     return AnimatedScale(
       scale: resaltado ? 1.08 : 1.0,
       duration: const Duration(milliseconds: 200),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: resaltado ? color.shade100 : color.shade50,
+          backgroundColor: fondo,
           elevation: resaltado ? 2 : 0,
           padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
-            side: resaltado ? BorderSide(color: color.shade300, width: 1.5) : BorderSide.none,
+            side: resaltado ? BorderSide(color: oscuro ? color.shade400 : color.shade300, width: 1.5) : BorderSide.none,
           ),
         ),
         onPressed: onTap,
         child: Text(calificacion.etiqueta,
-            style: TextStyle(color: color.shade800, fontWeight: FontWeight.w700)),
+            style: TextStyle(color: oscuro ? color.shade200 : color.shade800, fontWeight: FontWeight.w700)),
       ),
     );
   }
@@ -445,10 +456,11 @@ class _HojaEjemplos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colores = context.colores;
     return Container(
-      decoration: const BoxDecoration(
-        color: Color(0xFAFFFFFF),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      decoration: BoxDecoration(
+        color: colores.hoja,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 16),
       child: Column(
@@ -460,7 +472,7 @@ class _HojaEjemplos extends StatelessWidget {
               margin: const EdgeInsets.only(top: 12, bottom: 8),
               width: 36,
               height: 4,
-              decoration: BoxDecoration(color: const Color(0xFFBDBDBD), borderRadius: BorderRadius.circular(2)),
+              decoration: BoxDecoration(color: colores.tenue, borderRadius: BorderRadius.circular(2)),
             ),
           ),
           Padding(
@@ -475,10 +487,10 @@ class _HojaEjemplos extends StatelessWidget {
           ),
           const Divider(height: 1),
           if (ejemplos.isEmpty)
-            const Padding(
-              padding: EdgeInsets.all(30),
+            Padding(
+              padding: const EdgeInsets.all(30),
               child: Text('Aún no hay ejemplos para este carácter.',
-                  textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)),
+                  textAlign: TextAlign.center, style: TextStyle(color: colores.tenue)),
             )
           else
             ConstrainedBox(
@@ -487,7 +499,7 @@ class _HojaEjemplos extends StatelessWidget {
                 shrinkWrap: true,
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
                 itemCount: ejemplos.length,
-                separatorBuilder: (_, _) => const Divider(height: 20, color: Color(0xFFEEEEEE)),
+                separatorBuilder: (_, _) => Divider(height: 20, color: colores.separador),
                 itemBuilder: (_, i) => _FilaEjemplo(ejemplo: ejemplos[i], resaltar: caracter.caracter),
               ),
             ),
@@ -508,6 +520,8 @@ class _FilaEjemplo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final esEspanol = ejemplo.espanol != null && ejemplo.espanol!.isNotEmpty;
+    final colores = context.colores;
+    final rojo = colores.oscuro ? const Color(0xFFEF9A9A) : const Color(0xFFC62828);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -522,7 +536,7 @@ class _FilaEjemplo extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 19,
                       fontWeight: ch == resaltar ? FontWeight.w700 : FontWeight.w400,
-                      color: ch == resaltar ? const Color(0xFFC62828) : Colors.black87,
+                      color: ch == resaltar ? rojo : colores.tinta,
                     ),
                   ),
               ])),
@@ -531,14 +545,14 @@ class _FilaEjemplo extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 2),
-        Text(ejemplo.pinyin, style: TextStyle(fontSize: 13, color: Colors.grey.shade600)),
+        Text(ejemplo.pinyin, style: TextStyle(fontSize: 13, color: colores.tenue)),
         const SizedBox(height: 4),
         Text(
           esEspanol ? ejemplo.traduccion : 'EN  ${ejemplo.traduccion}',
           style: TextStyle(
             fontSize: 14,
             fontStyle: esEspanol ? FontStyle.normal : FontStyle.italic,
-            color: Colors.black87,
+            color: colores.tinta,
           ),
         ),
       ],

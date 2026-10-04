@@ -22,6 +22,7 @@ import '../datos/repositorio.dart';
 import '../datos/reporte.dart' show TipoReporte;
 import '../screens/pantalla_estudio.dart';
 import '../screens/pantalla_reporte.dart';
+import '../tema.dart';
 import 'boton_voz.dart';
 import 'comunes.dart';
 
@@ -83,6 +84,7 @@ class ParrafoLectura extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = parrafo;
+    final colores = context.colores;
     final tamanoPinyin = (tamano * 0.42).clamp(10.0, 15.0);
     final alturaPinyin = tamanoPinyin * 1.3;
 
@@ -96,9 +98,9 @@ class ParrafoLectura extends StatelessWidget {
         style: TextStyle(
           fontSize: tamano,
           height: 1.25,
-          color: Colors.black87,
+          color: colores.tinta,
           decoration: nombre ? TextDecoration.underline : null,
-          decorationColor: const Color(0x99795548),
+          decorationColor: colores.oscuro ? const Color(0x99BCAAA4) : const Color(0x99795548),
           decorationThickness: 1.5,
         ),
       );
@@ -110,7 +112,7 @@ class ParrafoLectura extends StatelessWidget {
               height: alturaPinyin,
               child: Text(
                 p.pinyin[i],
-                style: TextStyle(fontSize: tamanoPinyin, color: Colors.grey.shade600, height: 1.2),
+                style: TextStyle(fontSize: tamanoPinyin, color: colores.tenue, height: 1.2),
               ),
             ),
           texto,
@@ -151,7 +153,7 @@ class ParrafoLectura extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 6),
                   child: Text(
                     p.espanol,
-                    style: TextStyle(fontSize: 14, color: Colors.grey.shade800, height: 1.35),
+                    style: TextStyle(fontSize: 14, color: colores.suave, height: 1.35),
                   ),
                 )
               : const SizedBox(width: double.infinity),
@@ -167,7 +169,7 @@ class ParrafoLectura extends StatelessWidget {
                 icon: Icon(
                   mostrarTraduccion ? Icons.translate : Icons.translate_outlined,
                   size: 18,
-                  color: mostrarTraduccion ? Colors.black87 : Colors.black38,
+                  color: mostrarTraduccion ? colores.tinta : colores.tenue,
                 ),
                 onPressed: onAlternarTraduccion,
               ),
@@ -196,10 +198,11 @@ class FichaCaracterLectura extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final repo = DatosApp.de(context);
+    final colores = context.colores;
     return Container(
-      decoration: const BoxDecoration(
-        color: Color(0xFAFFFFFF),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      decoration: BoxDecoration(
+        color: colores.hoja,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: EdgeInsets.fromLTRB(24, 12, 24, MediaQuery.of(context).padding.bottom + 20),
       child: FutureBuilder<Caracter?>(
@@ -213,7 +216,7 @@ class FichaCaracterLectura extends StatelessWidget {
               Container(
                 width: 36,
                 height: 4,
-                decoration: BoxDecoration(color: const Color(0xFFBDBDBD), borderRadius: BorderRadius.circular(2)),
+                decoration: BoxDecoration(color: colores.tenue, borderRadius: BorderRadius.circular(2)),
               ),
               const SizedBox(height: 12),
               Row(
@@ -228,14 +231,14 @@ class FichaCaracterLectura extends StatelessWidget {
                             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500, letterSpacing: 1)),
                         if (c != null && c.pinyin != pinyinEnTexto && pinyinEnTexto.isNotEmpty)
                           Text('aquí; en el diccionario: ${c.pinyin}',
-                              style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                              style: TextStyle(fontSize: 12, color: colores.tenue)),
                         const SizedBox(height: 6),
                         Row(children: [
                           if (c != null) EtiquetaNivel(nivel: c.nivelHsk),
                           if (c != null) const SizedBox(width: 8),
                           if (c != null)
                             Text(c.progreso == null ? 'Nuevo para ti' : 'Ya lo estudias',
-                                style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                                style: TextStyle(fontSize: 12, color: colores.tenue)),
                         ]),
                       ],
                     ),
@@ -245,14 +248,14 @@ class FichaCaracterLectura extends StatelessWidget {
               ),
               const SizedBox(height: 14),
               if (cargando)
-                const Padding(
-                  padding: EdgeInsets.all(12),
+                Padding(
+                  padding: const EdgeInsets.all(12),
                   child: SizedBox(
-                      width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black54)),
+                      width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: colores.icono)),
                 )
               else if (c == null)
                 Text('Este carácter no está en la base de la app.',
-                    style: TextStyle(fontSize: 14, color: Colors.grey.shade700))
+                    style: TextStyle(fontSize: 14, color: colores.suave))
               else ...[
                 SizedBox(
                   width: double.infinity,

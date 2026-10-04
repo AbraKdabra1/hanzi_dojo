@@ -25,10 +25,16 @@ import '../painters/geometria.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
+import '../tema.dart';
 import 'pantalla_estudio.dart';
 
 /// Rampa de un solo tono (verde), de poco a mucho. El primero es "sin nada".
-const _rampa = [Color(0x14000000), Color(0xFFC8E6C9), Color(0xFF81C784), Color(0xFF43A047), Color(0xFF1B5E20)];
+const _rampaClara = [Color(0x14000000), Color(0xFFC8E6C9), Color(0xFF81C784), Color(0xFF43A047), Color(0xFF1B5E20)];
+
+/// De noche la rampa va de verde apagado a verde vivo (más días = más brillo).
+const _rampaOscura = [Color(0x1FFFFFFF), Color(0xFF0E4429), Color(0xFF006D32), Color(0xFF26A641), Color(0xFF39D353)];
+
+List<Color> _rampaDe(BuildContext context) => context.colores.oscuro ? _rampaOscura : _rampaClara;
 const _dias = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 const _diasLargos = ['lun', 'mar', 'mié', 'jue', 'vie', 'sáb', 'dom'];
 const _meses = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
@@ -102,7 +108,7 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
       child: Scaffold(
         appBar: const BarraSuperior(titulo: 'Mi progreso'),
         body: niveles == null
-            ? const Center(child: CircularProgressIndicator(color: Colors.black54))
+            ? Center(child: CircularProgressIndicator(color: context.colores.icono))
             : ListView(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
                 children: [
@@ -141,7 +147,7 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
                       child: Text(
                         'Cuando practiques, aquí verás tu calendario, tu racha y los caracteres y trazos '
                         'que más te cuestan.',
-                        style: TextStyle(fontSize: 13, color: Colors.grey.shade700, height: 1.35),
+                        style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.35),
                       ),
                     )
                   else ...[
@@ -188,10 +194,10 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
                                 style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
                           ]),
                           const SizedBox(height: 10),
-                          BarraAvance(valor: n.estudiados, total: n.total, color: EtiquetaNivel.colorDe(n.nivel)),
+                          BarraAvance(valor: n.estudiados, total: n.total, color: EtiquetaNivel.colorPara(context, n.nivel)),
                           const SizedBox(height: 4),
                           Text('${n.dominados} dominados',
-                              style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+                              style: TextStyle(fontSize: 11, color: context.colores.tenue)),
                         ],
                       ),
                     ),
@@ -221,7 +227,7 @@ class _Cifra extends StatelessWidget {
           Text(valor, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
           const SizedBox(height: 2),
           Text(etiqueta,
-              textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+              textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: context.colores.tenue)),
         ],
       ),
     );
@@ -268,7 +274,7 @@ class _Calendario extends StatelessWidget {
     final porDia = {for (final d in actividad) d.dia: d};
     final hoyDia = DateTime(hoy.year, hoy.month, hoy.day);
     final primerLunes = Estadisticas.lunes(hoyDia).subtract(const Duration(days: 7 * (semanas - 1)));
-    final etiqueta = TextStyle(fontSize: 10, color: Colors.grey.shade600);
+    final etiqueta = TextStyle(fontSize: 10, color: context.colores.tenue);
 
     return LayoutBuilder(builder: (context, restricciones) {
       const anchoDias = 14.0;
@@ -318,9 +324,9 @@ class _Calendario extends StatelessWidget {
                       height: lado,
                       margin: const EdgeInsets.only(right: separacion, bottom: separacion),
                       decoration: BoxDecoration(
-                        color: _rampa[Estadisticas.nivelCalendario(n)],
+                        color: _rampaDe(context)[Estadisticas.nivelCalendario(n)],
                         borderRadius: BorderRadius.circular(3),
-                        border: dia == hoyDia ? Border.all(color: Colors.black54, width: 1.2) : null,
+                        border: dia == hoyDia ? Border.all(color: context.colores.icono, width: 1.2) : null,
                       ),
                     ),
                   );
@@ -331,7 +337,7 @@ class _Calendario extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text('Menos ', style: etiqueta),
-              for (final c in _rampa)
+              for (final c in _rampaDe(context))
                 Container(
                   width: 10,
                   height: 10,
@@ -361,7 +367,7 @@ class _UltimosDias extends StatelessWidget {
     final dias = [for (int i = 6; i >= 0; i--) DateTime(hoyDia.year, hoyDia.month, hoyDia.day - i)];
     final maximo = dias.map((d) => porDia[d]?.repasos ?? 0).fold(1, (a, b) => a > b ? a : b);
     final deHoy = porDia[hoyDia];
-    final etiqueta = TextStyle(fontSize: 11, color: Colors.grey.shade700);
+    final etiqueta = TextStyle(fontSize: 11, color: context.colores.suave);
     const alto = 90.0;
 
     return Column(
@@ -389,7 +395,7 @@ class _UltimosDias extends StatelessWidget {
                           width: 18,
                           height: ((porDia[d]?.repasos ?? 0) / maximo * alto).clamp(2.0, alto),
                           decoration: BoxDecoration(
-                            color: d == hoyDia ? _rampa[3] : const Color(0xFF9E9E9E),
+                            color: d == hoyDia ? _rampaDe(context)[3] : const Color(0xFF9E9E9E),
                             borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
                           ),
                         ),
@@ -434,7 +440,7 @@ class _VistaPrecision extends StatelessWidget {
             if (p.experto != null) 'Experto: ${pct(p.experto!)}',
             '${p.repasos} repasos',
           ].join(' · '),
-          style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
+          style: TextStyle(fontSize: 12, color: context.colores.suave),
         ),
       ],
     );
@@ -465,7 +471,7 @@ class _FilaDificil extends StatelessWidget {
                 Text(
                   '$promedio trazos fallados en promedio · ${dificil.veces} '
                   '${dificil.veces == 1 ? 'repaso' : 'repasos'}',
-                  style: TextStyle(fontSize: 11.5, color: Colors.grey.shade600),
+                  style: TextStyle(fontSize: 11.5, color: context.colores.tenue),
                 ),
               ],
             ),
@@ -497,9 +503,9 @@ class _FilaTrazo extends StatelessWidget {
             width: 52,
             height: 52,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.colores.lienzo,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: const Color(0xFFE0E0E0)),
+              border: Border.all(color: context.colores.bordeLienzo),
             ),
             child: contornos.isEmpty || trazo.indice >= contornos.length
                 ? Center(child: Text(trazo.caracter, style: const TextStyle(fontSize: 30)))
@@ -515,7 +521,7 @@ class _FilaTrazo extends StatelessWidget {
                 Text(
                   'Fallado ${trazo.veces} veces'
                   '${trazo.alReves > 0 ? ' (${trazo.alReves} al revés)' : ''}',
-                  style: TextStyle(fontSize: 11.5, color: Colors.grey.shade600),
+                  style: TextStyle(fontSize: 11.5, color: context.colores.tenue),
                 ),
               ],
             ),

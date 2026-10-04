@@ -29,6 +29,7 @@ import 'package:flutter/material.dart';
 
 import '../helpers/energia.dart';
 import '../painters/rama_ciruelo.dart';
+import '../tema.dart';
 
 /// Envuelve una pantalla con el fondo de papel y tinta.
 class FondoTintaChina extends StatelessWidget {
@@ -41,24 +42,25 @@ class FondoTintaChina extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colores;
     return Stack(
       fit: StackFit.expand,
       children: [
-        const DecoratedBox(
+        DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Color(0xFFF8F4EE), Color(0xFFF2EDE5)],
+              colors: [c.papelArriba, c.papelAbajo],
             ),
           ),
         ),
-        const RepaintBoundary(child: CustomPaint(painter: _ManchasPainter())),
+        RepaintBoundary(child: CustomPaint(painter: _ManchasPainter(c.mancha, c.oscuro ? 0.5 : 1))),
         if (ramaAnimada)
-          _RamaAnimada(child: child)
+          _RamaAnimada(nocturno: c.oscuro, child: child)
         else ...[
           RepaintBoundary(
-            child: CustomPaint(painter: _PintorRamaQuieta(MediaQuery.devicePixelRatioOf(context))),
+            child: CustomPaint(painter: _PintorRamaQuieta(MediaQuery.devicePixelRatioOf(context), c.oscuro)),
           ),
           child,
         ],
@@ -67,10 +69,14 @@ class FondoTintaChina extends StatelessWidget {
   }
 }
 
-/// Manchas difusas de tinta café en las orillas. Degradados radiales que se
-/// desvanecen solos: suaves sin necesidad de desenfoque.
+/// Manchas difusas de tinta café en las orillas (de noche, un brillo cálido
+/// muy tenue). Degradados radiales que se desvanecen solos: suaves sin
+/// necesidad de desenfoque.
 class _ManchasPainter extends CustomPainter {
-  const _ManchasPainter();
+  const _ManchasPainter(this.color, this.intensidad);
+
+  final Color color;
+  final double intensidad;
 
   /// [x relativa, y relativa, radio, opacidad]
   static const _manchas = [
@@ -87,40 +93,42 @@ class _ManchasPainter extends CustomPainter {
       final radio = m[2];
       final pintura = Paint()
         ..shader = RadialGradient(
-          colors: [Color.fromRGBO(60, 40, 20, m[3]), const Color(0x003C2814)],
+          colors: [color.withValues(alpha: m[3] * intensidad), color.withValues(alpha: 0)],
         ).createShader(Rect.fromCircle(center: centro, radius: radio));
       canvas.drawCircle(centro, radio, pintura);
     }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _ManchasPainter old) => old.color != color || old.intensidad != intensidad;
 }
 
 /// Rama tenue y quieta. Se dibuja una vez en una imagen (solo el rincón donde
 /// está la rama) y en cada cuadro solo se copia esa imagen.
 class _PintorRamaQuieta extends CustomPainter {
-  _PintorRamaQuieta(this.dpr) : super(repaint: SpritesCiruelo.listos);
+  _PintorRamaQuieta(this.dpr, this.nocturno) : super(repaint: SpritesCiruelo.listos);
 
   final double dpr;
+  final bool nocturno;
 
   static ui.Image? _imagen;
   static Size? _tamanoImagen;
   static double _dprImagen = 0;
+  static bool _nocturnoImagen = false;
 
   @override
   void paint(Canvas canvas, Size size) {
     if (SpritesCiruelo.imagen == null) {
       // Aún sin flores: se dibuja directo (y no se guarda).
-      dibujarRama(canvas, size, tenue: true);
+      dibujarRama(canvas, size, tenue: true, nocturno: nocturno);
       return;
     }
     final s = escalaRama(size);
     final region = Size(math.min(size.width, 0.82 * s), math.min(size.height, 0.60 * s));
-    if (_imagen == null || _tamanoImagen != region || _dprImagen != dpr) {
+    if (_imagen == null || _tamanoImagen != region || _dprImagen != dpr || _nocturnoImagen != nocturno) {
       final grabadora = ui.PictureRecorder();
       final c = Canvas(grabadora)..scale(dpr);
-      dibujarRama(c, size, tenue: true);
+      dibujarRama(c, size, tenue: true, nocturno: nocturno);
       _imagen?.dispose();
       try {
         _imagen = grabadora
@@ -128,11 +136,12 @@ class _PintorRamaQuieta extends CustomPainter {
             .toImageSync((region.width * dpr).ceil(), (region.height * dpr).ceil());
       } catch (_) {
         _imagen = null;
-        dibujarRama(canvas, size, tenue: true);
+        dibujarRama(canvas, size, tenue: true, nocturno: nocturno);
         return;
       }
       _tamanoImagen = region;
       _dprImagen = dpr;
+      _nocturnoImagen = nocturno;
     }
     final imagen = _imagen!;
     canvas.drawImageRect(
@@ -144,13 +153,14 @@ class _PintorRamaQuieta extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _PintorRamaQuieta old) => old.dpr != dpr;
+  bool shouldRepaint(covariant _PintorRamaQuieta old) => old.dpr != dpr || old.nocturno != nocturno;
 }
 
 /// Rama que se mece, con pétalos cayendo (pantalla de inicio).
 class _RamaAnimada extends StatefulWidget {
-  const _RamaAnimada({required this.child});
+  const _RamaAnimada({required this.nocturno, required this.child});
 
+  final bool nocturno;
   final Widget child;
 
   @override
@@ -250,7 +260,7 @@ class _RamaAnimadaState extends State<_RamaAnimada> with WidgetsBindingObserver 
     return Stack(
       fit: StackFit.expand,
       children: [
-        RepaintBoundary(child: CustomPaint(painter: _PintorRamaAnimada(_viento))),
+        RepaintBoundary(child: CustomPaint(painter: _PintorRamaAnimada(_viento, widget.nocturno))),
         // Tocar en cualquier parte hace soplar el viento otra vez.
         Listener(
           behavior: HitTestBehavior.translucent,
@@ -263,14 +273,15 @@ class _RamaAnimadaState extends State<_RamaAnimada> with WidgetsBindingObserver 
 }
 
 class _PintorRamaAnimada extends CustomPainter {
-  _PintorRamaAnimada(this.viento) : super(repaint: Listenable.merge([viento, SpritesCiruelo.listos]));
+  _PintorRamaAnimada(this.viento, this.nocturno) : super(repaint: Listenable.merge([viento, SpritesCiruelo.listos]));
 
   final VientoCiruelo viento;
+  final bool nocturno;
 
   @override
   void paint(Canvas canvas, Size size) =>
-      dibujarRama(canvas, size, t: viento.t, fuerza: viento.fuerza, viento: viento);
+      dibujarRama(canvas, size, t: viento.t, fuerza: viento.fuerza, nocturno: nocturno, viento: viento);
 
   @override
-  bool shouldRepaint(covariant _PintorRamaAnimada old) => old.viento != viento;
+  bool shouldRepaint(covariant _PintorRamaAnimada old) => old.viento != viento || old.nocturno != nocturno;
 }

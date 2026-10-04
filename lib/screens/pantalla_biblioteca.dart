@@ -21,6 +21,7 @@ import '../helpers/archivos.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
+import '../tema.dart';
 import 'pantalla_libro.dart';
 
 class PantallaBiblioteca extends StatefulWidget {
@@ -69,9 +70,9 @@ class _PantallaBibliotecaState extends State<PantallaBiblioteca> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (contexto) => Container(
-        decoration: const BoxDecoration(
-          color: Color(0xFAFFFFFF),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        decoration: BoxDecoration(
+          color: context.colores.hoja,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         padding: EdgeInsets.fromLTRB(8, 12, 8, MediaQuery.of(contexto).padding.bottom + 12),
         child: Column(
@@ -98,7 +99,7 @@ class _PantallaBibliotecaState extends State<PantallaBiblioteca> {
               child: Text(
                 'Tus libros se quedan solo en este teléfono. La app calcula el pinyin y estima '
                 'su nivel HSK.',
-                style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                style: TextStyle(fontSize: 12, color: context.colores.tenue),
               ),
             ),
           ],
@@ -249,7 +250,7 @@ class _PantallaBibliotecaState extends State<PantallaBiblioteca> {
       child: Scaffold(
         appBar: const BarraSuperior(titulo: 'Leer', subtitulo: 'Libros graduados por nivel HSK'),
         body: libros == null
-            ? const Center(child: CircularProgressIndicator(color: Colors.black54))
+            ? Center(child: CircularProgressIndicator(color: context.colores.icono))
             : ListView(
                 padding: const EdgeInsets.fromLTRB(16, 4, 16, 32),
                 children: [
@@ -258,18 +259,18 @@ class _PantallaBibliotecaState extends State<PantallaBiblioteca> {
                     child: Text(
                       'Toca cualquier carácter para ver su significado y practicarlo. '
                       'Los nombres propios van subrayados.',
-                      style: TextStyle(fontSize: 13, color: Colors.grey.shade700, height: 1.35),
+                      style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.35),
                     ),
                   ),
                   for (final (i, libro) in libros.indexed) ...[
                     if (i == 0 || libros[i - 1].nivelHsk != libro.nivelHsk)
-                      _Encabezado(texto: nombreDeNivel(libro.nivelHsk), color: EtiquetaNivel.colorDe(libro.nivelHsk)),
+                      _Encabezado(texto: nombreDeNivel(libro.nivelHsk), color: EtiquetaNivel.colorPara(context, libro.nivelHsk)),
                     _TarjetaLibro(libro: libro, onTap: () => _abrir(libro)),
                     const SizedBox(height: 10),
                   ],
                   _Encabezado(
                     texto: 'MIS LIBROS',
-                    color: Colors.black87,
+                    color: context.colores.tinta,
                     accion: TextButton.icon(
                       icon: const Icon(Icons.add, size: 18),
                       label: const Text('Agregar'),
@@ -287,7 +288,7 @@ class _PantallaBibliotecaState extends State<PantallaBiblioteca> {
                             child: Text(
                               'Agrega tus propios textos en chino: archivos TXT o EPUB sin '
                               'protección, o un texto que pegues. Se quedan solo en tu teléfono.',
-                              style: TextStyle(fontSize: 13, color: Colors.grey.shade800, height: 1.35),
+                              style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.35),
                             ),
                           ),
                         ],
@@ -340,7 +341,9 @@ class _TarjetaLibro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = libro.propio ? const Color(0xFF5D4037) : EtiquetaNivel.colorDe(libro.nivelHsk);
+    final color = libro.propio
+        ? (context.colores.oscuro ? const Color(0xFFBCAAA4) : const Color(0xFF5D4037))
+        : EtiquetaNivel.colorPara(context, libro.nivelHsk);
     final nivel = libro.propio
         ? (libro.nivelHsk == 0 ? ' · más difícil que HSK 7-9' : ' · ${nombreDeNivel(libro.nivelHsk)} aprox.')
         : '';
@@ -360,7 +363,7 @@ class _TarjetaLibro extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: libro.propio ? 17 : 20, fontWeight: FontWeight.w600)),
                 if (libro.tituloPinyin.isNotEmpty)
-                  Text(libro.tituloPinyin, style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                  Text(libro.tituloPinyin, style: TextStyle(fontSize: 12, color: context.colores.tenue)),
                 if (libro.tituloEs.isNotEmpty) ...[
                   const SizedBox(height: 2),
                   Text(libro.tituloEs, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
@@ -369,7 +372,7 @@ class _TarjetaLibro extends StatelessWidget {
                 Text(
                   '${tipoDeLibro(libro)} · ${libro.capitulos} '
                   '${libro.capitulos == 1 ? 'capítulo' : 'capítulos'}$nivel',
-                  style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
+                  style: TextStyle(fontSize: 12, color: context.colores.suave),
                 ),
                 const SizedBox(height: 8),
                 BarraAvance(valor: libro.capitulosLeidos, total: libro.capitulos, color: color),
@@ -379,7 +382,7 @@ class _TarjetaLibro extends StatelessWidget {
           if (onBorrar != null)
             PopupMenuButton<String>(
               tooltip: 'Opciones',
-              icon: const Icon(Icons.more_vert, color: Colors.black45),
+              icon: Icon(Icons.more_vert, color: context.colores.icono),
               onSelected: (_) => onBorrar!(),
               itemBuilder: (_) => const [PopupMenuItem(value: 'borrar', child: Text('Borrar'))],
             ),

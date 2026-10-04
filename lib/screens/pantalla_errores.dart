@@ -14,6 +14,7 @@ import '../helpers/archivos.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
+import '../tema.dart';
 import 'pantalla_reporte.dart';
 
 class PantallaErrores extends StatefulWidget {
@@ -80,7 +81,7 @@ class _PantallaErroresState extends State<PantallaErrores> {
           titulo: 'Informe de errores',
           acciones: [
             IconButton(
-              icon: const Icon(Icons.flag_outlined, color: Colors.black54),
+              icon: Icon(Icons.flag_outlined, color: context.colores.icono),
               tooltip: 'Reportar un problema',
               onPressed: () => Navigator.push(
                 context,
@@ -89,20 +90,20 @@ class _PantallaErroresState extends State<PantallaErrores> {
             ),
             if (errores != null)
               IconButton(
-                icon: const Icon(Icons.copy_rounded, color: Colors.black54),
+                icon: Icon(Icons.copy_rounded, color: context.colores.icono),
                 tooltip: 'Copiar informe',
                 onPressed: _copiar,
               ),
             if (hay)
               IconButton(
-                icon: const Icon(Icons.delete_outline, color: Colors.black54),
+                icon: Icon(Icons.delete_outline, color: context.colores.icono),
                 tooltip: 'Borrar',
                 onPressed: _borrar,
               ),
           ],
         ),
         body: errores == null
-            ? const Center(child: CircularProgressIndicator(color: Colors.black54))
+            ? Center(child: CircularProgressIndicator(color: context.colores.icono))
             : ListView(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
                 children: [
@@ -113,10 +114,10 @@ class _PantallaErroresState extends State<PantallaErrores> {
                         Text(
                           'Si algo falla, la app guarda aquí los detalles. Nada se envía '
                           'solo: si quieres reportarlo, cópialo y pégalo en tu reporte.',
-                          style: TextStyle(fontSize: 13, color: Colors.grey.shade800, height: 1.35),
+                          style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.35),
                         ),
                         const SizedBox(height: 8),
-                        Text(_info.toString(), style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                        Text(_info.toString(), style: TextStyle(fontSize: 12, color: context.colores.tenue)),
                       ],
                     ),
                   ),
@@ -162,7 +163,7 @@ class _TarjetaError extends StatelessWidget {
           ),
           subtitle: Text(
             '${RegistroErrores.fechaCorta(error.momento)} · ${error.origen}$veces',
-            style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+            style: TextStyle(fontSize: 12, color: context.colores.tenue),
           ),
           children: [
             Align(

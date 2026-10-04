@@ -617,6 +617,11 @@ class Repositorio {
   Future<bool> fluidezMaxima() async => await base.leerAjuste('fluidez_maxima') == '1';
 
   Future<void> guardarFluidezMaxima(bool maxima) => base.guardarAjuste('fluidez_maxima', maxima ? '1' : '0');
+
+  /// Apariencia: 'auto' (la del teléfono), 'claro' u 'oscuro'.
+  Future<String> apariencia() async => await base.leerAjuste('apariencia') ?? 'auto';
+
+  Future<void> guardarApariencia(String valor) => base.guardarAjuste('apariencia', valor);
 }
 
 /// Preferencias del lector.

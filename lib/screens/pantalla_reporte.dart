@@ -21,6 +21,7 @@ import '../helpers/archivos.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
+import '../tema.dart';
 
 class PantallaReporte extends StatefulWidget {
   const PantallaReporte({super.key, this.tipo = TipoReporte.error, this.donde = '', this.queEstaMal = ''});
@@ -106,7 +107,7 @@ class _PantallaReporteState extends State<PantallaReporte> {
   @override
   Widget build(BuildContext context) {
     final r = _reporte;
-    final gris = TextStyle(fontSize: 13, color: Colors.grey.shade700, height: 1.35);
+    final gris = TextStyle(fontSize: 13, color: context.colores.suave, height: 1.35);
     return FondoTintaChina(
       child: Scaffold(
         appBar: const BarraSuperior(titulo: 'Reportar un problema'),
@@ -225,7 +226,8 @@ class _PantallaReporteState extends State<PantallaReporte> {
             const SizedBox(height: 16),
             FilledButton.icon(
               style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xDE000000),
+                backgroundColor: context.colores.boton,
+                    foregroundColor: context.colores.textoBoton,
                 padding: const EdgeInsets.symmetric(vertical: 14),
               ),
               icon: const Icon(Icons.open_in_new),

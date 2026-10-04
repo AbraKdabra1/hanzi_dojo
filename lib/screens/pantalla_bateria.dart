@@ -20,6 +20,7 @@ import '../helpers/energia.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
+import '../tema.dart';
 
 class PantallaBateria extends StatefulWidget {
   const PantallaBateria({super.key});
@@ -66,7 +67,7 @@ class _PantallaBateriaState extends State<PantallaBateria> {
 
   @override
   Widget build(BuildContext context) {
-    final suave = TextStyle(fontSize: 13, color: Colors.grey.shade700, height: 1.3);
+    final suave = TextStyle(fontSize: 13, color: context.colores.suave, height: 1.3);
     return FondoTintaChina(
       child: Scaffold(
         appBar: const BarraSuperior(titulo: 'Batería y fluidez'),
@@ -167,7 +168,7 @@ class _Ahora extends StatelessWidget {
       final ma = l.miliamperios;
       if (ma != null) filas.add(('Corriente', '${_numero(ma)} mA'));
       final ph = l.porcentajePorHora;
-      if (ph != null) filas.add(('A este ritmo', '−${_numero(ph, 1)} % por hora'));
+      if (ph != null) filas.add(('A este ritmo baja', '${_numero(ph, 1)} % por hora'));
       if (l.temperatura > 0) filas.add(('Temperatura', '${_numero(l.temperatura, 1)} °C'));
       if (l.tasaPantalla > 0) filas.add(('Pantalla', '${_numero(l.tasaPantalla)} Hz'));
     }
@@ -235,7 +236,7 @@ class _Medicion extends StatelessWidget {
               _Fila(nombre: 'Tiempo medido', valor: '${(m.segundosEnPantalla / 60).toStringAsFixed(1)} min'),
               if (m.promedioMa != null) _Fila(nombre: 'Corriente promedio', valor: '${_numero(m.promedioMa!)} mA'),
               if (m.porcentajePorHora != null)
-                _Fila(nombre: 'Equivale a', valor: '−${_numero(m.porcentajePorHora!, 1)} % por hora'),
+                _Fila(nombre: 'Equivale a bajar', valor: '${_numero(m.porcentajePorHora!, 1)} % por hora'),
               if (m.bajo != null) _Fila(nombre: 'Bajó la batería', valor: '${m.bajo} puntos'),
               if (m.huboCarga)
                 Text('⚠️ El teléfono estuvo cargando: esta medición no sirve. Reiníciala.', style: estiloSuave),
@@ -275,7 +276,7 @@ class _Fila extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
         children: [
-          Expanded(child: Text(nombre, style: TextStyle(fontSize: 14, color: Colors.grey.shade800))),
+          Expanded(child: Text(nombre, style: TextStyle(fontSize: 14, color: context.colores.suave))),
           Text(valor, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
         ],
       ),

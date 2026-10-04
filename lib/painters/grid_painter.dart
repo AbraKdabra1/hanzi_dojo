@@ -10,13 +10,16 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 class GridPainter extends CustomPainter {
-  const GridPainter();
+  const GridPainter({this.color = const Color(0xFFE0E0E0)});
+
+  /// Color de las líneas (cambia con el modo claro/oscuro).
+  final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
     // Línea gris clara de 1 px; guiones de 8 px con espacios de 6 px.
     final paint = Paint()
-      ..color = Colors.grey.shade300
+      ..color = color
       ..strokeWidth = 1
       ..style = PaintingStyle.stroke;
     const dashWidth = 8.0;
@@ -43,5 +46,5 @@ class GridPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant GridPainter old) => old.color != color;
 }

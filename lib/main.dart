@@ -30,6 +30,7 @@ import 'datos/repositorio.dart';
 import 'helpers/energia.dart';
 import 'painters/rama_ciruelo.dart';
 import 'screens/pantalla_inicio.dart';
+import 'tema.dart';
 import 'widgets/fondo_tinta.dart';
 
 void main() {
@@ -38,21 +39,6 @@ void main() {
   _registrarLicencias();
   runApp(const HanziDojoApp());
 }
-
-/// Tema visual de toda la app.
-ThemeData temaHanziDojo() => ThemeData(
-      fontFamily: 'NotoSansSC',
-      colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
-      useMaterial3: true,
-      scaffoldBackgroundColor: Colors.transparent,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        foregroundColor: Colors.black87,
-      ),
-    );
 
 class HanziDojoApp extends StatefulWidget {
   const HanziDojoApp({super.key});
@@ -96,6 +82,7 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
       final base = await BaseDatos.abrir();
       final repo = Repositorio(base);
       await Energia.iniciar(await repo.fluidezMaxima() ? ModoFluidez.maxima : ModoFluidez.automatica);
+      Apariencia.modo.value = Apariencia.desdeTexto(await repo.apariencia());
       await fondo;
       if (mounted) setState(() => _repo = repo);
     } catch (e, pila) {
@@ -107,26 +94,42 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
 
   @override
   Widget build(BuildContext context) {
-    final repo = _repo;
-    if (repo == null) {
-      // Pantalla de carga (o de error) mientras se abre la base.
-      return MaterialApp(
-        title: 'Hanzi Dojo',
-        debugShowCheckedModeBanner: false,
-        theme: temaHanziDojo(),
-        home: _PantallaCarga(error: _error),
-      );
-    }
-    return DatosApp(
-      repo: repo,
-      child: MaterialApp(
-        title: 'Hanzi Dojo',
-        debugShowCheckedModeBanner: false,
-        theme: temaHanziDojo(),
-        // Cada toque o desplazamiento sube la pantalla a 120 Hz un momento.
-        builder: (context, child) => DetectorActividad(child: child ?? const SizedBox()),
-        home: const PantallaInicio(),
-      ),
+    // La apariencia (Ajustes) cambia al momento, sin reiniciar la app.
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: Apariencia.modo,
+      builder: (context, modo, _) {
+        final repo = _repo;
+        if (repo == null) {
+          // Pantalla de carga (o de error) mientras se abre la base.
+          return MaterialApp(
+            title: 'Hanzi Dojo',
+            debugShowCheckedModeBanner: false,
+            theme: temaHanziDojo(),
+            darkTheme: temaHanziDojo(Brightness.dark),
+            themeMode: modo,
+            home: _PantallaCarga(error: _error),
+          );
+        }
+        return DatosApp(
+          repo: repo,
+          child: MaterialApp(
+            title: 'Hanzi Dojo',
+            debugShowCheckedModeBanner: false,
+            theme: temaHanziDojo(),
+            darkTheme: temaHanziDojo(Brightness.dark),
+            themeMode: modo,
+            builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
+              // Íconos de la barra de estado legibles también en pantallas sin AppBar.
+              value: Theme.of(context).brightness == Brightness.dark
+                  ? SystemUiOverlayStyle.light
+                  : SystemUiOverlayStyle.dark,
+              // Cada toque o desplazamiento sube la pantalla a 120 Hz un momento.
+              child: DetectorActividad(child: child ?? const SizedBox()),
+            ),
+            home: const PantallaInicio(),
+          ),
+        );
+      },
     );
   }
 }
@@ -149,7 +152,7 @@ class _PantallaCarga extends StatelessWidget {
                     SizedBox(
                       width: 22,
                       height: 22,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black54),
+                      child: CircularProgressIndicator(strokeWidth: 2),
                     ),
                   ],
                 )

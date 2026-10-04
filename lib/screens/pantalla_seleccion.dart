@@ -16,6 +16,7 @@ import '../datos/repositorio.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
+import '../tema.dart';
 import 'pantalla_estudio.dart';
 
 class PantallaSeleccion extends StatefulWidget {
@@ -111,7 +112,7 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
                       : null,
                   isDense: true,
                   filled: true,
-                  fillColor: const Color(0xB3FFFFFF),
+                  fillColor: context.colores.tarjeta,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
                 ),
               ),
@@ -139,12 +140,12 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
                 height: 52,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: EtiquetaNivel.colorDe(n.nivel).withValues(alpha: 0.10),
+                  color: EtiquetaNivel.colorPara(context, n.nivel).withValues(alpha: 0.10),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Text(n.nivel == 7 ? '7-9' : '${n.nivel}',
                     style: TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w700, color: EtiquetaNivel.colorDe(n.nivel))),
+                        fontSize: 20, fontWeight: FontWeight.w700, color: EtiquetaNivel.colorPara(context, n.nivel))),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -155,15 +156,15 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
                     const SizedBox(height: 2),
                     Text(
                       n.dominados > 0 ? '${n.dominados} dominados' : '${n.total} caracteres oficiales',
-                      style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                      style: TextStyle(fontSize: 12, color: context.colores.tenue),
                     ),
                     const SizedBox(height: 6),
-                    BarraAvance(valor: n.estudiados, total: n.total, color: EtiquetaNivel.colorDe(n.nivel)),
+                    BarraAvance(valor: n.estudiados, total: n.total, color: EtiquetaNivel.colorPara(context, n.nivel)),
                   ],
                 ),
               ),
               const SizedBox(width: 8),
-              Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey.shade400),
+              Icon(Icons.arrow_forward_ios, size: 14, color: context.colores.tenue),
             ],
           ),
         );
@@ -190,7 +191,8 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
             EtiquetaNivel(nivel: c.nivelHsk),
           ]),
           subtitle: Text(c.significado, maxLines: 1, overflow: TextOverflow.ellipsis),
-          trailing: const Icon(Icons.draw_outlined, size: 18, color: Colors.blue),
+          trailing: Icon(Icons.draw_outlined,
+              size: 18, color: context.colores.oscuro ? const Color(0xFF90CAF9) : Colors.blue),
           onTap: () => _estudiar(FiltroEstudio.unico(c.id)),
         );
       },

@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 
 import '../datos/datos_app.dart';
 import '../datos/estadisticas.dart';
+import '../tema.dart';
 import '../widgets/fondo_tinta.dart';
 import 'pantalla_ajustes.dart';
 import 'pantalla_biblioteca.dart';
@@ -114,6 +115,7 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colores;
     return FondoTintaChina(
       ramaAnimada: true,
       child: Scaffold(
@@ -123,7 +125,7 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
               Align(
                 alignment: Alignment.topRight,
                 child: IconButton(
-                  icon: const Icon(Icons.settings_outlined, color: Colors.black54),
+                  icon: Icon(Icons.settings_outlined, color: c.icono),
                   tooltip: 'Ajustes y créditos',
                   onPressed: () => _ir(const PantallaAjustes()),
                 ),
@@ -131,25 +133,25 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
               const Spacer(),
               const Text('汉字道场', style: TextStyle(fontSize: 44, fontWeight: FontWeight.w400, letterSpacing: 4)),
               const SizedBox(height: 4),
-              Text('Hanzi Dojo', style: TextStyle(fontSize: 14, color: Colors.grey.shade600, letterSpacing: 2)),
+              Text('Hanzi Dojo', style: TextStyle(fontSize: 14, color: c.tenue, letterSpacing: 2)),
               const SizedBox(height: 28),
               _ResumenDelDia(pendientes: _pendientes, nuevosHoy: _nuevosHoy, meta: _meta, racha: _racha),
               const SizedBox(height: 28),
 
               // Botón principal → PantallaModo
               Material(
-                color: const Color(0xDE000000),
+                color: c.boton,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
-                  side: const BorderSide(color: Color(0x4DFFFFFF), width: 1.5),
+                  side: BorderSide(color: c.bordeTarjeta, width: 1.5),
                 ),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(30),
                   onTap: () => _ir(const PantallaModo()),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 44, vertical: 15),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 15),
                     child: Text('Estudiar',
-                        style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w700)),
+                        style: TextStyle(fontSize: 18, color: c.textoBoton, fontWeight: FontWeight.w700)),
                   ),
                 ),
               ),
@@ -157,23 +159,22 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
 
               // Botón secundario → «Leer» (libros graduados por nivel HSK)
               Material(
-                color: const Color(0xCCFFFFFF),
+                color: c.tarjeta,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
-                  side: const BorderSide(color: Color(0xDE000000), width: 1.5),
+                  side: BorderSide(color: c.tinta, width: 1.5),
                 ),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(30),
                   onTap: () => _ir(const PantallaBiblioteca()),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 34, vertical: 12),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 34, vertical: 12),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.menu_book_rounded, size: 20, color: Colors.black87),
-                        SizedBox(width: 8),
-                        Text('Leer',
-                            style: TextStyle(fontSize: 17, color: Colors.black87, fontWeight: FontWeight.w700)),
+                        Icon(Icons.menu_book_rounded, size: 20, color: c.tinta),
+                        const SizedBox(width: 8),
+                        Text('Leer', style: TextStyle(fontSize: 17, color: c.tinta, fontWeight: FontWeight.w700)),
                       ],
                     ),
                   ),
@@ -185,12 +186,12 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
               // pasa por detrás, el texto se sigue leyendo bien).
               TextButton.icon(
                 style: TextButton.styleFrom(
-                  backgroundColor: const Color(0x99FFFFFF),
+                  backgroundColor: c.translucido,
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
-                icon: Icon(Icons.pie_chart_outline, color: Colors.grey.shade800, size: 20),
+                icon: Icon(Icons.pie_chart_outline, color: c.suave, size: 20),
                 label: Text('Ver mis estadísticas',
-                    style: TextStyle(color: Colors.grey.shade800, fontSize: 15, fontWeight: FontWeight.w500)),
+                    style: TextStyle(color: c.suave, fontSize: 15, fontWeight: FontWeight.w500)),
                 onPressed: () => _ir(const PantallaEstadisticas()),
               ),
               const Spacer(),
@@ -220,7 +221,7 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
                       _frases[_indiceFrase],
                       key: ValueKey<int>(_indiceFrase),
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey.shade700, fontStyle: FontStyle.italic, fontSize: 14),
+                      style: TextStyle(color: c.suave, fontStyle: FontStyle.italic, fontSize: 14),
                     ),
                   ),
                 ),
@@ -248,22 +249,23 @@ class _ResumenDelDia extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (pendientes == null) return const SizedBox(height: 40);
-    final estilo = TextStyle(fontSize: 13, color: Colors.grey.shade700);
+    final c = context.colores;
+    final estilo = TextStyle(fontSize: 13, color: c.suave);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: const Color(0x99FFFFFF),
+        color: c.translucido,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xB3FFFFFF)),
+        border: Border.all(color: c.bordeTarjeta),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.replay_rounded, size: 16, color: Colors.black54),
+          Icon(Icons.replay_rounded, size: 16, color: c.icono),
           const SizedBox(width: 4),
           Text('$pendientes ${pendientes == 1 ? 'repaso' : 'repasos'} hoy', style: estilo),
           const SizedBox(width: 14),
-          const Icon(Icons.fiber_new_outlined, size: 18, color: Colors.black54),
+          Icon(Icons.fiber_new_outlined, size: 18, color: c.icono),
           const SizedBox(width: 4),
           Text('$nuevosHoy de $meta nuevos', style: estilo),
           if (racha > 0) ...[

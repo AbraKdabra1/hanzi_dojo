@@ -114,7 +114,7 @@ void main() {
     await tester.pump();
     await tester.pump();
     expect(find.text('420 mA'), findsOneWidget);
-    expect(find.text('−8.6 % por hora'), findsOneWidget);
+    expect(find.text('8.6 % por hora'), findsOneWidget);
     expect(find.text('60 Hz'), findsOneWidget);
     expect(find.text('Automática (recomendada)'), findsOneWidget);
     expect(find.text('Siempre al máximo'), findsOneWidget);

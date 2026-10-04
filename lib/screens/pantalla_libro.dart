@@ -11,6 +11,7 @@ import '../datos/modelos.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
+import '../tema.dart';
 import 'pantalla_biblioteca.dart' show PortadaLibro;
 import 'pantalla_lectura.dart';
 
@@ -53,7 +54,7 @@ class _PantallaLibroState extends State<PantallaLibro> {
   Widget build(BuildContext context) {
     final libro = widget.libro;
     final capitulos = _capitulos;
-    final color = EtiquetaNivel.colorDe(libro.nivelHsk);
+    final color = EtiquetaNivel.colorPara(context, libro.nivelHsk);
     final siguiente = capitulos?.indexWhere((c) => !c.leido) ?? -1;
     return FondoTintaChina(
       child: Scaffold(
@@ -77,7 +78,7 @@ class _PantallaLibroState extends State<PantallaLibro> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             if (libro.tituloPinyin.isNotEmpty)
-                              Text(libro.tituloPinyin, style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                              Text(libro.tituloPinyin, style: TextStyle(fontSize: 12, color: context.colores.tenue)),
                             Text(libro.titulo,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
@@ -85,7 +86,7 @@ class _PantallaLibroState extends State<PantallaLibro> {
                             const SizedBox(height: 4),
                             Wrap(spacing: 6, runSpacing: 4, children: [
                               EtiquetaNivel(nivel: libro.nivelHsk),
-                              Text(tipoDeLibro(libro), style: TextStyle(fontSize: 12, color: Colors.grey.shade700)),
+                              Text(tipoDeLibro(libro), style: TextStyle(fontSize: 12, color: context.colores.suave)),
                             ]),
                           ],
                         ),
@@ -99,23 +100,24 @@ class _PantallaLibroState extends State<PantallaLibro> {
                   const SizedBox(height: 10),
                   Text(
                     explicacionDificultad(libro),
-                    style: TextStyle(fontSize: 12.5, color: Colors.grey.shade700, height: 1.35),
+                    style: TextStyle(fontSize: 12.5, color: context.colores.suave, height: 1.35),
                   ),
                   const SizedBox(height: 8),
                   Text(libro.fuente,
-                      style: TextStyle(fontSize: 12, color: Colors.grey.shade600, fontStyle: FontStyle.italic, height: 1.35)),
+                      style: TextStyle(fontSize: 12, color: context.colores.tenue, fontStyle: FontStyle.italic, height: 1.35)),
                 ],
               ),
             ),
             const SizedBox(height: 14),
             if (capitulos == null)
-              const Center(child: CircularProgressIndicator(color: Colors.black54))
+              Center(child: CircularProgressIndicator(color: context.colores.icono))
             else ...[
               if (capitulos.isNotEmpty)
                 Center(
                   child: FilledButton.icon(
                     style: FilledButton.styleFrom(
-                      backgroundColor: const Color(0xDE000000),
+                      backgroundColor: context.colores.boton,
+                    foregroundColor: context.colores.textoBoton,
                       padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
                     ),
                     icon: const Icon(Icons.menu_book_rounded),
@@ -136,7 +138,7 @@ class _PantallaLibroState extends State<PantallaLibro> {
                         radius: 15,
                         backgroundColor: cap.leido ? color : color.withValues(alpha: 0.10),
                         child: cap.leido
-                            ? const Icon(Icons.check, size: 16, color: Colors.white)
+                            ? Icon(Icons.check, size: 16, color: context.colores.lienzo)
                             : Text('${cap.orden}',
                                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: color)),
                       ),
@@ -146,11 +148,11 @@ class _PantallaLibroState extends State<PantallaLibro> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(cap.titulo, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
-                            Text(cap.tituloEs, style: TextStyle(fontSize: 13, color: Colors.grey.shade700)),
+                            Text(cap.tituloEs, style: TextStyle(fontSize: 13, color: context.colores.suave)),
                           ],
                         ),
                       ),
-                      const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+                      Icon(Icons.arrow_forward_ios, size: 14, color: context.colores.tenue),
                     ],
                   ),
                 ),
