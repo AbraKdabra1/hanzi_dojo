@@ -71,15 +71,22 @@ class PantallaCreditos extends StatelessWidget {
       'Apache 2.0',
     ),
     (
+      'Pronunciación (audio)',
+      'Grabaciones de hablantes nativos del proyecto audio-cmn (github.com/hugolpz/audio-cmn): '
+          'sílabas con la voz de Chen Wang y palabras HSK con la voz de Yue Tan (Shtooka). '
+          'Recortadas, con volumen igualado y convertidas a Opus para la app.',
+      'CC BY-SA',
+    ),
+    (
       'Tipografía',
       'Noto Sans SC (Google), recortada a los caracteres de la app.',
       'SIL Open Font License 1.1',
     ),
     (
-      'Ilustración de inicio',
-      'Salón de Oración por la Buena Cosecha (祈年殿) del Templo del Cielo, Pekín. '
-          'Ilustración original hecha para Hanzi Dojo (herramientas_arte/templo_del_cielo.py).',
-      'Original',
+      'Rama de ciruelo (梅花)',
+      'Ilustración original al estilo de la pintura china a tinta, dibujada por código para '
+          'Hanzi Dojo (lib/painters/rama_ciruelo.dart).',
+      'GPL-3.0',
     ),
   ];
 

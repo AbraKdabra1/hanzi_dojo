@@ -8,13 +8,11 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   final pubspec = File('pubspec.yaml').readAsStringSync();
 
-  test('la ilustración del Templo del Cielo existe, es JPEG y pesa poco', () {
-    final archivo = File('assets/imagenes/fondo_templo.jpg');
-    expect(archivo.existsSync(), isTrue);
-    final bytes = archivo.readAsBytesSync();
-    expect(bytes.sublist(0, 3), [0xFF, 0xD8, 0xFF]); // firma JPEG
-    expect(bytes.length, lessThan(400 * 1024));
-    expect(pubspec, contains('assets/imagenes/fondo_templo.jpg'));
+  test('las grabaciones de pronunciación están declaradas', () {
+    for (final ruta in ['assets/audio/', 'assets/audio/silabas/', 'assets/audio/palabras/']) {
+      expect(pubspec, contains('- $ruta'), reason: ruta);
+      expect(Directory(ruta).existsSync(), isTrue, reason: ruta);
+    }
   });
 
   test('las tres fuentes Noto Sans SC existen y están declaradas', () {

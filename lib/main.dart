@@ -8,8 +8,8 @@
 //   2. Se muestra de inmediato una pantalla de carga (sin esperar a nada).
 //   3. Mientras tanto se abren las bases de datos (la primera vez se copia
 //      la base de contenido, ~1 s; las siguientes es instantáneo) y se
-//      decodifica la ilustración del Templo del Cielo, para que el fondo
-//      aparezca completo desde el primer cuadro.
+//      dibujan las flores de la rama de ciruelo del fondo (unos ms), para que
+//      aparezcan completas desde el primer cuadro.
 //   4. Al terminar, se muestra la pantalla de inicio.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -23,6 +23,7 @@ import 'datos/base_datos.dart';
 import 'datos/datos_app.dart';
 import 'datos/registro_errores.dart';
 import 'datos/repositorio.dart';
+import 'painters/rama_ciruelo.dart';
 import 'screens/pantalla_inicio.dart';
 import 'widgets/fondo_tinta.dart';
 
@@ -62,13 +63,12 @@ class _HanziDojoAppState extends State<HanziDojoApp> {
   @override
   void initState() {
     super.initState();
-    // Después del primer cuadro: precacheImage necesita el contexto ya listo.
     WidgetsBinding.instance.addPostFrameCallback((_) => _abrirDatos());
   }
 
   Future<void> _abrirDatos() async {
     try {
-      final fondo = precacheImage(const AssetImage(rutaFondoTemplo), context);
+      final fondo = SpritesCiruelo.cargar();
       await RegistroErrores.iniciar(await getDatabasesPath());
       final base = await BaseDatos.abrir();
       await fondo;
@@ -153,6 +153,7 @@ void _registrarLicencias() {
     'Noto Sans SC (tipografía)': 'assets/licencias/noto_sans_sc_OFL.txt',
     'OpenCC (tradicional → simplificado)': 'assets/licencias/opencc_APACHE-2.0.txt',
     'chinese-poetry (textos clásicos de «Leer»)': 'assets/licencias/chinese_poetry_MIT.txt',
+    'audio-cmn (grabaciones de pronunciación)': 'assets/licencias/audio_cmn_CC-BY-SA.txt',
   };
   LicenseRegistry.addLicense(() async* {
     for (final entrada in licencias.entries) {
