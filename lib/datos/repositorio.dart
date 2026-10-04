@@ -7,6 +7,8 @@
 //   c.libros, c.capitulos, c.parrafos      → sección «Leer» (solo lectura)
 //   progreso, historial, lectura, ajustes   → tu avance
 //   mis_libros, mis_capitulos, mis_parrafos → libros que agregaste tú
+//   c.palabras, progreso_palabras, ejercicios → práctica con audio
+//                                              (ver repositorio_practica.dart)
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'dart:convert';
@@ -246,12 +248,19 @@ class Repositorio {
 
   /// Repasos y tiempo de cada día que estudiaste, del más antiguo al más
   /// reciente. Los días se cuentan en la hora local del teléfono.
+  /// Cuenta la escritura (historial) y la práctica con audio (ejercicios):
+  /// un día solo de tonos o vocabulario también mantiene la racha.
   Future<List<DiaActividad>> actividadPorDia({DateTime? ahora}) async {
     final desfase = (ahora ?? DateTime.now()).timeZoneOffset.inSeconds;
     final filas = await _db.rawQuery('''
-      SELECT date(momento + ?, 'unixepoch') AS dia, count(*) AS n, sum(duracion_ms) AS ms
-      FROM historial GROUP BY dia ORDER BY dia
-    ''', [desfase]);
+      SELECT dia, sum(n) AS n, sum(ms) AS ms FROM (
+        SELECT date(momento + ?, 'unixepoch') AS dia, count(*) AS n, sum(duracion_ms) AS ms
+        FROM historial GROUP BY dia
+        UNION ALL
+        SELECT date(momento + ?, 'unixepoch') AS dia, count(*) AS n, sum(duracion_ms) AS ms
+        FROM ejercicios GROUP BY dia
+      ) GROUP BY dia ORDER BY dia
+    ''', [desfase, desfase]);
     return [
       for (final f in filas)
         DiaActividad(DateTime.parse(f['dia'] as String), f['n'] as int, ((f['ms'] as int? ?? 0) / 1000).round()),

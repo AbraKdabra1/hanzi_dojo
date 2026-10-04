@@ -20,7 +20,8 @@ Qué fuente aporta qué:
                                        escritura a mano y cuántas palabras HSK
                                        usan el carácter (orden de estudio)
                      hsk30.csv       → lectura oficial de los caracteres que
-                                       son palabra por sí solos (了 = le)
+                                       son palabra por sí solos (了 = le) y
+                                       el vocabulario (tabla palabras)
     Unihan           kRSUnicode      → radical Kangxi de cada carácter
     Propias          radicales_kangxi.tsv, traducciones/*.tsv
                      libros/*.txt + libros_generado.json → sección «Leer»
@@ -62,6 +63,9 @@ ORACIONES = os.path.join(FUENTES, "oraciones", "cmn_sen_db_2.tsv")
 EJEMPLOS_SELECCION = os.path.join(FUENTES, "traducciones", "ejemplos_seleccion.tsv")
 EJEMPLOS_ES = os.path.join(FUENTES, "traducciones", "ejemplos_es.tsv")
 EJEMPLOS_PINYIN = os.path.join(FUENTES, "traducciones", "ejemplos_pinyin.tsv")
+PALABRAS_ES = os.path.join(FUENTES, "traducciones", "palabras_es.tsv")
+LISTA_AUDIO_PALABRAS = os.path.join(RAIZ, "assets", "audio", "palabras.txt")
+LISTA_SILABAS = os.path.join(RAIZ, "assets", "audio", "silabas.txt")
 OPENCC_TS = os.path.join(FUENTES, "opencc", "TSCharacters.txt")
 
 # Caracteres del bloque "CJK Radicals Supplement" (formas de radical sin
@@ -532,6 +536,23 @@ CREATE TABLE decodificacion (
     nombre TEXT PRIMARY KEY,
     tabla  TEXT NOT NULL
 );
+
+-- Vocabulario HSK 3.0 (las ~11,000 palabras de la lista oficial). De aquí
+-- salen el repaso de palabras, la escucha y el ejercicio de pinyin.
+CREATE TABLE palabras (
+    id             INTEGER PRIMARY KEY,
+    palabra        TEXT    NOT NULL UNIQUE,  -- simplificado y sin notas: 有些, 爸爸
+    forma          TEXT    NOT NULL,         -- como viene en la lista: 有（一）些, 爸爸|爸
+    pinyin         TEXT    NOT NULL,         -- con acentos, como en la lista: "bàba"
+    pinyin_num     TEXT    NOT NULL,         -- una sílaba por carácter: "ba4 ba5" ("_" = 儿 de erhua)
+    clase          TEXT    NOT NULL,         -- categoría gramatical (N, V, Adj…) o ''
+    nivel_hsk      INTEGER NOT NULL,         -- 1-6; 7 = niveles 7-9
+    significado_es TEXT,                     -- NULL si aún no hay traducción
+    significado_en TEXT    NOT NULL,
+    audio          INTEGER NOT NULL,         -- 1 si hay grabación en assets/audio/palabras
+    orden          INTEGER NOT NULL          -- posición en la lista oficial
+);
+CREATE INDEX idx_palabras_nivel ON palabras (nivel_hsk, orden);
 """
 
 
@@ -611,6 +632,110 @@ def filas_de_libros(nivel_de):
 # ═════════════════════════════════════════════════════════════════════════════
 # 4. CONSTRUCCIÓN
 # ═════════════════════════════════════════════════════════════════════════════
+
+def leer_cedict_palabras():
+    """(simplificado, pinyin con número en minúsculas) → acepciones, para palabras."""
+    patron = re.compile(r"^(\S+) (\S+) \[([^\]]+)\] /(.*)/\s*$")
+    datos = defaultdict(list)
+    with open(CEDICT, encoding="utf-8") as f:
+        for linea in f:
+            if linea.startswith("#"):
+                continue
+            m = patron.match(linea.rstrip("\n"))
+            if not m:
+                continue
+            _trad, simp, pinyin, acepciones = m.groups()
+            lista = [a.strip() for a in acepciones.split("/")]
+            datos[(simp, pinyin.lower())].extend(lista)
+            datos[(simp, None)].extend(lista)
+    return datos
+
+
+def filas_de_palabras(caracteres, validas):
+    """
+    Vocabulario HSK 3.0 → filas de la tabla `palabras`.
+
+    [caracteres]: filas ya armadas de la tabla caracteres (para el
+    significado de las palabras de un solo carácter).
+    """
+    cedict = leer_cedict_palabras()
+    espanol = {f["palabra"]: f["significado_es"].strip()
+               for f in leer_tsv_simple(PALABRAS_ES, ["palabra", "significado_es"])
+               if f["significado_es"].strip()}
+    por_caracter = {f["caracter"]: f for f in caracteres}
+    con_audio = set()
+    if os.path.exists(LISTA_AUDIO_PALABRAS):
+        with open(LISTA_AUDIO_PALABRAS, encoding="utf-8") as f:
+            con_audio = {l.strip() for l in f if l.strip()}
+
+    with open(HSK_PALABRAS, encoding="utf-8") as f:
+        filas_hsk = list(csv.DictReader(f))
+
+    def nivel(fila):
+        return 7 if fila["Level"] == "7-9" else int(fila["Level"])
+
+    filas_hsk.sort(key=lambda fila: (nivel(fila), fila["ID"]))
+    salida, indice, problemas = [], {}, []
+    for fila in filas_hsk:
+        forma = fila["Simplified"]
+        original = forma.split("|")[0]
+        palabra = re.sub(r"[（(].*?[)）]|\d|…", "", original).strip()
+        if not palabra or not all("\u3400" <= ch <= "\u9fff" for ch in palabra):
+            continue
+        py = fila["Pinyin"].split("|")[0]
+        py = re.sub(r"[（(].*?[)）]|…", "", py)
+        py = re.split(r"/", py)[0].strip()
+
+        # Una sílaba por carácter; el 儿 del erhua (一点儿 yīdiǎnr) va con "_".
+        silabas = None
+        if len(palabra) > 1 and palabra.endswith("儿") and py.endswith("r"):
+            silabas = partir_pinyin(py[:-1], len(palabra) - 1, validas)
+            if silabas:
+                silabas = silabas + ["_"]
+        if not silabas:
+            silabas = partir_pinyin(py, len(palabra), validas)
+        if not silabas:
+            problemas.append(f"palabra {palabra}: no se pudo partir el pinyin {py!r}")
+            continue
+
+        # Significados: inglés de CC-CEDICT; español de la traducción propia
+        # (o el del carácter, si la palabra es un solo carácter).
+        claves = re.findall(r"[^|;\s]+\|([^\[;]+)\[([^\]]+)\]", fila["CEDICT"] or "")
+        acepciones = []
+        for simp, pin in claves:
+            acepciones += cedict.get((simp, pin.lower()), [])
+        if not acepciones:
+            acepciones = cedict.get((palabra, None), [])
+        ingles = "; ".join(limpiar_acepciones(acepciones)[:4])
+        car = por_caracter.get(palabra) if len(palabra) == 1 else None
+        if not ingles and car:
+            ingles = car["significado_en"]
+        es = espanol.get(original) or espanol.get(palabra)
+        if not es and car:
+            es = car["significado_es"]
+
+        if palabra in indice:
+            # Misma palabra dos veces (面1 cara / 面2 fideos): se juntan los significados.
+            previa = salida[indice[palabra]]
+            if es and previa["significado_es"] and es not in previa["significado_es"]:
+                previa["significado_es"] += "; " + es
+            continue
+        indice[palabra] = len(salida)
+        salida.append({
+            "id": len(salida) + 1,
+            "palabra": palabra,
+            "forma": forma,
+            "pinyin": py,
+            "pinyin_num": " ".join(silabas),
+            "clase": fila["POS"] or "",
+            "nivel_hsk": nivel(fila),
+            "significado_es": es or None,
+            "significado_en": ingles or "",
+            "audio": 1 if palabra in con_audio else 0,
+            "orden": len(salida) + 1,
+        })
+    return salida, problemas
+
 
 def construir():
     graficos = leer_graphics()
@@ -760,6 +885,13 @@ def construir():
     insertar("parrafos", filas_parrafos)
     filas_trad = leer_tradicional()
     insertar("tradicional", filas_trad)
+    # Para partir el pinyin de las palabras solo valen sílabas reales: CC-CEDICT
+    # tiene algunas entradas de un carácter con dos sílabas pegadas (兛 "qianke").
+    reales = {re.sub(r"[\d_]", "", s) for s in open(LISTA_SILABAS, encoding="utf-8").read().split()}
+    validas_palabras = {s for s in silabas_validas(cedict) if s in reales} | {"r", "er", "n", "ng", "m"}
+    filas_palabras, problemas_palabras = filas_de_palabras(filas, validas_palabras)
+    problemas += problemas_palabras
+    insertar("palabras", filas_palabras)
     insertar("decodificacion", [{"nombre": "gbk", "tabla": tabla_gbk()}])
 
     # Versión = huella del contenido: si cambia cualquier dato, cambia la
@@ -767,7 +899,8 @@ def construir():
     huella = hashlib.sha1()
     for tabla, orden_sql in (("caracteres", "id"), ("radicales", "numero"), ("ejemplos", "id"),
                              ("libros", "id"), ("capitulos", "id"), ("parrafos", "id"),
-                             ("tradicional", "trad"), ("decodificacion", "nombre")):
+                             ("tradicional", "trad"), ("decodificacion", "nombre"),
+                             ("palabras", "id")):
         for fila in con.execute(f"SELECT * FROM {tabla} ORDER BY {orden_sql}"):
             huella.update(repr(fila).encode("utf-8"))
     version = huella.hexdigest()[:12]
@@ -804,6 +937,9 @@ def construir():
     print(f"  radicales: {len(filas_radicales)}  | ejemplos: {len(filas_ejemplos)}")
     print(f"  libros: {len(filas_libros)}  | capítulos: {len(filas_capitulos)}  | párrafos: {len(filas_parrafos)}")
     print(f"  tradicional → simplificado: {len(filas_trad)} caracteres")
+    con_es = sum(1 for f in filas_palabras if f["significado_es"])
+    print(f"  palabras: {len(filas_palabras)}  | con español: {con_es}  | con grabación: "
+          f"{sum(f['audio'] for f in filas_palabras)}")
     if problemas:
         print(f"  avisos ({len(problemas)}):")
         for p in problemas[:30]:
