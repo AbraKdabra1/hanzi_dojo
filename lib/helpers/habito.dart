@@ -12,8 +12,6 @@
 // app sigue normal.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import 'dart:typed_data';
-
 import 'package:flutter/services.dart';
 
 import '../datos/registro_errores.dart';

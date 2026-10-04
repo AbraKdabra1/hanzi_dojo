@@ -64,10 +64,7 @@ extension HabitoRepositorio on Repositorio {
 
   Future<List<DateTime>> diasProtegidos() async {
     final filas = await _bd.rawQuery('SELECT dia FROM protecciones ORDER BY dia');
-    return [
-      for (final f in filas)
-        if (DateTime.tryParse(f['dia'] as String) case final d?) d,
-    ];
+    return [for (final f in filas) ?DateTime.tryParse(f['dia'] as String)];
   }
 
   /// Si ayer (o los días desde tu última práctica) no practicaste y el

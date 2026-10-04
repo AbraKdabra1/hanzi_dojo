@@ -201,12 +201,12 @@ class TarjetaProgreso extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
+                // A la derecha: a la izquierda arriba está la rama de ciruelo.
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     const Text('汉字道场', style: TextStyle(fontSize: 22, letterSpacing: 2)),
-                    const Spacer(),
-                    Text('Hanzi Dojo', style: TextStyle(fontSize: 12, color: c.tenue, letterSpacing: 1.5)),
+                    Text('Hanzi Dojo', style: TextStyle(fontSize: 11, color: c.tenue, letterSpacing: 1.5)),
                   ],
                 ),
                 const Spacer(),
