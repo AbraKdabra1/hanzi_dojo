@@ -17,6 +17,8 @@
 
 import 'package:flutter/material.dart';
 
+import '../tema.dart';
+
 class TarjetaVidrio extends StatelessWidget {
   const TarjetaVidrio({
     super.key,
@@ -24,8 +26,8 @@ class TarjetaVidrio extends StatelessWidget {
     this.onTap,
     this.radio = 18,
     this.relleno = const EdgeInsets.all(16),
-    this.color = const Color(0xB3FFFFFF),
-    this.colorBorde = const Color(0xCCFFFFFF),
+    this.color,
+    this.colorBorde,
     this.sombra = true,
   });
 
@@ -34,26 +36,27 @@ class TarjetaVidrio extends StatelessWidget {
   final double radio;
   final EdgeInsetsGeometry relleno;
 
-  /// Color de relleno (translúcido).
-  final Color color;
-  final Color colorBorde;
+  /// Color de relleno (translúcido). null = el del tema (claro u oscuro).
+  final Color? color;
+  final Color? colorBorde;
   final bool sombra;
 
   @override
   Widget build(BuildContext context) {
     final forma = BorderRadius.circular(radio);
+    final c = context.colores;
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: forma,
         boxShadow: sombra
-            ? const [BoxShadow(color: Color(0x14000000), blurRadius: 10, offset: Offset(0, 4))]
+            ? [BoxShadow(color: c.sombra, blurRadius: 10, offset: const Offset(0, 4))]
             : null,
       ),
       child: Material(
-        color: color,
+        color: color ?? c.tarjeta,
         shape: RoundedRectangleBorder(
           borderRadius: forma,
-          side: BorderSide(color: colorBorde, width: 1.2),
+          side: BorderSide(color: colorBorde ?? c.bordeTarjeta, width: 1.2),
         ),
         child: InkWell(
           onTap: onTap,

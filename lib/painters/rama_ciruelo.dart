@@ -351,13 +351,16 @@ double escalaRama(Size tamano) => math.min(tamano.width, tamano.height * 0.55);
 
 /// Dibuja la rama (y las flores, si los sprites ya están listos).
 /// [tenue]: versión clara y quieta para las demás pantallas.
-void dibujarRama(Canvas canvas, Size tamano, {double t = 0, double fuerza = 0, bool tenue = false, VientoCiruelo? viento}) {
+/// [nocturno]: modo oscuro: rama de tinta clara sobre fondo oscuro (梅花 bajo
+/// la luna); las flores son las mismas.
+void dibujarRama(Canvas canvas, Size tamano,
+    {double t = 0, double fuerza = 0, bool tenue = false, bool nocturno = false, VientoCiruelo? viento}) {
   final s = escalaRama(tamano);
   viento?.alturaVisible = tamano.height / s;
   final (pos, ang) = _geo.posiciones(t, fuerza);
   Offset px(Offset q) => q * s;
 
-  _dibujarTinta(canvas, s, pos, px, tenue);
+  _dibujarTinta(canvas, s, pos, px, tenue, nocturno);
 
   final sprites = SpritesCiruelo.imagen;
   if (sprites == null) return;
@@ -365,7 +368,7 @@ void dibujarRama(Canvas canvas, Size tamano, {double t = 0, double fuerza = 0, b
   final rects = <Rect>[];
   final colores = <Color>[];
   const anclaje = SpritesCiruelo.celda / 2;
-  final alfaFlor = tenue ? 0.22 : 1.0;
+  final alfaFlor = tenue ? (nocturno ? 0.3 : 0.22) : 1.0;
 
   for (var k = 0; k < _flores.length; k++) {
     final f = _flores[k];
@@ -403,11 +406,21 @@ void dibujarRama(Canvas canvas, Size tamano, {double t = 0, double fuerza = 0, b
       Paint()..filterQuality = FilterQuality.medium);
 }
 
-void _dibujarTinta(Canvas canvas, double s, List<Offset> pos, Offset Function(Offset) px, bool tenue) {
+/// Colores de la tinta de la rama: [base, punta] en cada combinación.
+const _tintaDia = [Color(0xFF241D19), Color(0xFF463C35)];
+const _tintaDiaTenue = [Color(0x1F241D19), Color(0x1A463C35)];
+const _tintaNoche = [Color(0xFF6B5E53), Color(0xFF8A7B6E)];
+const _tintaNocheTenue = [Color(0x338A7B6E), Color(0x298A7B6E)];
+
+void _dibujarTinta(Canvas canvas, double s, List<Offset> pos, Offset Function(Offset) px, bool tenue, bool nocturno) {
+  // Pincel seco (飞白): vetas por donde "se ve el fondo" (claras de día,
+  // oscuras de noche).
   final vetas = Paint()
     ..style = PaintingStyle.stroke
     ..strokeCap = StrokeCap.round
-    ..color = const Color(0xFFF5EEE4).withValues(alpha: tenue ? 0.05 : 0.13);
+    ..color = nocturno
+        ? const Color(0xFF151311).withValues(alpha: tenue ? 0.06 : 0.28)
+        : const Color(0xFFF5EEE4).withValues(alpha: tenue ? 0.05 : 0.13);
 
   for (final cadena in _cadenas) {
     final puntos = <Offset>[];
@@ -462,7 +475,7 @@ void _dibujarTinta(Canvas canvas, double s, List<Offset> pos, Offset Function(Of
       ..shader = ui.Gradient.linear(
         puntos.first,
         puntos.last,
-        tenue ? const [Color(0x1F241D19), Color(0x1A463C35)] : const [Color(0xFF241D19), Color(0xFF463C35)],
+        nocturno ? (tenue ? _tintaNocheTenue : _tintaNoche) : (tenue ? _tintaDiaTenue : _tintaDia),
       );
     canvas.drawPath(contorno, tinta);
     if (!raiz) canvas.drawCircle(puntos.first, anchos.first / 2, tinta); // inicio redondeado
@@ -491,7 +504,10 @@ void _dibujarTinta(Canvas canvas, double s, List<Offset> pos, Offset Function(Of
   }
 
   // Puntos de musgo (苔点) sobre los tramos gruesos.
-  final musgo = Paint()..color = tenue ? const Color(0x22191410) : const Color(0xD9191410);
+  final musgo = Paint()
+    ..color = nocturno
+        ? (tenue ? const Color(0x22241E1A) : const Color(0xE6241E1A))
+        : (tenue ? const Color(0x22191410) : const Color(0xD9191410));
   for (var i = 0; i < _nodos.length; i++) {
     final p = _geo.padre[i];
     final g = _nodos[i].$5;

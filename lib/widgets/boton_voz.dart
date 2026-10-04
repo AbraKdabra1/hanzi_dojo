@@ -22,6 +22,7 @@ import 'package:just_audio/just_audio.dart';
 
 import '../datos/audio.dart';
 import '../datos/registro_errores.dart';
+import '../tema.dart';
 
 enum ResultadoVoz { grabacion, vozDelTelefono, sinSonido }
 
@@ -184,6 +185,7 @@ class _BotonVozState extends State<BotonVoz> {
   @override
   Widget build(BuildContext context) {
     const azul = Color(0xFF007AFF);
+    final c = context.colores;
     return Semantics(
       button: true,
       label: 'Escuchar pronunciación',
@@ -194,16 +196,16 @@ class _BotonVozState extends State<BotonVoz> {
           width: 64,
           height: 38,
           decoration: BoxDecoration(
-            color: _activo ? const Color(0x22007AFF) : const Color(0x14000000),
+            color: _activo ? const Color(0x22007AFF) : c.separador,
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color: _activo ? const Color(0x55007AFF) : const Color(0x30FFFFFF),
+              color: _activo ? const Color(0x55007AFF) : c.bordeTarjeta,
               width: 1.2,
             ),
           ),
           child: Icon(
             _activo ? Icons.volume_up_rounded : Icons.volume_up_outlined,
-            color: _activo ? azul : const Color(0xFF555555),
+            color: _activo ? azul : c.icono,
             size: widget.tamano,
           ),
         ),

@@ -155,14 +155,17 @@ class ControladorTrazos extends ChangeNotifier {
 }
 
 class PincelPainter extends CustomPainter {
-  PincelPainter(this.controlador) : super(repaint: controlador);
+  PincelPainter(this.controlador, {Color color = const Color(0xDD000000)})
+      : _tinta = Paint()
+          ..color = color
+          ..style = PaintingStyle.fill
+          ..isAntiAlias = true,
+        super(repaint: controlador);
 
   final ControladorTrazos controlador;
 
-  static final Paint _tinta = Paint()
-    ..color = const Color(0xDD000000)
-    ..style = PaintingStyle.fill
-    ..isAntiAlias = true;
+  /// Tinta negra de día; color papel de noche.
+  final Paint _tinta;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -177,5 +180,5 @@ class PincelPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(PincelPainter old) => !identical(old.controlador, controlador);
+  bool shouldRepaint(PincelPainter old) => !identical(old.controlador, controlador) || old._tinta.color != _tinta.color;
 }

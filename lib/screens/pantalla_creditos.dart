@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
+import '../tema.dart';
 
 class PantallaCreditos extends StatelessWidget {
   const PantallaCreditos({super.key});
@@ -106,10 +107,10 @@ class PantallaCreditos extends StatelessWidget {
                     Row(children: [
                       Expanded(
                           child: Text(titulo, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700))),
-                      Text(licencia, style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+                      Text(licencia, style: TextStyle(fontSize: 11, color: context.colores.tenue)),
                     ]),
                     const SizedBox(height: 6),
-                    Text(texto, style: TextStyle(fontSize: 13, color: Colors.grey.shade800, height: 1.35)),
+                    Text(texto, style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.35)),
                   ],
                 ),
               ),

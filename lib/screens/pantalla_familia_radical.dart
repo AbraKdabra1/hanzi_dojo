@@ -16,6 +16,7 @@ import '../datos/repositorio.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
+import '../tema.dart';
 import 'pantalla_estudio.dart';
 
 class PantallaFamiliaRadical extends StatefulWidget {
@@ -67,7 +68,7 @@ class _PantallaFamiliaRadicalState extends State<PantallaFamiliaRadical> {
       child: Scaffold(
         appBar: BarraSuperior(titulo: 'Radical ${widget.numero}', subtitulo: r?.nombreEs),
         body: _cargando || r == null
-            ? const Center(child: CircularProgressIndicator(color: Colors.black54))
+            ? Center(child: CircularProgressIndicator(color: context.colores.icono))
             : CustomScrollView(
                 slivers: [
                   SliverToBoxAdapter(child: _cabecera(r)),
@@ -93,14 +94,14 @@ class _PantallaFamiliaRadicalState extends State<PantallaFamiliaRadical> {
                 const SizedBox(width: 12),
                 if (r.variantes.isNotEmpty)
                   Text(r.variantes.join('  '),
-                      style: TextStyle(fontSize: 30, color: Colors.grey.shade700, height: 1.1)),
+                      style: TextStyle(fontSize: 30, color: context.colores.suave, height: 1.1)),
                 const Spacer(),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(r.pinyin, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                     Text('${r.trazos} ${r.trazos == 1 ? 'trazo' : 'trazos'}',
-                        style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                        style: TextStyle(fontSize: 12, color: context.colores.tenue)),
                   ],
                 ),
               ],
@@ -111,12 +112,12 @@ class _PantallaFamiliaRadicalState extends State<PantallaFamiliaRadical> {
               child: Text(r.nombreEs, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
             ),
             const SizedBox(height: 12),
-            BarraAvance(valor: r.aprendidosHsk, total: r.totalHsk, color: const Color(0xFF6A1B9A)),
+            BarraAvance(valor: r.aprendidosHsk, total: r.totalHsk, color: (context.colores.oscuro ? const Color(0xFFCE93D8) : const Color(0xFF6A1B9A))),
             const SizedBox(height: 4),
             Align(
               alignment: Alignment.centerLeft,
               child: Text('caracteres HSK de la familia que ya estudiaste',
-                  style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+                  style: TextStyle(fontSize: 11, color: context.colores.tenue)),
             ),
             const SizedBox(height: 14),
             Row(
@@ -151,11 +152,11 @@ class _PantallaFamiliaRadicalState extends State<PantallaFamiliaRadical> {
   List<Widget> _secciones() {
     if (_familia.isEmpty) {
       return [
-        const SliverToBoxAdapter(
+        SliverToBoxAdapter(
           child: Padding(
             padding: EdgeInsets.all(24),
             child: Text('Ningún carácter HSK usa este radical.',
-                textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)),
+                textAlign: TextAlign.center, style: TextStyle(color: context.colores.tenue)),
           ),
         ),
       ];
@@ -172,7 +173,7 @@ class _PantallaFamiliaRadicalState extends State<PantallaFamiliaRadical> {
             child: Row(children: [
               EtiquetaNivel(nivel: entrada.key),
               const SizedBox(width: 8),
-              Text('${entrada.value.length}', style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+              Text('${entrada.value.length}', style: TextStyle(fontSize: 12, color: context.colores.tenue)),
             ]),
           ),
         ),
@@ -229,13 +230,17 @@ class _CeldaCaracter extends StatelessWidget {
       radio: 12,
       sombra: false,
       relleno: const EdgeInsets.symmetric(vertical: 4),
-      color: visto ? const Color(0xBFE8F5E9) : const Color(0x99FFFFFF),
-      colorBorde: visto ? const Color(0xCCA5D6A7) : const Color(0xB3FFFFFF),
+      color: visto
+          ? (context.colores.oscuro ? const Color(0x332E7D32) : const Color(0xBFE8F5E9))
+          : context.colores.translucido,
+      colorBorde: visto
+          ? (context.colores.oscuro ? const Color(0x664CAF50) : const Color(0xCCA5D6A7))
+          : context.colores.bordeTarjeta,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(caracter.caracter, style: const TextStyle(fontSize: 26, height: 1.1)),
-          Text(caracter.pinyin, style: TextStyle(fontSize: 10, color: Colors.grey.shade600)),
+          Text(caracter.pinyin, style: TextStyle(fontSize: 10, color: context.colores.tenue)),
         ],
       ),
     );

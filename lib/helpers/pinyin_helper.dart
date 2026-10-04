@@ -18,13 +18,18 @@ class PinyinHelper {
   static const Color neutro = Color(0xFF9E9E9E);
 
   /// Color de un tono (1-4; cualquier otro valor = neutro).
-  static Color colorDeTono(int tono) => switch (tono) {
-        1 => tono1,
-        2 => tono2,
-        3 => tono3,
-        4 => tono4,
-        _ => neutro,
-      };
+  /// [oscuro]: en modo oscuro se aclara un poco (verde y azul profundos no
+  /// se leerían sobre negro).
+  static Color colorDeTono(int tono, {bool oscuro = false}) {
+    final base = switch (tono) {
+      1 => tono1,
+      2 => tono2,
+      3 => tono3,
+      4 => tono4,
+      _ => neutro,
+    };
+    return oscuro ? Color.lerp(base, const Color(0xFFFFFFFF), 0.3)! : base;
+  }
 
   /// Tono a partir del pinyin con número: "hao3" → 3, "ma5" → 5.
   static int tonoDeNumero(String pinyinNum) {

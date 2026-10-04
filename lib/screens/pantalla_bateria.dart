@@ -20,6 +20,7 @@ import '../helpers/energia.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
+import '../tema.dart';
 
 class PantallaBateria extends StatefulWidget {
   const PantallaBateria({super.key});
@@ -66,7 +67,7 @@ class _PantallaBateriaState extends State<PantallaBateria> {
 
   @override
   Widget build(BuildContext context) {
-    final suave = TextStyle(fontSize: 13, color: Colors.grey.shade700, height: 1.3);
+    final suave = TextStyle(fontSize: 13, color: context.colores.suave, height: 1.3);
     return FondoTintaChina(
       child: Scaffold(
         appBar: const BarraSuperior(titulo: 'Batería y fluidez'),
@@ -275,7 +276,7 @@ class _Fila extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
         children: [
-          Expanded(child: Text(nombre, style: TextStyle(fontSize: 14, color: Colors.grey.shade800))),
+          Expanded(child: Text(nombre, style: TextStyle(fontSize: 14, color: context.colores.suave))),
           Text(valor, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
         ],
       ),

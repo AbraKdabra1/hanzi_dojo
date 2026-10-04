@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../datos/modelos.dart';
 import '../helpers/pinyin_helper.dart';
+import '../tema.dart';
 
 /// Barra superior transparente con flecha para regresar.
 class BarraSuperior extends StatelessWidget implements PreferredSizeWidget {
@@ -20,6 +21,7 @@ class BarraSuperior extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colores;
     return AppBar(
       leading: IconButton(
         icon: const Icon(Icons.arrow_back_ios_new, size: 20),
@@ -29,10 +31,8 @@ class BarraSuperior extends StatelessWidget implements PreferredSizeWidget {
       title: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(titulo,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black87)),
-          if (subtitulo != null)
-            Text(subtitulo!, style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+          Text(titulo, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: c.tinta)),
+          if (subtitulo != null) Text(subtitulo!, style: TextStyle(fontSize: 11, color: c.tenue)),
         ],
       ),
       actions: acciones,
@@ -56,9 +56,16 @@ class EtiquetaNivel extends StatelessWidget {
         _ => const Color(0xFF757575),
       };
 
+  /// Color del nivel para texto sobre el fondo actual: en modo oscuro, más
+  /// claro (los tonos profundos no se leerían sobre negro).
+  static Color colorPara(BuildContext context, int nivel) {
+    final base = colorDe(nivel);
+    return context.colores.oscuro ? Color.lerp(base, Colors.white, 0.45)! : base;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final color = colorDe(nivel);
+    final color = colorPara(context, nivel);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
       decoration: BoxDecoration(
@@ -81,6 +88,7 @@ class BarraAvance extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colores;
     final fraccion = total == 0 ? 0.0 : valor / total;
     return Row(
       children: [
@@ -90,12 +98,12 @@ class BarraAvance extends StatelessWidget {
             value: fraccion,
             minHeight: 6,
             borderRadius: BorderRadius.circular(4),
-            backgroundColor: const Color(0x14000000),
-            color: color ?? Colors.black87,
+            backgroundColor: c.separador,
+            color: color ?? c.tinta,
           ),
         ),
         const SizedBox(width: 8),
-        Text('$valor / $total', style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+        Text('$valor / $total', style: TextStyle(fontSize: 11, color: c.tenue)),
       ],
     );
   }
@@ -110,7 +118,7 @@ class PinyinColoreado extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = PinyinHelper.colorDeTono(PinyinHelper.tonoDeNumero(caracter.pinyinNum));
+    final color = PinyinHelper.colorDeTono(PinyinHelper.tonoDeNumero(caracter.pinyinNum), oscuro: context.colores.oscuro);
     return Text.rich(
       TextSpan(children: [
         TextSpan(
@@ -120,7 +128,7 @@ class PinyinColoreado extends StatelessWidget {
         if (caracter.otrasLecturas.isNotEmpty)
           TextSpan(
             text: '   también ${caracter.otrasLecturas.replaceAll(' ', ', ')}',
-            style: TextStyle(fontSize: tamano * 0.55, color: Colors.grey.shade600),
+            style: TextStyle(fontSize: tamano * 0.55, color: context.colores.tenue),
           ),
       ]),
       textAlign: TextAlign.center,
@@ -138,18 +146,19 @@ class TextoSignificado extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colores;
     final estilo = TextStyle(
       fontSize: tamano,
-      color: Colors.black87,
+      color: c.tinta,
       fontStyle: caracter.tieneEspanol ? FontStyle.normal : FontStyle.italic,
       height: 1.3,
     );
     return Text.rich(
       TextSpan(children: [
         if (!caracter.tieneEspanol)
-          const TextSpan(
+          TextSpan(
             text: 'EN  ',
-            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: Colors.grey),
+            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: c.tenue),
           ),
         TextSpan(text: caracter.significado, style: estilo),
       ]),
@@ -193,7 +202,7 @@ class MensajeCentrado extends StatelessWidget {
               const SizedBox(height: 8),
               Text(texto!,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14, color: Colors.grey.shade700, height: 1.4)),
+                  style: TextStyle(fontSize: 14, color: context.colores.suave, height: 1.4)),
             ],
             if (acciones.isNotEmpty) ...[
               const SizedBox(height: 24),

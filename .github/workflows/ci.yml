@@ -5,7 +5,9 @@
 #   1. Valida la base de datos (python herramientas_datos/validar_db.py)
 #   2. flutter analyze  → errores y avisos del código Dart
 #   3. flutter test     → pruebas automáticas
-#   4. flutter build apk --profile → APK para probar la fluidez en el teléfono
+#   4. Capturas de las pantallas principales en claro y oscuro
+#      (test/capturas_test.dart) → PNG en la rama ci-registros, carpeta capturas/
+#   5. flutter build apk --profile → APK para probar la fluidez en el teléfono
 #
 # El APK queda en la pestaña "Actions" del repo (sección Artifacts) y se puede
 # instalar directo en el teléfono.
@@ -76,6 +78,13 @@ jobs:
           flutter test --reporter expanded 2>&1 | tee test.txt
           exit ${PIPESTATUS[0]}
 
+      - name: Capturas de pantalla (claro y oscuro)
+        id: capturas
+        continue-on-error: true
+        run: |
+          CAPTURAS=1 flutter test test/capturas_test.dart --reporter expanded 2>&1 | tee capturas.txt
+          exit ${PIPESTATUS[0]}
+
       - name: Compilar APK (profile)
         id: apk
         continue-on-error: true
@@ -97,6 +106,7 @@ jobs:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir -p /tmp/reg && cp -f *.txt pubspec.lock /tmp/reg/ 2>/dev/null || true
+          mkdir -p /tmp/reg/capturas && cp -f build/capturas/*.png /tmp/reg/capturas/ 2>/dev/null || true
           cd /tmp/reg
           {
             echo "commit: $GITHUB_SHA"
@@ -104,6 +114,7 @@ jobs:
             echo "validar_db: ${{ steps.validar.outcome }}"
             echo "analyze: ${{ steps.analyze.outcome }}"
             echo "test: ${{ steps.test.outcome }}"
+            echo "capturas: ${{ steps.capturas.outcome }}"
             echo "apk: ${{ steps.apk.outcome }}"
           } > resumen.txt
           git init -q && git checkout -q -b ci

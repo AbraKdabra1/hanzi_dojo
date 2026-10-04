@@ -22,6 +22,7 @@ import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
 import '../widgets/texto_lectura.dart';
+import '../tema.dart';
 
 class PantallaLectura extends StatefulWidget {
   const PantallaLectura({super.key, required this.libro, required this.capitulos, required this.indice});
@@ -141,7 +142,8 @@ class _PantallaLecturaState extends State<PantallaLectura> {
                 ])
               : FilledButton.icon(
                   style: FilledButton.styleFrom(
-                    backgroundColor: const Color(0xDE000000),
+                    backgroundColor: context.colores.boton,
+                    foregroundColor: context.colores.textoBoton,
                     padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 14),
                   ),
                   icon: const Icon(Icons.check),
@@ -199,7 +201,7 @@ class _PantallaLecturaState extends State<PantallaLectura> {
           ],
         ),
         body: parrafos == null
-            ? const Center(child: CircularProgressIndicator(color: Colors.black54))
+            ? Center(child: CircularProgressIndicator(color: context.colores.icono))
             // Lista perezosa: un capítulo de un libro propio puede tener
             // cientos de párrafos y solo se construyen los que se ven.
             : ListView.builder(
@@ -250,7 +252,7 @@ class _Encabezado extends StatelessWidget {
       children: [
         if (capitulo.tituloPinyin.isNotEmpty)
           Text(capitulo.tituloPinyin,
-              textAlign: TextAlign.center, style: TextStyle(fontSize: 13, color: Colors.grey.shade600)),
+              textAlign: TextAlign.center, style: TextStyle(fontSize: 13, color: context.colores.tenue)),
         Text(capitulo.titulo,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: tamano + 6, fontWeight: FontWeight.w600, letterSpacing: 2)),
@@ -263,7 +265,7 @@ class _Encabezado extends StatelessWidget {
           const SizedBox(height: 6),
           Text(capitulo.origen,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12, color: Colors.grey.shade600, fontStyle: FontStyle.italic, height: 1.35)),
+              style: TextStyle(fontSize: 12, color: context.colores.tenue, fontStyle: FontStyle.italic, height: 1.35)),
         ],
         if (capitulo.palabras.isNotEmpty) ...[
           const SizedBox(height: 14),
@@ -273,7 +275,7 @@ class _Encabezado extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Palabras de este capítulo',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.grey.shade700)),
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: context.colores.suave)),
                 const SizedBox(height: 6),
                 for (final p in capitulo.palabras)
                   Padding(
@@ -284,7 +286,7 @@ class _Encabezado extends StatelessWidget {
                       children: [
                         Text(p.chino, style: const TextStyle(fontSize: 20)),
                         const SizedBox(width: 8),
-                        Text(p.pinyin, style: TextStyle(fontSize: 13, color: Colors.grey.shade600)),
+                        Text(p.pinyin, style: TextStyle(fontSize: 13, color: context.colores.tenue)),
                         const SizedBox(width: 8),
                         Expanded(child: Text(p.espanol, style: const TextStyle(fontSize: 14))),
                       ],
@@ -322,12 +324,12 @@ class _BotonAjuste extends StatelessWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: activo ? const Color(0xDE000000) : Colors.transparent,
+            color: activo ? context.colores.boton : Colors.transparent,
           ),
           child: IconTheme(
-            data: IconThemeData(color: activo ? Colors.white : Colors.black54),
+            data: IconThemeData(color: activo ? context.colores.textoBoton : context.colores.icono),
             child: DefaultTextStyle.merge(
-              style: TextStyle(color: activo ? Colors.white : Colors.black54),
+              style: TextStyle(color: activo ? context.colores.textoBoton : context.colores.icono),
               child: child,
             ),
           ),

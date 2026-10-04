@@ -20,6 +20,7 @@ import '../helpers/archivos.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
+import '../tema.dart';
 import 'pantalla_bateria.dart';
 import 'pantalla_creditos.dart';
 import 'pantalla_errores.dart';
@@ -161,13 +162,49 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const Text('Apariencia', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                  const SizedBox(height: 4),
+                  Text(
+                    'El modo oscuro «tinta» descansa la vista de noche y, en pantallas OLED, '
+                    'gasta bastante menos batería.',
+                    style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.3),
+                  ),
+                  const SizedBox(height: 10),
+                  ValueListenableBuilder<ThemeMode>(
+                    valueListenable: Apariencia.modo,
+                    builder: (context, modo, _) => SizedBox(
+                      width: double.infinity,
+                      child: SegmentedButton<ThemeMode>(
+                        showSelectedIcon: false,
+                        segments: const [
+                          ButtonSegment(value: ThemeMode.system, label: Text('Automática'), icon: Icon(Icons.brightness_auto_outlined)),
+                          ButtonSegment(value: ThemeMode.light, label: Text('Clara'), icon: Icon(Icons.light_mode_outlined)),
+                          ButtonSegment(value: ThemeMode.dark, label: Text('Oscura'), icon: Icon(Icons.dark_mode_outlined)),
+                        ],
+                        selected: {modo},
+                        onSelectionChanged: (elegido) {
+                          final nuevo = elegido.first;
+                          Apariencia.modo.value = nuevo;
+                          DatosApp.de(context).guardarApariencia(Apariencia.aTexto(nuevo));
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            TarjetaVidrio(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   const Text('Caracteres nuevos por día',
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                   const SizedBox(height: 4),
                   Text(
                     'Al llegar a este número, la sesión te ofrece parar o seguir. '
                     'Entre 10 y 20 es un buen ritmo para no acumular repasos.',
-                    style: TextStyle(fontSize: 13, color: Colors.grey.shade700, height: 1.3),
+                    style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.3),
                   ),
                   if (limite != null)
                     Row(
@@ -203,7 +240,7 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                 subtitle: Text(
                   'Cada trazo correcto se transforma, con un rebote suave, en la forma '
                   'exacta del pincel. Apágalo si prefieres ver tu trazo tal cual.',
-                  style: TextStyle(fontSize: 13, color: Colors.grey.shade700, height: 1.3),
+                  style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.3),
                 ),
                 value: _ajuste ?? true,
                 onChanged: _ajuste == null
@@ -220,7 +257,7 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                 context,
                 MaterialPageRoute<void>(builder: (_) => const PantallaBateria()),
               ),
-              child: const Row(
+              child: Row(
                 children: [
                   Icon(Icons.battery_saver_outlined),
                   SizedBox(width: 12),
@@ -230,11 +267,11 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                       children: [
                         Text('Batería y fluidez', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                         Text('120 Hz solo cuando hace falta y cuánto gasta la app',
-                            style: TextStyle(fontSize: 13, color: Colors.black54)),
+                            style: TextStyle(fontSize: 13, color: context.colores.icono)),
                       ],
                     ),
                   ),
-                  Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+                  Icon(Icons.arrow_forward_ios, size: 14, color: context.colores.tenue),
                 ],
               ),
             ),
@@ -248,7 +285,7 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                   Text(
                     'Tu progreso vive solo en este teléfono. Exporta un respaldo para no '
                     'perderlo si cambias de teléfono o lo reinicias.',
-                    style: TextStyle(fontSize: 13, color: Colors.grey.shade700, height: 1.3),
+                    style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.3),
                   ),
                   const SizedBox(height: 6),
                   _FilaAccion(
@@ -279,12 +316,12 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                 context,
                 MaterialPageRoute<void>(builder: (_) => const PantallaReporte()),
               ),
-              child: const Row(
+              child: Row(
                 children: [
                   Icon(Icons.feedback_outlined),
                   SizedBox(width: 12),
                   Expanded(child: Text('Reportar un problema o sugerir algo', style: TextStyle(fontSize: 15))),
-                  Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+                  Icon(Icons.arrow_forward_ios, size: 14, color: context.colores.tenue),
                 ],
               ),
             ),
@@ -294,12 +331,12 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                 context,
                 MaterialPageRoute<void>(builder: (_) => const PantallaErrores()),
               ),
-              child: const Row(
+              child: Row(
                 children: [
                   Icon(Icons.bug_report_outlined),
                   SizedBox(width: 12),
                   Expanded(child: Text('Informe de errores', style: TextStyle(fontSize: 15))),
-                  Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+                  Icon(Icons.arrow_forward_ios, size: 14, color: context.colores.tenue),
                 ],
               ),
             ),
@@ -309,12 +346,12 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                 context,
                 MaterialPageRoute<void>(builder: (_) => const PantallaCreditos()),
               ),
-              child: const Row(
+              child: Row(
                 children: [
                   Icon(Icons.info_outline),
                   SizedBox(width: 12),
                   Expanded(child: Text('Créditos y licencias', style: TextStyle(fontSize: 15))),
-                  Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+                  Icon(Icons.arrow_forward_ios, size: 14, color: context.colores.tenue),
                 ],
               ),
             ),
@@ -346,9 +383,9 @@ class _FilaAccion extends StatelessWidget {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       enabled: onTap != null,
-      leading: Icon(icono, color: Colors.black87),
+      leading: Icon(icono, color: context.colores.tinta),
       title: Text(titulo, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-      subtitle: Text(subtitulo, style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+      subtitle: Text(subtitulo, style: TextStyle(fontSize: 12, color: context.colores.tenue)),
       onTap: onTap,
     );
   }

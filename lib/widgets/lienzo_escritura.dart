@@ -47,6 +47,7 @@ import '../painters/grid_painter.dart';
 import '../painters/pincel_painter.dart';
 import '../painters/pista_roja_painter.dart';
 import '../painters/trazo_guia_painter.dart';
+import '../tema.dart';
 
 class LienzoEscritura extends StatefulWidget {
   const LienzoEscritura({
@@ -317,6 +318,7 @@ class LienzoEscrituraState extends State<LienzoEscritura>
 
   @override
   Widget build(BuildContext context) {
+    final colores = context.colores;
     return LayoutBuilder(builder: (context, restricciones) {
       final tamano = restricciones.biggest;
       if (tamano != _tamano) {
@@ -341,10 +343,10 @@ class LienzoEscrituraState extends State<LienzoEscritura>
             // (painters/capa_fija.dart): menos batería al practicar.
             RepaintBoundary(
               child: CapaFija(
-                clave: (widget.modoNovato, _contornos),
+                clave: (widget.modoNovato, _contornos, colores.oscuro),
                 pintor: PintoresJuntos([
-                  const GridPainter(),
-                  if (widget.modoNovato) FondoCaracterPainter(_contornos),
+                  GridPainter(color: colores.cuadricula),
+                  if (widget.modoNovato) FondoCaracterPainter(_contornos, color: colores.silueta),
                 ]),
               ),
             ),
@@ -375,7 +377,7 @@ class LienzoEscrituraState extends State<LienzoEscritura>
                 child: const ColoredBox(color: Color(0x1A00C853)),
               ),
             ),
-            RepaintBoundary(child: CustomPaint(painter: PincelPainter(_tinta))),
+            RepaintBoundary(child: CustomPaint(painter: PincelPainter(_tinta, color: colores.trazo))),
             Positioned(
               top: 10,
               left: 0,
@@ -401,17 +403,19 @@ class _AvisoAlReves extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colores;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
       decoration: BoxDecoration(
-        color: const Color(0xF2FFFFFF),
+        color: c.hoja,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: const Color(0x55D32F2F)),
-        boxShadow: const [BoxShadow(color: Color(0x1A000000), blurRadius: 8, offset: Offset(0, 2))],
+        boxShadow: [BoxShadow(color: c.sombra, blurRadius: 8, offset: const Offset(0, 2))],
       ),
-      child: const Text(
+      child: Text(
         '↺  Al revés: empieza donde inicia la flecha',
-        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFFC62828)),
+        style: TextStyle(
+            fontSize: 13, fontWeight: FontWeight.w600, color: c.oscuro ? const Color(0xFFEF9A9A) : const Color(0xFFC62828)),
       ),
     );
   }
