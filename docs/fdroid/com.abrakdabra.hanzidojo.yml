@@ -1,0 +1,42 @@
+# Borrador de la receta de F-Droid (va en fdroiddata/metadata/). Ver docs/publicar.md.
+# F-Droid compila desde el código: vuelve a armar la base de contenido con
+# herramientas_datos/construir_db.py (solo Python estándar) y firma con su llave.
+Categories:
+  - Science & Education
+License: GPL-3.0-only
+AuthorName: AbraKdabra
+SourceCode: https://github.com/AbraKdabra1/hanzi_dojo
+IssueTracker: https://github.com/AbraKdabra1/hanzi_dojo/issues
+Changelog: https://github.com/AbraKdabra1/hanzi_dojo/blob/main/CHANGELOG.md
+
+AutoName: Hanzi Dojo
+
+RepoType: git
+Repo: https://github.com/AbraKdabra1/hanzi_dojo.git
+
+Builds:
+  - versionName: 2.1.0
+    versionCode: 3
+    commit: v2.1.0
+    output: build/app/outputs/flutter-apk/app-release.apk
+    srclibs:
+      - flutter@3.44.5
+    rm:
+      - ios
+    prebuild:
+      - export PUB_CACHE=$(pwd)/.pub-cache
+      - python3 herramientas_datos/construir_db.py
+      - $$flutter$$/bin/flutter config --no-analytics
+      - $$flutter$$/bin/flutter pub get
+    scandelete:
+      - .pub-cache
+    build:
+      - export PUB_CACHE=$(pwd)/.pub-cache
+      - export SIN_FIRMA=1
+      - $$flutter$$/bin/flutter build apk --release
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+UpdateCheckData: pubspec.yaml|version:\s.+\+(\d+)|.|version:\s(.+)\+
+CurrentVersion: 2.1.0
+CurrentVersionCode: 3

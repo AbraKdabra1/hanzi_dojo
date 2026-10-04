@@ -1,0 +1,29 @@
+<b>Hanzi Dojo · 汉字道场</b> es una app gratuita y de código abierto para aprender a <b>escribir caracteres chinos</b> trazo por trazo, con los 3,000 caracteres de la lista oficial <b>HSK 3.0</b>.
+
+<b>Escribe</b>
+• La app revisa cada trazo mientras escribes: la forma, el orden y el sentido.
+• Modo novato con silueta y pistas, o modo experto de memoria.
+• Cada trazo correcto se acomoda con un rebote suave en la forma exacta del pincel.
+• Repaso espaciado (SM-2): cada carácter vuelve justo cuando lo ibas a olvidar.
+• Estudia por nivel HSK o por los 214 radicales Kangxi y sus familias.
+
+<b>Escucha y habla</b>
+• Grabaciones de hablantes nativos (sílabas y ~8,500 palabras) que funcionan sin internet.
+• Entrenador de tonos, ejercicio de escucha y escritura de pinyin.
+• Vocabulario con repaso espaciado: unas 10,900 palabras HSK con significado en español.
+
+<b>Lee</b>
+• Siete libros graduados del HSK 1 al 7-9: cuentos, mitos, chengyu, leyendas, Viaje al Oeste, proverbios y poemas Tang, con pinyin, traducción y voz.
+• Agrega tus propios textos (TXT, EPUB o texto pegado).
+
+<b>Hazlo hábito</b>
+• Meta diaria, recordatorio, racha con protector semanal y logros.
+• Widget con el carácter del día y tarjeta de progreso para compartir.
+• Estadísticas: calendario, precisión, los caracteres y trazos que más te cuestan y los tonos que confundes.
+
+<b>Respeta tu teléfono y tu privacidad</b>
+• Sin anuncios, sin cuentas y sin permiso de internet: todo se queda en tu teléfono.
+• Modo oscuro «tinta» y pantalla a 120 Hz solo cuando hace falta, para cuidar la batería.
+• Exporta e importa tu progreso cuando cambies de teléfono.
+
+Todo en español. Licencia GPL-3.0. Contenido: CC-CEDICT, Make Me a Hanzi, Unihan, Tatoeba, audio-cmn, Noto Sans SC (ver Créditos en la app).

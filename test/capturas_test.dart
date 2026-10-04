@@ -51,6 +51,12 @@ Future<void> _cargarFuentes() async {
     noto.addFont(rootBundle.load('assets/fonts/NotoSansSC-$peso.ttf'));
   }
   await noto.load();
+  // Emojis (en CI: paquete fonts-noto-color-emoji). En el teléfono los pone Android.
+  final emojis = File('/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf');
+  if (emojis.existsSync()) {
+    final cargador = FontLoader('NotoColorEmoji')..addFont(Future.value(ByteData.sublistView(emojis.readAsBytesSync())));
+    await cargador.load();
+  }
   // Íconos de Material: vienen con Flutter.
   final artefactos = File(Platform.resolvedExecutable).parent.parent.parent;
   final iconos = File('${artefactos.path}/material_fonts/MaterialIcons-Regular.otf');
@@ -59,6 +65,11 @@ Future<void> _cargarFuentes() async {
     await cargador.load();
   }
 }
+
+/// El tema de la app con la fuente de emojis como respaldo (solo en pruebas).
+ThemeData _conEmojis(ThemeData tema) => tema.copyWith(
+      textTheme: tema.textTheme.apply(fontFamilyFallback: const ['NotoColorEmoji']),
+    );
 
 void main() {
   late Directory carpeta;
@@ -89,7 +100,7 @@ void main() {
           repo: repo,
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
-            theme: temaHanziDojo(oscuro ? Brightness.dark : Brightness.light),
+            theme: _conEmojis(temaHanziDojo(oscuro ? Brightness.dark : Brightness.light)),
             home: pantalla,
           ),
         ),

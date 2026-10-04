@@ -1,0 +1,145 @@
+# ---------------------------------------------------------------------------
+# Lanzamiento de Hanzi Dojo
+#
+# Al subir una etiqueta de versión (git tag v2.1.0 && git push origin v2.1.0):
+#   1. Arma android/key.properties con la llave de firma guardada en los
+#      secretos del repositorio (ver docs/publicar.md). Sin ellos, se detiene.
+#   2. Compila los APK de lanzamiento firmados: uno por arquitectura (más
+#      ligeros) y uno universal.
+#   3. Crea la versión en GitHub (pestaña Releases) con los APK, sus sumas
+#      SHA-256 y la huella del certificado, y las notas de CHANGELOG.md.
+#
+# También se puede correr a mano (Actions → Lanzamiento → Run workflow): en
+# ese caso solo deja los APK como artefactos, sin publicar nada.
+# ---------------------------------------------------------------------------
+name: Lanzamiento
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write   # crear la versión y subir los APK
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.44.5
+          cache: true
+
+      - name: Llave de firma
+        env:
+          LLAVE_BASE64: ${{ secrets.LLAVE_BASE64 }}
+          LLAVE_CLAVE: ${{ secrets.LLAVE_CLAVE }}
+          LLAVE_ALIAS: ${{ secrets.LLAVE_ALIAS }}
+        run: |
+          if [ -z "$LLAVE_BASE64" ] || [ -z "$LLAVE_CLAVE" ] || [ -z "$LLAVE_ALIAS" ]; then
+            echo "::error::Faltan los secretos LLAVE_BASE64, LLAVE_CLAVE y LLAVE_ALIAS (ver docs/publicar.md)"
+            exit 1
+          fi
+          echo "$LLAVE_BASE64" | base64 -d > "$RUNNER_TEMP/hanzi_dojo_lanzamiento.jks"
+          {
+            echo "storeFile=$RUNNER_TEMP/hanzi_dojo_lanzamiento.jks"
+            echo "storePassword=$LLAVE_CLAVE"
+            echo "keyAlias=$LLAVE_ALIAS"
+            echo "keyPassword=$LLAVE_CLAVE"
+          } > android/key.properties
+
+      - name: Versión
+        id: version
+        run: |
+          VERSION=$(grep -E '^version:' pubspec.yaml | sed -E 's/version: *([0-9.]+)\+([0-9]+).*/\1/')
+          CODIGO=$(grep -E '^version:' pubspec.yaml | sed -E 's/version: *([0-9.]+)\+([0-9]+).*/\2/')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "codigo=$CODIGO" >> "$GITHUB_OUTPUT"
+          if [ "${GITHUB_REF_TYPE}" = "tag" ] && [ "${GITHUB_REF_NAME}" != "v$VERSION" ]; then
+            echo "::error::La etiqueta ${GITHUB_REF_NAME} no coincide con la versión de pubspec.yaml ($VERSION)"
+            exit 1
+          fi
+
+      - name: Dependencias
+        run: flutter pub get
+
+      - name: APK por arquitectura
+        run: flutter build apk --release --split-per-abi
+
+      - name: APK universal
+        run: flutter build apk --release
+
+      - name: Preparar archivos
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          mkdir -p salida
+          cd build/app/outputs/flutter-apk
+          cp app-arm64-v8a-release.apk   "$GITHUB_WORKSPACE/salida/Hanzi_Dojo_${VERSION}_arm64.apk"
+          cp app-armeabi-v7a-release.apk "$GITHUB_WORKSPACE/salida/Hanzi_Dojo_${VERSION}_arm32.apk"
+          cp app-x86_64-release.apk      "$GITHUB_WORKSPACE/salida/Hanzi_Dojo_${VERSION}_x86_64.apk"
+          cp app-release.apk             "$GITHUB_WORKSPACE/salida/Hanzi_Dojo_${VERSION}_universal.apk"
+          cd "$GITHUB_WORKSPACE/salida"
+          sha256sum *.apk > SHA256SUMS.txt
+          # Huella del certificado: quien instale puede comprobar que el APK es el oficial.
+          APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
+          "$APKSIGNER" verify --print-certs "Hanzi_Dojo_${VERSION}_universal.apk" \
+            | grep -E 'SHA-256' | head -1 | sed -E 's/.*SHA-256 digest: //' > huella.txt
+          cat SHA256SUMS.txt huella.txt
+          # Permisos del APK final (la app no debe pedir internet).
+          AAPT2=$(ls "$ANDROID_HOME"/build-tools/*/aapt2 | sort -V | tail -1)
+          "$AAPT2" dump permissions "Hanzi_Dojo_${VERSION}_universal.apk" | tee permisos.txt
+          if grep -q 'android.permission.INTERNET' permisos.txt; then
+            echo "::warning::El APK de lanzamiento pide permiso de internet"
+          fi
+          rm permisos.txt
+
+      - name: Notas de la versión
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          # La sección "## VERSION" de CHANGELOG.md, hasta la siguiente "## ".
+          awk -v v="## $VERSION" '
+            index($0, v) == 1 { dentro = 1; next }
+            dentro && /^## / { exit }
+            dentro { print }
+          ' CHANGELOG.md > notas.md
+          {
+            echo ""
+            echo "### Qué APK descargar"
+            echo "- **arm64**: casi todos los teléfonos de los últimos años (el más ligero)."
+            echo "- **universal**: si no sabes cuál, este funciona en todos."
+            echo ""
+            echo "Huella SHA-256 del certificado de firma: \`$(cat salida/huella.txt)\`"
+          } >> notas.md
+          cat notas.md
+
+      - name: Guardar APK como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: hanzi-dojo-${{ steps.version.outputs.version }}
+          path: salida/
+          retention-days: 30
+
+      - name: Publicar la versión en GitHub
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" salida/*.apk salida/SHA256SUMS.txt \
+            --title "Hanzi Dojo $VERSION" --notes-file notas.md
+
+      - name: Borrar la llave del equipo de GitHub
+        if: always()
+        run: rm -f android/key.properties "$RUNNER_TEMP/hanzi_dojo_lanzamiento.jks"

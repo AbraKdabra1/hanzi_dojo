@@ -171,6 +171,15 @@ flutter test              # pruebas automáticas
 > El modo **debug** siempre se siente más lento. Para juzgar la fluidez
 > (120 Hz en el Pura 70) usa `--profile` o `--release`.
 
+### Descargar la app
+
+Las versiones firmadas están en la pestaña **Releases** del repositorio
+(`Hanzi_Dojo_X.Y.Z_arm64.apk` para casi todos los teléfonos; `universal` si no
+sabes cuál). Cómo se publican (llave de firma, F-Droid, AppGallery):
+[`docs/publicar.md`](docs/publicar.md). Novedades: [`CHANGELOG.md`](CHANGELOG.md).
+Privacidad: [`docs/privacidad.md`](docs/privacidad.md) — la app no tiene
+permiso de internet.
+
 ### Instalar el APK que genera GitHub
 
 Cada push corre la integración continua (pestaña **Actions** del repo). Al
@@ -227,7 +236,10 @@ lib/
                                   tonos, escucha, vocabulario y pinyin, logros y compartir
 android/app/src/main/kotlin/…/MainActivity.kt   Archivos (guardar/abrir), energía (tasa de refresco, batería) y hábito
 android/app/src/main/kotlin/…/Habito.kt         Recordatorio diario, widget de inicio y compartir imagen
-herramientas_datos/               Scripts de Python que arman la base (ver arriba)
+herramientas_datos/               Scripts de Python que arman la base (ver arriba) y el ícono
+herramientas/crear_llave_firma.ps1  Crea la llave de firma de lanzamiento (Windows)
+fastlane/metadata/android/        Ficha de tienda (F-Droid, AppGallery): textos, ícono, capturas
+docs/                             Publicar, privacidad y receta de F-Droid
 test/                             Pruebas: SM-2, sesión, trazos, caligrafía, base de datos real,
                                   historial, respaldo, informe de errores y lector
 ```
