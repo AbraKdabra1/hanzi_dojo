@@ -138,6 +138,45 @@ class Voz {
     }
   }
 
+  /// Lee [texto] solo con grabaciones (no con la voz del teléfono: de ella
+  /// no se sabe qué palabra suena) y avisa con [alSonar] qué runas
+  /// [inicio, fin) suenan en cada momento; al terminar avisa (-1, -1).
+  /// Devuelve false si se interrumpió (otro sonido, detener()).
+  static Future<bool> leerResaltando(
+    String texto, {
+    List<String>? pinyin,
+    required void Function(int inicio, int fin) alSonar,
+    double? rapidez,
+  }) async {
+    if (desactivada) return false;
+    final turno = ++_turno;
+    await _detenerSonido();
+    try {
+      final (palabras, silabas) = await _cargarListas();
+      final plan = Audio.planDeLectura(texto, pinyin: pinyin, palabras: palabras, silabas: silabas);
+      final audio = _audio;
+      await audio.setSpeed(rapidez ?? velocidad);
+      for (final clip in plan.clips) {
+        if (turno != _turno) return false;
+        if (clip.esPausa) {
+          await Future<void>.delayed(Duration(milliseconds: clip.pausaMs));
+          continue;
+        }
+        alSonar(clip.inicio, clip.fin);
+        await audio.setAsset(clip.ruta);
+        if (turno != _turno) return false;
+        await audio.play();
+      }
+      return turno == _turno;
+    } catch (e, pila) {
+      RegistroErrores.registrar('Voz (leer en voz alta)', e, pila);
+      return false;
+    } finally {
+      if (turno == _turno) await _reproductor?.stop();
+      alSonar(-1, -1);
+    }
+  }
+
   /// Toca exactamente estas grabaciones (los ejercicios: una sílaba o una
   /// palabra concreta, sin pasar por la voz del teléfono). false si falló.
   static Future<bool> tocar(List<Clip> clips, {double? rapidez}) async {

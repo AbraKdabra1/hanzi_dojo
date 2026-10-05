@@ -11,6 +11,7 @@
 //   拼  pinyin encima de los caracteres
 //   🌐  traducción de todos los párrafos
 //   Aa  tamaño de letra
+//   🎧  leer el capítulo en voz alta, resaltando lo que suena (fase 7)
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ import 'package:flutter/material.dart';
 import '../datos/datos_app.dart';
 import '../datos/modelos.dart';
 import '../datos/repositorio.dart';
+import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
@@ -56,6 +58,13 @@ class _PantallaLecturaState extends State<PantallaLectura> {
 
   final ScrollController _desplazamiento = ScrollController();
 
+  /// Lectura en voz alta: si está sonando y qué (párrafo, inicio, fin).
+  bool _leyendo = false;
+  (int, int, int)? _sonando;
+
+  /// Para llevar a la vista el párrafo que se está leyendo.
+  final Map<int, GlobalKey> _claves = {};
+
   CapituloLibro get _capitulo => widget.capitulos[_indice];
   bool get _leido => _capitulo.leido || _leidosAhora.contains(_capitulo.orden);
 
@@ -71,15 +80,62 @@ class _PantallaLecturaState extends State<PantallaLectura> {
 
   @override
   void dispose() {
+    if (_leyendo) Voz.detener();
     _desplazamiento.dispose();
     super.dispose();
   }
 
+  /// Lee el capítulo párrafo por párrafo con las grabaciones, resaltando la
+  /// palabra que suena. Un segundo toque lo detiene.
+  Future<void> _leerCapitulo() async {
+    final parrafos = _parrafos;
+    if (parrafos == null) return;
+    if (_leyendo) {
+      setState(() {
+        _leyendo = false;
+        _sonando = null;
+      });
+      await Voz.detener();
+      return;
+    }
+    setState(() => _leyendo = true);
+    for (var i = 0; i < parrafos.length; i++) {
+      if (!mounted || !_leyendo || !identical(parrafos, _parrafos)) break;
+      _mostrarParrafo(i);
+      final completo = await Voz.leerResaltando(
+        parrafos[i].chino,
+        pinyin: parrafos[i].pinyin,
+        alSonar: (inicio, fin) {
+          if (mounted && _leyendo) setState(() => _sonando = inicio < 0 ? null : (i, inicio, fin));
+        },
+      );
+      if (!completo) break;
+      await Future<void>.delayed(const Duration(milliseconds: 450));
+    }
+    if (mounted) {
+      setState(() {
+        _leyendo = false;
+        _sonando = null;
+      });
+    }
+  }
+
+  void _mostrarParrafo(int i) {
+    final contexto = _claves[i]?.currentContext;
+    if (contexto == null) return;
+    Scrollable.ensureVisible(contexto,
+        alignment: 0.15, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
+  }
+
   Future<void> _cargar() async {
+    if (_leyendo) Voz.detener();
     setState(() {
       _parrafos = null;
       _invertidos.clear();
       _seleccion = null;
+      _leyendo = false;
+      _sonando = null;
+      _claves.clear();
     });
     final parrafos = await DatosApp.de(context).parrafos(_capitulo.id, propio: widget.libro.propio);
     if (!mounted) return;
@@ -103,6 +159,8 @@ class _PantallaLecturaState extends State<PantallaLectura> {
         texto: p.caracteres[posicion],
         pinyinEnTexto: p.pinyin[posicion],
         donde: widget.libro.propio ? null : _dondeReporte(p),
+        contexto: p.caracteres,
+        posicion: posicion,
       ),
     );
     if (mounted) setState(() => _seleccion = null);
@@ -194,6 +252,12 @@ class _PantallaLecturaState extends State<PantallaLectura> {
                 child: const Icon(Icons.translate, size: 20),
               ),
             _BotonAjuste(
+              activo: _leyendo,
+              tooltip: _leyendo ? tr('Detener la lectura') : tr('Escuchar el capítulo'),
+              onTap: _leerCapitulo,
+              child: Icon(_leyendo ? Icons.stop_rounded : Icons.headphones_rounded, size: 20),
+            ),
+            _BotonAjuste(
               activo: false,
               tooltip: tr('Tamaño de letra'),
               onTap: () => _cambiarAjustes(_ajustes.copia(tamano: _ajustes.siguienteTamano)),
@@ -207,6 +271,9 @@ class _PantallaLecturaState extends State<PantallaLectura> {
             // cientos de párrafos y solo se construyen los que se ven.
             : ListView.builder(
                 controller: _desplazamiento,
+                // Algo más de margen construido: así el párrafo siguiente ya
+                // existe cuando la lectura en voz alta lo trae a la vista.
+                cacheExtent: 1200,
                 padding: const EdgeInsets.fromLTRB(16, 4, 16, 40),
                 itemCount: parrafos.length + 2,
                 itemBuilder: (context, k) {
@@ -219,6 +286,7 @@ class _PantallaLecturaState extends State<PantallaLectura> {
                   if (k == parrafos.length + 1) return _pie(hayMas);
                   final i = k - 1;
                   return Padding(
+                    key: _claves.putIfAbsent(i, GlobalKey.new),
                     padding: const EdgeInsets.only(bottom: 8),
                     child: ParrafoLectura(
                       parrafo: parrafos[i],
@@ -229,6 +297,7 @@ class _PantallaLecturaState extends State<PantallaLectura> {
                         if (!_invertidos.remove(i)) _invertidos.add(i);
                       }),
                       seleccionado: _seleccion?.$1 == i ? _seleccion?.$2 : null,
+                      sonando: _sonando?.$1 == i ? (_sonando!.$2, _sonando!.$3) : null,
                       onTocarCaracter: (posicion) => _tocarCaracter(i, posicion),
                     ),
                   );

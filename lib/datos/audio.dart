@@ -17,17 +17,25 @@
 
 /// Una pieza de la lectura: una grabación o una pausa breve.
 class Clip {
-  Clip.palabra(String palabra)
+  Clip.palabra(String palabra, {this.inicio = -1, this.fin = -1})
       : ruta = 'assets/audio/palabras/$palabra.opus',
         pausaMs = 0;
-  Clip.silaba(String clave)
+  Clip.silaba(String clave, {this.inicio = -1, this.fin = -1})
       : ruta = 'assets/audio/silabas/$clave.opus',
         pausaMs = 0;
-  const Clip.pausa(this.pausaMs) : ruta = '';
+  const Clip.pausa(this.pausaMs)
+      : ruta = '',
+        inicio = -1,
+        fin = -1;
 
   /// Asset a reproducir ('' si es una pausa).
   final String ruta;
   final int pausaMs;
+
+  /// Qué parte del texto suena: runas [inicio, fin) (-1 si no se sabe).
+  /// Sirve para resaltar lo que se va leyendo.
+  final int inicio;
+  final int fin;
 
   bool get esPausa => pausaMs > 0;
 
@@ -190,7 +198,8 @@ class Audio {
         }
       }
       if (largo > 0) {
-        clips.add(Clip.palabra(nombrePalabra(String.fromCharCodes(runas.sublist(i, i + largo)))));
+        clips.add(Clip.palabra(nombrePalabra(String.fromCharCodes(runas.sublist(i, i + largo))),
+            inicio: i, fin: i + largo));
         caracteres += largo;
         cubiertos += largo;
         i += largo;
@@ -203,10 +212,10 @@ class Audio {
       final silaba = conPinyin ? silabaDisponible(pinyin[i], silabas) : null;
       final c = String.fromCharCode(r);
       if (silaba != null) {
-        clips.add(Clip.silaba(silaba));
+        clips.add(Clip.silaba(silaba, inicio: i, fin: i + 1));
         cubiertos++;
       } else if (palabras.contains(c)) {
-        clips.add(Clip.palabra(nombrePalabra(c)));
+        clips.add(Clip.palabra(nombrePalabra(c), inicio: i, fin: i + 1));
         cubiertos++;
       }
       i++;

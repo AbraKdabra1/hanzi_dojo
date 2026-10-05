@@ -84,6 +84,28 @@ extension PracticaRepositorio on Repositorio {
     return filas.isEmpty ? null : Palabra.desdeFila(filas.first);
   }
 
+  /// Las palabras HSK que existan entre [textos] (para encontrar en un libro
+  /// la palabra a la que pertenece un carácter).
+  Future<List<Palabra>> palabrasPorTextos(Iterable<String> textos) async {
+    final lista = textos.toSet().toList();
+    if (lista.isEmpty) return const [];
+    final marcas = List.filled(lista.length, '?').join(', ');
+    final filas = await _bd.rawQuery(
+        'SELECT $_columnasPalabra, $_progresoPalabra $_desdePalabras WHERE w.palabra IN ($marcas)', lista);
+    return filas.map(Palabra.desdeFila).toList();
+  }
+
+  /// Agrega una palabra al repaso de vocabulario (fase 7, desde «Leer»):
+  /// queda para repasar hoy mismo. Si ya estaba, no cambia nada.
+  Future<void> agregarPalabraARepaso(Palabra p, {DateTime? ahora}) async {
+    final t = _segundos(ahora ?? DateTime.now());
+    await _bd.rawInsert('''
+      INSERT OR IGNORE INTO progreso_palabras (palabra, intervalo, factor, aciertos_seguidos, veces_visto,
+                                               proximo_repaso, primera_vez, ultima_vez)
+      VALUES (?, 0, 2.5, 0, 0, ?, ?, ?)
+    ''', [p.palabra, t, t, t]);
+  }
+
   /// Guarda una respuesta de un ejercicio (tabla ejercicios).
   Future<void> registrarEjercicio(
     String tipo,

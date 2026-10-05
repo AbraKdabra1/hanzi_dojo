@@ -1039,4 +1039,12 @@ const textosEn = <String, String>{
       '30 questions in 12 minutes. Your best score at this level: {0}.',
   'Unas preguntas por nivel para saber por dónde empezar.':
       'A few questions per level to find out where to start.',
+  'Detener la lectura':
+      'Stop reading',
+  'Escuchar el capítulo':
+      'Listen to the chapter',
+  'Ya está en tu vocabulario':
+      'Already in your vocabulary',
+  'Al repaso':
+      'Add to review',
 };
