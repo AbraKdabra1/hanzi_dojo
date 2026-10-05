@@ -240,6 +240,27 @@ extension PracticaRepositorio on Repositorio {
     ];
   }
 
+  /// La mejor calificación de simulacro de cada nivel (nivel → 0-100).
+  Future<Map<int, int>> mejoresSimulacros() async {
+    final filas = await _bd.rawQuery(
+        "SELECT elemento, respuesta FROM ejercicios WHERE tipo = 'examen' AND elemento LIKE 'simulacro:%'");
+    final mejores = <int, int>{};
+    for (final f in filas) {
+      final nivel = int.tryParse((f['elemento'] as String).split(':').last);
+      final nota = int.tryParse(f['respuesta'] as String);
+      if (nivel == null || nota == null) continue;
+      if (nota > (mejores[nivel] ?? -1)) mejores[nivel] = nota;
+    }
+    return mejores;
+  }
+
+  /// Nivel sugerido por el último examen de ubicación (null si nunca lo hiciste).
+  Future<int?> ultimaUbicacion() async {
+    final filas = await _bd.rawQuery(
+        "SELECT respuesta FROM ejercicios WHERE tipo = 'examen' AND elemento = 'ubicacion' ORDER BY momento DESC, id DESC LIMIT 1");
+    return filas.isEmpty ? null : int.tryParse(filas.first['respuesta'] as String);
+  }
+
   /// Los tonos que más confundes (de los ejercicios de tonos).
   Future<List<ConfusionTono>> confusionTonos() async {
     final filas = await _bd.rawQuery('SELECT elemento, respuesta FROM ejercicios WHERE tipo IN (?, ?) AND resultado = 0',

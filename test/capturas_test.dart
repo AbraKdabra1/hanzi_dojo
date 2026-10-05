@@ -23,7 +23,9 @@ import 'package:hanzi_dojo/screens/pantalla_bateria.dart';
 import 'package:hanzi_dojo/screens/pantalla_biblioteca.dart';
 import 'package:hanzi_dojo/screens/pantalla_compartir.dart';
 import 'package:hanzi_dojo/screens/pantalla_estadisticas.dart';
+import 'package:hanzi_dojo/screens/pantalla_buscar_dibujo.dart';
 import 'package:hanzi_dojo/screens/pantalla_escucha.dart';
+import 'package:hanzi_dojo/screens/pantalla_examen.dart';
 import 'package:hanzi_dojo/screens/pantalla_estudio.dart';
 import 'package:hanzi_dojo/screens/pantalla_inicio.dart';
 import 'package:hanzi_dojo/screens/pantalla_lectura.dart';
@@ -185,6 +187,8 @@ void main() {
     });
     await capturar(tester, '16_logros', const PantallaLogros());
     await capturar(tester, '17_compartir', const PantallaCompartir());
+    await capturar(tester, '18_simulacro', const PantallaExamen.simulacro(nivel: 1));
+    await capturar(tester, '19_buscar_dibujo', const PantallaBuscarDibujo());
 
     // La interfaz en inglés (Ajustes › Idioma).
     Idioma.actual.value = Lengua.ingles;

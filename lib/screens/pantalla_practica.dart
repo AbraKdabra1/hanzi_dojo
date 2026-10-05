@@ -19,6 +19,7 @@ import '../widgets/ejercicio.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
 import 'pantalla_escucha.dart';
+import 'pantalla_examen.dart';
 import 'pantalla_pinyin.dart';
 import 'pantalla_tonos.dart';
 import 'pantalla_vocabulario.dart';
@@ -35,6 +36,7 @@ class _PantallaPracticaState extends State<PantallaPractica> {
   int _nivel = 1;
   int? _pendientes;
   AvancePalabras? _avance;
+  int? _mejorSimulacro;
 
   @override
   void initState() {
@@ -47,11 +49,13 @@ class _PantallaPracticaState extends State<PantallaPractica> {
     final nivel = await repo.nivelPractica();
     final pendientes = await repo.palabrasPendientes();
     final avance = await repo.avancePalabras();
+    final simulacros = await repo.mejoresSimulacros();
     if (!mounted) return;
     setState(() {
       _nivel = nivel;
       _pendientes = pendientes;
       _avance = avance.where((a) => a.nivel == nivel).firstOrNull;
+      _mejorSimulacro = simulacros[nivel];
     });
   }
 
@@ -112,6 +116,20 @@ class _PantallaPracticaState extends State<PantallaPractica> {
               titulo: tr('Pinyin'),
               texto: tr('Ve una palabra y escribe cómo se lee, con sus tonos.'),
               onTap: () => _ir(PantallaPinyin(nivel: _nivel)),
+            ),
+            _Ejercicio(
+              emoji: '📝',
+              titulo: tr('Simulacro HSK'),
+              texto: _mejorSimulacro == null
+                  ? tr('30 preguntas en 12 minutos: escucha, lectura y caracteres. Se aprueba con 60.')
+                  : tr('30 preguntas en 12 minutos. Tu mejor calificación en este nivel: {0}.', [_mejorSimulacro]),
+              onTap: () => _ir(PantallaExamen.simulacro(nivel: _nivel)),
+            ),
+            _Ejercicio(
+              emoji: '🧭',
+              titulo: tr('Examen de ubicación'),
+              texto: tr('Unas preguntas por nivel para saber por dónde empezar.'),
+              onTap: () => _ir(const PantallaExamen.ubicacion()),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),

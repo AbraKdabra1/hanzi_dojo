@@ -995,4 +995,48 @@ const textosEn = <String, String>{
       'chapter',
   'capítulos':
       'chapters',
+  'Lectura':
+      'Reading',
+  'Caracteres':
+      'Characters',
+  'Examen de ubicación':
+      'Placement test',
+  'Simulacro {0}':
+      '{0} mock exam',
+  'No lo sé':
+      'I don\'t know',
+  '¿Qué significa lo que escuchas?':
+      'What does what you hear mean?',
+  '¿Cómo se escribe?':
+      'How is it written?',
+  '¡Aprobado! (se aprueba con {0})':
+      'Passed! (passing score: {0})',
+  'Aún no: se aprueba con {0}':
+      'Not yet: the passing score is {0}',
+  '{0} de {1} correctas · {2}:{3}':
+      '{0} of {1} correct · {2}:{3}',
+  'Tu mejor calificación anterior: {0}':
+      'Your previous best score: {0}',
+  'Para repasar':
+      'To review',
+  'No respondiste':
+      'You didn\'t answer',
+  'Elegiste: {0}':
+      'You chose: {0}',
+  'Otro simulacro':
+      'Another mock exam',
+  'Tu nivel para empezar':
+      'Your starting level',
+  'Quedó elegido para la práctica con audio. Para escribir, elige este nivel en Estudiar › Niveles HSK.':
+      'It\'s now selected for audio practice. For writing, choose this level in Study › HSK levels.',
+  'Listo':
+      'Done',
+  'Simulacro HSK':
+      'HSK mock exam',
+  '30 preguntas en 12 minutos: escucha, lectura y caracteres. Se aprueba con 60.':
+      '30 questions in 12 minutes: listening, reading and characters. Passing score: 60.',
+  '30 preguntas en 12 minutos. Tu mejor calificación en este nivel: {0}.':
+      '30 questions in 12 minutes. Your best score at this level: {0}.',
+  'Unas preguntas por nivel para saber por dónde empezar.':
+      'A few questions per level to find out where to start.',
 };
