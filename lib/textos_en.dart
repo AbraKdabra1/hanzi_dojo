@@ -971,4 +971,28 @@ const textosEn = <String, String>{
       'Brush sound',
   'El roce del pincel sobre el papel con cada trazo correcto.':
       'The brush brushing the paper with each correct stroke.',
+  'Orden de trazos':
+      'Stroke order',
+  'Trazo {0} de {1}':
+      'Stroke {0} of {1}',
+  'Repetir':
+      'Replay',
+  'Buscar dibujando':
+      'Search by drawing',
+  'Deshacer trazo':
+      'Undo stroke',
+  'Preparando los caracteres…':
+      'Preparing the characters…',
+  'Dibuja un carácter en el cuadro, de preferencia en su orden de trazos. Con cada trazo verás aquí los más parecidos.':
+      'Draw a character in the box, ideally in its stroke order. With each stroke you\'ll see the closest matches here.',
+  'protegido 🛡️':
+      'shielded 🛡️',
+  'sin repasos':
+      'no reviews',
+  ' · cargando':
+      ' · charging',
+  'capítulo':
+      'chapter',
+  'capítulos':
+      'chapters',
 };

@@ -15,6 +15,7 @@ import '../datos/modelos.dart';
 import '../datos/repositorio.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
+import 'pantalla_buscar_dibujo.dart';
 import '../widgets/tarjeta_vidrio.dart';
 import '../tema.dart';
 import 'pantalla_estudio.dart';
@@ -110,7 +111,14 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
                             setState(() => _buscando = false);
                           },
                         )
-                      : null,
+                      : IconButton(
+                          icon: const Icon(Icons.draw_outlined, size: 20),
+                          tooltip: tr('Buscar dibujando'),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(builder: (_) => const PantallaBuscarDibujo()),
+                          ),
+                        ),
                   isDense: true,
                   filled: true,
                   fillColor: context.colores.tarjeta,

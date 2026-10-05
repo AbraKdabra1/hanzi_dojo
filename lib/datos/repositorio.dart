@@ -331,6 +331,19 @@ class Repositorio {
     return filas.first['n'] as int? ?? 0;
   }
 
+  /// Medianas (JSON) de los caracteres HSK: para buscar dibujando
+  /// (helpers/reconocedor.dart).
+  Future<List<(String, String)>> medianasHsk() async {
+    final filas = await _db.rawQuery('SELECT caracter, medianas FROM c.caracteres WHERE nivel_hsk > 0');
+    return [for (final f in filas) (f['caracter'] as String, f['medianas'] as String)];
+  }
+
+  /// Pinyin de cada carácter HSK (para mostrar debajo de los candidatos).
+  Future<Map<String, String>> pinyinHsk() async {
+    final filas = await _db.rawQuery('SELECT caracter, pinyin FROM c.caracteres WHERE nivel_hsk > 0');
+    return {for (final f in filas) f['caracter'] as String: f['pinyin'] as String};
+  }
+
   /// Búsqueda por carácter, pinyin (con o sin tonos) o significado.
   /// Los caracteres HSK salen primero.
   Future<List<Caracter>> buscar(String texto) async {

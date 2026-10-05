@@ -24,6 +24,7 @@ import '../datos/sesion_estudio.dart';
 import '../datos/reporte.dart' show TipoReporte;
 import '../datos/srs.dart';
 import '../tema.dart';
+import '../widgets/animacion_trazos.dart';
 import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
@@ -243,6 +244,13 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
             alignment: WrapAlignment.center,
             children: [
               BotonVoz(texto: c.caracter, pinyin: [c.pinyin]),
+              _Pastilla(
+                icono: Icons.play_circle_outline_rounded,
+                texto: tr('Orden de trazos'),
+                color: colores.oscuro ? const Color(0xFFFFAB91) : const Color(0xFFBF360C),
+                onTap: () => mostrarOrdenDeTrazos(context,
+                    caracter: c.caracter, trazosSvg: _trazosSvg, medianas: _medianas),
+              ),
               _Pastilla(
                 icono: Icons.menu_book_rounded,
                 texto: tr('Ejemplos'),
