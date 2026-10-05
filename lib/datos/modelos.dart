@@ -528,6 +528,40 @@ class CapituloLibro {
       );
 }
 
+/// Pregunta de comprensión al final de un capítulo (tabla c.preguntas).
+/// Trae los dos idiomas; [pregunta] y [opciones] dan el de la app.
+class PreguntaComprension {
+  const PreguntaComprension({
+    required this.id,
+    required this.preguntaEs,
+    required this.preguntaEn,
+    required this.opcionesEs,
+    required this.opcionesEn,
+    required this.correcta,
+  });
+
+  final int id;
+  final String preguntaEs;
+  final String preguntaEn;
+  final List<String> opcionesEs;
+  final List<String> opcionesEn;
+
+  /// Posición (0-3) de la opción correcta, la misma en los dos idiomas.
+  final int correcta;
+
+  String get pregunta => Idioma.ingles ? preguntaEn : preguntaEs;
+  List<String> get opciones => Idioma.ingles ? opcionesEn : opcionesEs;
+
+  factory PreguntaComprension.desdeFila(Map<String, Object?> f) => PreguntaComprension(
+        id: f['id'] as int,
+        preguntaEs: f['pregunta_es'] as String,
+        preguntaEn: f['pregunta_en'] as String,
+        opcionesEs: [for (final o in jsonDecode(f['opciones_es'] as String) as List) o as String],
+        opcionesEn: [for (final o in jsonDecode(f['opciones_en'] as String) as List) o as String],
+        correcta: f['correcta'] as int,
+      );
+}
+
 /// Un párrafo: el texto chino, una sílaba de pinyin por carácter, dónde hay
 /// nombres propios y la traducción.
 class ParrafoLibro {

@@ -38,12 +38,17 @@ class TipoEjercicio {
   /// Repaso de vocabulario (resultado = q de SM-2).
   static const palabra = 'palabra';
 
+  /// Preguntas de comprensión de Leer ('cuentos-para-ninos:2:1' → la opción
+  /// elegida, en el orden de la base).
+  static const comprension = 'comprension';
+
   static String nombre(String tipo) => switch (tipo) {
         tono => tr('Tonos (sílabas)'),
         tonosPalabra => tr('Tonos (palabras)'),
         escucha => tr('Escucha'),
         pinyin => tr('Pinyin'),
         palabra => tr('Vocabulario'),
+        comprension => tr('Comprensión'),
         _ => tipo,
       };
 }

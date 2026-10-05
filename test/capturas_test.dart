@@ -40,6 +40,8 @@ import 'package:hanzi_dojo/screens/pantalla_vocabulario.dart';
 import 'package:hanzi_dojo/idioma.dart';
 import 'package:hanzi_dojo/tema.dart';
 import 'package:hanzi_dojo/widgets/boton_voz.dart';
+import 'package:hanzi_dojo/widgets/ejercicio.dart';
+import 'package:hanzi_dojo/widgets/preguntas_comprension.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 final _pedidas = Platform.environment.containsKey('CAPTURAS');
@@ -171,6 +173,15 @@ void main() {
     await capturar(tester, '07_lectura', PantallaLectura(libro: libro, capitulos: capitulos, indice: 0));
     await capturar(tester, '07b_ficha', PantallaLectura(libro: libro, capitulos: capitulos, indice: 0),
         accion: (t) => t.tap(find.text('四').first, warnIfMissed: false));
+    await capturar(tester, '07c_preguntas', PantallaLectura(libro: libro, capitulos: capitulos, indice: 0),
+        accion: (t) async {
+      await t.scrollUntilVisible(find.text('¿Qué entendiste?'), 400, scrollable: find.byType(Scrollable).first);
+      await t.drag(find.byType(ListView), const Offset(0, -420), warnIfMissed: false);
+      await t.pump(const Duration(milliseconds: 600));
+      final opciones = find.descendant(of: find.byType(PreguntasComprension), matching: find.byType(BotonOpcion));
+      await t.tap(opciones.at(1), warnIfMissed: false);
+      await t.tap(opciones.at(6), warnIfMissed: false);
+    });
     await capturar(tester, '08_estadisticas', const PantallaEstadisticas());
     await capturar(tester, '09_ajustes', const PantallaAjustes());
     await capturar(tester, '10_bateria', const PantallaBateria());

@@ -218,6 +218,25 @@ def main():
                 (aviso if en_db_libros.get(clave, (0, "original"))[1] == "original" else error)(
                     f"Libro {clave}: «{c}» no está en la base (no se podrá consultar)")
 
+    # 9b. Preguntas de comprensión: tres por capítulo, cuatro opciones
+    # distintas en cada idioma y la correcta dentro de rango.
+    sin_preguntas = [f"{clave} {orden}" for clave, orden in q(
+        "SELECT l.clave, c.orden FROM capitulos c JOIN libros l ON l.id = c.libro_id "
+        "WHERE (SELECT count(*) FROM preguntas p WHERE p.capitulo_id = c.id) < 3")]
+    if sin_preguntas:
+        error(f"Capítulos con menos de 3 preguntas de comprensión: {sin_preguntas[:5]}")
+    total_preguntas = 0
+    for pid, pes, pen, oes, oen, correcta in q(
+            "SELECT id, pregunta_es, pregunta_en, opciones_es, opciones_en, correcta FROM preguntas"):
+        total_preguntas += 1
+        oes, oen = json.loads(oes), json.loads(oen)
+        if not pes.strip() or not pen.strip():
+            error(f"Pregunta {pid}: texto vacío")
+        if len(oes) != 4 or len(oen) != 4 or len(set(oes)) != 4 or len(set(oen)) != 4:
+            error(f"Pregunta {pid}: se esperaban cuatro opciones distintas por idioma")
+        if not 0 <= correcta < 4:
+            error(f"Pregunta {pid}: respuesta correcta fuera de rango ({correcta})")
+
     # 10. Vocabulario ─────────────────────────────────────────────────────
     por_nivel = dict(q("SELECT nivel_hsk, count(*) FROM palabras GROUP BY nivel_hsk"))
     if sum(por_nivel.values()) < 10500:
@@ -252,7 +271,8 @@ def main():
     total = q("SELECT count(*) FROM caracteres")[0][0]
     print(f"contenido.db versión {version_db}: {total} caracteres, "
           f"{len(en_db)} HSK, {con_ejemplo} con ejemplos, {3000 - len(sin_es)} con español, "
-          f"{len(en_db_libros)} libros ({total_parrafos} párrafos), {total_palabras} palabras")
+          f"{len(en_db_libros)} libros ({total_parrafos} párrafos, {total_preguntas} preguntas), "
+          f"{total_palabras} palabras")
     for a in avisos:
         print("  AVISO:", a)
     for e in errores:

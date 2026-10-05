@@ -64,6 +64,12 @@ class Sensaciones {
     HapticFeedback.selectionClick();
   }
 
+  /// Al contestar una pregunta: un toque suave si acertaste, uno más firme si no.
+  static void respuesta(bool bien) {
+    if (desactivadas || !vibracion) return;
+    bien ? HapticFeedback.selectionClick() : HapticFeedback.mediumImpact();
+  }
+
   /// Suelta el reproductor del pincel (al apagar el sonido en Ajustes).
   static Future<void> soltar() async {
     final p = _pincel;

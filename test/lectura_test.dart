@@ -11,6 +11,8 @@ import 'package:hanzi_dojo/datos/base_datos.dart';
 import 'package:hanzi_dojo/datos/modelos.dart';
 import 'package:hanzi_dojo/datos/repositorio.dart';
 import 'package:hanzi_dojo/datos/respaldo.dart';
+import 'package:hanzi_dojo/idioma.dart';
+import 'package:hanzi_dojo/widgets/preguntas_comprension.dart';
 import 'package:hanzi_dojo/widgets/texto_lectura.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -128,6 +130,31 @@ void main() {
       expect(guardados.copia(tamano: 34).siguienteTamano, AjustesLectura.tamanos.first);
     });
 
+    test('cada capítulo trae tres preguntas de comprensión en los dos idiomas', () async {
+      final posiciones = <int>{};
+      for (final libro in await repo.libros()) {
+        for (final cap in await repo.capitulos(libro)) {
+          final preguntas = await repo.preguntasDeCapitulo(cap.id);
+          expect(preguntas.length, 3, reason: '${libro.clave} ${cap.orden}');
+          for (final q in preguntas) {
+            expect(q.opcionesEs.length, 4);
+            expect(q.opcionesEn.length, 4);
+            expect(q.correcta, inInclusiveRange(0, 3));
+            posiciones.add(q.correcta);
+          }
+        }
+      }
+      // Las opciones van barajadas: la correcta no cae siempre en el mismo lugar.
+      expect(posiciones.length, 4);
+
+      final q = (await repo.preguntasDeCapitulo((await repo.capitulos((await repo.libros()).first)).first.id)).first;
+      expect(q.pregunta, q.preguntaEs);
+      Idioma.actual.value = Lengua.ingles;
+      addTearDown(() => Idioma.actual.value = Lengua.espanol);
+      expect(q.pregunta, q.preguntaEn);
+      expect(q.opciones, q.opcionesEn);
+    });
+
     test('consultar un carácter tocado en el texto', () async {
       expect((await repo.caracterPorTexto('梨'))?.nivelHsk, 5);
       expect(await repo.caracterPorTexto('x'), isNull);
@@ -180,6 +207,56 @@ void main() {
       await tester.tap(find.byIcon(Icons.translate_outlined));
       await tester.pumpAndSettle();
       expect(find.text('Kong Rong dijo: «Bien».'), findsOneWidget);
+    });
+
+    testWidgets('preguntas de comprensión: se contestan una vez y dan el resumen', (tester) async {
+      const preguntas = [
+        PreguntaComprension(
+          id: 1,
+          preguntaEs: '¿Qué pera tomó Kong Rong?',
+          preguntaEn: 'Which pear did Kong Rong take?',
+          opcionesEs: ['La más grande', 'La más pequeña', 'La más dulce', 'Ninguna'],
+          opcionesEn: ['The biggest', 'The smallest', 'The sweetest', 'None'],
+          correcta: 1,
+        ),
+        PreguntaComprension(
+          id: 2,
+          preguntaEs: '¿Cuántos hermanos tenía?',
+          preguntaEn: 'How many brothers did he have?',
+          opcionesEs: ['Uno', 'Tres', 'Cinco', 'Seis'],
+          opcionesEn: ['One', 'Three', 'Five', 'Six'],
+          correcta: 3,
+        ),
+      ];
+      final respuestas = <int, int>{};
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: StatefulBuilder(
+              builder: (context, setState) => PreguntasComprension(
+                preguntas: preguntas,
+                respuestas: respuestas,
+                onResponder: (i, o) => setState(() => respuestas.putIfAbsent(i, () => o)),
+              ),
+            ),
+          ),
+        ),
+      ));
+      expect(find.text('2 preguntas sobre lo que leíste'), findsOneWidget);
+      await tester.tap(find.text('La más pequeña'));
+      await tester.pump();
+      expect(find.byIcon(Icons.check_rounded), findsOneWidget);
+      await tester.tap(find.text('Uno'));
+      await tester.pumpAndSettle();
+      expect(respuestas, {0: 1, 1: 0});
+      expect(find.text('1 de 2 correctas'), findsOneWidget);
+      // La segunda marca la elegida (✗) y la buena (✓).
+      expect(find.byIcon(Icons.close_rounded), findsOneWidget);
+      expect(find.byIcon(Icons.check_rounded), findsNWidgets(2));
+      // Ya contestada, tocar otra opción no cambia nada.
+      await tester.tap(find.text('Seis'));
+      await tester.pump();
+      expect(respuestas, {0: 1, 1: 0});
     });
   });
 }

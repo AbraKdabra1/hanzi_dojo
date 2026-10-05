@@ -253,7 +253,13 @@ extension PracticaRepositorio on Repositorio {
     ''', [desde, TipoEjercicio.palabra]);
     final porTipo = {for (final f in filas) f['tipo'] as String: f};
     return [
-      for (final tipo in [TipoEjercicio.tono, TipoEjercicio.tonosPalabra, TipoEjercicio.escucha, TipoEjercicio.pinyin])
+      for (final tipo in [
+        TipoEjercicio.tono,
+        TipoEjercicio.tonosPalabra,
+        TipoEjercicio.escucha,
+        TipoEjercicio.pinyin,
+        TipoEjercicio.comprension,
+      ])
         ResumenEjercicio(
           tipo: tipo,
           total: porTipo[tipo]?['n'] as int? ?? 0,

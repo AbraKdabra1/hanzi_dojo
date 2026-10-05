@@ -1047,4 +1047,14 @@ const textosEn = <String, String>{
       'Already in your vocabulary',
   'Al repaso':
       'Add to review',
+  'Comprensión':
+      'Comprehension',
+  '{0} preguntas sobre lo que leíste':
+      '{0} questions about what you read',
+  '{0} de {1} correctas · ¡entendiste todo!':
+      '{0} of {1} correct · you understood it all!',
+  '{0} de {1} correctas':
+      '{0} of {1} correct',
+  '¿Qué entendiste?':
+      'How much did you understand?',
 };

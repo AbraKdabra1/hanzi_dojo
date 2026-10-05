@@ -5,6 +5,7 @@
 // Tablas (ver base_datos.dart):
 //   c.caracteres, c.radicales, c.ejemplos  → contenido (solo lectura)
 //   c.libros, c.capitulos, c.parrafos      → sección «Leer» (solo lectura)
+//   c.preguntas                            → preguntas de comprensión de cada capítulo
 //   progreso, historial, lectura, ajustes   → tu avance
 //   mis_libros, mis_capitulos, mis_parrafos → libros que agregaste tú
 //   c.palabras, progreso_palabras, ejercicios → práctica con audio
@@ -440,6 +441,12 @@ class Repositorio {
             : 'SELECT chino, pinyin, nombres, espanol FROM c.parrafos WHERE capitulo_id = ? ORDER BY orden',
         [capituloId]);
     return filas.map(ParrafoLibro.desdeFila).toList();
+  }
+
+  /// Preguntas de comprensión de un capítulo (los libros propios no tienen).
+  Future<List<PreguntaComprension>> preguntasDeCapitulo(int capituloId) async {
+    final filas = await _db.rawQuery('SELECT * FROM c.preguntas WHERE capitulo_id = ? ORDER BY orden', [capituloId]);
+    return filas.map(PreguntaComprension.desdeFila).toList();
   }
 
   // ── Mis libros ────────────────────────────────────────────────────────

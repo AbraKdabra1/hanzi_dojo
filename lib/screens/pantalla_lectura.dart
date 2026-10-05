@@ -5,7 +5,8 @@
 // nuevas que conviene conocer antes de leer.
 // En medio: los párrafos (texto_lectura.dart). Toca un carácter para ver su
 // ficha; cada párrafo se puede escuchar y traducir.
-// Abajo: "Terminé este capítulo" (queda marcado ✓) y el siguiente.
+// Abajo: tres preguntas de comprensión (fase 7), "Terminé este capítulo"
+// (queda marcado ✓) y el siguiente.
 //
 // Botones de la barra (se recuerdan para la próxima vez):
 //   拼  pinyin encima de los caracteres
@@ -18,10 +19,14 @@ import 'package:flutter/material.dart';
 
 import '../datos/datos_app.dart';
 import '../datos/modelos.dart';
+import '../datos/practica.dart';
 import '../datos/repositorio.dart';
+import '../datos/repositorio_practica.dart';
+import '../helpers/sensaciones.dart';
 import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
+import '../widgets/preguntas_comprension.dart';
 import '../widgets/tarjeta_vidrio.dart';
 import '../widgets/texto_lectura.dart';
 import '../tema.dart';
@@ -64,6 +69,11 @@ class _PantallaLecturaState extends State<PantallaLectura> {
 
   /// Para llevar a la vista el párrafo que se está leyendo.
   final Map<int, GlobalKey> _claves = {};
+
+  /// Preguntas de comprensión del capítulo y lo que contestaste
+  /// (pregunta → opción).
+  List<PreguntaComprension> _preguntas = const [];
+  final Map<int, int> _respuestas = {};
 
   CapituloLibro get _capitulo => widget.capitulos[_indice];
   bool get _leido => _capitulo.leido || _leidosAhora.contains(_capitulo.orden);
@@ -136,10 +146,18 @@ class _PantallaLecturaState extends State<PantallaLectura> {
       _leyendo = false;
       _sonando = null;
       _claves.clear();
+      _preguntas = const [];
+      _respuestas.clear();
     });
-    final parrafos = await DatosApp.de(context).parrafos(_capitulo.id, propio: widget.libro.propio);
+    final repo = DatosApp.de(context);
+    final parrafos = await repo.parrafos(_capitulo.id, propio: widget.libro.propio);
+    // Los libros propios no traen preguntas.
+    final preguntas = widget.libro.propio ? const <PreguntaComprension>[] : await repo.preguntasDeCapitulo(_capitulo.id);
     if (!mounted) return;
-    setState(() => _parrafos = parrafos);
+    setState(() {
+      _parrafos = parrafos;
+      _preguntas = preguntas;
+    });
     if (_desplazamiento.hasClients) _desplazamiento.jumpTo(0);
   }
 
@@ -182,6 +200,20 @@ class _PantallaLecturaState extends State<PantallaLectura> {
     );
   }
 
+  /// Contestar una pregunta de comprensión (una sola vez por visita).
+  void _responder(int pregunta, int opcion) {
+    if (_respuestas.containsKey(pregunta) || pregunta >= _preguntas.length) return;
+    final bien = opcion == _preguntas[pregunta].correcta;
+    setState(() => _respuestas[pregunta] = opcion);
+    Sensaciones.respuesta(bien);
+    DatosApp.de(context).registrarEjercicio(
+      TipoEjercicio.comprension,
+      '${widget.libro.clave}:${_capitulo.orden}:${pregunta + 1}',
+      correcto: bien,
+      respuesta: '$opcion',
+    );
+  }
+
   void _irA(int indice) {
     setState(() => _indice = indice);
     _cargar();
@@ -193,6 +225,15 @@ class _PantallaLecturaState extends State<PantallaLectura> {
       padding: const EdgeInsets.only(top: 12),
       child: Column(
         children: [
+          if (_preguntas.isNotEmpty) ...[
+            PreguntasComprension(
+              preguntas: _preguntas,
+              respuestas: _respuestas,
+              onResponder: _responder,
+              color: EtiquetaNivel.colorPara(context, widget.libro.nivelHsk),
+            ),
+            const SizedBox(height: 18),
+          ],
           _leido
               ? Row(mainAxisSize: MainAxisSize.min, children: [
                   Icon(Icons.check_circle, color: EtiquetaNivel.colorPara(context, widget.libro.nivelHsk)),
