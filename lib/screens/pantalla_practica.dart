@@ -22,6 +22,7 @@ import 'pantalla_escucha.dart';
 import 'pantalla_pinyin.dart';
 import 'pantalla_tonos.dart';
 import 'pantalla_vocabulario.dart';
+import '../idioma.dart';
 
 class PantallaPractica extends StatefulWidget {
   const PantallaPractica({super.key});
@@ -72,34 +73,34 @@ class _PantallaPracticaState extends State<PantallaPractica> {
     final pendientes = _pendientes ?? 0;
     return FondoTintaChina(
       child: Scaffold(
-        appBar: const BarraSuperior(titulo: 'Practicar con audio', subtitulo: 'Grabaciones de hablantes nativos'),
+        appBar: BarraSuperior(titulo: tr('Practicar con audio'), subtitulo: tr('Grabaciones de hablantes nativos')),
         body: ListView(
           padding: const EdgeInsets.only(bottom: 32),
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
-              child: Text('Nivel', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: c.tenue)),
+              child: Text(tr('Nivel'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: c.tenue)),
             ),
             SelectorNivel(nivel: _nivel, onCambio: _cambiarNivel),
             const SizedBox(height: 16),
             _Ejercicio(
               emoji: '🎵',
-              titulo: 'Tonos',
-              texto: 'Oye una sílaba y elige su tono. Con palabras de dos sílabas, los dos.',
+              titulo: tr('Tonos'),
+              texto: tr('Oye una sílaba y elige su tono. Con palabras de dos sílabas, los dos.'),
               onTap: () => _ir(PantallaTonos(nivel: _nivel)),
             ),
             _Ejercicio(
               emoji: '👂',
-              titulo: 'Escucha',
-              texto: 'Oye una palabra y elige cuál es: por su carácter o por su significado.',
+              titulo: tr('Escucha'),
+              texto: tr('Oye una palabra y elige cuál es: por su carácter o por su significado.'),
               onTap: () => _ir(PantallaEscucha(nivel: _nivel)),
             ),
             _Ejercicio(
               emoji: '📖',
-              titulo: 'Vocabulario',
+              titulo: tr('Vocabulario'),
               texto: pendientes > 0
-                  ? 'Repaso espaciado de palabras HSK. Hoy tienes $pendientes por repasar.'
-                  : 'Repaso espaciado de las palabras HSK, como con los caracteres.',
+                  ? tr('Repaso espaciado de palabras HSK. Hoy tienes {0} por repasar.', [pendientes])
+                  : tr('Repaso espaciado de las palabras HSK, como con los caracteres.'),
               insignia: pendientes > 0 ? '$pendientes' : null,
               pie: avance == null
                   ? null
@@ -108,15 +109,14 @@ class _PantallaPracticaState extends State<PantallaPractica> {
             ),
             _Ejercicio(
               emoji: '⌨️',
-              titulo: 'Pinyin',
-              texto: 'Ve una palabra y escribe cómo se lee, con sus tonos.',
+              titulo: tr('Pinyin'),
+              texto: tr('Ve una palabra y escribe cómo se lee, con sus tonos.'),
               onTap: () => _ir(PantallaPinyin(nivel: _nivel)),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
               child: Text(
-                'Consejo: mantén presionado cualquier botón de sonido para oírlo más lento. '
-                'En Ajustes puedes hacer que todas las grabaciones suenen lentas.',
+                tr('Consejo: mantén presionado cualquier botón de sonido para oírlo más lento. En Ajustes puedes hacer que todas las grabaciones suenen lentas.'),
                 style: TextStyle(fontSize: 12, color: c.tenue, height: 1.4),
               ),
             ),

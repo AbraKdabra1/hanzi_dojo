@@ -48,6 +48,7 @@ import '../painters/pincel_painter.dart';
 import '../painters/pista_roja_painter.dart';
 import '../painters/trazo_guia_painter.dart';
 import '../tema.dart';
+import '../idioma.dart';
 
 class LienzoEscritura extends StatefulWidget {
   const LienzoEscritura({
@@ -413,7 +414,7 @@ class _AvisoAlReves extends StatelessWidget {
         boxShadow: [BoxShadow(color: c.sombra, blurRadius: 8, offset: const Offset(0, 2))],
       ),
       child: Text(
-        '↺  Al revés: empieza donde inicia la flecha',
+        tr('↺  Al revés: empieza donde inicia la flecha'),
         style: TextStyle(
             fontSize: 13, fontWeight: FontWeight.w600, color: c.oscuro ? const Color(0xFFEF9A9A) : const Color(0xFFC62828)),
       ),

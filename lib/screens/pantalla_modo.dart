@@ -14,6 +14,7 @@ import '../tema.dart';
 import '../widgets/fondo_tinta.dart';
 import 'pantalla_seleccion.dart';
 import 'pantalla_radicales.dart';
+import '../idioma.dart';
 
 class PantallaModo extends StatefulWidget {
   const PantallaModo({super.key});
@@ -28,8 +29,8 @@ class _PantallaModoState extends State<PantallaModo> {
   void _navegar(bool esRadical) {
     if (_modoNovato == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Primero elige tu nivel de experiencia'),
+        SnackBar(
+          content: Text(tr('Primero elige tu nivel de experiencia')),
           duration: Duration(seconds: 2),
           behavior: SnackBarBehavior.floating,
         ),
@@ -61,7 +62,7 @@ class _PantallaModoState extends State<PantallaModo> {
             icon: Icon(Icons.arrow_back_ios, color: c.tinta, size: 20),
             onPressed: () => Navigator.pop(context),
           ),
-          title: Text('¿Cómo quieres estudiar?',
+          title: Text(tr('¿Cómo quieres estudiar?'),
               style: TextStyle(color: c.tinta, fontSize: 16, fontWeight: FontWeight.w600)),
           centerTitle: true,
         ),
@@ -74,7 +75,7 @@ class _PantallaModoState extends State<PantallaModo> {
                 const SizedBox(height: 20),
 
                 // ── Selector de experiencia ──────────────────────────
-                const _Seccion(titulo: "Tu nivel de experiencia"),
+                _Seccion(titulo: tr('Tu nivel de experiencia')),
                 const SizedBox(height: 12),
                 Row(
                   children: [
@@ -82,8 +83,8 @@ class _PantallaModoState extends State<PantallaModo> {
                       child: _BotonSelector(
                         seleccionado: _modoNovato == true,
                         icono: Icons.school_rounded,
-                        titulo: "Soy novato",
-                        subtitulo: "Silueta y guía de trazos",
+                        titulo: tr('Soy novato'),
+                        subtitulo: tr('Silueta y guía de trazos'),
                         onTap: () => setState(() => _modoNovato = true),
                       ),
                     ),
@@ -92,8 +93,8 @@ class _PantallaModoState extends State<PantallaModo> {
                       child: _BotonSelector(
                         seleccionado: _modoNovato == false,
                         icono: Icons.psychology_rounded,
-                        titulo: "Tengo experiencia",
-                        subtitulo: "De memoria, sin silueta",
+                        titulo: tr('Tengo experiencia'),
+                        subtitulo: tr('De memoria, sin silueta'),
                         onTap: () => setState(() => _modoNovato = false),
                       ),
                     ),
@@ -103,15 +104,15 @@ class _PantallaModoState extends State<PantallaModo> {
                 const SizedBox(height: 32),
 
                 // ── Selector de contenido ────────────────────────────
-                const _Seccion(titulo: "¿Qué quieres estudiar?"),
+                _Seccion(titulo: tr('¿Qué quieres estudiar?')),
                 const SizedBox(height: 12),
 
                 // Tarjeta HSK — colores azules fijos en hex
                 _TarjetaEstudio(
                   icono: "📚",
-                  titulo: "Niveles HSK",
+                  titulo: tr('Niveles HSK'),
                   subtitulo:
-                      "Los 3,000 caracteres de la lista oficial HSK 3.0",
+                      tr('Los 3,000 caracteres de la lista oficial HSK 3.0'),
                   detalle: "HSK 1 → HSK 7-9",
                   colorFondo: azul.withValues(alpha: 0.06),
                   colorBorde: azul.withValues(alpha: 0.30),
@@ -126,10 +127,10 @@ class _PantallaModoState extends State<PantallaModo> {
                 // Tarjeta Radicales — colores morados fijos en hex
                 _TarjetaEstudio(
                   icono: "🔑",
-                  titulo: "Radicales Kangxi",
+                  titulo: tr('Radicales Kangxi'),
                   subtitulo:
-                      "Los 214 radicales y la familia de caracteres de cada uno",
-                  detalle: "Radical → familia",
+                      tr('Los 214 radicales y la familia de caracteres de cada uno'),
+                  detalle: tr('Radical → familia'),
                   colorFondo: morado.withValues(alpha: 0.06),
                   colorBorde: morado.withValues(alpha: 0.30),
                   colorDetalleFondo: morado.withValues(alpha: 0.10),
@@ -142,16 +143,16 @@ class _PantallaModoState extends State<PantallaModo> {
 
                 // ── Nota informativa ─────────────────────────────────
                 if (_modoNovato == true)
-                  const _NotaInfo(
+                  _NotaInfo(
                     icono: Icons.lightbulb_outline,
                     texto:
-                        "Modo novato: verás la silueta del carácter y una animación del trazo correcto cuando te equivoques.",
+                        tr('Modo novato: verás la silueta del carácter y una animación del trazo correcto cuando te equivoques.'),
                   ),
                 if (_modoNovato == false)
-                  const _NotaInfo(
+                  _NotaInfo(
                     icono: Icons.fitness_center,
                     texto:
-                        "Modo experto: sin silueta. Escribes de memoria; solo al equivocarte ves en rojo el trazo que tocaba.",
+                        tr('Modo experto: sin silueta. Escribes de memoria; solo al equivocarte ves en rojo el trazo que tocaba.'),
                   ),
 
                 const SizedBox(height: 24),

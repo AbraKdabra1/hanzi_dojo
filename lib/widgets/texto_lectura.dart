@@ -25,6 +25,7 @@ import '../screens/pantalla_reporte.dart';
 import '../tema.dart';
 import 'boton_voz.dart';
 import 'comunes.dart';
+import '../idioma.dart';
 
 /// Signos que nunca deben empezar una línea (se pegan al carácter anterior).
 const _cierre = '，。！？；：、）》」』”’…—·.,!?;:)';
@@ -165,7 +166,7 @@ class ParrafoLectura extends StatelessWidget {
             if (p.espanol.isNotEmpty)
               IconButton(
                 visualDensity: VisualDensity.compact,
-                tooltip: mostrarTraduccion ? 'Ocultar traducción' : 'Ver traducción',
+                tooltip: mostrarTraduccion ? tr('Ocultar traducción') : tr('Ver traducción'),
                 icon: Icon(
                   mostrarTraduccion ? Icons.translate : Icons.translate_outlined,
                   size: 18,
@@ -230,14 +231,14 @@ class FichaCaracterLectura extends StatelessWidget {
                         Text(pinyinEnTexto,
                             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500, letterSpacing: 1)),
                         if (c != null && c.pinyin != pinyinEnTexto && pinyinEnTexto.isNotEmpty)
-                          Text('aquí; en el diccionario: ${c.pinyin}',
+                          Text(tr('aquí; en el diccionario: {0}', [c.pinyin]),
                               style: TextStyle(fontSize: 12, color: colores.tenue)),
                         const SizedBox(height: 6),
                         Row(children: [
                           if (c != null) EtiquetaNivel(nivel: c.nivelHsk),
                           if (c != null) const SizedBox(width: 8),
                           if (c != null)
-                            Text(c.progreso == null ? 'Nuevo para ti' : 'Ya lo estudias',
+                            Text(c.progreso == null ? tr('Nuevo para ti') : tr('Ya lo estudias'),
                                 style: TextStyle(fontSize: 12, color: colores.tenue)),
                         ]),
                       ],
@@ -254,7 +255,7 @@ class FichaCaracterLectura extends StatelessWidget {
                       width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: colores.icono)),
                 )
               else if (c == null)
-                Text('Este carácter no está en la base de la app.',
+                Text(tr('Este carácter no está en la base de la app.'),
                     style: TextStyle(fontSize: 14, color: colores.suave))
               else ...[
                 SizedBox(
@@ -266,7 +267,7 @@ class FichaCaracterLectura extends StatelessWidget {
                   width: double.infinity,
                   child: FilledButton.icon(
                     icon: const Icon(Icons.edit_outlined, size: 18),
-                    label: const Text('Practicar su escritura'),
+                    label: Text(tr('Practicar su escritura')),
                     onPressed: () {
                       // Se toma el Navigator antes de cerrar la hoja: después
                       // su contexto ya no sirve para abrir otra pantalla.
@@ -288,7 +289,7 @@ class FichaCaracterLectura extends StatelessWidget {
                 const SizedBox(height: 4),
                 TextButton.icon(
                   icon: const Icon(Icons.flag_outlined, size: 18),
-                  label: const Text('Reportar un error'),
+                  label: Text(tr('Reportar un error')),
                   onPressed: () {
                     final navegador = Navigator.of(context);
                     navegador.pop();
@@ -296,8 +297,8 @@ class FichaCaracterLectura extends StatelessWidget {
                       MaterialPageRoute<void>(
                         builder: (_) => PantallaReporte(
                           tipo: TipoReporte.contenido,
-                          donde: '$lugar · carácter $texto',
-                          queEstaMal: 'Texto o traducción de un libro',
+                          donde: tr('{0} · carácter {1}', [lugar, texto]),
+                          queEstaMal: tr('Texto o traducción de un libro'),
                         ),
                       ),
                     );

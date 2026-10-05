@@ -25,6 +25,7 @@ import '../helpers/habito.dart';
 import '../tema.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
+import '../idioma.dart';
 
 /// Lo que muestra la tarjeta.
 class DatosTarjeta {
@@ -101,7 +102,7 @@ class _PantallaCompartirState extends State<PantallaCompartir> {
     } catch (e, pila) {
       RegistroErrores.registrar('Compartir', e, pila);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('No se pudo preparar la imagen: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(tr('No se pudo preparar la imagen: {0}', [e]))));
       }
     } finally {
       if (mounted) setState(() => _ocupado = false);
@@ -109,16 +110,16 @@ class _PantallaCompartirState extends State<PantallaCompartir> {
   }
 
   Future<void> _compartir() => _hacer((png) async {
-        final ok = await Habito.compartirImagen(png, texto: 'Aprendo chino con Hanzi Dojo · 汉字道场');
+        final ok = await Habito.compartirImagen(png, texto: tr('Aprendo chino con Hanzi Dojo · 汉字道场'));
         if (!ok && mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No se pudo abrir el menú para compartir.')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(tr('No se pudo abrir el menú para compartir.'))));
         }
       });
 
   Future<void> _guardar() => _hacer((png) async {
         final nombre = await Archivos.guardar(nombre: 'hanzi_dojo_progreso.png', bytes: png, tipo: 'image/png');
         if (nombre != null && mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Imagen guardada: $nombre')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(tr('Imagen guardada: {0}', [nombre]))));
         }
       });
 
@@ -127,7 +128,7 @@ class _PantallaCompartirState extends State<PantallaCompartir> {
     final datos = _datos;
     return FondoTintaChina(
       child: Scaffold(
-        appBar: const BarraSuperior(titulo: 'Compartir mi progreso'),
+        appBar: BarraSuperior(titulo: tr('Compartir mi progreso')),
         body: datos == null
             ? const Center(child: CircularProgressIndicator())
             : Column(
@@ -153,7 +154,7 @@ class _PantallaCompartirState extends State<PantallaCompartir> {
                           child: OutlinedButton.icon(
                             onPressed: _ocupado ? null : _guardar,
                             icon: const Icon(Icons.save_alt_rounded),
-                            label: const Text('Guardar'),
+                            label: Text(tr('Guardar')),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -161,7 +162,7 @@ class _PantallaCompartirState extends State<PantallaCompartir> {
                           child: FilledButton.icon(
                             onPressed: _ocupado ? null : _compartir,
                             icon: const Icon(Icons.share_rounded),
-                            label: const Text('Compartir'),
+                            label: Text(tr('Compartir')),
                           ),
                         ),
                       ],
@@ -188,8 +189,6 @@ class TarjetaProgreso extends StatelessWidget {
     final conAvance = [for (final n in datos.niveles) if (n.estudiados > 0) n];
     final niveles = (conAvance.isEmpty ? datos.niveles.take(1) : conAvance.take(3)).toList();
     final hoy = DateTime.now();
-    const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre',
-      'octubre', 'noviembre', 'diciembre'];
     return SizedBox(
       width: 360,
       height: 450,
@@ -213,7 +212,7 @@ class TarjetaProgreso extends StatelessWidget {
                 if (logro != null) ...[
                   Text(logro.emoji, textAlign: TextAlign.center, style: const TextStyle(fontSize: 64)),
                   const SizedBox(height: 4),
-                  Text('Logro desbloqueado',
+                  Text(tr('Logro desbloqueado'),
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: c.tenue, letterSpacing: 1)),
                   Text(logro.titulo,
@@ -228,7 +227,7 @@ class TarjetaProgreso extends StatelessWidget {
                       Text('${datos.racha}', style: const TextStyle(fontSize: 72, fontWeight: FontWeight.w700, height: 1)),
                     ],
                   ),
-                  Text(datos.racha == 1 ? 'día seguido practicando' : 'días seguidos practicando',
+                  Text(datos.racha == 1 ? tr('día seguido practicando') : tr('días seguidos practicando'),
                       textAlign: TextAlign.center, style: TextStyle(fontSize: 15, color: c.suave)),
                 ],
                 const Spacer(),
@@ -264,9 +263,9 @@ class TarjetaProgreso extends StatelessWidget {
                     ),
                   ),
                 const Spacer(),
-                Text('${hoy.day} de ${meses[hoy.month - 1]} de ${hoy.year}',
+                Text(tr('{0} de {1} de {2}', [hoy.day, mesesLargos[hoy.month - 1], hoy.year]),
                     textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: c.tenue)),
-                Text('Aprende a escribir chino · gratis y de código abierto',
+                Text(tr('Aprende a escribir chino · gratis y de código abierto'),
                     textAlign: TextAlign.center, style: TextStyle(fontSize: 10, color: c.tenue)),
               ],
             ),

@@ -20,6 +20,7 @@
 import 'package:flutter/foundation.dart' show LicenseEntryWithLineBreaks, LicenseRegistry;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:sqflite/sqflite.dart' show getDatabasesPath;
 
@@ -30,6 +31,7 @@ import 'datos/repositorio.dart';
 import 'datos/repositorio_habito.dart';
 import 'datos/repositorio_practica.dart';
 import 'helpers/energia.dart';
+import 'idioma.dart';
 import 'helpers/habito.dart';
 import 'painters/rama_ciruelo.dart';
 import 'screens/pantalla_inicio.dart';
@@ -40,6 +42,8 @@ import 'widgets/fondo_tinta.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   RegistroErrores.instalar();
+  // Mientras se abre la base: el idioma del teléfono (luego, el de Ajustes).
+  Idioma.actual.value = Idioma.desdeTexto(null);
   _registrarLicencias();
   runApp(const HanziDojoApp());
 }
@@ -89,6 +93,7 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
       final repo = Repositorio(base);
       await Energia.iniciar(await repo.fluidezMaxima() ? ModoFluidez.maxima : ModoFluidez.automatica);
       Apariencia.modo.value = Apariencia.desdeTexto(await repo.apariencia());
+      Idioma.actual.value = Idioma.desdeTexto(await repo.idioma());
       Voz.velocidad = await repo.vozLenta() ? 0.75 : 1.0;
       // El recordatorio lo programa Android; se vuelve a poner por si la app se
       // reinstaló o se importó un respaldo (si ya estaba, no cambia nada).
@@ -105,8 +110,10 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
 
   @override
   Widget build(BuildContext context) {
-    // La apariencia (Ajustes) cambia al momento, sin reiniciar la app.
-    return ValueListenableBuilder<ThemeMode>(
+    // La apariencia y el idioma (Ajustes) cambian al momento, sin reiniciar.
+    return ValueListenableBuilder<Lengua>(
+      valueListenable: Idioma.actual,
+      builder: (context, lengua, _) => ValueListenableBuilder<ThemeMode>(
       valueListenable: Apariencia.modo,
       builder: (context, modo, _) {
         final repo = _repo;
@@ -118,17 +125,26 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
             theme: temaHanziDojo(),
             darkTheme: temaHanziDojo(Brightness.dark),
             themeMode: modo,
+            locale: Idioma.locale,
+            supportedLocales: Idioma.locales,
+            localizationsDelegates: GlobalMaterialLocalizations.delegates,
             home: _PantallaCarga(error: _error),
           );
         }
         return DatosApp(
           repo: repo,
           child: MaterialApp(
+            // Al cambiar de idioma se arma la app de nuevo (vuelve al inicio):
+            // los textos de tr() se leen al construir cada pantalla.
+            key: ValueKey(lengua),
             title: 'Hanzi Dojo',
             debugShowCheckedModeBanner: false,
             theme: temaHanziDojo(),
             darkTheme: temaHanziDojo(Brightness.dark),
             themeMode: modo,
+            locale: Idioma.locale,
+            supportedLocales: Idioma.locales,
+            localizationsDelegates: GlobalMaterialLocalizations.delegates,
             builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
               // Íconos de la barra de estado legibles también en pantallas sin AppBar.
               value: Theme.of(context).brightness == Brightness.dark
@@ -141,6 +157,7 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
           ),
         );
       },
+      ),
     );
   }
 }
@@ -170,7 +187,7 @@ class _PantallaCarga extends StatelessWidget {
               : Padding(
                   padding: const EdgeInsets.all(32),
                   child: Text(
-                    'No se pudo abrir la base de datos.\n\n$error',
+                    tr('No se pudo abrir la base de datos.\n\n{0}', [error]),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -199,7 +216,7 @@ void _registrarLicencias() {
   LicenseRegistry.addLicense(() async* {
     for (final entrada in licencias.entries) {
       final texto = await rootBundle.loadString(entrada.value);
-      yield LicenseEntryWithLineBreaks([entrada.key], texto);
+      yield LicenseEntryWithLineBreaks([tr(entrada.key)], texto);
     }
   });
 }

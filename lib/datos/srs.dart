@@ -16,17 +16,22 @@
 // Todo aquí es cálculo puro (sin base de datos) para poder probarlo.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import '../idioma.dart';
+
 /// Botones que ves al terminar un carácter.
 enum Calificacion {
   dificil(0, 'Difícil'),
   medio(3, 'Medio'),
   facil(5, 'Fácil');
 
-  const Calificacion(this.q, this.etiqueta);
+  const Calificacion(this.q, this._etiqueta);
 
   /// Valor q de SM-2.
   final int q;
-  final String etiqueta;
+  final String _etiqueta;
+
+  /// Nombre del botón en el idioma de la interfaz.
+  String get etiqueta => tr(_etiqueta);
 
   /// true si cuenta como "lo recordé".
   bool get aprobado => q >= 3;

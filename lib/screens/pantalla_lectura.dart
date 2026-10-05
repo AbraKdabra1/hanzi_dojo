@@ -23,6 +23,7 @@ import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
 import '../widgets/texto_lectura.dart';
 import '../tema.dart';
+import '../idioma.dart';
 
 class PantallaLectura extends StatefulWidget {
   const PantallaLectura({super.key, required this.libro, required this.capitulos, required this.indice});
@@ -111,7 +112,7 @@ class _PantallaLecturaState extends State<PantallaLectura> {
   String _dondeReporte(ParrafoLibro p) {
     final titulo = widget.libro.tituloEs.isEmpty ? widget.libro.titulo : widget.libro.tituloEs;
     final inicio = p.chino.length > 16 ? '${p.chino.substring(0, 16)}…' : p.chino;
-    return 'Libro «$titulo», capítulo ${_capitulo.orden} · párrafo «$inicio»';
+    return tr('Libro «{0}», capítulo {1} · párrafo «{2}»', [titulo, _capitulo.orden, inicio]);
   }
 
   Future<void> _terminar() async {
@@ -119,7 +120,7 @@ class _PantallaLecturaState extends State<PantallaLectura> {
     if (!mounted) return;
     setState(() => _leidosAhora.add(_capitulo.orden));
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Capítulo ${_capitulo.orden} leído ✓')),
+      SnackBar(content: Text(tr('Capítulo {0} leído ✓', [_capitulo.orden]))),
     );
   }
 
@@ -138,7 +139,7 @@ class _PantallaLecturaState extends State<PantallaLectura> {
               ? Row(mainAxisSize: MainAxisSize.min, children: [
                   Icon(Icons.check_circle, color: EtiquetaNivel.colorPara(context, widget.libro.nivelHsk)),
                   const SizedBox(width: 6),
-                  const Text('Capítulo leído', style: TextStyle(fontWeight: FontWeight.w600)),
+                  Text(tr('Capítulo leído'), style: TextStyle(fontWeight: FontWeight.w600)),
                 ])
               : FilledButton.icon(
                   style: FilledButton.styleFrom(
@@ -147,14 +148,14 @@ class _PantallaLecturaState extends State<PantallaLectura> {
                     padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 14),
                   ),
                   icon: const Icon(Icons.check),
-                  label: const Text('Terminé este capítulo'),
+                  label: Text(tr('Terminé este capítulo')),
                   onPressed: _terminar,
                 ),
           if (hayMas) ...[
             const SizedBox(height: 14),
             OutlinedButton.icon(
               icon: const Icon(Icons.arrow_forward),
-              label: Text('Siguiente: ${widget.capitulos[_indice + 1].titulo}',
+              label: Text(tr('Siguiente: {0}', [widget.capitulos[_indice + 1].titulo]),
                   maxLines: 1, overflow: TextOverflow.ellipsis),
               onPressed: () => _irA(_indice + 1),
             ),
@@ -173,11 +174,11 @@ class _PantallaLecturaState extends State<PantallaLectura> {
       child: Scaffold(
         appBar: BarraSuperior(
           titulo: widget.libro.titulo,
-          subtitulo: 'Capítulo ${cap.orden} de ${widget.capitulos.length}',
+          subtitulo: tr('Capítulo {0} de {1}', [cap.orden, widget.capitulos.length]),
           acciones: [
             _BotonAjuste(
               activo: _ajustes.pinyin,
-              tooltip: 'Pinyin',
+              tooltip: tr('Pinyin'),
               onTap: () => _cambiarAjustes(_ajustes.copia(pinyin: !_ajustes.pinyin)),
               child: const Text('拼', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
             ),
@@ -185,7 +186,7 @@ class _PantallaLecturaState extends State<PantallaLectura> {
             if (!widget.libro.propio)
               _BotonAjuste(
                 activo: _ajustes.traduccion,
-                tooltip: 'Traducción',
+                tooltip: tr('Traducción'),
                 onTap: () {
                   _invertidos.clear();
                   _cambiarAjustes(_ajustes.copia(traduccion: !_ajustes.traduccion));
@@ -194,7 +195,7 @@ class _PantallaLecturaState extends State<PantallaLectura> {
               ),
             _BotonAjuste(
               activo: false,
-              tooltip: 'Tamaño de letra',
+              tooltip: tr('Tamaño de letra'),
               onTap: () => _cambiarAjustes(_ajustes.copia(tamano: _ajustes.siguienteTamano)),
               child: const Icon(Icons.format_size, size: 21),
             ),
@@ -274,7 +275,7 @@ class _Encabezado extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Palabras de este capítulo',
+                Text(tr('Palabras de este capítulo'),
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: context.colores.suave)),
                 const SizedBox(height: 6),
                 for (final p in capitulo.palabras)

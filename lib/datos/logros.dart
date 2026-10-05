@@ -10,6 +10,7 @@
 // aunque después bajes (p. ej. se rompe la racha), el logro se queda.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import '../idioma.dart';
 import 'modelos.dart';
 
 /// Lo que hace falta para saber cuánto llevas de cada logro.
@@ -58,17 +59,25 @@ class Logro {
   const Logro({
     required this.clave,
     required this.emoji,
-    required this.titulo,
-    required this.descripcion,
+    required String titulo,
+    required String descripcion,
     required this.meta,
     required this.valor,
-  });
+    this.argumentos = const [],
+  })  : tituloEs = titulo,
+        descripcionEs = descripcion;
 
   /// Identificador fijo (es lo que se guarda en la base).
   final String clave;
   final String emoji;
-  final String titulo;
-  final String descripcion;
+
+  /// Textos en español ({0} = argumentos[0]); se muestran con tr().
+  final String tituloEs;
+  final String descripcionEs;
+  final List<Object> argumentos;
+
+  String get titulo => tr(tituloEs, argumentos);
+  String get descripcion => tr(descripcionEs, argumentos);
 
   /// Cuánto hace falta.
   final int meta;
@@ -88,8 +97,9 @@ class Logros {
   static Logro _nivel(int n) => Logro(
         clave: 'nivel_$n',
         emoji: n == 7 ? '🐉' : '🎓',
-        titulo: '${nombreDeNivel(n)} completo',
-        descripcion: 'Estudia todos los caracteres de ${nombreDeNivel(n)}',
+        titulo: '{0} completo',
+        descripcion: 'Estudia todos los caracteres de {0}',
+        argumentos: [nombreDeNivel(n)],
         meta: 1,
         valor: (d) {
           final total = d.totalPorNivel[n] ?? 0;

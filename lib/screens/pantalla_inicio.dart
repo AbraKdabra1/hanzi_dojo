@@ -35,6 +35,7 @@ import 'pantalla_estadisticas.dart';
 import 'pantalla_logros.dart';
 import 'pantalla_modo.dart';
 import 'pantalla_practica.dart';
+import '../idioma.dart';
 
 class PantallaInicio extends StatefulWidget {
   const PantallaInicio({super.key});
@@ -44,11 +45,11 @@ class PantallaInicio extends StatefulWidget {
 }
 
 class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObserver {
-  static const _frases = [
-    'El viaje de mil millas comienza con un solo paso.',
-    'Aprender es un tesoro que seguirá a su dueño a todas partes.',
-    'No temas ir despacio, teme solo a detenerte.',
-    'La paciencia es una planta amarga, pero su fruto es dulce.',
+  static List<String> get _frases => [
+    tr('El viaje de mil millas comienza con un solo paso.'),
+    tr('Aprender es un tesoro que seguirá a su dueño a todas partes.'),
+    tr('No temas ir despacio, teme solo a detenerte.'),
+    tr('La paciencia es una planta amarga, pero su fruto es dulce.'),
   ];
   int _indiceFrase = 0;
   Timer? _temporizador;
@@ -137,13 +138,13 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
     if (cubiertos.isNotEmpty) {
       aviso.showSnackBar(SnackBar(
         content: Text(cubiertos.length == 1
-            ? '🛡️ Tu protector de racha cubrió el día que no practicaste. Hay uno por semana.'
-            : '🛡️ Tus protectores de racha cubrieron ${cubiertos.length} días.'),
+            ? tr('🛡️ Tu protector de racha cubrió el día que no practicaste. Hay uno por semana.')
+            : tr('🛡️ Tus protectores de racha cubrieron {0} días.', [cubiertos.length])),
         duration: const Duration(seconds: 5),
       ));
     }
     if (celebrarMeta) {
-      aviso.showSnackBar(SnackBar(content: Text('🎯 ¡Meta del día cumplida! $hoy de $metaDiaria')));
+      aviso.showSnackBar(SnackBar(content: Text(tr('🎯 ¡Meta del día cumplida! {0} de {1}', [hoy, metaDiaria]))));
     }
     if (logros.isNotEmpty) await mostrarLogrosNuevos(context, logros);
   }
@@ -166,13 +167,13 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
                 children: [
                   IconButton(
                     icon: Icon(Icons.emoji_events_outlined, color: c.icono),
-                    tooltip: 'Logros',
+                    tooltip: tr('Logros'),
                     onPressed: () => _ir(const PantallaLogros()),
                   ),
                   const Spacer(),
                   IconButton(
                     icon: Icon(Icons.settings_outlined, color: c.icono),
-                    tooltip: 'Ajustes y créditos',
+                    tooltip: tr('Ajustes y créditos'),
                     onPressed: () => _ir(const PantallaAjustes()),
                   ),
                 ],
@@ -205,7 +206,7 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
                   onTap: () => _ir(const PantallaModo()),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 15),
-                    child: Text('Estudiar',
+                    child: Text(tr('Estudiar'),
                         style: TextStyle(fontSize: 18, color: c.textoBoton, fontWeight: FontWeight.w700)),
                   ),
                 ),
@@ -219,13 +220,13 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
                 children: [
                   _BotonSecundario(
                     icono: Icons.menu_book_rounded,
-                    texto: 'Leer',
+                    texto: tr('Leer'),
                     onTap: () => _ir(const PantallaBiblioteca()),
                   ),
                   const SizedBox(width: 12),
                   _BotonSecundario(
                     icono: Icons.headphones_rounded,
-                    texto: 'Practicar',
+                    texto: tr('Practicar'),
                     onTap: () => _ir(const PantallaPractica()),
                   ),
                 ],
@@ -240,7 +241,7 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
                 icon: Icon(Icons.pie_chart_outline, color: c.suave, size: 20),
-                label: Text('Ver mis estadísticas',
+                label: Text(tr('Ver mis estadísticas'),
                     style: TextStyle(color: c.suave, fontSize: 15, fontWeight: FontWeight.w500)),
                 onPressed: () => _ir(const PantallaEstadisticas()),
               ),
@@ -354,7 +355,7 @@ class _ResumenDelDia extends StatelessWidget {
     final cumplida = hoy >= metaDiaria;
     final verde = c.oscuro ? const Color(0xFF81C784) : const Color(0xFF2E7D32);
     return Semantics(
-      label: 'Hoy llevas $hoy de $metaDiaria. $pendientes repasos pendientes. Racha de $racha días.',
+      label: tr('Hoy llevas {0} de {1}. {2} repasos pendientes. Racha de {3} días.', [hoy, metaDiaria, pendientes, racha]),
       child: Container(
         padding: const EdgeInsets.fromLTRB(10, 8, 16, 8),
         decoration: BoxDecoration(
@@ -391,7 +392,7 @@ class _ResumenDelDia extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(cumplida ? 'Meta de hoy cumplida' : 'Hoy: $hoy de $metaDiaria',
+                Text(cumplida ? tr('Meta de hoy cumplida') : tr('Hoy: {0} de {1}', [hoy, metaDiaria]),
                     style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: c.tinta)),
                 const SizedBox(height: 2),
                 Row(

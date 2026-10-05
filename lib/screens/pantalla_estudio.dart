@@ -28,6 +28,7 @@ import '../widgets/fondo_tinta.dart';
 import '../widgets/lienzo_escritura.dart';
 import 'pantalla_familia_radical.dart';
 import 'pantalla_reporte.dart';
+import '../idioma.dart';
 
 class PantallaEstudio extends StatefulWidget {
   const PantallaEstudio({super.key, required this.filtro, required this.modoNovato});
@@ -148,18 +149,18 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
       child: Scaffold(
         appBar: BarraSuperior(
           titulo: widget.filtro.titulo,
-          subtitulo: widget.modoNovato ? '🐣 Novato' : '🥋 Experto',
+          subtitulo: widget.modoNovato ? tr('🐣 Novato') : tr('🥋 Experto'),
           acciones: [
             if (c != null)
               IconButton(
                 icon: Icon(Icons.flag_outlined, color: colores.icono),
-                tooltip: 'Reportar un error en este carácter',
+                tooltip: tr('Reportar un error en este carácter'),
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute<void>(
                     builder: (_) => PantallaReporte(
                       tipo: TipoReporte.contenido,
-                      donde: 'Carácter ${c.caracter} (${c.pinyin}) · ${nombreDeNivel(c.nivelHsk)}',
+                      donde: tr('Carácter {0} ({1}) · {2}', [c.caracter, c.pinyin, nombreDeNivel(c.nivelHsk)]),
                     ),
                   ),
                 ),
@@ -167,7 +168,7 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
             if (c != null)
               IconButton(
                 icon: Icon(Icons.refresh, color: colores.icono),
-                tooltip: 'Reiniciar trazos',
+                tooltip: tr('Reiniciar trazos'),
                 onPressed: () {
                   _claveLienzo.currentState?.reiniciar();
                   setState(() {
@@ -218,14 +219,14 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
               BotonVoz(texto: c.caracter, pinyin: [c.pinyin]),
               _Pastilla(
                 icono: Icons.menu_book_rounded,
-                texto: 'Ejemplos',
+                texto: tr('Ejemplos'),
                 color: colores.oscuro ? const Color(0xFF90CAF9) : const Color(0xFF1565C0),
                 onTap: () => _verEjemplos(c),
               ),
               if (r != null)
                 _Pastilla(
                   icono: Icons.account_tree_outlined,
-                  texto: 'Radical ${r.formaPrincipal} ${r.nombreEs}',
+                  texto: tr('Radical {0} {1}', [r.formaPrincipal, r.nombre]),
                   color: colores.oscuro ? const Color(0xFFCE93D8) : const Color(0xFF6A1B9A),
                   onTap: () => Navigator.push(
                     context,
@@ -243,10 +244,10 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
               EtiquetaNivel(nivel: c.nivelHsk),
               if (c.nivelEscritura != null) ...[
                 const SizedBox(width: 6),
-                Text('✍ escritura oficial', style: TextStyle(fontSize: 11, color: colores.tenue)),
+                Text(tr('✍ escritura oficial'), style: TextStyle(fontSize: 11, color: colores.tenue)),
               ],
               const SizedBox(width: 6),
-              Text('· ${c.numTrazos} trazos', style: TextStyle(fontSize: 11, color: colores.tenue)),
+              Text(tr('· {0} trazos', [c.numTrazos]), style: TextStyle(fontSize: 11, color: colores.tenue)),
             ],
           ),
         ],
@@ -300,7 +301,7 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
     if (!_completado) {
       return Center(
         child: Text(
-          'Escribe el carácter trazo por trazo',
+          tr('Escribe el carácter trazo por trazo'),
           style: TextStyle(color: colores.tenue, fontSize: 15, fontStyle: FontStyle.italic),
         ),
       );
@@ -310,7 +311,7 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          _errores == 0 ? 'Sin errores ✨' : '$_errores ${_errores == 1 ? 'error' : 'errores'} de trazo',
+          _errores == 0 ? tr('Sin errores ✨') : (_errores == 1 ? tr('1 error de trazo') : tr('{0} errores de trazo', [_errores])),
           style: TextStyle(fontSize: 13, color: colores.suave),
         ),
         const SizedBox(height: 10),
@@ -337,13 +338,13 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
   // ── Fin de la sesión ─────────────────────────────────────────────────────
 
   Widget _vistaFin() {
-    final resumen = 'Nuevos: ${_sesion.nuevasEnSesion} · Repasados: ${_sesion.repasadasEnSesion}';
-    final volver = OutlinedButton(onPressed: () => Navigator.pop(context), child: const Text('Volver'));
+    final resumen = tr('Nuevos: {0} · Repasados: {1}', [_sesion.nuevasEnSesion, _sesion.repasadasEnSesion]);
+    final volver = OutlinedButton(onPressed: () => Navigator.pop(context), child: Text(tr('Volver')));
     return switch (_sesion.fin) {
       FinSesion.limiteDiario => MensajeCentrado(
           emoji: '🎯',
-          titulo: 'Cumpliste tu meta de caracteres nuevos por hoy',
-          texto: '$resumen\n\nPuedes seguir con más nuevos o volver mañana para tus repasos.',
+          titulo: tr('Cumpliste tu meta de caracteres nuevos por hoy'),
+          texto: tr('{0}\n\nPuedes seguir con más nuevos o volver mañana para tus repasos.', [resumen]),
           acciones: [
             volver,
             FilledButton(
@@ -351,15 +352,15 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
                 _sesion.estudiarMas();
                 _cargarSiguiente();
               },
-              child: const Text('Estudiar más'),
+              child: Text(tr('Estudiar más')),
             ),
           ],
         ),
-      FinSesion.unicoTerminado => MensajeCentrado(emoji: '✅', titulo: 'Práctica terminada', acciones: [volver]),
+      FinSesion.unicoTerminado => MensajeCentrado(emoji: '✅', titulo: tr('Práctica terminada'), acciones: [volver]),
       _ => MensajeCentrado(
           emoji: '🎉',
-          titulo: 'No hay nada pendiente aquí',
-          texto: '$resumen\n\nTerminaste los nuevos y los repasos de este grupo por ahora.',
+          titulo: tr('No hay nada pendiente aquí'),
+          texto: tr('{0}\n\nTerminaste los nuevos y los repasos de este grupo por ahora.', [resumen]),
           acciones: [volver],
         ),
     };
@@ -481,7 +482,7 @@ class _HojaEjemplos extends StatelessWidget {
               children: [
                 Text(caracter.caracter, style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w400)),
                 const SizedBox(width: 12),
-                const Text('Ejemplos', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                Text(tr('Ejemplos'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
               ],
             ),
           ),
@@ -489,7 +490,7 @@ class _HojaEjemplos extends StatelessWidget {
           if (ejemplos.isEmpty)
             Padding(
               padding: const EdgeInsets.all(30),
-              child: Text('Aún no hay ejemplos para este carácter.',
+              child: Text(tr('Aún no hay ejemplos para este carácter.'),
                   textAlign: TextAlign.center, style: TextStyle(color: colores.tenue)),
             )
           else
@@ -519,7 +520,7 @@ class _FilaEjemplo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final esEspanol = ejemplo.espanol != null && ejemplo.espanol!.isNotEmpty;
+    final esEspanol = ejemplo.traduccionEnIdioma;
     final colores = context.colores;
     final rojo = colores.oscuro ? const Color(0xFFEF9A9A) : const Color(0xFFC62828);
     return Column(
@@ -548,7 +549,7 @@ class _FilaEjemplo extends StatelessWidget {
         Text(ejemplo.pinyin, style: TextStyle(fontSize: 13, color: colores.tenue)),
         const SizedBox(height: 4),
         Text(
-          esEspanol ? ejemplo.traduccion : 'EN  ${ejemplo.traduccion}',
+          esEspanol ? ejemplo.traduccion : tr('EN  {0}', [ejemplo.traduccion]),
           style: TextStyle(
             fontSize: 14,
             fontStyle: esEspanol ? FontStyle.normal : FontStyle.italic,

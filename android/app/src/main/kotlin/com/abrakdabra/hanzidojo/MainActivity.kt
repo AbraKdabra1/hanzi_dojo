@@ -150,7 +150,7 @@ class MainActivity : FlutterActivity() {
             clipData = ClipData.newRawUri("", uri)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        startActivity(Intent.createChooser(envio, "Compartir mi progreso"))
+        startActivity(Intent.createChooser(envio, if (DatosHanzi.ingles(this)) "Share my progress" else "Compartir mi progreso"))
         resultado.success(true)
     }
 

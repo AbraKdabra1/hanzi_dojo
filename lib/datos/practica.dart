@@ -17,6 +17,7 @@ import '../helpers/pinyin_entrada.dart';
 import 'audio.dart';
 import 'modelos.dart';
 import 'srs.dart';
+import '../idioma.dart';
 
 /// Valores de la columna `tipo` de la tabla ejercicios.
 class TipoEjercicio {
@@ -38,11 +39,11 @@ class TipoEjercicio {
   static const palabra = 'palabra';
 
   static String nombre(String tipo) => switch (tipo) {
-        tono => 'Tonos (sílabas)',
-        tonosPalabra => 'Tonos (palabras)',
-        escucha => 'Escucha',
-        pinyin => 'Pinyin',
-        palabra => 'Vocabulario',
+        tono => tr('Tonos (sílabas)'),
+        tonosPalabra => tr('Tonos (palabras)'),
+        escucha => tr('Escucha'),
+        pinyin => tr('Pinyin'),
+        palabra => tr('Vocabulario'),
         _ => tipo,
       };
 }
@@ -129,8 +130,13 @@ class Palabra {
 
   bool get tieneEspanol => significadoEs != null && significadoEs!.isNotEmpty;
 
-  /// Significado a mostrar: español si existe; si no, inglés.
-  String get significado => tieneEspanol ? significadoEs! : significadoEn;
+  /// Significado a mostrar: en inglés con la interfaz en inglés (si lo hay);
+  /// si no, español si existe y si no, inglés.
+  String get significado =>
+      (Idioma.ingles && significadoEn.isNotEmpty) || !tieneEspanol ? significadoEn : significadoEs!;
+
+  /// ¿El significado está en el idioma de la interfaz? (Si no, se marca "EN".)
+  bool get significadoEnIdioma => Idioma.ingles || tieneEspanol;
 
   String get nombreNivel => nombreDeNivel(nivelHsk);
 
@@ -213,11 +219,11 @@ class SilabaTono {
 
 /// Nombre corto de cada tono, para los botones.
 String nombreDeTono(int tono) => switch (tono) {
-      1 => 'alto y plano',
-      2 => 'sube',
-      3 => 'baja y sube',
-      4 => 'baja',
-      _ => 'neutro',
+      1 => tr('alto y plano'),
+      2 => tr('sube'),
+      3 => tr('baja y sube'),
+      4 => tr('baja'),
+      _ => tr('neutro'),
     };
 
 // ═══════════════════════════════════════════════════════════════════════════

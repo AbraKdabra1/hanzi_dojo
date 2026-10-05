@@ -441,6 +441,7 @@ CREATE TABLE radicales (
     forma_principal TEXT    NOT NULL,      -- la que se muestra (水)
     variantes       TEXT    NOT NULL,      -- otras formas, separadas por espacio (氵 氺)
     nombre_es       TEXT    NOT NULL,      -- "agua"
+    nombre_en       TEXT    NOT NULL,      -- "water" (interfaz en inglés)
     pinyin          TEXT    NOT NULL,      -- con acentos
     trazos          INTEGER NOT NULL,      -- trazos del radical
     caracter_id     INTEGER,               -- id en `caracteres` para practicarlo (NULL si no hay trazos)
@@ -832,7 +833,8 @@ def construir():
             problemas.append(f"radical {n}: ninguna forma tiene datos de trazo")
         filas_radicales.append({
             "numero": n, "forma_principal": r["forma_principal"], "variantes": r["variantes"],
-            "nombre_es": r["nombre_es"], "pinyin": r["pinyin"], "trazos": int(r["trazos"]),
+            "nombre_es": r["nombre_es"], "nombre_en": r["nombre_en"],
+            "pinyin": r["pinyin"], "trazos": int(r["trazos"]),
             "caracter_id": practica, "total_hsk": total_hsk[n], "total": total[n],
         })
 

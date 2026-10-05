@@ -32,6 +32,7 @@ import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
 import '../tema.dart';
 import 'pantalla_estudio.dart';
+import '../idioma.dart';
 
 /// Rampa de un solo tono (verde), de poco a mucho. El primero es "sin nada".
 const _rampaClara = [Color(0x14000000), Color(0xFFC8E6C9), Color(0xFF81C784), Color(0xFF43A047), Color(0xFF1B5E20)];
@@ -40,11 +41,8 @@ const _rampaClara = [Color(0x14000000), Color(0xFFC8E6C9), Color(0xFF81C784), Co
 const _rampaOscura = [Color(0x1FFFFFFF), Color(0xFF0E4429), Color(0xFF006D32), Color(0xFF26A641), Color(0xFF39D353)];
 
 List<Color> _rampaDe(BuildContext context) => context.colores.oscuro ? _rampaOscura : _rampaClara;
-const _dias = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
-const _diasLargos = ['lun', 'mar', 'mié', 'jue', 'vie', 'sáb', 'dom'];
-const _meses = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 
-String _fecha(DateTime d) => '${_diasLargos[d.weekday - 1]} ${d.day} ${_meses[d.month - 1]}';
+String _fecha(DateTime d) => '${diasCortos[d.weekday - 1]} ${d.day} ${mesesCortos[d.month - 1]}';
 
 class PantallaEstadisticas extends StatefulWidget {
   const PantallaEstadisticas({super.key});
@@ -124,7 +122,7 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
         _actividad.where((d) => !d.dia.isBefore(lunes)).fold(0, (s, d) => s + d.segundos) ~/ 60;
     return FondoTintaChina(
       child: Scaffold(
-        appBar: const BarraSuperior(titulo: 'Mi progreso'),
+        appBar: BarraSuperior(titulo: tr('Mi progreso')),
         body: niveles == null
             ? Center(child: CircularProgressIndicator(color: context.colores.icono))
             : ListView(
@@ -132,7 +130,7 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
                 children: [
                   Row(
                     children: [
-                      Expanded(child: _Cifra(valor: '$_total', etiqueta: 'caracteres estudiados')),
+                      Expanded(child: _Cifra(valor: '$_total', etiqueta: tr('caracteres estudiados'))),
                       const SizedBox(width: 10),
                       Expanded(
                         child: _Cifra(
@@ -141,7 +139,7 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      Expanded(child: _Cifra(valor: '$_pendientes', etiqueta: 'repasos para hoy')),
+                      Expanded(child: _Cifra(valor: '$_pendientes', etiqueta: tr('repasos para hoy'))),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -150,38 +148,37 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
                       Expanded(
                         child: _Cifra(
                           valor: '🔥 ${_racha.actual}',
-                          etiqueta: _racha.actual == 1 ? 'día seguido' : 'días seguidos',
+                          etiqueta: _racha.actual == 1 ? tr('día seguido') : tr('días seguidos'),
                         ),
                       ),
                       const SizedBox(width: 10),
-                      Expanded(child: _Cifra(valor: '${_racha.maxima}', etiqueta: 'racha más larga')),
+                      Expanded(child: _Cifra(valor: '${_racha.maxima}', etiqueta: tr('racha más larga'))),
                       const SizedBox(width: 10),
-                      Expanded(child: _Cifra(valor: '$minutosSemana', etiqueta: 'minutos esta semana')),
+                      Expanded(child: _Cifra(valor: '$minutosSemana', etiqueta: tr('minutos esta semana'))),
                     ],
                   ),
                   const SizedBox(height: 16),
                   if (_actividad.isEmpty)
                     TarjetaVidrio(
                       child: Text(
-                        'Cuando practiques, aquí verás tu calendario, tu racha y los caracteres y trazos '
-                        'que más te cuestan.',
+                        tr('Cuando practiques, aquí verás tu calendario, tu racha y los caracteres y trazos que más te cuestan.'),
                         style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.35),
                       ),
                     )
                   else ...[
                     _Seccion(
-                      titulo: 'Tu calendario',
+                      titulo: tr('Tu calendario'),
                       child: _Calendario(actividad: _actividad, hoy: hoy, protegidos: _protegidos),
                     ),
                     _Seccion(
-                      titulo: 'Últimos 7 días',
+                      titulo: tr('Últimos 7 días'),
                       child: _UltimosDias(actividad: _actividad, hoy: hoy),
                     ),
                     if (_precision case final p? when p.total != null)
-                      _Seccion(titulo: 'Precisión (últimos 30 días)', child: _VistaPrecision(precision: p)),
+                      _Seccion(titulo: tr('Precisión (últimos 30 días)'), child: _VistaPrecision(precision: p)),
                     if (_dificiles.isNotEmpty)
                       _Seccion(
-                        titulo: 'Los que más te cuestan',
+                        titulo: tr('Los que más te cuestan'),
                         child: Column(
                           children: [
                             for (final d in _dificiles) _FilaDificil(dificil: d, onPracticar: () => _practicar(d.caracter)),
@@ -190,7 +187,7 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
                       ),
                     if (_trazos.isNotEmpty)
                       _Seccion(
-                        titulo: 'Los trazos que más fallas',
+                        titulo: tr('Los trazos que más fallas'),
                         child: Column(
                           children: [
                             for (final (t, c) in _trazos)
@@ -200,7 +197,7 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
                       ),
                     if (_ejercicios.any((e) => e.total > 0))
                       _Seccion(
-                        titulo: 'Práctica con audio (últimos 30 días)',
+                        titulo: tr('Práctica con audio (últimos 30 días)'),
                         child: _VistaPractica(resumen: _ejercicios, confusiones: _confusiones),
                       ),
                   ],
@@ -219,11 +216,11 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
                           const SizedBox(height: 10),
                           BarraAvance(valor: n.estudiados, total: n.total, color: EtiquetaNivel.colorPara(context, n.nivel)),
                           const SizedBox(height: 4),
-                          Text('${n.dominados} dominados',
+                          Text(tr('{0} dominados', [n.dominados]),
                               style: TextStyle(fontSize: 11, color: context.colores.tenue)),
                           if (_palabras[n.nivel] case final w? when w.estudiadas > 0) ...[
                             const SizedBox(height: 8),
-                            Text('Vocabulario', style: TextStyle(fontSize: 11, color: context.colores.tenue)),
+                            Text(tr('Vocabulario'), style: TextStyle(fontSize: 11, color: context.colores.tenue)),
                             const SizedBox(height: 4),
                             BarraAvance(
                               valor: w.estudiadas,
@@ -277,7 +274,7 @@ class _VistaPractica extends StatelessWidget {
                   const SizedBox(width: 8),
                   SizedBox(
                     width: 64,
-                    child: Text('${((r.precision ?? 0) * 100).round()} % de ${r.total}',
+                    child: Text(tr('{0} % de {1}', [((r.precision ?? 0) * 100).round(), r.total]),
                         textAlign: TextAlign.end, style: TextStyle(fontSize: 11, color: c.tenue)),
                   ),
                 ],
@@ -285,7 +282,7 @@ class _VistaPractica extends StatelessWidget {
             ),
         if (confusiones.isNotEmpty) ...[
           const SizedBox(height: 6),
-          Text('Tonos que confundes', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: c.suave)),
+          Text(tr('Tonos que confundes'), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: c.suave)),
           const SizedBox(height: 6),
           for (final k in confusiones)
             Padding(
@@ -296,7 +293,7 @@ class _VistaPractica extends StatelessWidget {
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
-                      'Oyes el ${k.esperado}.º y eliges el ${k.elegido}.º (${k.veces} veces)',
+                      tr('Oyes el {0}.º y eliges el {1}.º ({2} veces)', [k.esperado, k.elegido, k.veces]),
                       style: const TextStyle(fontSize: 13),
                     ),
                   ),
@@ -396,7 +393,7 @@ class _Calendario extends StatelessWidget {
                   final inicio = diaDe(s, 0);
                   final nuevo = s == 0 || diaDe(s - 1, 0).month != inicio.month;
                   return nuevo
-                      ? Text(_meses[inicio.month - 1], style: etiqueta, softWrap: false, overflow: TextOverflow.visible)
+                      ? Text(mesesCortos[inicio.month - 1], style: etiqueta, softWrap: false, overflow: TextOverflow.visible)
                       : const SizedBox.shrink();
                 }),
               ),
@@ -407,7 +404,7 @@ class _Calendario extends StatelessWidget {
               SizedBox(
                 width: anchoDias,
                 height: lado + separacion,
-                child: fila.isEven ? Text(_dias[fila], style: etiqueta) : null,
+                child: fila.isEven ? Text(diasLetra[fila], style: etiqueta) : null,
               ),
               for (int s = 0; s < semanas; s++)
                 Builder(builder: (_) {
@@ -418,8 +415,8 @@ class _Calendario extends StatelessWidget {
                   final protegido = protegidos.contains(dia);
                   return Tooltip(
                     message: n == 0
-                        ? '${_fecha(dia)} · ${protegido ? 'protegido 🛡️' : 'sin repasos'}'
-                        : '${_fecha(dia)} · $n ${n == 1 ? 'repaso' : 'repasos'} · ${a!.minutos} min',
+                        ? '${_fecha(dia)} · ${protegido ? tr('protegido 🛡️') : tr('sin repasos')}'
+                        : tr('{0} · {1} · {2} min', [_fecha(dia), n == 1 ? tr('1 repaso') : tr('{0} repasos', [n]), a!.minutos]),
                     triggerMode: TooltipTriggerMode.tap,
                     child: Container(
                       width: lado,
@@ -442,7 +439,7 @@ class _Calendario extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text('Menos ', style: etiqueta),
+              Text(tr('Menos '), style: etiqueta),
               for (final c in _rampaDe(context))
                 Container(
                   width: 10,
@@ -450,7 +447,7 @@ class _Calendario extends StatelessWidget {
                   margin: const EdgeInsets.only(left: 2),
                   decoration: BoxDecoration(color: c, borderRadius: BorderRadius.circular(2)),
                 ),
-              Text('  Más', style: etiqueta),
+              Text(tr('  Más'), style: etiqueta),
             ],
           ),
         ],
@@ -488,7 +485,7 @@ class _UltimosDias extends StatelessWidget {
                 Expanded(
                   child: Tooltip(
                     message:
-                        '${_fecha(d)} · ${porDia[d]?.repasos ?? 0} repasos · ${porDia[d]?.minutos ?? 0} min',
+                        tr('{0} · {1} repasos · {2} min', [_fecha(d), porDia[d]?.repasos ?? 0, porDia[d]?.minutos ?? 0]),
                     triggerMode: TooltipTriggerMode.tap,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -506,7 +503,7 @@ class _UltimosDias extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Text(_dias[d.weekday - 1],
+                        Text(diasLetra[d.weekday - 1],
                             style: etiqueta.copyWith(fontWeight: d == hoyDia ? FontWeight.w800 : FontWeight.w400)),
                       ],
                     ),
@@ -517,7 +514,7 @@ class _UltimosDias extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          deHoy == null ? 'Hoy aún no practicas.' : 'Hoy: ${deHoy.repasos} repasos en ${deHoy.minutos} min.',
+          deHoy == null ? tr('Hoy aún no practicas.') : tr('Hoy: {0} repasos en {1} min.', [deHoy.repasos, deHoy.minutos]),
           style: etiqueta,
         ),
       ],
@@ -537,14 +534,14 @@ class _VistaPrecision extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('${pct(p.total!)} de tus repasos sin ningún trazo fallado',
+        Text(tr('{0} de tus repasos sin ningún trazo fallado', [pct(p.total!)]),
             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
         const SizedBox(height: 4),
         Text(
           [
-            if (p.novato != null) 'Novato: ${pct(p.novato!)}',
-            if (p.experto != null) 'Experto: ${pct(p.experto!)}',
-            '${p.repasos} repasos',
+            if (p.novato != null) tr('Novato: {0}', [pct(p.novato!)]),
+            if (p.experto != null) tr('Experto: {0}', [pct(p.experto!)]),
+            tr('{0} repasos', [p.repasos]),
           ].join(' · '),
           style: TextStyle(fontSize: 12, color: context.colores.suave),
         ),
@@ -575,14 +572,13 @@ class _FilaDificil extends StatelessWidget {
                 Text('${c.pinyin} · ${c.significado}',
                     maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13)),
                 Text(
-                  '$promedio trazos fallados en promedio · ${dificil.veces} '
-                  '${dificil.veces == 1 ? 'repaso' : 'repasos'}',
+                  tr('{0} trazos fallados en promedio · {1}', [promedio, dificil.veces == 1 ? tr('1 repaso') : tr('{0} repasos', [dificil.veces])]),
                   style: TextStyle(fontSize: 11.5, color: context.colores.tenue),
                 ),
               ],
             ),
           ),
-          TextButton(onPressed: onPracticar, child: const Text('Practicar')),
+          TextButton(onPressed: onPracticar, child: Text(tr('Practicar'))),
         ],
       ),
     );
@@ -622,17 +618,16 @@ class _FilaTrazo extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('${trazo.caracter} · trazo ${trazo.indice + 1}${total > 0 ? ' de $total' : ''}',
+                Text(tr('{0} · trazo {1}{2}', [trazo.caracter, trazo.indice + 1, total > 0 ? tr(' de {0}', [total]) : '']),
                     style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                 Text(
-                  'Fallado ${trazo.veces} veces'
-                  '${trazo.alReves > 0 ? ' (${trazo.alReves} al revés)' : ''}',
+                  tr('Fallado {0} veces{1}', [trazo.veces, trazo.alReves > 0 ? tr(' ({0} al revés)', [trazo.alReves]) : '']),
                   style: TextStyle(fontSize: 11.5, color: context.colores.tenue),
                 ),
               ],
             ),
           ),
-          if (onPracticar != null) TextButton(onPressed: onPracticar, child: const Text('Practicar')),
+          if (onPracticar != null) TextButton(onPressed: onPracticar, child: Text(tr('Practicar'))),
         ],
       ),
     );

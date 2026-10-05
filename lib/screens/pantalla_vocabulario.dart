@@ -25,6 +25,7 @@ import '../widgets/comunes.dart';
 import '../widgets/ejercicio.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
+import '../idioma.dart';
 
 class PantallaVocabulario extends StatefulWidget {
   const PantallaVocabulario({super.key, required this.nivel});
@@ -100,17 +101,17 @@ class _PantallaVocabularioState extends State<PantallaVocabulario> {
 
   /// "mañana", "en 6 días"… para mostrar debajo de cada botón.
   static String _cuando(Palabra p, Calificacion calificacion) {
-    if (!calificacion.aprobado) return 'otra vez hoy';
+    if (!calificacion.aprobado) return tr('otra vez hoy');
     final estado = EstadoSrs(
       intervaloDias: p.progreso?.intervaloDias ?? 0,
       factor: p.progreso?.factor ?? EstadoSrs.factorInicial,
       aciertosSeguidos: p.progreso?.aciertosSeguidos ?? 0,
     ).calificar(calificacion);
     final d = estado.intervaloDias;
-    if (d <= 1) return 'mañana';
-    if (d < 30) return 'en $d días';
+    if (d <= 1) return tr('mañana');
+    if (d < 30) return tr('en {0} días', [d]);
     final meses = (d / 30).round();
-    return meses <= 1 ? 'en un mes' : 'en $meses meses';
+    return meses <= 1 ? tr('en un mes') : tr('en {0} meses', [meses]);
   }
 
   @override
@@ -119,10 +120,10 @@ class _PantallaVocabularioState extends State<PantallaVocabulario> {
     return FondoTintaChina(
       child: Scaffold(
         appBar: BarraSuperior(
-          titulo: 'Vocabulario',
+          titulo: tr('Vocabulario'),
           subtitulo: sesion == null || (sesion.nuevas + sesion.repasadas) == 0
               ? nombreDeNivel(widget.nivel)
-              : '${sesion.repasadas} repasadas · ${sesion.nuevas} nuevas',
+              : tr('{0} repasadas · {1} nuevas', [sesion.repasadas, sesion.nuevas]),
         ),
         body: SafeArea(top: false, child: _cuerpo(context)),
       ),
@@ -137,28 +138,27 @@ class _PantallaVocabularioState extends State<PantallaVocabulario> {
       if (sesion.fin == FinSesionPalabras.limiteDiario) {
         return MensajeCentrado(
           emoji: '✅',
-          titulo: 'Listas las palabras nuevas de hoy',
-          texto: 'Repasaste ${sesion.repasadas} y aprendiste ${sesion.nuevas}. '
-              'Puedes seguir con más o volver mañana (el límite se cambia en Ajustes).',
+          titulo: tr('Listas las palabras nuevas de hoy'),
+          texto: tr('Repasaste {0} y aprendiste {1}. Puedes seguir con más o volver mañana (el límite se cambia en Ajustes).', [sesion.repasadas, sesion.nuevas]),
           acciones: [
             FilledButton(
               onPressed: () {
                 sesion.estudiarMas();
                 _siguiente();
               },
-              child: const Text('Estudiar más'),
+              child: Text(tr('Estudiar más')),
             ),
-            OutlinedButton(onPressed: () => Navigator.maybePop(context), child: const Text('Terminar')),
+            OutlinedButton(onPressed: () => Navigator.maybePop(context), child: Text(tr('Terminar'))),
           ],
         );
       }
       return MensajeCentrado(
         emoji: '🎉',
-        titulo: '¡Vocabulario al día!',
+        titulo: tr('¡Vocabulario al día!'),
         texto: sesion.nuevas + sesion.repasadas == 0
-            ? 'No hay palabras por repasar ni nuevas en ${nombreDeNivel(widget.nivel)}.'
-            : 'Repasaste ${sesion.repasadas} y aprendiste ${sesion.nuevas} palabras.',
-        acciones: [OutlinedButton(onPressed: () => Navigator.maybePop(context), child: const Text('Terminar'))],
+            ? tr('No hay palabras por repasar ni nuevas en {0}.', [nombreDeNivel(widget.nivel)])
+            : tr('Repasaste {0} y aprendiste {1} palabras.', [sesion.repasadas, sesion.nuevas]),
+        acciones: [OutlinedButton(onPressed: () => Navigator.maybePop(context), child: Text(tr('Terminar')))],
       );
     }
 
@@ -194,7 +194,7 @@ class _PantallaVocabularioState extends State<PantallaVocabulario> {
                         : Padding(
                             key: const ValueKey('frente'),
                             padding: const EdgeInsets.symmetric(vertical: 24),
-                            child: Text('¿Cómo se lee y qué significa?',
+                            child: Text(tr('¿Cómo se lee y qué significa?'),
                                 style: TextStyle(fontSize: 15, color: c.suave)),
                           ),
                   ),
@@ -230,7 +230,7 @@ class _PantallaVocabularioState extends State<PantallaVocabulario> {
                   height: 52,
                   child: FilledButton(
                     onPressed: _mostrar,
-                    child: const Text('Mostrar', style: TextStyle(fontSize: 16)),
+                    child: Text(tr('Mostrar'), style: TextStyle(fontSize: 16)),
                   ),
                 ),
         ),
@@ -254,7 +254,7 @@ class _PantallaVocabularioState extends State<PantallaVocabulario> {
         const SizedBox(height: 12),
         Text.rich(
           TextSpan(children: [
-            if (!p.tieneEspanol)
+            if (!p.significadoEnIdioma)
               TextSpan(text: 'EN  ', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: c.tenue)),
             TextSpan(text: p.significado),
           ]),
@@ -263,7 +263,7 @@ class _PantallaVocabularioState extends State<PantallaVocabulario> {
         ),
         if (p.forma != p.palabra) ...[
           const SizedBox(height: 6),
-          Text('En la lista oficial: ${p.forma.replaceAll('|', ' / ')}',
+          Text(tr('En la lista oficial: {0}', [p.forma.replaceAll('|', ' / ')]),
               style: TextStyle(fontSize: 12, color: c.tenue)),
         ],
         if (_componentes.length > 1) ...[

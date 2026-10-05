@@ -20,6 +20,7 @@ import 'estadisticas.dart';
 import 'importar_libro.dart';
 import 'modelos.dart';
 import 'srs.dart';
+import '../idioma.dart';
 
 /// Qué conjunto de caracteres se está estudiando en una sesión.
 class FiltroEstudio {
@@ -74,9 +75,9 @@ class FiltroEstudio {
   /// Título para la barra superior de la pantalla de estudio.
   String get titulo => switch (tipo) {
         TipoFiltro.nivel => nombreDeNivel(nivel),
-        TipoFiltro.familia => 'Familia del radical $radical',
-        TipoFiltro.radicales => 'Radicales Kangxi',
-        TipoFiltro.unico => 'Práctica libre',
+        TipoFiltro.familia => tr('Familia del radical {0}', [radical]),
+        TipoFiltro.radicales => tr('Radicales Kangxi'),
+        TipoFiltro.unico => tr('Práctica libre'),
       };
 }
 
@@ -631,6 +632,11 @@ class Repositorio {
   Future<String> apariencia() async => await base.leerAjuste('apariencia') ?? 'auto';
 
   Future<void> guardarApariencia(String valor) => base.guardarAjuste('apariencia', valor);
+
+  /// Idioma de la interfaz: 'auto' (el del teléfono), 'es' o 'en'.
+  Future<String> idioma() async => await base.leerAjuste('idioma') ?? 'auto';
+
+  Future<void> guardarIdioma(String valor) => base.guardarAjuste('idioma', valor);
 }
 
 /// Preferencias del lector.

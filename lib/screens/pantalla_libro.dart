@@ -14,6 +14,7 @@ import '../widgets/tarjeta_vidrio.dart';
 import '../tema.dart';
 import 'pantalla_biblioteca.dart' show PortadaLibro;
 import 'pantalla_lectura.dart';
+import '../idioma.dart';
 
 class PantallaLibro extends StatefulWidget {
   const PantallaLibro({super.key, required this.libro});
@@ -60,7 +61,7 @@ class _PantallaLibroState extends State<PantallaLibro> {
       child: Scaffold(
         appBar: BarraSuperior(
           titulo: libro.propio ? libro.titulo : libro.tituloEs,
-          subtitulo: libro.propio ? 'Mis libros' : nombreDeNivel(libro.nivelHsk),
+          subtitulo: libro.propio ? tr('Mis libros') : nombreDeNivel(libro.nivelHsk),
         ),
         body: ListView(
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 32),
@@ -122,8 +123,8 @@ class _PantallaLibroState extends State<PantallaLibro> {
                     ),
                     icon: const Icon(Icons.menu_book_rounded),
                     label: Text(siguiente <= 0
-                        ? (siguiente == 0 ? 'Empezar a leer' : 'Leer otra vez')
-                        : 'Seguir: capítulo ${siguiente + 1}'),
+                        ? (siguiente == 0 ? tr('Empezar a leer') : tr('Leer otra vez'))
+                        : tr('Seguir: capítulo {0}', [siguiente + 1])),
                     onPressed: () => _leer(siguiente < 0 ? 0 : siguiente),
                   ),
                 ),
@@ -168,11 +169,11 @@ class _PantallaLibroState extends State<PantallaLibro> {
 
 /// "Adaptado", "Texto original", "EPUB", "TXT", "Texto pegado".
 String tipoDeLibro(Libro libro) {
-  if (!libro.propio) return libro.adaptado ? 'Adaptado' : 'Texto original';
+  if (!libro.propio) return libro.adaptado ? tr('Adaptado') : tr('Texto original');
   return switch (libro.formato) {
     'epub' => 'EPUB',
     'txt' => 'TXT',
-    _ => 'Texto pegado',
+    _ => tr('Texto pegado'),
   };
 }
 
@@ -180,15 +181,10 @@ String tipoDeLibro(Libro libro) {
 String explicacionDificultad(Libro libro) {
   final porciento = (libro.cobertura * 100).round();
   if (!libro.propio) {
-    return 'Si dominas ${nombreDeNivel(libro.nivelHsk)}, ya conoces el $porciento % de sus '
-        '${libro.caracteres} caracteres (contando las palabras que se explican en cada capítulo).';
+    return tr('Si dominas {0}, ya conoces el {1} % de sus {2} caracteres (contando las palabras que se explican en cada capítulo).', [nombreDeNivel(libro.nivelHsk), porciento, libro.caracteres]);
   }
   if (libro.nivelHsk == 0) {
-    return 'Nivel estimado: más difícil que HSK 7-9. Aun dominando todo el HSK conocerías el '
-        '$porciento % de sus ${libro.caracteres} caracteres. El pinyin es automático y puede '
-        'fallar en caracteres con varias lecturas.';
+    return tr('Nivel estimado: más difícil que HSK 7-9. Aun dominando todo el HSK conocerías el {0} % de sus {1} caracteres. El pinyin es automático y puede fallar en caracteres con varias lecturas.', [porciento, libro.caracteres]);
   }
-  return 'Nivel estimado: ${nombreDeNivel(libro.nivelHsk)}. Si lo dominas, conoces el $porciento % '
-      'de sus ${libro.caracteres} caracteres. El pinyin es automático y puede fallar en caracteres '
-      'con varias lecturas.';
+  return tr('Nivel estimado: {0}. Si lo dominas, conoces el {1} % de sus {2} caracteres. El pinyin es automático y puede fallar en caracteres con varias lecturas.', [nombreDeNivel(libro.nivelHsk), porciento, libro.caracteres]);
 }

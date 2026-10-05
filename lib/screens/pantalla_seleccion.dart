@@ -18,6 +18,7 @@ import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
 import '../tema.dart';
 import 'pantalla_estudio.dart';
+import '../idioma.dart';
 
 class PantallaSeleccion extends StatefulWidget {
   const PantallaSeleccion({super.key, required this.modoNovato});
@@ -87,8 +88,8 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
     return FondoTintaChina(
       child: Scaffold(
         appBar: BarraSuperior(
-          titulo: 'Niveles HSK',
-          subtitulo: widget.modoNovato ? '🐣 Modo novato' : '🥋 Modo experto',
+          titulo: tr('Niveles HSK'),
+          subtitulo: widget.modoNovato ? tr('🐣 Modo novato') : tr('🥋 Modo experto'),
         ),
         body: Column(
           children: [
@@ -98,7 +99,7 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
                 controller: _busqueda,
                 onChanged: _alEscribir,
                 decoration: InputDecoration(
-                  hintText: 'Buscar: 好, hao, bueno…',
+                  hintText: tr('Buscar: 好, hao, bueno…'),
                   prefixIcon: const Icon(Icons.search, size: 20),
                   suffixIcon: _buscando
                       ? IconButton(
@@ -155,7 +156,7 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
                     Text(nombreDeNivel(n.nivel), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                     const SizedBox(height: 2),
                     Text(
-                      n.dominados > 0 ? '${n.dominados} dominados' : '${n.total} caracteres oficiales',
+                      n.dominados > 0 ? tr('{0} dominados', [n.dominados]) : tr('{0} caracteres oficiales', [n.total]),
                       style: TextStyle(fontSize: 12, color: context.colores.tenue),
                     ),
                     const SizedBox(height: 6),
@@ -174,7 +175,7 @@ class _PantallaSeleccionState extends State<PantallaSeleccion> {
 
   Widget _listaResultados() {
     if (_resultados.isEmpty) {
-      return const MensajeCentrado(emoji: '🔍', titulo: 'Sin resultados');
+      return MensajeCentrado(emoji: '🔍', titulo: tr('Sin resultados'));
     }
     return ListView.separated(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),

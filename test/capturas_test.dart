@@ -35,6 +35,7 @@ import 'package:hanzi_dojo/screens/pantalla_radicales.dart';
 import 'package:hanzi_dojo/screens/pantalla_seleccion.dart';
 import 'package:hanzi_dojo/screens/pantalla_tonos.dart';
 import 'package:hanzi_dojo/screens/pantalla_vocabulario.dart';
+import 'package:hanzi_dojo/idioma.dart';
 import 'package:hanzi_dojo/tema.dart';
 import 'package:hanzi_dojo/widgets/boton_voz.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -184,5 +185,13 @@ void main() {
     });
     await capturar(tester, '16_logros', const PantallaLogros());
     await capturar(tester, '17_compartir', const PantallaCompartir());
+
+    // La interfaz en inglés (Ajustes › Idioma).
+    Idioma.actual.value = Lengua.ingles;
+    await capturar(tester, '20_inicio_en', const PantallaInicio());
+    await capturar(tester, '21_estudio_en', PantallaEstudio(filtro: FiltroEstudio.unico(idHao), modoNovato: true));
+    await capturar(tester, '22_practica_en', const PantallaPractica());
+    await capturar(tester, '23_ajustes_en', const PantallaAjustes());
+    Idioma.actual.value = Lengua.espanol;
   }, skip: !_pedidas);
 }

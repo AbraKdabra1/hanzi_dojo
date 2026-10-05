@@ -26,6 +26,7 @@ import 'package:just_audio/just_audio.dart';
 import '../datos/audio.dart';
 import '../datos/registro_errores.dart';
 import '../tema.dart';
+import '../idioma.dart';
 
 enum ResultadoVoz { grabacion, vozDelTelefono, sinSonido }
 
@@ -214,9 +215,8 @@ class _BotonVozState extends State<BotonVoz> {
         pinyinPorPalabras: widget.pinyinPorPalabras,
         rapidez: lento ? Voz.velocidadLenta : null);
     if (resultado == ResultadoVoz.sinSonido && mounted) {
-      ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(
-        content: Text('No hay grabación de esto y tu teléfono no tiene voz en chino. '
-            'Puedes instalar una en Ajustes del teléfono › Texto a voz.'),
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(SnackBar(
+        content: Text(tr('No hay grabación de esto y tu teléfono no tiene voz en chino. Puedes instalar una en Ajustes del teléfono › Texto a voz.')),
       ));
     }
     // El resaltado dura al menos un momento (la voz del teléfono no avisa
@@ -233,7 +233,7 @@ class _BotonVozState extends State<BotonVoz> {
     final c = context.colores;
     return Semantics(
       button: true,
-      label: 'Escuchar pronunciación (mantén presionado para oírla lento)',
+      label: tr('Escuchar pronunciación (mantén presionado para oírla lento)'),
       child: GestureDetector(
         onTap: _hablar,
         onLongPress: () => _hablar(lento: true),

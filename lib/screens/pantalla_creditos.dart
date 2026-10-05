@@ -13,80 +13,70 @@ import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
 import '../tema.dart';
+import '../idioma.dart';
 
 class PantallaCreditos extends StatelessWidget {
   const PantallaCreditos({super.key});
 
   static const _fuentes = [
     (
-      'Código de Hanzi Dojo',
-      'Software libre: puedes usarlo, estudiarlo, modificarlo y compartirlo. Las versiones '
-          'modificadas que se distribuyan deben seguir siendo libres y publicar su código. '
-          'Código fuente: github.com/AbraKdabra1/hanzi_dojo.',
+      tr('Código de Hanzi Dojo'),
+      tr('Software libre: puedes usarlo, estudiarlo, modificarlo y compartirlo. Las versiones modificadas que se distribuyan deben seguir siendo libres y publicar su código. Código fuente: github.com/AbraKdabra1/hanzi_dojo.'),
       'GPL-3.0',
     ),
     (
-      'Niveles HSK 3.0',
-      'Lista oficial de caracteres del estándar GF 0025-2021 (Ministerio de Educación de China), '
-          'tomada de github.com/ivankra/hsk30.',
+      tr('Niveles HSK 3.0'),
+      tr('Lista oficial de caracteres del estándar GF 0025-2021 (Ministerio de Educación de China), tomada de github.com/ivankra/hsk30.'),
       'MIT',
     ),
     (
-      'Trazos y orden de trazos',
-      'Make Me a Hanzi (github.com/skishore/makemeahanzi), derivado de las fuentes Arphic PL KaitiM GB y UKai.',
-      'Arphic Public License',
+      tr('Trazos y orden de trazos'),
+      tr('Make Me a Hanzi (github.com/skishore/makemeahanzi), derivado de las fuentes Arphic PL KaitiM GB y UKai.'),
+      tr('Arphic Public License'),
     ),
     (
-      'Lecturas',
-      'Lista HSK 3.0 y Make Me a Hanzi (dictionary.txt, basado en Unihan y CJKlib).',
+      tr('Lecturas'),
+      tr('Lista HSK 3.0 y Make Me a Hanzi (dictionary.txt, basado en Unihan y CJKlib).'),
       'LGPL 3',
     ),
     (
-      'Significados',
-      'CC-CEDICT (cc-cedict.org). Los significados en español son una traducción de esos datos, '
-          'generada con ayuda de IA y revisable.',
+      tr('Significados'),
+      tr('CC-CEDICT (cc-cedict.org). Los significados en español son una traducción de esos datos, generada con ayuda de IA y revisable.'),
       'CC BY-SA 4.0',
     ),
     (
-      'Radicales',
-      'Unihan (Unicode), campo kRSUnicode: radical Kangxi de cada carácter.',
-      'Unicode License v3',
+      tr('Radicales'),
+      tr('Unihan (Unicode), campo kRSUnicode: radical Kangxi de cada carácter.'),
+      tr('Unicode License v3'),
     ),
     (
-      'Oraciones de ejemplo',
-      'Tatoeba (tatoeba.org), vía github.com/krmanik/chinese-example-sentences. '
-          'Traducción al español generada con ayuda de IA a partir del chino.',
+      tr('Oraciones de ejemplo'),
+      tr('Tatoeba (tatoeba.org), vía github.com/krmanik/chinese-example-sentences. Traducción al español generada con ayuda de IA a partir del chino.'),
       'CC BY 2.0 FR',
     ),
     (
-      'Libros de «Leer»',
-      'Historias clásicas chinas de dominio público, contadas de nuevo para Hanzi Dojo (HSK 1 a 5). '
-          'Textos originales del Zengguang Xianwen y poemas Tang tomados de '
-          'github.com/chinese-poetry/chinese-poetry. Traducciones al español escritas para la app.',
-      'MIT (textos clásicos)',
+      tr('Libros de «Leer»'),
+      tr('Historias clásicas chinas de dominio público, contadas de nuevo para Hanzi Dojo (HSK 1 a 5). Textos originales del Zengguang Xianwen y poemas Tang tomados de github.com/chinese-poetry/chinese-poetry. Traducciones al español escritas para la app.'),
+      tr('MIT (textos clásicos)'),
     ),
     (
-      'Tradicional → simplificado',
-      'OpenCC (github.com/BYVoid/OpenCC): para consultar los caracteres de libros propios '
-          'escritos en caracteres tradicionales.',
-      'Apache 2.0',
+      tr('Tradicional → simplificado'),
+      tr('OpenCC (github.com/BYVoid/OpenCC): para consultar los caracteres de libros propios escritos en caracteres tradicionales.'),
+      tr('Apache 2.0'),
     ),
     (
-      'Pronunciación (audio)',
-      'Grabaciones de hablantes nativos del proyecto audio-cmn (github.com/hugolpz/audio-cmn): '
-          'sílabas con la voz de Chen Wang y palabras HSK con la voz de Yue Tan (Shtooka). '
-          'Recortadas, con volumen igualado y convertidas a Opus para la app.',
+      tr('Pronunciación (audio)'),
+      tr('Grabaciones de hablantes nativos del proyecto audio-cmn (github.com/hugolpz/audio-cmn): sílabas con la voz de Chen Wang y palabras HSK con la voz de Yue Tan (Shtooka). Recortadas, con volumen igualado y convertidas a Opus para la app.'),
       'CC BY-SA',
     ),
     (
-      'Tipografía',
-      'Noto Sans SC (Google), recortada a los caracteres de la app.',
-      'SIL Open Font License 1.1',
+      tr('Tipografía'),
+      tr('Noto Sans SC (Google), recortada a los caracteres de la app.'),
+      tr('SIL Open Font License 1.1'),
     ),
     (
-      'Rama de ciruelo (梅花)',
-      'Ilustración original al estilo de la pintura china a tinta, dibujada por código para '
-          'Hanzi Dojo (lib/painters/rama_ciruelo.dart).',
+      tr('Rama de ciruelo (梅花)'),
+      tr('Ilustración original al estilo de la pintura china a tinta, dibujada por código para Hanzi Dojo (lib/painters/rama_ciruelo.dart).'),
       'GPL-3.0',
     ),
   ];
@@ -95,7 +85,7 @@ class PantallaCreditos extends StatelessWidget {
   Widget build(BuildContext context) {
     return FondoTintaChina(
       child: Scaffold(
-        appBar: const BarraSuperior(titulo: 'Créditos y licencias'),
+        appBar: BarraSuperior(titulo: tr('Créditos y licencias')),
         body: ListView(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
           children: [
@@ -122,10 +112,9 @@ class PantallaCreditos extends StatelessWidget {
                 onPressed: () => showLicensePage(
                   context: context,
                   applicationName: 'Hanzi Dojo',
-                  applicationLegalese: 'Código: GPL-3.0 o posterior.\n'
-                      'Datos: CC-CEDICT, Make Me a Hanzi, Unihan, HSK 3.0, Tatoeba.',
+                  applicationLegalese: tr('Código: GPL-3.0 o posterior.\nDatos: CC-CEDICT, Make Me a Hanzi, Unihan, HSK 3.0, Tatoeba.'),
                 ),
-                child: const Text('Ver licencias completas'),
+                child: Text(tr('Ver licencias completas')),
               ),
             ),
           ],

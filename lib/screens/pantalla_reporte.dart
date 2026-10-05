@@ -22,6 +22,7 @@ import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
 import '../tema.dart';
+import '../idioma.dart';
 
 class PantallaReporte extends StatefulWidget {
   const PantallaReporte({super.key, this.tipo = TipoReporte.error, this.donde = '', this.queEstaMal = ''});
@@ -95,13 +96,13 @@ class _PantallaReporteState extends State<PantallaReporte> {
     final ok = await Archivos.abrirEnlace(_reporte.urlGitHub).catchError((Object _) => false);
     if (!mounted) return;
     if (!ok) {
-      await _copiar(motivo: 'No se pudo abrir el navegador. ');
+      await _copiar(motivo: tr('No se pudo abrir el navegador. '));
     }
   }
 
   Future<void> _copiar({String motivo = ''}) async {
     await Clipboard.setData(ClipboardData(text: _reporte.texto));
-    if (mounted) _aviso('${motivo}Reporte copiado: pégalo donde quieras enviarlo.');
+    if (mounted) _aviso(tr('{0}Reporte copiado: pégalo donde quieras enviarlo.', [motivo]));
   }
 
   @override
@@ -110,7 +111,7 @@ class _PantallaReporteState extends State<PantallaReporte> {
     final gris = TextStyle(fontSize: 13, color: context.colores.suave, height: 1.35);
     return FondoTintaChina(
       child: Scaffold(
-        appBar: const BarraSuperior(titulo: 'Reportar un problema'),
+        appBar: BarraSuperior(titulo: tr('Reportar un problema')),
         body: ListView(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
           children: [
@@ -118,7 +119,7 @@ class _PantallaReporteState extends State<PantallaReporte> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('¿Qué quieres contarnos?', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                  Text(tr('¿Qué quieres contarnos?'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -126,7 +127,7 @@ class _PantallaReporteState extends State<PantallaReporte> {
                     children: [
                       for (final t in TipoReporte.values)
                         ChoiceChip(
-                          label: Text(t.etiqueta),
+                          label: Text(tr(t.etiqueta)),
                           selected: _tipo == t,
                           onSelected: (_) => setState(() => _tipo = t),
                         ),
@@ -136,13 +137,13 @@ class _PantallaReporteState extends State<PantallaReporte> {
                     const SizedBox(height: 14),
                     TextField(
                       controller: _donde,
-                      decoration: const InputDecoration(
-                        labelText: '¿Dónde?',
-                        hintText: 'El carácter, o el libro y capítulo',
+                      decoration: InputDecoration(
+                        labelText: tr('¿Dónde?'),
+                        hintText: tr('El carácter, o el libro y capítulo'),
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Text('¿Qué está mal?', style: gris),
+                    Text(tr('¿Qué está mal?'), style: gris),
                     const SizedBox(height: 6),
                     Wrap(
                       spacing: 6,
@@ -151,7 +152,7 @@ class _PantallaReporteState extends State<PantallaReporte> {
                         for (final o in queEstaMalOpciones)
                           ChoiceChip(
                             visualDensity: VisualDensity.compact,
-                            label: Text(o, style: const TextStyle(fontSize: 12.5)),
+                            label: Text(tr(o), style: const TextStyle(fontSize: 12.5)),
                             selected: _queEstaMal == o,
                             onSelected: (s) => setState(() => _queEstaMal = s ? o : ''),
                           ),
@@ -166,9 +167,9 @@ class _PantallaReporteState extends State<PantallaReporte> {
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       labelText: switch (_tipo) {
-                        TipoReporte.error => '¿Qué pasó? ¿Qué esperabas?',
-                        TipoReporte.contenido => '¿Qué dice ahora y por qué está mal?',
-                        TipoReporte.sugerencia => '¿Qué te gustaría?',
+                        TipoReporte.error => tr('¿Qué pasó? ¿Qué esperabas?'),
+                        TipoReporte.contenido => tr('¿Qué dice ahora y por qué está mal?'),
+                        TipoReporte.sugerencia => tr('¿Qué te gustaría?'),
                       },
                       alignLabelWithHint: true,
                       border: const OutlineInputBorder(),
@@ -180,14 +181,14 @@ class _PantallaReporteState extends State<PantallaReporte> {
                       controller: _propuesta,
                       minLines: 1,
                       maxLines: 4,
-                      decoration: const InputDecoration(labelText: '¿Cómo debería decir? (opcional)'),
+                      decoration: InputDecoration(labelText: tr('¿Cómo debería decir? (opcional)')),
                     ),
                   ],
                   const SizedBox(height: 8),
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
                     dense: true,
-                    title: const Text('Adjuntar versión de la app y modelo del teléfono'),
+                    title: Text(tr('Adjuntar versión de la app y modelo del teléfono')),
                     subtitle: Text(_info.toString(), style: const TextStyle(fontSize: 11.5)),
                     value: _adjuntarDispositivo,
                     onChanged: (v) => setState(() => _adjuntarDispositivo = v),
@@ -196,11 +197,11 @@ class _PantallaReporteState extends State<PantallaReporte> {
                     SwitchListTile(
                       contentPadding: EdgeInsets.zero,
                       dense: true,
-                      title: const Text('Adjuntar el informe de errores'),
+                      title: Text(tr('Adjuntar el informe de errores')),
                       subtitle: Text(
                         _errores.isEmpty
-                            ? 'No hay errores registrados'
-                            : 'Los ${_errores.length < Reporte.erroresMaximos ? _errores.length : Reporte.erroresMaximos} más recientes',
+                            ? tr('No hay errores registrados')
+                            : tr('Los {0} más recientes', [_errores.length < Reporte.erroresMaximos ? _errores.length : Reporte.erroresMaximos]),
                         style: const TextStyle(fontSize: 11.5),
                       ),
                       value: _adjuntarErrores && _errores.isNotEmpty,
@@ -214,10 +215,10 @@ class _PantallaReporteState extends State<PantallaReporte> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Esto es lo que se enviará', style: gris.copyWith(fontWeight: FontWeight.w700)),
+                  Text(tr('Esto es lo que se enviará'), style: gris.copyWith(fontWeight: FontWeight.w700)),
                   const SizedBox(height: 8),
                   SelectableText(
-                    _listo ? r.texto : 'Escribe una descripción para ver el reporte.',
+                    _listo ? r.texto : tr('Escribe una descripción para ver el reporte.'),
                     style: const TextStyle(fontSize: 12.5, height: 1.4),
                   ),
                 ],
@@ -231,20 +232,19 @@ class _PantallaReporteState extends State<PantallaReporte> {
                 padding: const EdgeInsets.symmetric(vertical: 14),
               ),
               icon: const Icon(Icons.open_in_new),
-              label: const Text('Abrir en GitHub'),
+              label: Text(tr('Abrir en GitHub')),
               onPressed: _listo ? _abrirGitHub : null,
             ),
             const SizedBox(height: 8),
             OutlinedButton.icon(
               style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 14)),
               icon: const Icon(Icons.copy_rounded),
-              label: const Text('Copiar el reporte'),
+              label: Text(tr('Copiar el reporte')),
               onPressed: _listo ? _copiar : null,
             ),
             const SizedBox(height: 10),
             Text(
-              'GitHub abre el formulario del proyecto ya lleno; para enviarlo necesitas una cuenta '
-              '(es gratis). Si no tienes, copia el reporte y mándalo como prefieras.',
+              tr('GitHub abre el formulario del proyecto ya lleno; para enviarlo necesitas una cuenta (es gratis). Si no tienes, copia el reporte y mándalo como prefieras.'),
               style: gris.copyWith(fontSize: 12),
               textAlign: TextAlign.center,
             ),

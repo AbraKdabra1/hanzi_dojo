@@ -16,6 +16,7 @@ import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
 import '../tema.dart';
 import 'pantalla_reporte.dart';
+import '../idioma.dart';
 
 class PantallaErrores extends StatefulWidget {
   const PantallaErrores({super.key});
@@ -50,7 +51,7 @@ class _PantallaErroresState extends State<PantallaErrores> {
     await Clipboard.setData(ClipboardData(text: texto));
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Informe copiado. Pégalo en tu reporte.')),
+      SnackBar(content: Text(tr('Informe copiado. Pégalo en tu reporte.'))),
     );
   }
 
@@ -58,11 +59,11 @@ class _PantallaErroresState extends State<PantallaErrores> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (contexto) => AlertDialog(
-        title: const Text('¿Borrar el informe?'),
-        content: const Text('Se borrarán todos los errores guardados.'),
+        title: Text(tr('¿Borrar el informe?')),
+        content: Text(tr('Se borrarán todos los errores guardados.')),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(contexto, false), child: const Text('Cancelar')),
-          FilledButton(onPressed: () => Navigator.pop(contexto, true), child: const Text('Borrar')),
+          TextButton(onPressed: () => Navigator.pop(contexto, false), child: Text(tr('Cancelar'))),
+          FilledButton(onPressed: () => Navigator.pop(contexto, true), child: Text(tr('Borrar'))),
         ],
       ),
     );
@@ -78,11 +79,11 @@ class _PantallaErroresState extends State<PantallaErrores> {
     return FondoTintaChina(
       child: Scaffold(
         appBar: BarraSuperior(
-          titulo: 'Informe de errores',
+          titulo: tr('Informe de errores'),
           acciones: [
             IconButton(
               icon: Icon(Icons.flag_outlined, color: context.colores.icono),
-              tooltip: 'Reportar un problema',
+              tooltip: tr('Reportar un problema'),
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute<void>(builder: (_) => const PantallaReporte()),
@@ -91,13 +92,13 @@ class _PantallaErroresState extends State<PantallaErrores> {
             if (errores != null)
               IconButton(
                 icon: Icon(Icons.copy_rounded, color: context.colores.icono),
-                tooltip: 'Copiar informe',
+                tooltip: tr('Copiar informe'),
                 onPressed: _copiar,
               ),
             if (hay)
               IconButton(
                 icon: Icon(Icons.delete_outline, color: context.colores.icono),
-                tooltip: 'Borrar',
+                tooltip: tr('Borrar'),
                 onPressed: _borrar,
               ),
           ],
@@ -112,8 +113,7 @@ class _PantallaErroresState extends State<PantallaErrores> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Si algo falla, la app guarda aquí los detalles. Nada se envía '
-                          'solo: si quieres reportarlo, cópialo y pégalo en tu reporte.',
+                          tr('Si algo falla, la app guarda aquí los detalles. Nada se envía solo: si quieres reportarlo, cópialo y pégalo en tu reporte.'),
                           style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.35),
                         ),
                         const SizedBox(height: 8),
@@ -123,10 +123,10 @@ class _PantallaErroresState extends State<PantallaErrores> {
                   ),
                   const SizedBox(height: 12),
                   if (!hay)
-                    const MensajeCentrado(
+                    MensajeCentrado(
                       emoji: '✅',
-                      titulo: 'Sin errores registrados',
-                      texto: 'Todo ha funcionado bien hasta ahora.',
+                      titulo: tr('Sin errores registrados'),
+                      texto: tr('Todo ha funcionado bien hasta ahora.'),
                     )
                   else
                     for (final e in errores) ...[
