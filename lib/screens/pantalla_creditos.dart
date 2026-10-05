@@ -18,7 +18,7 @@ import '../idioma.dart';
 class PantallaCreditos extends StatelessWidget {
   const PantallaCreditos({super.key});
 
-  static const _fuentes = [
+  static List<(String, String, String)> get _fuentes => [
     (
       tr('Código de Hanzi Dojo'),
       tr('Software libre: puedes usarlo, estudiarlo, modificarlo y compartirlo. Las versiones modificadas que se distribuyan deben seguir siendo libres y publicar su código. Código fuente: github.com/AbraKdabra1/hanzi_dojo.'),

@@ -66,8 +66,14 @@ class _PantallaModoState extends State<PantallaModo> {
               style: TextStyle(color: c.tinta, fontSize: 16, fontWeight: FontWeight.w600)),
           centerTitle: true,
         ),
+        // Desplazable si no cabe (horizontal); si cabe, el Spacer empuja la nota abajo.
         body: SafeArea(
-          child: Padding(
+          child: LayoutBuilder(
+            builder: (context, restricciones) => SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: restricciones.maxHeight),
+                child: IntrinsicHeight(
+                  child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,6 +163,10 @@ class _PantallaModoState extends State<PantallaModo> {
 
                 const SizedBox(height: 24),
               ],
+            ),
+                  ),
+                ),
+              ),
             ),
           ),
         ),

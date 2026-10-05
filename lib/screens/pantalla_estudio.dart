@@ -13,6 +13,8 @@
 // fallaste (y si fue al revés) y en qué modo estabas.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../datos/datos_app.dart';
@@ -184,13 +186,37 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
               ? (_cargando
                   ? Center(child: CircularProgressIndicator(color: colores.icono))
                   : _vistaFin())
-              : Column(
-                  children: [
-                    Expanded(flex: 3, child: _panelSuperior(c)),
-                    Expanded(flex: 6, child: _lienzo(c)),
-                    Expanded(flex: 2, child: _panelInferior()),
-                  ],
-                ),
+              : LayoutBuilder(builder: (context, r) {
+                  // Vertical: datos arriba, lienzo al centro, calificación abajo.
+                  if (r.maxWidth < r.maxHeight * 1.15) {
+                    return Column(
+                      children: [
+                        Expanded(flex: 3, child: _panelSuperior(c)),
+                        Expanded(flex: 6, child: _lienzo(c)),
+                        Expanded(flex: 2, child: _panelInferior()),
+                      ],
+                    );
+                  }
+                  // Horizontal (teléfono girado o tableta): el lienzo a la
+                  // derecha, del alto de la pantalla; datos y calificación a
+                  // la izquierda.
+                  final lado = math.min(r.maxHeight, r.maxWidth * 0.55);
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Center(child: SingleChildScrollView(child: _panelSuperior(c))),
+                            ),
+                            SizedBox(height: 120, child: _panelInferior()),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: lado, child: _lienzo(c)),
+                    ],
+                  );
+                }),
         ),
       ),
     );

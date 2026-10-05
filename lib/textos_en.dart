@@ -963,4 +963,12 @@ const textosEn = <String, String>{
       'streak shields',
   'vocabulario':
       'vocabulary',
+  'Vibrar al trazar':
+      'Vibrate when writing',
+  'Un toque corto con cada trazo correcto y uno más marcado al equivocarte.':
+      'A short tap with each correct stroke and a firmer one when you make a mistake.',
+  'Sonido de pincel':
+      'Brush sound',
+  'El roce del pincel sobre el papel con cada trazo correcto.':
+      'The brush brushing the paper with each correct stroke.',
 };

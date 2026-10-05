@@ -55,6 +55,8 @@ flutter:
     - assets/audio/
     - assets/audio/silabas/
     - assets/audio/palabras/
+    # Roce de pincel al acertar un trazo (sintetizado para la app; Ajustes › Sonido de pincel).
+    - assets/sonidos/
 
   fonts:
     # Noto Sans SC recortada a los caracteres de la app

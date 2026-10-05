@@ -22,6 +22,7 @@ import '../datos/repositorio_practica.dart';
 import '../datos/respaldo.dart';
 import '../helpers/archivos.dart';
 import '../helpers/habito.dart';
+import '../helpers/sensaciones.dart';
 import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
@@ -45,6 +46,8 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
   bool? _ajuste;
   int? _limitePalabras;
   String? _idioma;
+  bool? _vibracion;
+  bool? _sonidoPincel;
   bool? _vozLenta;
   int? _metaDiaria;
 
@@ -70,6 +73,8 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
     final limitePalabras = await repo.limitePalabrasPorDia();
     final vozLenta = await repo.vozLenta();
     final idioma = await repo.idioma();
+    final vibracion = await repo.vibracion();
+    final sonidoPincel = await repo.sonidoPincel();
     final metaDiaria = await repo.metaDiaria();
     final recordatorio = await repo.recordatorio();
     final previo = await Respaldo.hayRespaldoPrevio(repo.base);
@@ -80,6 +85,8 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
         _limitePalabras = limitePalabras;
         _vozLenta = vozLenta;
         _idioma = idioma;
+        _vibracion = vibracion;
+        _sonidoPincel = sonidoPincel;
         _metaDiaria = metaDiaria;
         _recordatorio = recordatorio;
         _hayPrevio = previo;
@@ -454,6 +461,50 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                         setState(() => _ajuste = v);
                         DatosApp.de(context).guardarAjusteCaligrafico(v);
                       },
+              ),
+            ),
+            const SizedBox(height: 12),
+            TarjetaVidrio(
+              child: Column(
+                children: [
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(tr('Vibrar al trazar'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                    subtitle: Text(
+                      tr('Un toque corto con cada trazo correcto y uno más marcado al equivocarte.'),
+                      style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.3),
+                    ),
+                    value: _vibracion ?? true,
+                    onChanged: _vibracion == null
+                        ? null
+                        : (v) {
+                            setState(() => _vibracion = v);
+                            Sensaciones.vibracion = v;
+                            DatosApp.de(context).guardarVibracion(v);
+                          },
+                  ),
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(tr('Sonido de pincel'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                    subtitle: Text(
+                      tr('El roce del pincel sobre el papel con cada trazo correcto.'),
+                      style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.3),
+                    ),
+                    value: _sonidoPincel ?? false,
+                    onChanged: _sonidoPincel == null
+                        ? null
+                        : (v) {
+                            setState(() => _sonidoPincel = v);
+                            Sensaciones.sonidoPincel = v;
+                            if (v) {
+                              Sensaciones.trazoBien(); // para oírlo al activarlo
+                            } else {
+                              Sensaciones.soltar();
+                            }
+                            DatosApp.de(context).guardarSonidoPincel(v);
+                          },
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 12),

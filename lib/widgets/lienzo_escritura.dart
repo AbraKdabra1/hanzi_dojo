@@ -35,11 +35,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
-import 'package:flutter/services.dart';
 
 import '../datos/modelos.dart' show FalloTrazo;
 import '../helpers/cache_trazos.dart';
 import '../helpers/evaluacion_trazo.dart';
+import '../helpers/sensaciones.dart';
 import '../painters/capa_fija.dart';
 import '../painters/fondo_caracter_painter.dart';
 import '../painters/geometria.dart';
@@ -246,7 +246,7 @@ class LienzoEscrituraState extends State<LienzoEscritura>
     );
 
     if (resultado == ResultadoTrazo.correcto) {
-      HapticFeedback.lightImpact();
+      Sensaciones.trazoBien();
       _aceptarTrazo(_siguienteTrazo);
       _guia.reset();
       setState(() {
@@ -257,9 +257,12 @@ class LienzoEscrituraState extends State<LienzoEscritura>
         if (_siguienteTrazo >= _medianasLienzo.length) _completo = true;
       });
       _despues(const Duration(milliseconds: 300), () => setState(() => _destello = false));
-      if (_completo) widget.onCompletado(_errores);
+      if (_completo) {
+        Sensaciones.caracterCompleto();
+        widget.onCompletado(_errores);
+      }
     } else {
-      HapticFeedback.heavyImpact();
+      Sensaciones.trazoMal();
       final alReves = resultado == ResultadoTrazo.alReves;
       // Al revés, la animación del trazo correcto se muestra también en modo
       // experto: es la forma más clara de enseñar por dónde empieza.

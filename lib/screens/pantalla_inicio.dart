@@ -160,8 +160,16 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
     return FondoTintaChina(
       ramaAnimada: true,
       child: Scaffold(
+        // En horizontal (o con letra muy grande) el contenido no cabe: se
+        // vuelve desplazable; en vertical ocupa la pantalla y los Spacer lo
+        // reparten como siempre.
         body: SafeArea(
-          child: Column(
+          child: LayoutBuilder(
+            builder: (context, restricciones) => SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: restricciones.maxHeight),
+                child: IntrinsicHeight(
+                  child: Column(
             children: [
               Row(
                 children: [
@@ -279,6 +287,10 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
               ),
               const SizedBox(height: 20),
             ],
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       ),

@@ -40,9 +40,23 @@ class FondoTintaChina extends StatelessWidget {
   /// true: rama grande que se mece y suelta pétalos (pantalla de inicio).
   final bool ramaAnimada;
 
+  /// Ancho máximo del contenido. En tabletas (o un teléfono girado) la
+  /// pantalla se centra en una columna de este ancho y el papel sigue
+  /// ocupando todo el fondo: los textos no quedan en renglones larguísimos.
+  static const anchoMaximo = 680.0;
+
   @override
   Widget build(BuildContext context) {
     final c = context.colores;
+    final ancho = MediaQuery.sizeOf(context).width;
+    final contenido = ancho <= anchoMaximo + 48
+        ? child
+        : Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: anchoMaximo),
+              child: child,
+            ),
+          );
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -57,12 +71,12 @@ class FondoTintaChina extends StatelessWidget {
         ),
         RepaintBoundary(child: CustomPaint(painter: _ManchasPainter(c.mancha, c.oscuro ? 0.5 : 1))),
         if (ramaAnimada)
-          _RamaAnimada(nocturno: c.oscuro, child: child)
+          _RamaAnimada(nocturno: c.oscuro, child: contenido)
         else ...[
           RepaintBoundary(
             child: CustomPaint(painter: _PintorRamaQuieta(MediaQuery.devicePixelRatioOf(context), c.oscuro)),
           ),
-          child,
+          contenido,
         ],
       ],
     );

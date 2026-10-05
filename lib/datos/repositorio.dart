@@ -619,6 +619,16 @@ class Repositorio {
   /// ¿Los trazos correctos se acomodan en su forma caligráfica? (Activo por defecto.)
   Future<bool> ajusteCaligrafico() async => await base.leerAjuste('ajuste_caligrafico') != '0';
 
+  /// ¿Vibrar al trazar? (Activo por defecto.)
+  Future<bool> vibracion() async => await base.leerAjuste('vibracion') != '0';
+
+  Future<void> guardarVibracion(bool activa) => base.guardarAjuste('vibracion', activa ? '1' : '0');
+
+  /// ¿Sonido de pincel al acertar un trazo? (Apagado por defecto.)
+  Future<bool> sonidoPincel() async => await base.leerAjuste('sonido_pincel') == '1';
+
+  Future<void> guardarSonidoPincel(bool activo) => base.guardarAjuste('sonido_pincel', activo ? '1' : '0');
+
   Future<void> guardarAjusteCaligrafico(bool activo) =>
       base.guardarAjuste('ajuste_caligrafico', activo ? '1' : '0');
 

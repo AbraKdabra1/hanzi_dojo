@@ -31,6 +31,7 @@ import 'datos/repositorio.dart';
 import 'datos/repositorio_habito.dart';
 import 'datos/repositorio_practica.dart';
 import 'helpers/energia.dart';
+import 'helpers/sensaciones.dart';
 import 'idioma.dart';
 import 'helpers/habito.dart';
 import 'painters/rama_ciruelo.dart';
@@ -94,6 +95,8 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
       await Energia.iniciar(await repo.fluidezMaxima() ? ModoFluidez.maxima : ModoFluidez.automatica);
       Apariencia.modo.value = Apariencia.desdeTexto(await repo.apariencia());
       Idioma.actual.value = Idioma.desdeTexto(await repo.idioma());
+      Sensaciones.vibracion = await repo.vibracion();
+      Sensaciones.sonidoPincel = await repo.sonidoPincel();
       Voz.velocidad = await repo.vozLenta() ? 0.75 : 1.0;
       // El recordatorio lo programa Android; se vuelve a poner por si la app se
       // reinstaló o se importó un respaldo (si ya estaba, no cambia nada).
