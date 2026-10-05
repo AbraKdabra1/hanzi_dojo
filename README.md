@@ -19,16 +19,20 @@ rastreo. La app no pide permiso de internet.
 | Estudio por nivel | HSK 1 a 6 y 7-9 (lista oficial HSK 3.0). |
 | Estudio por radical | Los 214 radicales Kangxi; cada uno muestra su familia de caracteres agrupada por nivel. |
 | Búsqueda | Por carácter, pinyin sin tonos (`hao`, `nv`) o significado en español/inglés. |
+| Buscar dibujando | Botón del lápiz junto a la búsqueda. Dibuja un carácter que no sabes leer y la app sugiere los más parecidos de los 3,000 HSK con cada trazo (compara la forma y el orden de tus trazos, sin internet). |
+| Orden de trazos | En el estudio, «Orden de trazos» anima el carácter trazo por trazo, con el número de cada trazo; se puede repetir. |
 | Modo novato / experto | Novato: silueta gris y pista del trazo. Experto: cuadrícula vacía. |
 | Revisión de trazos | Compara tu trazo con el correcto (DTW) y revisa el sentido: si va al revés te lo dice y muestra por dónde empieza. Si fallas, el trazo se pinta de rojo y se borra. |
 | Ajuste caligráfico | Cada trazo correcto se transforma, con un rebote de resorte, en la forma exacta del pincel (kaishu). Se puede apagar en Ajustes. |
 | Repetición espaciada | SM-2. Calificas "Difícil / Medio / Fácil"; la app sugiere una según tus errores. Lo "Difícil" vuelve a salir a las 3 tarjetas. |
 | Límite diario | Nuevos por día configurable (5 a 50, 15 por defecto) en Ajustes. |
 | Ejemplos | 1 o 2 oraciones por carácter con pinyin y traducción al español. |
-| Leer | Libros graduados por nivel HSK con pinyin encima de cada carácter (se puede ocultar), traducción por párrafo, voz y nombres propios subrayados. Toca un carácter para ver su ficha y practicar su escritura. Marca los capítulos que terminas. |
+| Leer | Libros graduados por nivel HSK con pinyin encima de cada carácter (se puede ocultar), traducción por párrafo, voz y nombres propios subrayados. Toca un carácter para ver su ficha, practicar su escritura o mandar la palabra completa al repaso de vocabulario. 🎧 lee el capítulo entero en voz alta resaltando la palabra que suena. Al final de cada capítulo, tres preguntas de comprensión. Marca los capítulos que terminas. |
 | Mis libros | Agrega tus propios textos: TXT (UTF-8, UTF-16 o GBK), EPUB sin DRM o texto pegado. La app los parte en capítulos, calcula el pinyin y estima su nivel HSK. Se quedan solo en el teléfono (no van en el respaldo). Los caracteres tradicionales se consultan como simplificados. |
 | Voz | Grabaciones de hablantes nativos incluidas en la app (sílabas y ~8,500 palabras HSK): suenan en cualquier teléfono, sin internet. En oraciones largas usa la voz del teléfono si la tiene. |
 | Practicar con audio | Inicio → Practicar. **Tonos**: oye una sílaba y elige su tono entre cuatro botones que dibujan su curva (o los dos tonos de una palabra). **Escucha**: oye una palabra y elige su carácter o su significado. **Vocabulario**: repaso espaciado de las ~10,900 palabras HSK (no solo caracteres), empezando por las que usan caracteres que ya estudiaste. **Pinyin**: escribe cómo se lee una palabra (`ni3hao3` o `nǐhǎo`). Mantén presionado un botón de sonido para oírlo lento, o activa «Voz lenta» en Ajustes. |
+| Simulacro HSK | Practicar → Simulacro HSK. Como el examen: 30 preguntas en 12 minutos en tres secciones (escucha, lectura y caracteres), sin saber si acertaste hasta el final. Se aprueba con 60; la app recuerda tu mejor calificación por nivel. |
+| Examen de ubicación | Practicar → Examen de ubicación. Cinco preguntas por nivel, de HSK 1 hacia arriba, hasta encontrar el nivel por el que te conviene empezar. |
 | Meta diaria | Ajustes → Tu hábito: 10, 20, 40 o 60 repasos y ejercicios al día. En el inicio se ve como un anillo que se llena; al cumplirla, la app lo celebra. |
 | Recordatorio | Ajustes → Tu hábito: un aviso al día a la hora que elijas, solo si todavía no cumples tu meta. Lo programa Android (sin servicios de Google: funciona en Huawei) y sobrevive a reinicios. |
 | Racha y protector | Los días seguidos practicando (escritura o audio). Un protector por semana cubre un día sin práctica para que la racha no se rompa (🛡️ en el inicio y en el calendario). |
@@ -40,6 +44,9 @@ rastreo. La app no pide permiso de internet.
 | Exportar / importar | Ajustes → Tus datos. Guarda tu progreso en un archivo `.hanzidojo` y recupéralo en otro teléfono. Antes de importar se guarda una copia para poder deshacerlo. |
 | Informe de errores | Ajustes → Informe de errores. Si algo falla, los detalles se guardan en el teléfono (los últimos 50) para copiarlos al reportar un problema. No se envía nada solo. |
 | Modo oscuro «tinta» | Ajustes → Apariencia: Automática (la del teléfono), Clara u Oscura. En pantallas OLED la oscura gasta bastante menos batería. La rama del inicio se vuelve «ciruelo bajo la luna». |
+| Idioma | Ajustes → Idioma · Language: español, inglés o el del teléfono. En inglés, los significados vienen de CC-CEDICT y los ejemplos de Tatoeba en inglés; el recordatorio y el widget también cambian. |
+| Tabletas y horizontal | En pantallas anchas el contenido se centra a una columna cómoda; en horizontal el estudio pone el lienzo junto a la información del carácter. |
+| Vibración y sonido | Una vibración suave con cada trazo correcto (otra al fallar) y, si quieres, un sonido de pincel. Se eligen en Ajustes, junto al ajuste caligráfico. |
 | Batería y fluidez | Ajustes → Batería y fluidez. La pantalla va a 120 Hz solo mientras tocas o algo se desplaza (o siempre, si lo eliges). Con el ahorro de batería del teléfono la app no anima nada. Muestra el consumo del momento y puede medir el promedio de una sesión. |
 
 El progreso se guarda **solo en el teléfono** (`progreso.db`). Las actualizaciones
@@ -82,6 +89,7 @@ que se copia al teléfono la primera vez (por eso la app abre rápido).
 | Tradicional → simplificado | [OpenCC](https://github.com/BYVoid/OpenCC) `TSCharacters.txt` (para consultar libros propios) | — |
 | Libros de «Leer» | Historias clásicas chinas de dominio público, contadas de nuevo para la app (`herramientas_datos/fuentes/libros/`) | Pinyin al día; cada carácter tiene una sílaba válida; los adaptados cumplen la cobertura mínima de su nivel |
 | Vocabulario | Las palabras de la lista oficial HSK 3.0 (hsk30), con su pinyin partido por carácter y significado en español (traducido de CC-CEDICT para HSK 1-6; en 7-9, por ahora en inglés) | Cada palabra tiene una sílaba válida por carácter; HSK 1-6 con español |
+| Preguntas de comprensión | Escritas para Hanzi Dojo en español e inglés (`herramientas_datos/fuentes/libros/preguntas.json`); las opciones se barajan de forma fija al construir la base | 3 por capítulo, con 4 opciones distintas en cada idioma |
 | Pronunciación (audio) | [audio-cmn](https://github.com/hugolpz/audio-cmn): 1,707 sílabas (voz de Chen Wang) y 8,569 palabras HSK (voz de Yue Tan), en `assets/audio/` (Opus, ~23 MB) | `test/audio_test.dart`: cada palabra de la lista tiene su archivo |
 
 ### Los libros de «Leer»
@@ -114,6 +122,10 @@ Cada libro es un archivo de texto fácil de editar (el formato está explicado e
 dice qué tan difícil es: qué porcentaje de sus caracteres ya conoce alguien de
 ese nivel (sin contar nombres propios y contando las palabras que se explican
 al inicio de cada capítulo). Los adaptados deben llegar al 90 %.
+
+Las preguntas de comprensión de cada capítulo están en `preguntas.json`, en la
+misma carpeta: la pregunta y sus cuatro opciones en español y en inglés, y cuál
+es la correcta.
 
 Los caracteres que no son HSK (unos 6,500) también están, con significado en
 inglés, para que las familias de radicales estén completas.
@@ -192,7 +204,9 @@ descomprímelo y abre el `.apk` en el teléfono.
 
 ```
 lib/
-├── main.dart                     Arranque: abre la base, apariencia, energía y licencias
+├── main.dart                     Arranque: abre la base, idioma, apariencia, energía y licencias
+├── idioma.dart                   Español / inglés: tr('texto') y fechas
+├── textos_en.dart                Los textos de la interfaz en inglés (español → inglés)
 ├── tema.dart                     Colores claro/oscuro (ColoresTinta) y Apariencia
 ├── datos/
 │   ├── base_datos.dart           Abre progreso.db y adjunta contenido.db (ATTACH)
@@ -201,6 +215,7 @@ lib/
 │   ├── repositorio_habito.dart   Meta diaria, protector de racha, logros y recordatorio
 │   ├── logros.dart               Los logros y cuánto llevas de cada uno
 │   ├── practica.dart             Palabra, preguntas, entrenador de tonos y sesión de vocabulario
+│   ├── examen.dart               Simulacros HSK y examen de ubicación (armar y calificar)
 │   ├── sesion_estudio.dart       Orden de las tarjetas en una sesión (repasos, nuevos, "Difícil")
 │   ├── srs.dart                  Algoritmo SM-2
 │   ├── respaldo.dart             Exportar / importar el progreso (.hanzidojo)
@@ -219,6 +234,8 @@ lib/
 │   ├── zip_simple.dart           Lector mínimo de ZIP (para EPUB)
 │   ├── pinyin_entrada.dart       Lee el pinyin que escribes (números, acentos, sin tono)
 │   ├── habito.dart               Recordatorio, widget y compartir (canal con Android)
+│   ├── reconocedor.dart          Buscar dibujando: qué caracteres se parecen a lo que dibujaste
+│   ├── sensaciones.dart          Vibración y sonido de pincel
 │   └── pinyin_helper.dart        Colores por tono
 ├── painters/                     Dibujo del lienzo (cuadrícula, silueta, tinta, pistas)
 │   ├── rama_ciruelo.dart         Rama de ciruelo en flor del fondo (viento y pétalos)
@@ -229,11 +246,14 @@ lib/
 │   ├── boton_voz.dart            Pronunciación: grabaciones (just_audio) o voz del teléfono
 │   ├── fondo_tinta.dart          Fondo de papel; en el inicio la rama se mece ~30 s y se apaga
 │   ├── ejercicio.dart            Piezas de los ejercicios (opciones, curva de cada tono, resumen)
+│   ├── animacion_trazos.dart     Orden de trazos animado
+│   ├── preguntas_comprension.dart Preguntas al final de cada capítulo de «Leer»
 │   └── comunes.dart, …           Piezas de interfaz reutilizables
 └── screens/                      Inicio, modo, selección, radicales, familia,
                                   estudio, estadísticas, ajustes, errores, créditos,
                                   biblioteca, libro y lectura («Leer»), práctica,
-                                  tonos, escucha, vocabulario y pinyin, logros y compartir
+                                  tonos, escucha, vocabulario y pinyin, simulacros y
+                                  ubicación, buscar dibujando, logros y compartir
 android/app/src/main/kotlin/…/MainActivity.kt   Archivos (guardar/abrir), energía (tasa de refresco, batería) y hábito
 android/app/src/main/kotlin/…/Habito.kt         Recordatorio diario, widget de inicio y compartir imagen
 herramientas_datos/               Scripts de Python que arman la base (ver arriba) y el ícono
@@ -241,7 +261,8 @@ herramientas/crear_llave_firma.ps1  Crea la llave de firma de lanzamiento (Windo
 fastlane/metadata/android/        Ficha de tienda (F-Droid, AppGallery): textos, ícono, capturas
 docs/                             Publicar, privacidad y receta de F-Droid
 test/                             Pruebas: SM-2, sesión, trazos, caligrafía, base de datos real,
-                                  historial, respaldo, informe de errores y lector
+                                  historial, respaldo, informe de errores, lector, práctica,
+                                  exámenes, reconocedor e idioma (que no falte ningún texto en inglés)
 ```
 
 ### Fluidez

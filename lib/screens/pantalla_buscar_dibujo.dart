@@ -195,11 +195,16 @@ class _Lienzo extends StatelessWidget {
         onPointerDown: (e) => trazos.empezar(e.localPosition),
         onPointerMove: (e) => trazos.agregar(e.localPosition),
         onPointerUp: (_) => alTerminarTrazo(),
-        child: RepaintBoundary(
-          child: CustomPaint(
-            painter: GridPainter(color: c.cuadricula),
-            foregroundPainter: _PintorTrazos(trazos, c.trazo),
-            size: Size.infinite,
+        // Recortado a las esquinas redondeadas: que las diagonales de la
+        // cuadrícula (y los trazos) no se salgan del cuadro.
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(14.5),
+          child: RepaintBoundary(
+            child: CustomPaint(
+              painter: GridPainter(color: c.cuadricula),
+              foregroundPainter: _PintorTrazos(trazos, c.trazo),
+              size: Size.infinite,
+            ),
           ),
         ),
       ),

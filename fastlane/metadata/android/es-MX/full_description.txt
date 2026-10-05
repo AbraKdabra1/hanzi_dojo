@@ -6,14 +6,17 @@
 • Cada trazo correcto se acomoda con un rebote suave en la forma exacta del pincel.
 • Repaso espaciado (SM-2): cada carácter vuelve justo cuando lo ibas a olvidar.
 • Estudia por nivel HSK o por los 214 radicales Kangxi y sus familias.
+• Mira el orden de trazos animado, o dibuja un carácter que no sabes leer para encontrarlo.
 
 <b>Escucha y habla</b>
 • Grabaciones de hablantes nativos (sílabas y ~8,500 palabras) que funcionan sin internet.
 • Entrenador de tonos, ejercicio de escucha y escritura de pinyin.
 • Vocabulario con repaso espaciado: unas 10,900 palabras HSK con significado en español.
+• Simulacros HSK con tiempo y un examen de ubicación para saber por dónde empezar.
 
 <b>Lee</b>
 • Siete libros graduados del HSK 1 al 7-9: cuentos, mitos, chengyu, leyendas, Viaje al Oeste, proverbios y poemas Tang, con pinyin, traducción y voz.
+• Escucha cada capítulo con la palabra que suena resaltada y responde preguntas de comprensión al final.
 • Agrega tus propios textos (TXT, EPUB o texto pegado).
 
 <b>Hazlo hábito</b>
@@ -26,4 +29,4 @@
 • Modo oscuro «tinta» y pantalla a 120 Hz solo cuando hace falta, para cuidar la batería.
 • Exporta e importa tu progreso cuando cambies de teléfono.
 
-Todo en español. Licencia GPL-3.0. Contenido: CC-CEDICT, Make Me a Hanzi, Unihan, Tatoeba, audio-cmn, Noto Sans SC (ver Créditos en la app).
+En español o en inglés, en teléfonos y tabletas. Licencia GPL-3.0. Contenido: CC-CEDICT, Make Me a Hanzi, Unihan, Tatoeba, audio-cmn, Noto Sans SC (ver Créditos en la app).
