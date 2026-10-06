@@ -8,9 +8,13 @@
 //      las puede cargar (el iPhone no lee Opus en Ogg).
 //   3. Capturas del inicio, la elección de modo, los niveles y el estudio.
 //
-// Las capturas las guarda test_driver/integration_test.dart en
-// build/capturas_ios/ y el flujo las publica en la rama ci-ios.
+// Cada captura se guarda en la carpeta temporal de la app (en el simulador es
+// una carpeta de la Mac) y se escribe su ruta ("CAPTURA: …"); el flujo las
+// recoge y las publica en la rama ci-ios. Con flutter drive y
+// test_driver/integration_test.dart también se guardan en build/capturas_ios.
 // ─────────────────────────────────────────────────────────────────────────────
+
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +39,15 @@ Finder _texto(String es, String en) =>
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Hanzi Dojo en el simulador de iPhone', (tester) async {
+  Future<void> captura(String nombre) async {
+    final bytes = await binding.takeScreenshot(nombre);
+    final archivo = File('${Directory.systemTemp.path}/capturas_ios/$nombre.png');
+    archivo.parent.createSync(recursive: true);
+    archivo.writeAsBytesSync(bytes);
+    debugPrint('CAPTURA: ${archivo.path}');
+  }
+
+  testWidgets('Hanzi Dojo en el simulador de iPhone', timeout: const Timeout(Duration(minutes: 8)), (tester) async {
     // La app instala sus propios avisos de error; se devuelven al final para
     // que la prueba no se queje.
     final antesFlutter = FlutterError.onError;
@@ -52,7 +64,7 @@ void main() {
     }
     expect(_texto('Estudiar', 'Study'), findsOneWidget);
     await _esperar(tester, 3);
-    await binding.takeScreenshot('01_inicio');
+    await captura('01_inicio');
 
     // Las grabaciones: Ogg Opus → CAF, y el reproductor de iOS las acepta.
     expect(Grabaciones.enIos, isTrue);
@@ -69,9 +81,9 @@ void main() {
     // Estudiar → modo → niveles.
     await tester.tap(_texto('Estudiar', 'Study'));
     await _esperar(tester, 2);
-    await binding.takeScreenshot('02_modo');
+    await captura('02_modo');
     await tester.tap(_texto('Soy novato', "I'm a beginner"));
     await _esperar(tester, 3);
-    await binding.takeScreenshot('03_niveles');
+    await captura('03_niveles');
   });
 }

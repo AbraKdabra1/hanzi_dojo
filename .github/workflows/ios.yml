@@ -6,7 +6,8 @@
 #     instala con AltStore o Sideloadly usando tu propio Apple ID, sin pagar
 #     nada (ver docs/ios.md).
 #   · Simulador: integration_test/ios_test.dart abre la app, revisa que las
-#     grabaciones suenen en iOS y toma capturas.
+#     grabaciones suenen en iOS y toma capturas (flutter test en el
+#     simulador; las capturas las guarda la prueba y aquí se recogen).
 #
 # Registros y capturas → rama ci-ios (resumen.txt, *.txt, capturas/*.png).
 # ---------------------------------------------------------------------------
@@ -62,6 +63,7 @@ jobs:
       - name: Probar en el simulador de iPhone
         id: simulador
         continue-on-error: true
+        timeout-minutes: 30
         run: |
           set -o pipefail
           UDID=$(xcrun simctl list devices available -j | python3 -c "
@@ -69,13 +71,27 @@ jobs:
           d = json.load(sys.stdin)['devices']
           print(next(x['udid'] for k, v in sorted(d.items(), reverse=True) if 'iOS' in k
                      for x in v if x['name'].startswith('iPhone')))")
+          echo "UDID=$UDID" >> "$GITHUB_ENV"
           echo "Simulador: $UDID" | tee simulador.txt
-          xcrun simctl boot "$UDID" || true
           # En español, como la mayoría de quienes la usan.
-          xcrun simctl spawn "$UDID" defaults write "Apple Global Domain" AppleLanguages -array es-MX
-          xcrun simctl spawn "$UDID" defaults write "Apple Global Domain" AppleLocale -string es_MX
-          flutter drive --driver=test_driver/integration_test.dart \
-            --target=integration_test/ios_test.dart -d "$UDID" 2>&1 | tee -a simulador.txt
+          xcrun simctl spawn "$UDID" defaults write "Apple Global Domain" AppleLanguages -array es-MX || true
+          xcrun simctl spawn "$UDID" defaults write "Apple Global Domain" AppleLocale -string es_MX || true
+          xcrun simctl bootstatus "$UDID" -b 2>&1 | tail -2 | tee -a simulador.txt
+          flutter test integration_test/ios_test.dart -d "$UDID" --reporter expanded 2>&1 | tee -a simulador.txt
+
+      - name: Capturas del simulador
+        if: always()
+        continue-on-error: true
+        run: |
+          mkdir -p build/capturas_ios
+          # La prueba guarda sus capturas en la carpeta temporal de la app (en
+          # el simulador es una carpeta de la Mac) y escribe la ruta.
+          grep -o 'CAPTURA: .*\.png' simulador.txt | sed 's/^CAPTURA: //' | while read -r f; do
+            cp "$f" build/capturas_ios/ 2>/dev/null || true
+          done
+          # Y cómo quedó la pantalla al final, pase lo que pase.
+          [ -n "$UDID" ] && xcrun simctl io "$UDID" screenshot build/capturas_ios/99_al_terminar.png || true
+          ls -la build/capturas_ios
 
       - name: Publicar registros en la rama ci-ios
         if: always() && github.event_name == 'push'
