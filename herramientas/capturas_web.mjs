@@ -8,7 +8,7 @@
 //   2. Capturas del inicio, la elección de modo y los niveles.
 //   3. Que el audio se pueda tocar (Ogg en Chrome; en Safari, CAF).
 //   4. Segunda vez: abre desde lo guardado (IndexedDB), sin descargar.
-//   5. Sin internet: abre igual (sw_hanzi.js).
+//   5. Sin internet: abre igual (sw_hanzi.js; solo en Chrome, ver abajo).
 //
 // Uso: node herramientas/capturas_web.mjs <dirección> <carpeta de salida>
 // ─────────────────────────────────────────────────────────────────────────────
@@ -25,8 +25,6 @@ mkdirSync(salida, { recursive: true });
 const navegadores = [
   ['chrome_android', chromium, devices['Pixel 7'], {}],
   ['safari_iphone', webkit, devices['iPhone 15'], {}],
-  // Para comparar: Chrome sin service worker (¿algo de sw_hanzi.js estorba?).
-  ['chrome_sin_sw', chromium, devices['Pixel 7'], { serviceWorkers: 'block' }],
 ];
 
 const resumen = [];
@@ -161,39 +159,7 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
     await captura('01_inicio');
     await esperarGuardado();
   });
-  const completo = nombre !== 'chrome_sin_sw';
-  if (!completo) {
-    // Experimento: leer la base guardada directo con JavaScript (sin la app),
-    // para saber si IndexedDB es lento en Chrome o si el atasco está en la app.
-    await nuevaPagina();
-    await pagina.goto(new URL('manifest.json', url).href);
-    const lectura = await pagina.evaluate(
-      () =>
-        new Promise((listo) => {
-          const t0 = performance.now();
-          const abierta = indexedDB.open('sqflite_databases');
-          abierta.onsuccess = () => {
-            const tx = abierta.result.transaction(['files', 'blocks'], 'readonly');
-            let n = 0;
-            const cursor = tx.objectStore('blocks').openCursor();
-            cursor.onsuccess = () => {
-              const c = cursor.result;
-              if (c) {
-                n++;
-                c.continue();
-              } else {
-                listo({ bloques: n, ms: Math.round(performance.now() - t0) });
-              }
-            };
-            cursor.onerror = () => listo({ error: String(cursor.error) });
-          };
-          abierta.onerror = () => listo({ error: String(abierta.error) });
-        }),
-    );
-    anotar(`lectura directa de IndexedDB: ${JSON.stringify(lectura)}`);
-    resumen.push(`${nombre} · lectura directa: ${lectura.bloques} bloques en ${lectura.ms} ms`);
-  }
-  if (completo) await paso('estudiar', async () => {
+  await paso('estudiar', async () => {
     await tocar('Estudiar');
     await captura('02_modo');
     await tocar('Soy novato');
@@ -201,7 +167,7 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
     await tocar('Niveles HSK');
     await captura('04_hsk');
   });
-  if (completo) await paso('audio', async () => {
+  await paso('audio', async () => {
     const audio = await pagina.evaluate(async () => {
       const a = document.createElement('audio');
       const r = await fetch('assets/assets/audio/silabas/ma1.opus');
@@ -217,10 +183,15 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
   await paso('segunda vez', async () => {
     // Como al cerrar la app y volver a abrirla: otra pestaña.
     await nuevaPagina();
-    await abrir('segunda vez', completo ? 90000 : 300000);
+    await abrir('segunda vez', 90000);
     await captura('05_segunda_vez');
   });
-  if (completo) await paso('sin internet', async () => {
+  // El WebKit de Playwright en Linux no corre service workers (Safari en
+  // iPhone sí): ahí la prueba sin internet solo aplica a Chrome.
+  if (tipo === webkit) {
+    anotar('sin internet: no se prueba en WebKit de Playwright (sin service workers)');
+    pasos++;
+  } else await paso('sin internet', async () => {
     // Dar tiempo a que el service worker termine de guardar.
     await pagina.waitForTimeout(3000);
     await contexto.setOffline(true);
@@ -230,9 +201,8 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
     await contexto.setOffline(false);
   });
 
-  const total = completo ? 5 : 2;
-  anotar(`pasos completos: ${pasos} de ${total}`);
-  resumen.push(`${nombre} · pasos completos: ${pasos} de ${total}`);
+  anotar(`pasos completos: ${pasos} de 5`);
+  resumen.push(`${nombre} · pasos completos: ${pasos} de 5`);
   writeFileSync(`${salida}/registro_${nombre}.txt`, registro.join('\n') + '\n');
   await navegador.close();
 }
