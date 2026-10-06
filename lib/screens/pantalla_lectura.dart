@@ -314,7 +314,7 @@ class _PantallaLecturaState extends State<PantallaLectura> {
                 controller: _desplazamiento,
                 // Algo más de margen construido: así el párrafo siguiente ya
                 // existe cuando la lectura en voz alta lo trae a la vista.
-                cacheExtent: 1200,
+                scrollCacheExtent: const ScrollCacheExtent.pixels(1200),
                 padding: const EdgeInsets.fromLTRB(16, 4, 16, 40),
                 itemCount: parrafos.length + 2,
                 itemBuilder: (context, k) {
