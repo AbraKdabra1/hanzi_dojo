@@ -63,7 +63,7 @@ jobs:
       - name: Probar en el simulador de iPhone
         id: simulador
         continue-on-error: true
-        timeout-minutes: 30
+        timeout-minutes: 32
         run: |
           set -o pipefail
           UDID=$(xcrun simctl list devices available -j | python3 -c "
@@ -77,9 +77,24 @@ jobs:
           xcrun simctl spawn "$UDID" defaults write "Apple Global Domain" AppleLanguages -array es-MX || true
           xcrun simctl spawn "$UDID" defaults write "Apple Global Domain" AppleLocale -string es_MX || true
           xcrun simctl bootstatus "$UDID" -b 2>&1 | tail -2 | tee -a simulador.txt
+          xcrun simctl list runtimes | tee -a simulador.txt
           mkdir -p "$PWD/build/capturas_ios"
-          flutter test integration_test/ios_test.dart -d "$UDID" --reporter expanded \
-            --dart-define=CAPTURAS="$PWD/build/capturas_ios" 2>&1 | tee -a simulador.txt
+          # A veces la app no llega a conectarse con la prueba en el simulador
+          # (se queda esperando sin decir nada): cada intento tiene 14 minutos
+          # y se reintenta una vez.
+          for intento in 1 2; do
+            echo "── Intento $intento ──" | tee -a simulador.txt
+            if perl -e 'alarm shift; exec @ARGV' 840 \
+                flutter test integration_test/ios_test.dart -d "$UDID" --reporter expanded \
+                --dart-define=CAPTURAS="$PWD/build/capturas_ios" 2>&1 | tee -a simulador.txt; then
+              exit 0
+            fi
+            grep -q 'Hanzi Dojo en el simulador de iPhone' simulador.txt && grep -q '\[E\]' simulador.txt && exit 1
+            xcrun simctl shutdown "$UDID" || true
+            xcrun simctl boot "$UDID" || true
+            xcrun simctl bootstatus "$UDID" -b > /dev/null 2>&1 || true
+          done
+          exit 1
 
       - name: Capturas del simulador
         if: always()

@@ -61,7 +61,7 @@ void main() {
     return r;
   }
 
-  testWidgets('Hanzi Dojo en el simulador de iPhone', timeout: const Timeout(Duration(minutes: 8)), (tester) async {
+  testWidgets('Hanzi Dojo en el simulador de iPhone', timeout: const Timeout(Duration(minutes: 6)), (tester) async {
     // La app instala sus propios avisos de error; se devuelven al final para
     // que la prueba no se queje.
     final antesFlutter = FlutterError.onError;
