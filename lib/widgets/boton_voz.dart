@@ -259,7 +259,7 @@ class Voz {
       }
       if (turno != _turno) return false;
       if (alCambiar != null) {
-        avisos = audio.currentIndexStream.listen((k) {
+        avisos = audio.currentIndexStream.distinct().listen((k) {
           if (k != null && k < clips.length && turno == _turno) alCambiar(k);
         });
       }
