@@ -13,6 +13,8 @@ Genera:
   android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
   android/app/src/main/res/values/ic_launcher_fondo.xml
   fastlane/metadata/android/es-MX/images/icon.png (512 × 512, tiendas)
+  ios/Runner/Assets.xcassets/AppIcon.appiconset/*.png       íconos de iPhone/iPad (sin transparencia)
+  ios/Runner/Assets.xcassets/LaunchImage.imageset/*.png     字 de la pantalla de arranque (claro y oscuro)
 
 Requiere Pillow:  pip install pillow
 Uso:  python herramientas_datos/generar_icono.py
@@ -29,6 +31,8 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB = os.path.join(RAIZ, "assets", "db", "contenido.db")
 RES = os.path.join(RAIZ, "android", "app", "src", "main", "res")
 TIENDA = os.path.join(RAIZ, "fastlane", "metadata", "android", "es-MX", "images", "icon.png")
+IOS_ICONO = os.path.join(RAIZ, "ios", "Runner", "Assets.xcassets", "AppIcon.appiconset")
+IOS_ARRANQUE = os.path.join(RAIZ, "ios", "Runner", "Assets.xcassets", "LaunchImage.imageset")
 
 PAPEL = (246, 240, 230, 255)
 PAPEL_SOMBRA = (233, 224, 210, 255)
@@ -103,13 +107,13 @@ def dibujar_caracter(dibujo, caracter, x0, y0, lado, color):
                 dibujo.polygon(puntos, fill=color)
 
 
-def capa_frente(lado, monocromo=False):
+def capa_frente(lado, monocromo=False, tinta_propia=None):
     """Capa del ícono adaptable (lado = 108 dp). Todo cabe en el círculo
     seguro de 66 dp del centro (los teléfonos recortan en círculo, gota,
     cuadrado redondeado…)."""
     img = Image.new("RGBA", (lado, lado), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
-    tinta = (255, 255, 255, 255) if monocromo else TINTA
+    tinta = tinta_propia or ((255, 255, 255, 255) if monocromo else TINTA)
     zona = lado * 66 / 108
     centro = lado / 2
     lado_caracter = zona * 0.72
@@ -152,6 +156,45 @@ def legado(lado):
     return base.resize((lado, lado), Image.LANCZOS)
 
 
+def cuadrado(lado):
+    """Cuadrado completo sin esquinas redondeadas (tiendas e iOS: cada
+    sistema aplica su propia forma)."""
+    grande = fondo(2048)
+    frente = capa_frente(int(2048 * 108 / 70))
+    d = (frente.width - 2048) // 2
+    grande.alpha_composite(frente.crop((d, d, d + 2048, d + 2048)))
+    return grande.resize((lado, lado), Image.LANCZOS)
+
+
+def iconos_ios():
+    """Llena AppIcon.appiconset según su Contents.json. Apple no acepta
+    transparencia en el ícono: se guarda en RGB."""
+    with open(os.path.join(IOS_ICONO, "Contents.json"), encoding="utf-8") as f:
+        imagenes = json.load(f)["images"]
+    base = cuadrado(1024).convert("RGB")
+    hechos = set()
+    for im in imagenes:
+        nombre = im.get("filename")
+        if not nombre or nombre in hechos:
+            continue
+        puntos = float(im["size"].split("x")[0])
+        lado = round(puntos * float(im["scale"].rstrip("x")))
+        guardar(base.resize((lado, lado), Image.LANCZOS), os.path.join(IOS_ICONO, nombre))
+        hechos.add(nombre)
+
+
+def arranque_ios():
+    """字 con su sello, sin fondo, para el centro de la pantalla de arranque
+    (120 pt). En modo oscuro el carácter va en color papel."""
+    for sufijo, tinta in (("", TINTA), ("-oscuro", (240, 232, 218, 255))):
+        frente = capa_frente(120 * 3 * 108 // 66, tinta_propia=tinta)
+        d = (frente.width - 360) // 2
+        img = frente.crop((d, d, d + 360, d + 360))
+        for escala in (1, 2, 3):
+            nombre = f"LaunchImage{sufijo}{'' if escala == 1 else f'@{escala}x'}.png"
+            guardar(img.resize((120 * escala, 120 * escala), Image.LANCZOS), os.path.join(IOS_ARRANQUE, nombre))
+
+
 def guardar(img, ruta):
     os.makedirs(os.path.dirname(ruta), exist_ok=True)
     img.save(ruta, optimize=True)
@@ -178,11 +221,9 @@ def main():
                 '    <monochrome android:drawable="@mipmap/ic_launcher_monochrome" />\n'
                 "</adaptive-icon>\n")
     # Tiendas: 512 × 512 cuadrado completo (cada tienda aplica su propia forma).
-    grande = fondo(2048)
-    frente = capa_frente(int(2048 * 108 / 70))
-    d = (frente.width - 2048) // 2
-    grande.alpha_composite(frente.crop((d, d, d + 2048, d + 2048)))
-    guardar(grande.resize((512, 512), Image.LANCZOS), TIENDA)
+    guardar(cuadrado(512), TIENDA)
+    iconos_ios()
+    arranque_ios()
     print("Ícono generado.")
 
 

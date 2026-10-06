@@ -25,6 +25,7 @@ import 'package:just_audio/just_audio.dart';
 
 import '../datos/audio.dart';
 import '../datos/registro_errores.dart';
+import '../helpers/grabaciones.dart';
 import '../tema.dart';
 import '../idioma.dart';
 
@@ -85,6 +86,15 @@ class Voz {
         });
         final disponible = await _tts.isLanguageAvailable('zh-CN');
         if (disponible != true) return false;
+        if (Grabaciones.enIos) {
+          // Que suene aunque el interruptor de silencio esté puesto.
+          await _tts.setSharedInstance(true);
+          await _tts.setIosAudioCategory(
+            IosTextToSpeechAudioCategory.playback,
+            [IosTextToSpeechAudioCategoryOptions.duckOthers],
+            IosTextToSpeechAudioMode.spokenAudio,
+          );
+        }
         final listo = await _tts.setLanguage('zh-CN');
         await _tts.setSpeechRate(0.42); // un poco más lento que lo normal
         await _tts.setPitch(1.0);
@@ -163,7 +173,7 @@ class Voz {
           continue;
         }
         alSonar(clip.inicio, clip.fin);
-        await audio.setAsset(clip.ruta);
+        await Grabaciones.cargar(audio, clip.ruta);
         if (turno != _turno) return false;
         await audio.play();
       }
@@ -202,7 +212,7 @@ class Voz {
           await Future<void>.delayed(Duration(milliseconds: clip.pausaMs));
           continue;
         }
-        await audio.setAsset(clip.ruta);
+        await Grabaciones.cargar(audio, clip.ruta);
         if (turno != _turno) return;
         await audio.play(); // termina cuando acaba la grabación (o si se detiene)
       }

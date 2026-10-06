@@ -8,6 +8,9 @@
 #      ligeros) y uno universal.
 #   3. Crea la versión en GitHub (pestaña Releases) con los APK, sus sumas
 #      SHA-256 y la huella del certificado, y las notas de CHANGELOG.md.
+#   4. En una Mac de GitHub compila el .ipa de iPhone/iPad sin firmar y lo
+#      agrega a la versión (se instala con el Apple ID de cada quien, ver
+#      docs/ios.md).
 #
 # También se puede correr a mano (Actions → Lanzamiento → Run workflow): en
 # ese caso solo deja los APK como artefactos, sin publicar nada.
@@ -119,6 +122,7 @@ jobs:
             echo "### Qué APK descargar"
             echo "- **arm64**: casi todos los teléfonos de los últimos años (el más ligero)."
             echo "- **universal**: si no sabes cuál, este funciona en todos."
+            echo "- **iOS_sin_firmar.ipa**: iPhone y iPad, se instala con tu propio Apple ID (gratis; ver docs/ios.md)."
             echo ""
             echo "Huella SHA-256 del certificado de firma: \`$(cat salida/huella.txt)\`"
           } >> notas.md
@@ -143,3 +147,40 @@ jobs:
       - name: Borrar la llave del equipo de GitHub
         if: always()
         run: rm -f android/key.properties "$RUNNER_TEMP/hanzi_dojo_lanzamiento.jks"
+
+  ipa:
+    needs: apk
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.44.5
+          cache: true
+
+      - name: Compilar para iPhone (.ipa sin firmar)
+        id: version
+        run: |
+          VERSION=$(grep -E '^version:' pubspec.yaml | sed -E 's/version: *([0-9.]+)\+([0-9]+).*/\1/')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          flutter pub get
+          flutter build ios --release --no-codesign
+          mkdir Payload && cp -R build/ios/iphoneos/Runner.app Payload/
+          zip -qry "Hanzi_Dojo_${VERSION}_iOS_sin_firmar.ipa" Payload
+          shasum -a 256 "Hanzi_Dojo_${VERSION}_iOS_sin_firmar.ipa"
+
+      - name: Guardar .ipa como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: hanzi-dojo-${{ steps.version.outputs.version }}-ios
+          path: "*.ipa"
+          retention-days: 30
+
+      - name: Agregar a la versión en GitHub
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "$GITHUB_REF_NAME" *.ipa --clobber

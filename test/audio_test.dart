@@ -1,9 +1,12 @@
 // Pruebas de datos/audio.dart: qué grabaciones se tocan para cada texto.
 
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hanzi_dojo/datos/audio.dart';
+import 'package:hanzi_dojo/helpers/grabaciones.dart';
+import 'package:hanzi_dojo/helpers/ogg_a_caf.dart';
 
 void main() {
   group('claveSilaba', () {
@@ -128,5 +131,108 @@ void main() {
         palabras: const {'图书馆', '我'}, silabas: const {'qu4'}, pinyin: const ['wǒ', 'qù', 'tú', 'shū', 'guǎn', '']);
     final rangos = [for (final c in plan.clips) if (!c.esPausa) (c.inicio, c.fin)];
     expect(rangos, [(0, 1), (1, 2), (2, 5)]);
+  });
+
+  group('Grabaciones en iOS', () {
+    test('nombre del CAF reempacado (uno por grabación, sin chocar)', () {
+      expect(Grabaciones.nombreCaf('assets/audio/silabas/ma1.opus'), 'audio_silabas_ma1.caf');
+      expect(Grabaciones.nombreCaf('assets/audio/palabras/一下.opus'), 'audio_palabras_一下.caf');
+      expect(Grabaciones.nombreCaf('assets/sonidos/pincel.opus'), 'sonidos_pincel.caf');
+    });
+
+    test('en la computadora (y en Android) no se reempaca nada', () {
+      expect(Grabaciones.enIos, isFalse);
+    });
+
+    test('reempacar termina, también con dos botones a la vez, y la segunda vez ya está listo', () async {
+      TestWidgetsFlutterBinding.ensureInitialized();
+      const ruta = 'assets/audio/silabas/ma1.opus';
+      final rutas = await Future.wait([Grabaciones.archivoCaf(ruta), Grabaciones.archivoCaf(ruta)])
+          .timeout(const Duration(seconds: 20));
+      expect(rutas[0], rutas[1]);
+      expect(String.fromCharCodes(File(rutas[0]).readAsBytesSync().take(4)), 'caff');
+      expect(await Grabaciones.archivoCaf(ruta).timeout(const Duration(seconds: 5)), rutas[0]);
+    });
+
+    test('todas las grabaciones son Ogg (lo que se reempaca en iOS)', () {
+      for (final carpeta in ['assets/audio/silabas', 'assets/audio/palabras', 'assets/sonidos']) {
+        final archivos = Directory(carpeta).listSync().whereType<File>().where((f) => f.path.endsWith('.opus'));
+        for (final f in archivos.take(200)) {
+          final cabecera = f.openSync()..setPositionSync(0);
+          final bytes = cabecera.readSync(4);
+          cabecera.closeSync();
+          expect(String.fromCharCodes(bytes), 'OggS', reason: f.path);
+        }
+      }
+    });
+  });
+
+  group('Ogg → CAF (iPhone)', () {
+    int u32(Uint8List b, int i) => ByteData.sublistView(b).getUint32(i);
+    int u64(Uint8List b, int i) => u32(b, i) * 0x100000000 + u32(b, i + 4);
+    int i32(Uint8List b, int i) => ByteData.sublistView(b).getInt32(i);
+
+    /// Bloques del CAF: tipo → (inicio del contenido, tamaño).
+    Map<String, (int, int)> bloques(Uint8List caf) {
+      final r = <String, (int, int)>{};
+      var i = 8;
+      while (i < caf.length) {
+        final tipo = String.fromCharCodes(caf.sublist(i, i + 4));
+        final tamano = u64(caf, i + 4);
+        r[tipo] = (i + 12, tamano);
+        i += 12 + tamano;
+      }
+      expect(i, caf.length, reason: 'los bloques cubren el archivo exacto');
+      return r;
+    }
+
+    test('ma1: misma cuenta que una conversión de referencia validada con ffprobe', () {
+      final caf = OggACaf.convertir(File('assets/audio/silabas/ma1.opus').readAsBytesSync());
+      expect(String.fromCharCodes(caf.sublist(0, 4)), 'caff');
+      expect(caf.length, 1584);
+      final b = bloques(caf);
+      expect(b.keys, ['desc', 'chan', 'pakt', 'data']);
+      final (desc, _) = b['desc']!;
+      expect(ByteData.sublistView(caf).getFloat64(desc), 48000);
+      expect(String.fromCharCodes(caf.sublist(desc + 8, desc + 12)), 'opus');
+      expect(u32(caf, desc + 20), 960); // muestras por paquete
+      expect(u32(caf, desc + 24), 1); // mono
+      final (pakt, _) = b['pakt']!;
+      expect(u64(caf, pakt), 29); // paquetes
+      expect(u64(caf, pakt + 8), 27360); // muestras válidas
+      expect(i32(caf, pakt + 16), 312); // pre-skip
+      expect(i32(caf, pakt + 20), 168); // sobrantes
+    });
+
+    test('todas las grabaciones se pueden reempacar', () {
+      final archivos = [
+        ...Directory('assets/audio/silabas').listSync().whereType<File>().take(300),
+        ...Directory('assets/audio/palabras').listSync().whereType<File>().take(300),
+        File('assets/sonidos/pincel.opus'),
+      ];
+      for (final f in archivos) {
+        final caf = OggACaf.convertir(f.readAsBytesSync());
+        final b = bloques(caf);
+        final (datos, tamano) = b['data']!;
+        expect(tamano, greaterThan(4), reason: f.path);
+        expect(datos + tamano, caf.length, reason: f.path);
+      }
+    });
+
+    test('enteros de 7 bits como los pide CAF', () {
+      expect(OggACaf.entero7(79), [79]);
+      expect(OggACaf.entero7(128), [0x81, 0x00]);
+      expect(OggACaf.entero7(300), [0x82, 0x2C]);
+    });
+
+    test('muestras por paquete según el primer byte (RFC 6716)', () {
+      expect(OggACaf.muestrasDePaquete(Uint8List.fromList([0xF8])), 960); // CELT 20 ms
+      expect(OggACaf.muestrasDePaquete(Uint8List.fromList([0x09])), 960 * 2); // SILK 20 ms, 2 tramas iguales
+      expect(OggACaf.muestrasDePaquete(Uint8List.fromList([0x03, 0x03])), 480 * 3); // SILK 10 ms, 3 tramas
+    });
+
+    test('lo que no es Ogg Opus se rechaza', () {
+      expect(() => OggACaf.convertir(Uint8List.fromList(List.filled(40, 1))), throwsFormatException);
+    });
   });
 }

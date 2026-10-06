@@ -31,6 +31,7 @@ import 'datos/repositorio.dart';
 import 'datos/repositorio_habito.dart';
 import 'datos/repositorio_practica.dart';
 import 'helpers/energia.dart';
+import 'helpers/grabaciones.dart';
 import 'helpers/sensaciones.dart';
 import 'idioma.dart';
 import 'helpers/habito.dart';
@@ -98,7 +99,9 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
       Sensaciones.vibracion = await repo.vibracion();
       Sensaciones.sonidoPincel = await repo.sonidoPincel();
       Voz.velocidad = await repo.vozLenta() ? 0.75 : 1.0;
-      // El recordatorio lo programa Android; se vuelve a poner por si la app se
+      // iOS: que las pronunciaciones suenen aunque esté en silencio.
+      Grabaciones.prepararIos().catchError((Object e, StackTrace pila) => RegistroErrores.registrar('Audio iOS', e, pila));
+      // El recordatorio lo programa el sistema; se vuelve a poner por si la app se
       // reinstaló o se importó un respaldo (si ya estaba, no cambia nada).
       final recordatorio = await repo.recordatorio();
       if (recordatorio != null) Habito.programarRecordatorio(recordatorio.$1, recordatorio.$2);

@@ -7,7 +7,7 @@ name: Análisis rápido
 
 on:
   push:
-    branches-ignore: [ci-registros, ci-analisis, main]
+    branches-ignore: [ci-registros, ci-analisis, ci-ios, main]
 
 permissions:
   contents: write

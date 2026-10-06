@@ -19,7 +19,7 @@ name: CI
 
 on:
   push:
-    branches-ignore: [ci-registros, ci-analisis]
+    branches-ignore: [ci-registros, ci-analisis, ci-ios]
   pull_request:
   workflow_dispatch:
 
