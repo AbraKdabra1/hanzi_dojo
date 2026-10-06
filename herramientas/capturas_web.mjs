@@ -162,6 +162,37 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
     await esperarGuardado();
   });
   const completo = nombre !== 'chrome_sin_sw';
+  if (!completo) {
+    // Experimento: leer la base guardada directo con JavaScript (sin la app),
+    // para saber si IndexedDB es lento en Chrome o si el atasco está en la app.
+    await nuevaPagina();
+    await pagina.goto(new URL('manifest.json', url).href);
+    const lectura = await pagina.evaluate(
+      () =>
+        new Promise((listo) => {
+          const t0 = performance.now();
+          const abierta = indexedDB.open('sqflite_databases');
+          abierta.onsuccess = () => {
+            const tx = abierta.result.transaction(['files', 'blocks'], 'readonly');
+            let n = 0;
+            const cursor = tx.objectStore('blocks').openCursor();
+            cursor.onsuccess = () => {
+              const c = cursor.result;
+              if (c) {
+                n++;
+                c.continue();
+              } else {
+                listo({ bloques: n, ms: Math.round(performance.now() - t0) });
+              }
+            };
+            cursor.onerror = () => listo({ error: String(cursor.error) });
+          };
+          abierta.onerror = () => listo({ error: String(abierta.error) });
+        }),
+    );
+    anotar(`lectura directa de IndexedDB: ${JSON.stringify(lectura)}`);
+    resumen.push(`${nombre} · lectura directa: ${lectura.bloques} bloques en ${lectura.ms} ms`);
+  }
   if (completo) await paso('estudiar', async () => {
     await tocar('Estudiar');
     await captura('02_modo');
@@ -186,7 +217,7 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
   await paso('segunda vez', async () => {
     // Como al cerrar la app y volver a abrirla: otra pestaña.
     await nuevaPagina();
-    await abrir('segunda vez', 90000);
+    await abrir('segunda vez', completo ? 90000 : 300000);
     await captura('05_segunda_vez');
   });
   if (completo) await paso('sin internet', async () => {

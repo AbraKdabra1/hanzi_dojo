@@ -107,8 +107,10 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
   Future<void> _abrirDatos() async {
     try {
       final fondo = SpritesCiruelo.cargar();
+      _marca('carpeta de datos');
+      final carpetaDatos = await getDatabasesPath();
       _marca('registro de errores');
-      await RegistroErrores.iniciar(await getDatabasesPath());
+      await RegistroErrores.iniciar(carpetaDatos);
       _marca('base de datos');
       final base = await BaseDatos.abrir();
       _marca('ajustes');
