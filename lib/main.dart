@@ -98,11 +98,20 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
     }
   }
 
+  /// Versión web: cada paso del arranque en la consola del navegador (si algo
+  /// se atora, se ve dónde).
+  void _marca(String paso) {
+    if (kIsWeb) debugPrint('Arranque: $paso');
+  }
+
   Future<void> _abrirDatos() async {
     try {
       final fondo = SpritesCiruelo.cargar();
+      _marca('registro de errores');
       await RegistroErrores.iniciar(await getDatabasesPath());
+      _marca('base de datos');
       final base = await BaseDatos.abrir();
+      _marca('ajustes');
       final repo = Repositorio(base);
       await Energia.iniciar(await repo.fluidezMaxima() ? ModoFluidez.maxima : ModoFluidez.automatica);
       Apariencia.modo.value = Apariencia.desdeTexto(await repo.apariencia());
@@ -116,7 +125,9 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
       // reinstaló o se importó un respaldo (si ya estaba, no cambia nada).
       final recordatorio = await repo.recordatorio();
       if (recordatorio != null) Habito.programarRecordatorio(recordatorio.$1, recordatorio.$2);
+      _marca('dibujos del fondo');
       await fondo;
+      _marca('listo');
       if (mounted) setState(() => _repo = repo);
     } catch (e, pila) {
       debugPrint('Error al abrir la base de datos: $e\n$pila');
@@ -260,6 +271,7 @@ void _registrarLicencias() {
     'Lista HSK 3.0 (ivankra/hsk30)': 'assets/licencias/hsk30_MIT.txt',
     'Tatoeba (oraciones de ejemplo)': 'assets/licencias/tatoeba_CC-BY-2.0-FR.txt',
     'Noto Sans SC (tipografía)': 'assets/licencias/noto_sans_sc_OFL.txt',
+    'Noto Color Emoji y Noto Sans Math (símbolos de la versión web)': 'assets/licencias/noto_emoji_math_OFL.txt',
     'OpenCC (tradicional → simplificado)': 'assets/licencias/opencc_APACHE-2.0.txt',
     'chinese-poetry (textos clásicos de «Leer»)': 'assets/licencias/chinese_poetry_MIT.txt',
     'audio-cmn (grabaciones de pronunciación)': 'assets/licencias/audio_cmn_CC-BY-SA.txt',

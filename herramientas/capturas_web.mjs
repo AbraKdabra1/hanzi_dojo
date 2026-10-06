@@ -21,13 +21,16 @@ const url = new URL(direccion);
 url.searchParams.set('semantica', '1'); // ver main.dart: para encontrar los botones
 mkdirSync(salida, { recursive: true });
 
+// [nombre, motor, dispositivo, opciones del contexto]
 const navegadores = [
-  ['chrome_android', chromium, devices['Pixel 7']],
-  ['safari_iphone', webkit, devices['iPhone 15']],
+  ['chrome_android', chromium, devices['Pixel 7'], {}],
+  ['safari_iphone', webkit, devices['iPhone 15'], {}],
+  // Para comparar: Chrome sin service worker (¿algo de sw_hanzi.js estorba?).
+  ['chrome_sin_sw', chromium, devices['Pixel 7'], { serviceWorkers: 'block' }],
 ];
 
 const resumen = [];
-for (const [nombre, tipo, dispositivo] of navegadores) {
+for (const [nombre, tipo, dispositivo, extra] of navegadores) {
   const registro = [];
   const anotar = (texto) => {
     const linea = `${new Date().toISOString().slice(11, 19)} ${texto}`;
@@ -35,18 +38,54 @@ for (const [nombre, tipo, dispositivo] of navegadores) {
     console.log(`[${nombre}] ${linea}`);
   };
   const navegador = await tipo.launch();
-  const contexto = await navegador.newContext({ ...dispositivo, locale: 'es-MX', timezoneId: 'America/Mexico_City' });
+  const contexto = await navegador.newContext({
+    ...dispositivo,
+    locale: 'es-MX',
+    timezoneId: 'America/Mexico_City',
+    ...extra,
+  });
   const pagina = await contexto.newPage();
-  pagina.on('console', (m) => anotar(`[consola ${m.type()}] ${m.text()}`));
+  pagina.on('console', (m) => {
+    if (!m.text().includes('GL Driver Message')) anotar(`[consola ${m.type()}] ${m.text()}`);
+  });
   pagina.on('pageerror', (e) => anotar(`[error de página] ${e.message}`));
-  pagina.on('requestfailed', (r) => anotar(`[falló] ${r.url()} ${r.failure()?.errorText ?? ''}`));
+  // Pedidos en curso (para saber cuál se queda colgado) y a otros servidores
+  // (la versión web no debería pedir nada fuera de su sitio).
+  const enCurso = new Map();
+  pagina.on('request', (r) => {
+    enCurso.set(r, Date.now());
+    if (!r.url().startsWith(url.origin) && !r.url().startsWith('blob:') && !r.url().startsWith('data:')) {
+      anotar(`[fuera del sitio] ${r.method()} ${r.url()}`);
+    }
+  });
+  pagina.on('requestfinished', (r) => enCurso.delete(r));
+  pagina.on('requestfailed', (r) => {
+    enCurso.delete(r);
+    anotar(`[falló] ${r.url()} ${r.failure()?.errorText ?? ''}`);
+  });
+  const diagnostico = async () => {
+    for (const [r, desde] of enCurso) {
+      anotar(`[sin terminar] ${r.method()} ${r.url()} (desde hace ${((Date.now() - desde) / 1000).toFixed(0)} s)`);
+    }
+    const estado = await pagina
+      .evaluate(async () => ({
+        sw: navigator.serviceWorker?.controller?.scriptURL ?? 'ninguno',
+        bases: (await indexedDB.databases?.())?.map((b) => `${b.name} v${b.version}`).join(', ') ?? '?',
+      }))
+      .catch((e) => ({ error: e.message }));
+    anotar(`[estado] ${JSON.stringify(estado)}`);
+  };
 
   const captura = async (archivo) => {
     await pagina.screenshot({ path: `${salida}/${nombre}_${archivo}.png` });
     anotar(`captura ${archivo}`);
   };
   const tocar = async (texto) => {
-    await pagina.getByText(texto, { exact: true }).first().click({ timeout: 15000 });
+    // Las tarjetas juntan título y subtítulo en un mismo elemento: basta con
+    // que empiece con el texto.
+    const exacto = pagina.getByText(texto, { exact: true });
+    const boton = (await exacto.count()) > 0 ? exacto : pagina.getByText(new RegExp(`^\\s*${texto}`));
+    await boton.first().click({ timeout: 15000 });
     await pagina.waitForTimeout(2500);
   };
   const abrir = async (paso, limite) => {
@@ -67,6 +106,7 @@ for (const [nombre, tipo, dispositivo] of navegadores) {
     } catch (e) {
       anotar(`✗ ${titulo}: ${e.message.split('\n')[0]}`);
       resumen.push(`${nombre} · ✗ ${titulo}`);
+      await diagnostico();
       await captura(`error_${titulo.replace(/\W+/g, '_')}`).catch(() => {});
     }
   };
@@ -75,7 +115,8 @@ for (const [nombre, tipo, dispositivo] of navegadores) {
     await abrir('primera vez', 240000);
     await captura('01_inicio');
   });
-  await paso('estudiar', async () => {
+  const completo = nombre !== 'chrome_sin_sw';
+  if (completo) await paso('estudiar', async () => {
     await tocar('Estudiar');
     await captura('02_modo');
     await tocar('Soy novato');
@@ -83,7 +124,7 @@ for (const [nombre, tipo, dispositivo] of navegadores) {
     await tocar('Niveles HSK');
     await captura('04_hsk');
   });
-  await paso('audio', async () => {
+  if (completo) await paso('audio', async () => {
     const audio = await pagina.evaluate(async () => {
       const a = document.createElement('audio');
       const r = await fetch('assets/assets/audio/silabas/ma1.opus');
@@ -100,7 +141,7 @@ for (const [nombre, tipo, dispositivo] of navegadores) {
     await abrir('segunda vez', 90000);
     await captura('05_segunda_vez');
   });
-  await paso('sin internet', async () => {
+  if (completo) await paso('sin internet', async () => {
     // Dar tiempo a que el service worker termine de guardar.
     await pagina.waitForTimeout(3000);
     await contexto.setOffline(true);
@@ -109,8 +150,9 @@ for (const [nombre, tipo, dispositivo] of navegadores) {
     await contexto.setOffline(false);
   });
 
-  anotar(`pasos completos: ${pasos} de 5`);
-  resumen.push(`${nombre} · pasos completos: ${pasos} de 5`);
+  const total = completo ? 5 : 2;
+  anotar(`pasos completos: ${pasos} de ${total}`);
+  resumen.push(`${nombre} · pasos completos: ${pasos} de ${total}`);
   writeFileSync(`${salida}/registro_${nombre}.txt`, registro.join('\n') + '\n');
   await navegador.close();
 }

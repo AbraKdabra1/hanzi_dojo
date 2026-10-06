@@ -81,8 +81,8 @@ jobs:
           EOF
           sleep 2
           node herramientas/capturas_web.mjs http://localhost:8000/hanzi_dojo/ capturas_web 2>&1 | tee navegadores.txt
-          # Bien si los dos navegadores completaron todo.
-          test "$(grep -c 'pasos completos: 5 de 5' capturas_web/resumen_navegadores.txt)" = 2
+          # Bien si ningún paso falló.
+          test -s capturas_web/resumen_navegadores.txt && ! grep -q '✗' capturas_web/resumen_navegadores.txt
 
       - name: Preparar para GitHub Pages
         if: steps.compilar.outcome == 'success' && (github.ref == 'refs/heads/v2' || github.event_name == 'workflow_dispatch')

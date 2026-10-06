@@ -945,6 +945,8 @@ const textosEn = <String, String>{
       'HSK 3.0 list (ivankra/hsk30)',
   'Tatoeba (oraciones de ejemplo)':
       'Tatoeba (example sentences)',
+  'Noto Color Emoji y Noto Sans Math (símbolos de la versión web)':
+      'Noto Color Emoji and Noto Sans Math (web version symbols)',
   'Noto Sans SC (tipografía)':
       'Noto Sans SC (typeface)',
   'OpenCC (tradicional → simplificado)':

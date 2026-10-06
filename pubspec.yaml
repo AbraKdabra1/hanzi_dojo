@@ -82,3 +82,26 @@ flutter:
           weight: 500
         - asset: assets/fonts/NotoSansSC-Bold.ttf
           weight: 700
+    # Emoji y símbolos de la interfaz, solo para la versión web (en el teléfono
+    # los pone el sistema): herramientas_datos/preparar_simbolos_web.py. OFL.
+    - family: SimbolosHanzi0
+      fonts:
+        - asset: assets/fonts/simbolos/SimbolosHanzi0.ttf
+    - family: SimbolosHanzi1
+      fonts:
+        - asset: assets/fonts/simbolos/SimbolosHanzi1.ttf
+    - family: SimbolosHanzi2
+      fonts:
+        - asset: assets/fonts/simbolos/SimbolosHanzi2.ttf
+    - family: SimbolosHanzi3
+      fonts:
+        - asset: assets/fonts/simbolos/SimbolosHanzi3.ttf
+    - family: SimbolosHanzi4
+      fonts:
+        - asset: assets/fonts/simbolos/SimbolosHanzi4.ttf
+    - family: SimbolosHanzi5
+      fonts:
+        - asset: assets/fonts/simbolos/SimbolosHanzi5.ttf
+    - family: SimbolosHanzi6
+      fonts:
+        - asset: assets/fonts/simbolos/SimbolosHanzi6.ttf
