@@ -38,16 +38,16 @@ class Grabaciones {
 
   /// Deja [reproductor] listo para tocar el asset [ruta] ("assets/audio/…").
   static Future<void> cargar(AudioPlayer reproductor, String ruta) async {
-    if (!necesitaCaf) {
-      await reproductor.setAsset(ruta);
-      return;
-    }
+    await reproductor.setAudioSource(await fuente(ruta));
+  }
+
+  /// El asset [ruta] como fuente para el reproductor (por ejemplo, para
+  /// armar una lista que suene de corrido): el Opus tal cual o, donde hace
+  /// falta, ya reempacado a CAF.
+  static Future<UriAudioSource> fuente(String ruta) async {
+    if (!necesitaCaf) return AudioSource.asset(ruta);
     final caf = await archivoCaf(ruta);
-    if (CacheCaf.esArchivo) {
-      await reproductor.setFilePath(caf);
-    } else {
-      await reproductor.setUrl(caf);
-    }
+    return CacheCaf.esArchivo ? AudioSource.file(caf) : AudioSource.uri(Uri.parse(caf));
   }
 
   /// El CAF de [ruta]: una ruta de archivo (iOS) o una dirección blob: (web).

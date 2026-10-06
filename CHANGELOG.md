@@ -23,11 +23,13 @@ Primera versión pública.
 
 **Leer**
 - Siete libros graduados del HSK 1 al 7-9 (cuentos, mitos, chengyu, leyendas, Viaje al Oeste, proverbios y poemas Tang) con pinyin, traducción y voz.
-- Escucha el capítulo completo con la palabra que suena resaltada, manda palabras al repaso con un toque y responde tres preguntas de comprensión al final.
+- Escucha el capítulo completo de corrido, sin saltarse ninguna sílaba, con la palabra que suena resaltada: desde el párrafo que tienes a la vista, con pausa y a la velocidad que elijas (0.6× a 1.5×, se cambia mientras suena).
+- Manda palabras al repaso con un toque y responde tres preguntas de comprensión al final.
 - Tus propios libros: TXT, EPUB o texto pegado.
 
 **Hábito**
 - Meta diaria con anillo de avance, recordatorio diario (solo si aún no la cumples) y widget con el carácter del día.
+- Carácter del día en la pantalla de bloqueo: una notificación silenciosa al día, a la hora que elijas, con el carácter en grande, su pinyin y su significado (se activa en Ajustes).
 - Racha con protector semanal, 22 logros y tarjeta de progreso para compartir.
 
 **Todo lo demás**

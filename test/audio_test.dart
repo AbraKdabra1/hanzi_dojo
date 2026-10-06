@@ -133,6 +133,35 @@ void main() {
     expect(rangos, [(0, 1), (1, 2), (2, 5)]);
   });
 
+  group('Recortes (leer de corrido)', () {
+    test('clave de cada grabación en recortes.txt', () {
+      expect(Clip.silaba('ma1').claveRecorte, 's/ma1');
+      expect(Clip.palabra('56fe-4e66-9986').claveRecorte, 'p/56fe-4e66-9986');
+      expect(const Clip.pausa(250).claveRecorte, isNull);
+    });
+
+    test('se leen las líneas válidas e ignoran comentarios y basura', () {
+      final r = Audio.leerRecortes('# comentario\ns/ma1 31 545\np/4e00 20 800\nmal\ns/x1 9 3\n');
+      expect(r, {'s/ma1': (31, 545), 'p/4e00': (20, 800)});
+    });
+
+    test('cada grabación tiene su recorte y deja la mayor parte del audio', () {
+      final r = Audio.leerRecortes(File('assets/audio/recortes.txt').readAsStringSync());
+      final palabras = File('assets/audio/palabras.txt').readAsLinesSync().where((l) => l.isNotEmpty);
+      final silabas = File('assets/audio/silabas.txt').readAsLinesSync().where((l) => l.isNotEmpty);
+      for (final p in palabras) {
+        final recorte = r['p/${Audio.nombrePalabra(p)}'];
+        expect(recorte, isNotNull, reason: p);
+        expect(recorte!.$2 - recorte.$1, greaterThan(150), reason: p);
+      }
+      for (final s in silabas) {
+        final recorte = r['s/$s'];
+        expect(recorte, isNotNull, reason: s);
+        expect(recorte!.$2 - recorte.$1, greaterThan(150), reason: s);
+      }
+    });
+  });
+
   group('Grabaciones en iOS', () {
     test('nombre del CAF reempacado (uno por grabación, sin chocar)', () {
       expect(Grabaciones.nombreCaf('assets/audio/silabas/ma1.opus'), 'audio_silabas_ma1.caf');
@@ -209,6 +238,7 @@ void main() {
         ...Directory('assets/audio/silabas').listSync().whereType<File>().take(300),
         ...Directory('assets/audio/palabras').listSync().whereType<File>().take(300),
         File('assets/sonidos/pincel.opus'),
+        File('assets/sonidos/silencio.opus'),
       ];
       for (final f in archivos) {
         final caf = OggACaf.convertir(f.readAsBytesSync());

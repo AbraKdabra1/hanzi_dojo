@@ -127,6 +127,9 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
       // reinstaló o se importó un respaldo (si ya estaba, no cambia nada).
       final recordatorio = await repo.recordatorio();
       if (recordatorio != null) Habito.programarRecordatorio(recordatorio.$1, recordatorio.$2);
+      // Lo mismo con el carácter del día de la pantalla de bloqueo.
+      final caracterDia = await repo.caracterDia();
+      if (caracterDia != null) Habito.programarCaracterDia(caracterDia.$1, caracterDia.$2);
       _marca('dibujos del fondo');
       await fondo;
       _marca('listo');

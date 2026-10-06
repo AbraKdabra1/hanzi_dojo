@@ -547,12 +547,16 @@ class Repositorio {
         traduccion: await base.leerAjuste('lectura_traduccion') == '1',
         tamano: double.tryParse(await base.leerAjuste('lectura_tamano') ?? '') ??
             AjustesLectura.tamanoPorDefecto,
+        velocidad: _velocidadValida(double.tryParse(await base.leerAjuste('lectura_velocidad') ?? '')),
       );
+
+  static double _velocidadValida(double? v) => AjustesLectura.velocidades.contains(v) ? v! : 1.0;
 
   Future<void> guardarAjustesLectura(AjustesLectura a) async {
     await base.guardarAjuste('lectura_pinyin', a.pinyin ? '1' : '0');
     await base.guardarAjuste('lectura_traduccion', a.traduccion ? '1' : '0');
     await base.guardarAjuste('lectura_tamano', '${a.tamano}');
+    await base.guardarAjuste('lectura_velocidad', '${a.velocidad}');
   }
 
   // ═══════════════════════════════════════════════════════════════════════
@@ -671,9 +675,17 @@ class Repositorio {
 
 /// Preferencias del lector.
 class AjustesLectura {
-  const AjustesLectura({this.pinyin = true, this.traduccion = false, this.tamano = tamanoPorDefecto});
+  const AjustesLectura({
+    this.pinyin = true,
+    this.traduccion = false,
+    this.tamano = tamanoPorDefecto,
+    this.velocidad = 1.0,
+  });
 
   static const tamanoPorDefecto = 26.0;
+
+  /// Velocidades de la lectura en voz alta (1.0 = como se grabaron).
+  static const velocidades = [0.6, 0.8, 1.0, 1.25, 1.5];
 
   /// Tamaños de letra que se van alternando con el botón "Aa".
   static const tamanos = [22.0, 26.0, 30.0, 34.0];
@@ -687,10 +699,14 @@ class AjustesLectura {
   /// Tamaño de los caracteres.
   final double tamano;
 
-  AjustesLectura copia({bool? pinyin, bool? traduccion, double? tamano}) => AjustesLectura(
+  /// Velocidad de la lectura en voz alta (una de [velocidades]).
+  final double velocidad;
+
+  AjustesLectura copia({bool? pinyin, bool? traduccion, double? tamano, double? velocidad}) => AjustesLectura(
         pinyin: pinyin ?? this.pinyin,
         traduccion: traduccion ?? this.traduccion,
         tamano: tamano ?? this.tamano,
+        velocidad: velocidad ?? this.velocidad,
       );
 
   /// El siguiente tamaño de [tamanos] (vuelve al primero después del último).

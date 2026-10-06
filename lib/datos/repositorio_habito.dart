@@ -171,4 +171,16 @@ extension HabitoRepositorio on Repositorio {
 
   Future<void> guardarRecordatorio((int, int)? hora) =>
       base.guardarAjuste('recordatorio', hora == null ? '' : '${hora.$1}:${_dos(hora.$2)}');
+
+  /// Hora del carácter del día en la pantalla de bloqueo, o null si está
+  /// apagado.
+  Future<(int, int)?> caracterDia() async {
+    final texto = await base.leerAjuste('caracter_dia') ?? '';
+    final m = RegExp(r'^(\d{1,2}):(\d{2})$').firstMatch(texto);
+    if (m == null) return null;
+    return (int.parse(m.group(1)!), int.parse(m.group(2)!));
+  }
+
+  Future<void> guardarCaracterDia((int, int)? hora) =>
+      base.guardarAjuste('caracter_dia', hora == null ? '' : '${hora.$1}:${_dos(hora.$2)}');
 }
