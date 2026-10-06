@@ -60,4 +60,6 @@ assets/db/*.tmp
 android/key.properties
 *.jks
 *.keystore
+# La llave de pruebas sí va en el repo (pública a propósito; ver android/app/build.gradle.kts).
+!android/llave_pruebas.keystore
 llave_base64.txt
