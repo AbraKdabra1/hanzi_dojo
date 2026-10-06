@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hanzi_dojo/helpers/grabaciones.dart';
+import 'package:hanzi_dojo/helpers/ogg_a_caf.dart';
 import 'package:hanzi_dojo/main.dart' as app;
 import 'package:integration_test/integration_test.dart';
 import 'package:just_audio/just_audio.dart';
@@ -94,6 +95,19 @@ void main() {
     for (final ruta in ['assets/audio/silabas/ma1.opus', 'assets/audio/palabras/一下.opus']) {
       final bytes = await tester.runAsync(() => paso('leer $ruta', () => rootBundle.load(ruta)));
       debugPrint('Asset $ruta: ${bytes?.lengthInBytes} bytes');
+      // Diagnóstico: cada operación por separado (síncronas y asíncronas).
+      final datos = bytes!.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+      final reloj = Stopwatch()..start();
+      final caf0 = OggACaf.convertir(datos);
+      debugPrint('Convertir en memoria: ${caf0.length} bytes en ${reloj.elapsedMilliseconds} ms');
+      final dir = Directory('${Directory.systemTemp.path}/prueba_caf');
+      debugPrint('Carpeta temporal: ${dir.path}');
+      dir.createSync(recursive: true);
+      final f = File('${dir.path}/sincrono.caf')..writeAsBytesSync(caf0);
+      debugPrint('Escribir síncrono: ${f.lengthSync()} bytes');
+      await tester.runAsync(() => paso('existe (async)', () => f.exists(), segundos: 15));
+      await tester.runAsync(
+          () => paso('escribir (async)', () => File('${dir.path}/asincrono.caf').writeAsBytes(caf0), segundos: 15));
       final caf = await tester.runAsync(() => paso('CAF $ruta', () => Grabaciones.archivoCaf(ruta)));
       final archivo = File(caf!);
       final cabecera = String.fromCharCodes(archivo.readAsBytesSync().take(4));

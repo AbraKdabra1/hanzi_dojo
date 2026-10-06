@@ -73,8 +73,13 @@ class FondoTintaChina extends StatelessWidget {
         if (ramaAnimada)
           _RamaAnimada(nocturno: c.oscuro, child: contenido)
         else ...[
-          RepaintBoundary(
-            child: CustomPaint(painter: _PintorRamaQuieta(MediaQuery.devicePixelRatioOf(context), c.oscuro)),
+          // Debajo de la barra de estado / la isla del iPhone, como el resto
+          // de la pantalla (si no, la rama tapa los botones de arriba).
+          Padding(
+            padding: EdgeInsets.only(top: MediaQuery.paddingOf(context).top),
+            child: RepaintBoundary(
+              child: CustomPaint(painter: _PintorRamaQuieta(MediaQuery.devicePixelRatioOf(context), c.oscuro)),
+            ),
           ),
           contenido,
         ],
@@ -274,7 +279,11 @@ class _RamaAnimadaState extends State<_RamaAnimada> with WidgetsBindingObserver 
     return Stack(
       fit: StackFit.expand,
       children: [
-        RepaintBoundary(child: CustomPaint(painter: _PintorRamaAnimada(_viento, widget.nocturno))),
+        // Debajo de la barra de estado / la isla del iPhone (ver arriba).
+        Padding(
+          padding: EdgeInsets.only(top: MediaQuery.paddingOf(context).top),
+          child: RepaintBoundary(child: CustomPaint(painter: _PintorRamaAnimada(_viento, widget.nocturno))),
+        ),
         // Tocar en cualquier parte hace soplar el viento otra vez.
         Listener(
           behavior: HitTestBehavior.translucent,

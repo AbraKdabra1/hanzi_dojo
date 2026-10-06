@@ -73,9 +73,12 @@ jobs:
                      for x in v if x['name'].startswith('iPhone')))")
           echo "UDID=$UDID" >> "$GITHUB_ENV"
           echo "Simulador: $UDID" | tee simulador.txt
-          # En español, como la mayoría de quienes la usan.
-          xcrun simctl spawn "$UDID" defaults write "Apple Global Domain" AppleLanguages -array es-MX || true
+          # En español, como la mayoría de quienes la usan (se aplica al
+          # reiniciar el simulador).
+          xcrun simctl bootstatus "$UDID" -b > /dev/null 2>&1 || true
+          xcrun simctl spawn "$UDID" defaults write "Apple Global Domain" AppleLanguages -array es-MX es || true
           xcrun simctl spawn "$UDID" defaults write "Apple Global Domain" AppleLocale -string es_MX || true
+          xcrun simctl shutdown "$UDID" || true
           xcrun simctl bootstatus "$UDID" -b 2>&1 | tail -2 | tee -a simulador.txt
           xcrun simctl list runtimes | tee -a simulador.txt
           mkdir -p "$PWD/build/capturas_ios"
