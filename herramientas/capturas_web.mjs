@@ -44,25 +44,31 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
     timezoneId: 'America/Mexico_City',
     ...extra,
   });
-  const pagina = await contexto.newPage();
-  pagina.on('console', (m) => {
-    if (!m.text().includes('GL Driver Message')) anotar(`[consola ${m.type()}] ${m.text()}`);
-  });
-  pagina.on('pageerror', (e) => anotar(`[error de página] ${e.message}`));
   // Pedidos en curso (para saber cuál se queda colgado) y a otros servidores
-  // (la versión web no debería pedir nada fuera de su sitio).
+  // (la versión web solo debería pedir a Google Fonts letras que no trae).
   const enCurso = new Map();
-  pagina.on('request', (r) => {
-    enCurso.set(r, Date.now());
-    if (!r.url().startsWith(url.origin) && !r.url().startsWith('blob:') && !r.url().startsWith('data:')) {
-      anotar(`[fuera del sitio] ${r.method()} ${r.url()}`);
-    }
-  });
-  pagina.on('requestfinished', (r) => enCurso.delete(r));
-  pagina.on('requestfailed', (r) => {
-    enCurso.delete(r);
-    anotar(`[falló] ${r.url()} ${r.failure()?.errorText ?? ''}`);
-  });
+  let pagina;
+  const nuevaPagina = async () => {
+    if (pagina) await pagina.close();
+    enCurso.clear();
+    pagina = await contexto.newPage();
+    pagina.on('console', (m) => {
+      if (!m.text().includes('GL Driver Message')) anotar(`[consola ${m.type()}] ${m.text()}`);
+    });
+    pagina.on('pageerror', (e) => anotar(`[error de página] ${e.message}`));
+    pagina.on('request', (r) => {
+      enCurso.set(r, Date.now());
+      if (!r.url().startsWith(url.origin) && !r.url().startsWith('blob:') && !r.url().startsWith('data:')) {
+        anotar(`[fuera del sitio] ${r.method()} ${r.url()}`);
+      }
+    });
+    pagina.on('requestfinished', (r) => enCurso.delete(r));
+    pagina.on('requestfailed', (r) => {
+      enCurso.delete(r);
+      anotar(`[falló] ${r.url()} ${r.failure()?.errorText ?? ''}`);
+    });
+  };
+  await nuevaPagina();
   const diagnostico = async () => {
     for (const [r, desde] of enCurso) {
       anotar(`[sin terminar] ${r.method()} ${r.url()} (desde hace ${((Date.now() - desde) / 1000).toFixed(0)} s)`);
@@ -71,9 +77,37 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
       .evaluate(async () => ({
         sw: navigator.serviceWorker?.controller?.scriptURL ?? 'ninguno',
         bases: (await indexedDB.databases?.())?.map((b) => `${b.name} v${b.version}`).join(', ') ?? '?',
+        // Lo que ve la accesibilidad (así se encuentran los botones).
+        semantica: [...document.querySelectorAll('flt-semantics')]
+          .map((e) => `${e.getAttribute('role') ?? ''}:${e.getAttribute('aria-label') ?? e.textContent ?? ''}`)
+          .filter((t) => t.length > 1)
+          .slice(0, 40),
       }))
       .catch((e) => ({ error: e.message }));
     anotar(`[estado] ${JSON.stringify(estado)}`);
+  };
+  // Cuánto tarda en quedar guardada la base en IndexedDB: una lectura espera a
+  // que termine la escritura en curso.
+  const esperarGuardado = async () => {
+    const r = await pagina.evaluate(
+      () =>
+        new Promise((listo) => {
+          const t0 = performance.now();
+          const abierta = indexedDB.open('sqflite_databases');
+          abierta.onerror = () => listo({ error: String(abierta.error) });
+          abierta.onsuccess = () => {
+            const db = abierta.result;
+            const cuenta = db.transaction(['blocks'], 'readonly').objectStore('blocks').count();
+            cuenta.onsuccess = () => {
+              listo({ bloques: cuenta.result, ms: Math.round(performance.now() - t0) });
+              db.close();
+            };
+            cuenta.onerror = () => listo({ error: String(cuenta.error) });
+          };
+        }),
+    );
+    anotar(`guardado en IndexedDB: ${JSON.stringify(r)}`);
+    resumen.push(`${nombre} · base guardada: ${r.bloques} bloques, ${(r.ms / 1000).toFixed(1)} s después de abrir`);
   };
 
   const captura = async (archivo) => {
@@ -81,12 +115,23 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
     anotar(`captura ${archivo}`);
   };
   const tocar = async (texto) => {
-    // Las tarjetas juntan título y subtítulo en un mismo elemento: basta con
-    // que empiece con el texto.
-    const exacto = pagina.getByText(texto, { exact: true });
-    const boton = (await exacto.count()) > 0 ? exacto : pagina.getByText(new RegExp(`^\\s*${texto}`));
-    await boton.first().click({ timeout: 15000 });
-    await pagina.waitForTimeout(2500);
+    // El botón puede tener el texto tal cual o, en las tarjetas, junto con el
+    // subtítulo (en el texto o en aria-label): basta con que empiece con él.
+    const inicio = new RegExp(`^\\s*${texto}`);
+    const opciones = [
+      pagina.getByText(texto, { exact: true }),
+      pagina.getByRole('button', { name: inicio }),
+      pagina.locator(`flt-semantics[aria-label^="${texto}"]`),
+      pagina.getByText(inicio),
+    ];
+    for (const opcion of opciones) {
+      if ((await opcion.count()) > 0) {
+        await opcion.first().click({ timeout: 15000 });
+        await pagina.waitForTimeout(2500);
+        return;
+      }
+    }
+    throw new Error(`No encontré "${texto}"`);
   };
   const abrir = async (paso, limite) => {
     const inicio = Date.now();
@@ -114,6 +159,7 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
   await paso('primera vez', async () => {
     await abrir('primera vez', 240000);
     await captura('01_inicio');
+    await esperarGuardado();
   });
   const completo = nombre !== 'chrome_sin_sw';
   if (completo) await paso('estudiar', async () => {
@@ -138,6 +184,8 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
     resumen.push(`${nombre} · audio: ogg="${audio.ogg}" caf="${audio.caf}"`);
   });
   await paso('segunda vez', async () => {
+    // Como al cerrar la app y volver a abrirla: otra pestaña.
+    await nuevaPagina();
     await abrir('segunda vez', 90000);
     await captura('05_segunda_vez');
   });
@@ -145,6 +193,7 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
     // Dar tiempo a que el service worker termine de guardar.
     await pagina.waitForTimeout(3000);
     await contexto.setOffline(true);
+    await nuevaPagina();
     await abrir('sin internet', 90000);
     await captura('06_sin_internet');
     await contexto.setOffline(false);

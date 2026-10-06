@@ -55,9 +55,12 @@ Cada vez que se abre con internet, revisa si hay una versión nueva y la usa
 ## Privacidad
 
 La página la sirve GitHub Pages: como cualquier sitio, GitHub recibe la
-dirección IP de quien la abre (ver la política de privacidad de GitHub). La
-app no tiene cuentas, anuncios ni analítica y no envía tu progreso a ningún
-lado: se queda en el navegador. Ver [privacidad.md](privacidad.md).
+dirección IP de quien la abre (ver la política de privacidad de GitHub). El
+motor de Flutter descarga de Google Fonts su tipografía base y, si aparece un
+carácter poco común que la app no trae (fuera de HSK y de los libros de
+«Leer»), la fuente que lo dibuja; Google recibe solo la petición de esa
+fuente. La app no tiene cuentas, anuncios ni analítica y no envía tu progreso
+a ningún lado: se queda en el navegador. Ver [privacidad.md](privacidad.md).
 
 ## Para quien desarrolla
 

@@ -50,6 +50,16 @@ que tú elijas.
 Desinstalar la app borra todo. Si quieres conservarlo, antes usa
 Ajustes → Tus datos → Exportar progreso.
 
+## Versión web
+
+La versión que se abre en el navegador ([web.md](web.md)) guarda lo mismo,
+pero dentro del navegador (IndexedDB) en lugar de la carpeta de la app; borrar
+los datos del sitio, o quitar el ícono de la pantalla de inicio en iPhone, lo
+borra. Como es una página web, la sirve GitHub Pages, que recibe la dirección
+IP de quien la abre, y el motor de Flutter descarga de Google Fonts su
+tipografía base y las letras poco comunes que la app no trae. Tu progreso
+nunca sale del navegador.
+
 ## Contacto
 
 Dudas o sugerencias: <https://github.com/AbraKdabra1/hanzi_dojo/issues>
