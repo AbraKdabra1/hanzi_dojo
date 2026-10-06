@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hanzi_dojo/datos/audio.dart';
+import 'package:hanzi_dojo/helpers/grabaciones.dart';
 
 void main() {
   group('claveSilaba', () {
@@ -128,5 +129,29 @@ void main() {
         palabras: const {'图书馆', '我'}, silabas: const {'qu4'}, pinyin: const ['wǒ', 'qù', 'tú', 'shū', 'guǎn', '']);
     final rangos = [for (final c in plan.clips) if (!c.esPausa) (c.inicio, c.fin)];
     expect(rangos, [(0, 1), (1, 2), (2, 5)]);
+  });
+
+  group('Grabaciones en iOS', () {
+    test('nombre del CAF reempacado (uno por grabación, sin chocar)', () {
+      expect(Grabaciones.nombreCaf('assets/audio/silabas/ma1.opus'), 'audio_silabas_ma1.caf');
+      expect(Grabaciones.nombreCaf('assets/audio/palabras/一下.opus'), 'audio_palabras_一下.caf');
+      expect(Grabaciones.nombreCaf('assets/sonidos/pincel.opus'), 'sonidos_pincel.caf');
+    });
+
+    test('en la computadora (y en Android) no se reempaca nada', () {
+      expect(Grabaciones.enIos, isFalse);
+    });
+
+    test('todas las grabaciones son Ogg (lo que se reempaca en iOS)', () {
+      for (final carpeta in ['assets/audio/silabas', 'assets/audio/palabras', 'assets/sonidos']) {
+        final archivos = Directory(carpeta).listSync().whereType<File>().where((f) => f.path.endsWith('.opus'));
+        for (final f in archivos.take(200)) {
+          final cabecera = f.openSync()..setPositionSync(0);
+          final bytes = cabecera.readSync(4);
+          cabecera.closeSync();
+          expect(String.fromCharCodes(bytes), 'OggS', reason: f.path);
+        }
+      }
+    });
   });
 }

@@ -1,7 +1,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// archivos.dart — Guardar y abrir archivos con los diálogos de Android
+// archivos.dart — Guardar y abrir archivos con los diálogos del sistema
 //
-// Habla con MainActivity.kt por el canal "hanzi_dojo/archivos":
+// Habla con MainActivity.kt (Android) o AppDelegate.swift (iOS) por el canal
+// "hanzi_dojo/archivos":
 //   guardar → diálogo "Guardar como…" del sistema (Descargas, Drive, la nube
 //             de Huawei… lo que tenga el teléfono). Sin permisos de
 //             almacenamiento: el usuario elige dónde y la app solo escribe ahí.
@@ -39,10 +40,15 @@ class InfoDispositivo {
   final String version;
   final String compilacion;
   final String modelo;
+
+  /// Versión del sistema: "14 (API 34)" en Android; en iPhone/iPad ya viene
+  /// con el nombre ("iOS 18.2", "iPadOS 18.2").
   final String android;
 
+  String get sistema => RegExp(r'^\d').hasMatch(android) ? 'Android $android' : android;
+
   @override
-  String toString() => 'Hanzi Dojo $version ($compilacion) · $modelo · Android $android';
+  String toString() => 'Hanzi Dojo $version ($compilacion) · $modelo · $sistema';
 }
 
 class Archivos {

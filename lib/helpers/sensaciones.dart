@@ -15,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 
 import '../datos/registro_errores.dart';
+import 'grabaciones.dart';
 
 class Sensaciones {
   Sensaciones._();
@@ -33,7 +34,7 @@ class Sensaciones {
 
   static Future<void> _prepararPincel() => _cargando ??= () async {
         final p = _pincel = AudioPlayer();
-        await p.setAsset('assets/sonidos/pincel.opus');
+        await Grabaciones.cargar(p, 'assets/sonidos/pincel.opus');
         await p.setVolume(0.7);
       }();
 
