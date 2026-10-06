@@ -41,8 +41,11 @@ class Grabaciones {
   }
 
   /// Ruta del CAF de [ruta] en la carpeta temporal (lo crea si no existe).
-  static Future<String> archivoCaf(String ruta) =>
-      _enCurso[ruta] ??= _convertir(ruta).whenComplete(() => _enCurso.remove(ruta));
+  static Future<String> archivoCaf(String ruta) => _enCurso[ruta] ??= _convertir(ruta).whenComplete(() {
+        // Con llaves a propósito: "() => _enCurso.remove(ruta)" devolvería la
+        // propia conversión y whenComplete se quedaría esperándose a sí mismo.
+        _enCurso.remove(ruta);
+      });
 
   /// "assets/audio/silabas/ma1.opus" → "audio_silabas_ma1.caf".
   @visibleForTesting

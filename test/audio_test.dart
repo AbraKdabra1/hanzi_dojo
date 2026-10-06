@@ -144,6 +144,16 @@ void main() {
       expect(Grabaciones.enIos, isFalse);
     });
 
+    test('reempacar termina, también con dos botones a la vez, y la segunda vez ya está listo', () async {
+      TestWidgetsFlutterBinding.ensureInitialized();
+      const ruta = 'assets/audio/silabas/ma1.opus';
+      final rutas = await Future.wait([Grabaciones.archivoCaf(ruta), Grabaciones.archivoCaf(ruta)])
+          .timeout(const Duration(seconds: 20));
+      expect(rutas[0], rutas[1]);
+      expect(String.fromCharCodes(File(rutas[0]).readAsBytesSync().take(4)), 'caff');
+      expect(await Grabaciones.archivoCaf(ruta).timeout(const Duration(seconds: 5)), rutas[0]);
+    });
+
     test('todas las grabaciones son Ogg (lo que se reempaca en iOS)', () {
       for (final carpeta in ['assets/audio/silabas', 'assets/audio/palabras', 'assets/sonidos']) {
         final archivos = Directory(carpeta).listSync().whereType<File>().where((f) => f.path.endsWith('.opus'));
