@@ -199,12 +199,6 @@ Cada push corre la integración continua (pestaña **Actions** del repo). Al
 terminar, en la sección **Artifacts** está `hanzi-dojo-profile-apk`: descárgalo,
 descomprímelo y abre el `.apk` en el teléfono.
 
-Estos APK de prueba se firman con una llave de pruebas fija y pública
-(`android/llave_pruebas.keystore`), así que cada uno se instala encima del
-anterior sin perder tu progreso. Android no deja mezclar llaves: para pasar de
-un APK de prueba a uno de *Releases* (o al revés) hay que exportar el progreso,
-desinstalar, instalar el otro e importar.
-
 ---
 
 ## Estructura del código

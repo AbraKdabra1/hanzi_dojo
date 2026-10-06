@@ -42,16 +42,6 @@ android {
     }
 
     signingConfigs {
-        // Llave de PRUEBAS fija y pública (android/llave_pruebas.keystore, en
-        // el repo). Firma los APK debug/profile, también los de la integración
-        // continua: así cada APK de prueba se instala encima del anterior sin
-        // desinstalar. No sirve para publicar (eso es la llave de lanzamiento).
-        getByName("debug") {
-            storeFile = rootProject.file("llave_pruebas.keystore")
-            storePassword = "android"
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
-        }
         if (archivoLlave.exists()) {
             create("lanzamiento") {
                 storeFile = file(propiedadesLlave.getProperty("storeFile"))
