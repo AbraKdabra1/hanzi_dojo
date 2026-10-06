@@ -117,11 +117,11 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
   const tocar = async (texto) => {
     // El botón puede tener el texto tal cual o, en las tarjetas, junto con el
     // subtítulo (en el texto o en aria-label): basta con que empiece con él.
-    const inicio = new RegExp(`^\\s*${texto}`);
+    const inicio = new RegExp(`(^|\\n)\\s*${texto}`); // también tras un emoji ("📚\\nNiveles HSK")
     const opciones = [
       pagina.getByText(texto, { exact: true }),
       pagina.getByRole('button', { name: inicio }),
-      pagina.locator(`flt-semantics[aria-label^="${texto}"]`),
+      pagina.locator(`flt-semantics[aria-label*="${texto}"]`),
       pagina.getByText(inicio),
     ];
     for (const opcion of opciones) {
