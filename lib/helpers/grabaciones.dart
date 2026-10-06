@@ -55,9 +55,7 @@ class Grabaciones {
   static Future<String> _convertir(String ruta) async {
     final carpeta = Directory('${Directory.systemTemp.path}/grabaciones_caf');
     final caf = File('${carpeta.path}/${nombreCaf(ruta)}');
-    // Archivos de 1-5 KB: las operaciones síncronas tardan microsegundos (y en
-    // el simulador de iOS las asíncronas de esta función se quedaban sin
-    // responder).
+    // Archivos de 1-5 KB: las operaciones síncronas tardan microsegundos.
     if (caf.existsSync() && caf.lengthSync() > 0) return caf.path;
     carpeta.createSync(recursive: true);
     final datos = await rootBundle.load(ruta);

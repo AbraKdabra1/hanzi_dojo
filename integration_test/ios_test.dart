@@ -91,7 +91,7 @@ void main() {
 
     // Las grabaciones: Ogg Opus → CAF, y el reproductor de iOS las acepta.
     expect(Grabaciones.enIos, isTrue);
-    for (final ruta in ['assets/audio/silabas/ma1.opus', 'assets/audio/palabras/一下.opus']) {
+    for (final ruta in ['assets/audio/silabas/ma1.opus', 'assets/audio/palabras/4e00-4e0b.opus' /* 一下 */]) {
       final bytes = await tester.runAsync(() => paso('leer $ruta', () => rootBundle.load(ruta)));
       debugPrint('Asset $ruta: ${bytes?.lengthInBytes} bytes');
       final caf = await tester.runAsync(() => paso('CAF $ruta', () => Grabaciones.archivoCaf(ruta)));
