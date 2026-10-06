@@ -1057,4 +1057,30 @@ const textosEn = <String, String>{
       '{0} of {1} correct',
   '¿Qué entendiste?':
       'How much did you understand?',
+  '¿Te está sirviendo Hanzi Dojo? Es gratis y sin anuncios; si quieres, puedes apoyarlo.':
+      'Is Hanzi Dojo helping you? It\'s free and ad-free; if you\'d like, you can support it.',
+  'Ver cómo':
+      'See how',
+  'Apoyar el proyecto':
+      'Support the project',
+  'Voluntario: la app es gratis y completa para todos':
+      'Optional: the app is free and complete for everyone',
+  'No se pudo abrir el navegador.':
+      'Couldn\'t open the browser.',
+  'Apoyar Hanzi Dojo':
+      'Support Hanzi Dojo',
+  'Hanzi Dojo es gratis, sin anuncios ni cuentas, y de código abierto. Así va a seguir.':
+      'Hanzi Dojo is free, with no ads or accounts, and open source. It will stay that way.',
+  'Si te está ayudando a aprender y quieres apoyar su desarrollo (más libros, grabaciones y ejercicios), puedes dejar un donativo voluntario. No desbloquea nada: la app es igual para todos.':
+      'If it\'s helping you learn and you\'d like to support its development (more books, recordings and exercises), you can leave an optional donation. It doesn\'t unlock anything: the app is the same for everyone.',
+  'Donar con PayPal':
+      'Donate with PayPal',
+  'Se abre en el navegador. Tú eliges la cantidad.':
+      'Opens in your browser. You choose the amount.',
+  'Otras formas de ayudar':
+      'Other ways to help',
+  'Recomiéndala a alguien que estudie chino, cuéntanos qué mejorar (Ajustes → Reportar un problema) o corrige una traducción en GitHub.':
+      'Recommend it to someone learning Chinese, tell us what to improve (Settings → Report a problem) or fix a translation on GitHub.',
+  'Ahora no':
+      'Not now',
 };

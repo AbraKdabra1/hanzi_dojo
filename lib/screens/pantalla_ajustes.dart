@@ -9,6 +9,7 @@
 //   suave) en la forma exacta del pincel, o se queda como lo dibujaste.
 // · Tus datos: exportar e importar el progreso (respaldo.dart) y deshacer la
 //   última importación.
+// · Apoyar el proyecto (donativo voluntario, widgets/apoyo.dart).
 // · Reportar un problema (pantalla_reporte.dart) e Informe de errores
 //   (pantalla_errores.dart).
 // ─────────────────────────────────────────────────────────────────────────────
@@ -23,6 +24,7 @@ import '../datos/respaldo.dart';
 import '../helpers/archivos.dart';
 import '../helpers/habito.dart';
 import '../helpers/sensaciones.dart';
+import '../widgets/apoyo.dart';
 import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
@@ -566,6 +568,10 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
               ),
             ),
             const SizedBox(height: 12),
+            if (Apoyo.disponible) ...[
+              TarjetaVidrio(onTap: () => Apoyo.mostrar(context), child: const FilaApoyo()),
+              const SizedBox(height: 12),
+            ],
             TarjetaVidrio(
               onTap: () => Navigator.push(
                 context,

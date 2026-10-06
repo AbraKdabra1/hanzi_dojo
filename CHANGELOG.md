@@ -36,3 +36,4 @@ Primera versión pública.
 - Exportar e importar tu progreso; informe de errores y reporte de problemas desde la app.
 - Interfaz en español o en inglés; se adapta a tabletas y a la pantalla en horizontal.
 - Sin anuncios, sin cuentas y sin internet: todo se queda en tu teléfono.
+- Si quieres apoyar el proyecto, hay un botón discreto para donar con PayPal (no desbloquea nada).

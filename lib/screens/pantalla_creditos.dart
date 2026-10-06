@@ -9,6 +9,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../widgets/apoyo.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
@@ -117,6 +118,11 @@ class PantallaCreditos extends StatelessWidget {
                 child: Text(tr('Ver licencias completas')),
               ),
             ),
+            // Al final y discreto (no aparece en la versión de Google Play).
+            if (Apoyo.disponible) ...[
+              const SizedBox(height: 24),
+              TarjetaVidrio(onTap: () => Apoyo.mostrar(context), child: const FilaApoyo()),
+            ],
           ],
         ),
       ),

@@ -114,9 +114,16 @@ Pasos (una vez):
 Cuesta un pago único de 25 USD y, para cuentas personales nuevas, Google pide
 una prueba cerrada con un grupo de personas durante unas semanas antes de
 publicar (revisa las reglas vigentes en la Play Console, cambian seguido). Play solo permite
-enlaces de donativos dentro de la app a organizaciones sin fines de lucro: en
-esa versión el botón de «Apoyar el proyecto» se quitaría y el enlace quedaría
-solo en la ficha de la tienda.
+enlaces de donativos dentro de la app a organizaciones sin fines de lucro, así
+que esa versión se compila sin el botón de «Apoyar el proyecto» (el enlace queda
+solo en la ficha de la tienda):
+
+```bash
+flutter build appbundle --release --dart-define=TIENDA=play
+```
+
+El enlace de donativos está en `lib/widgets/apoyo.dart` (`Apoyo.enlace`); para
+cambiar de plataforma basta con cambiar esa línea.
 
 ## Lista rápida antes de cada versión
 

@@ -27,6 +27,7 @@ import '../datos/repositorio_habito.dart';
 import '../datos/repositorio_practica.dart';
 import '../helpers/habito.dart';
 import '../tema.dart';
+import '../widgets/apoyo.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/logro_dialogo.dart';
 import 'pantalla_ajustes.dart';
@@ -146,7 +147,11 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
     if (celebrarMeta) {
       aviso.showSnackBar(SnackBar(content: Text(tr('🎯 ¡Meta del día cumplida! {0} de {1}', [hoy, metaDiaria]))));
     }
-    if (logros.isNotEmpty) await mostrarLogrosNuevos(context, logros);
+    if (logros.isNotEmpty) {
+      await mostrarLogrosNuevos(context, logros);
+      // Una sola vez en la vida de la app (ver widgets/apoyo.dart).
+      if (mounted) await Apoyo.sugerirTrasLogro(context, repo);
+    }
   }
 
   Future<void> _ir(Widget pantalla) async {

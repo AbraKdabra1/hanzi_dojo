@@ -27,6 +27,9 @@ Cuando tocas «Reportar un problema», la app abre tu navegador con un
 formulario de GitHub ya lleno; tú decides si lo envías y ves exactamente qué
 contiene.
 
+«Apoyar el proyecto» abre en tu navegador la página de PayPal del autor. La
+app no envía nada: si donas o no, y cuánto, solo lo sabe PayPal.
+
 ## Permisos
 
 | Permiso | Para qué |

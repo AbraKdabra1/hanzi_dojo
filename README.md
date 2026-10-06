@@ -41,6 +41,7 @@ rastreo. La app no pide permiso de internet.
 | Widget | En la pantalla de inicio del teléfono: carácter del día (de los que ya estudiaste), repasos pendientes y avance de hoy. Se actualiza al salir de la app y cada 3 horas. |
 | Estadísticas | Caracteres estudiados, dominados, repasos para hoy, avance por nivel (caracteres y vocabulario), aciertos de cada ejercicio con audio y los tonos que más confundes. |
 | Historial | Cada repaso queda registrado: cuánto tardaste, qué trazos fallaste (y si fue al revés), en qué modo y con qué calificación. Es la base de las estadísticas que vienen. |
+| Apoyar el proyecto | Ajustes → Apoyar el proyecto (también al final de Créditos): un donativo voluntario con PayPal. No desbloquea nada; la app es igual para todos. Se sugiere una sola vez, después de un logro, y no vuelve a aparecer. La versión para Google Play se compila sin este botón. |
 | Exportar / importar | Ajustes → Tus datos. Guarda tu progreso en un archivo `.hanzidojo` y recupéralo en otro teléfono. Antes de importar se guarda una copia para poder deshacerlo. |
 | Informe de errores | Ajustes → Informe de errores. Si algo falla, los detalles se guardan en el teléfono (los últimos 50) para copiarlos al reportar un problema. No se envía nada solo. |
 | Modo oscuro «tinta» | Ajustes → Apariencia: Automática (la del teléfono), Clara u Oscura. En pantallas OLED la oscura gasta bastante menos batería. La rama del inicio se vuelve «ciruelo bajo la luna». |
@@ -248,6 +249,7 @@ lib/
 │   ├── ejercicio.dart            Piezas de los ejercicios (opciones, curva de cada tono, resumen)
 │   ├── animacion_trazos.dart     Orden de trazos animado
 │   ├── preguntas_comprension.dart Preguntas al final de cada capítulo de «Leer»
+│   ├── apoyo.dart                Apoyar el proyecto (donativo voluntario; oculto en Google Play)
 │   └── comunes.dart, …           Piezas de interfaz reutilizables
 └── screens/                      Inicio, modo, selección, radicales, familia,
                                   estudio, estadísticas, ajustes, errores, créditos,

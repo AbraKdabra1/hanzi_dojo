@@ -3,8 +3,9 @@
 # herramientas_datos/construir_db.py (solo Python estándar) y firma con su llave.
 Categories:
   - Science & Education
-License: GPL-3.0-only
+License: GPL-3.0-or-later
 AuthorName: AbraKdabra
+Donate: https://paypal.me/simbadelmarino
 SourceCode: https://github.com/AbraKdabra1/hanzi_dojo
 IssueTracker: https://github.com/AbraKdabra1/hanzi_dojo/issues
 Changelog: https://github.com/AbraKdabra1/hanzi_dojo/blob/main/CHANGELOG.md
