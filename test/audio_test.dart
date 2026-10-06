@@ -217,7 +217,7 @@ void main() {
 
     test('muestras por paquete según el primer byte (RFC 6716)', () {
       expect(OggACaf.muestrasDePaquete(Uint8List.fromList([0xF8])), 960); // CELT 20 ms
-      expect(OggACaf.muestrasDePaquete(Uint8List.fromList([0x0B])), 960 * 2); // SILK 20 ms, 2 tramas
+      expect(OggACaf.muestrasDePaquete(Uint8List.fromList([0x09])), 960 * 2); // SILK 20 ms, 2 tramas iguales
       expect(OggACaf.muestrasDePaquete(Uint8List.fromList([0x03, 0x03])), 480 * 3); // SILK 10 ms, 3 tramas
     });
 
