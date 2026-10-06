@@ -52,15 +52,17 @@ class Grabaciones {
   static Future<String> _convertir(String ruta) async {
     final carpeta = Directory('${Directory.systemTemp.path}/grabaciones_caf');
     final caf = File('${carpeta.path}/${nombreCaf(ruta)}');
-    if (await caf.exists() && await caf.length() > 0) return caf.path;
-    await carpeta.create(recursive: true);
+    // Archivos de 1-5 KB: las operaciones síncronas tardan microsegundos (y en
+    // el simulador de iOS las asíncronas de esta función se quedaban sin
+    // responder).
+    if (caf.existsSync() && caf.lengthSync() > 0) return caf.path;
+    carpeta.createSync(recursive: true);
     final datos = await rootBundle.load(ruta);
     final convertido = OggACaf.convertir(datos.buffer.asUint8List(datos.offsetInBytes, datos.lengthInBytes));
     // Primero a un nombre provisional: si la app se cierra a la mitad, no
     // queda un CAF a medias que luego parezca bueno.
-    final provisional = File('${caf.path}.tmp');
-    await provisional.writeAsBytes(convertido, flush: true);
-    await provisional.rename(caf.path);
+    final provisional = File('${caf.path}.tmp')..writeAsBytesSync(convertido);
+    provisional.renameSync(caf.path);
     return caf.path;
   }
 
