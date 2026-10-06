@@ -18,6 +18,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hanzi_dojo/helpers/grabaciones.dart';
 import 'package:hanzi_dojo/main.dart' as app;
@@ -91,6 +92,8 @@ void main() {
     // Las grabaciones: Ogg Opus → CAF, y el reproductor de iOS las acepta.
     expect(Grabaciones.enIos, isTrue);
     for (final ruta in ['assets/audio/silabas/ma1.opus', 'assets/audio/palabras/一下.opus']) {
+      final bytes = await tester.runAsync(() => paso('leer $ruta', () => rootBundle.load(ruta)));
+      debugPrint('Asset $ruta: ${bytes?.lengthInBytes} bytes');
       final caf = await tester.runAsync(() => paso('CAF $ruta', () => Grabaciones.archivoCaf(ruta)));
       final archivo = File(caf!);
       final cabecera = String.fromCharCodes(archivo.readAsBytesSync().take(4));

@@ -35,8 +35,6 @@ dependencies:
   just_audio: ^0.10.4
   # iOS: sesión de audio en modo voz (suena aunque esté en silencio).
   audio_session: ^0.2.1
-  # iOS no lee Opus en Ogg: se reempaca a CAF sin recodificar (Dart puro, BSD-3).
-  ogg_caf_converter: ^0.1.4
   # Íconos estilo iOS (se usan en algunos botones).
   cupertino_icons: ^1.0.8
 

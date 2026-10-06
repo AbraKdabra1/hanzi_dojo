@@ -4,9 +4,9 @@
 // Las grabaciones vienen en Opus dentro de Ogg (.opus): pesan poco y Android
 // las toca directo. iPhone/iPad no leen el contenedor Ogg, pero sí el mismo
 // Opus dentro de CAF, el contenedor de Apple. Así que en iOS, la primera vez
-// que suena cada grabación se reempaca a CAF (sin recodificar: misma calidad y
-// mismo peso, en milisegundos) y se guarda en la carpeta temporal; las
-// siguientes veces ya está lista.
+// que suena cada grabación se reempaca a CAF (ogg_a_caf.dart: sin recodificar,
+// misma calidad y mismo peso, en milisegundos) y se guarda en la carpeta
+// temporal; las siguientes veces ya está lista.
 //
 // También en iOS: la sesión de audio en modo "voz" para que las
 // pronunciaciones suenen aunque el interruptor de silencio esté puesto (como
@@ -19,7 +19,8 @@ import 'package:audio_session/audio_session.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:just_audio/just_audio.dart';
-import 'package:ogg_caf_converter/ogg_caf_converter.dart';
+
+import 'ogg_a_caf.dart';
 
 class Grabaciones {
   Grabaciones._();
@@ -53,10 +54,13 @@ class Grabaciones {
     final caf = File('${carpeta.path}/${nombreCaf(ruta)}');
     if (await caf.exists() && await caf.length() > 0) return caf.path;
     await carpeta.create(recursive: true);
-    final ogg = File('${caf.path}.ogg');
     final datos = await rootBundle.load(ruta);
-    await ogg.writeAsBytes(datos.buffer.asUint8List(datos.offsetInBytes, datos.lengthInBytes), flush: true);
-    await OggCafConverter().convertOggToCaf(input: ogg.path, output: caf.path, deleteInput: true);
+    final convertido = OggACaf.convertir(datos.buffer.asUint8List(datos.offsetInBytes, datos.lengthInBytes));
+    // Primero a un nombre provisional: si la app se cierra a la mitad, no
+    // queda un CAF a medias que luego parezca bueno.
+    final provisional = File('${caf.path}.tmp');
+    await provisional.writeAsBytes(convertido, flush: true);
+    await provisional.rename(caf.path);
     return caf.path;
   }
 
