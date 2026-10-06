@@ -120,6 +120,10 @@ jobs:
     needs: web
     if: github.ref == 'refs/heads/v2' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    # Requiere, una vez: Settings → Pages → Source: "GitHub Actions" y, en
+    # Settings → Environments → github-pages, permitir la rama v2 (ver
+    # docs/web.md). Mientras no esté, este paso falla sin marcar todo en rojo.
+    continue-on-error: true
     permissions:
       pages: write
       id-token: write

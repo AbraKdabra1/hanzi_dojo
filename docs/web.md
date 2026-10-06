@@ -74,6 +74,9 @@ a ningún lado: se queda en el navegador. Ver [privacidad.md](privacidad.md).
   momento (`lib/helpers/ogg_a_caf.dart`), igual que en la app de iOS.
 - `.github/workflows/web.yml` compila, prueba en Chrome y Safari
   (`herramientas/capturas_web.mjs`, registros y capturas en la rama
-  `ci-web`) y, desde `v2`, publica en GitHub Pages.
+  `ci-web`) y, desde `v2`, publica en GitHub Pages. Para eso, una sola vez,
+  en el repositorio: **Settings → Pages → Source: GitHub Actions**, y en
+  **Settings → Environments → github-pages → Deployment branches** agregar
+  `v2`.
 - Para probarla en tu PC: `dart run sqflite_common_ffi_web:setup` una vez y
   luego `flutter run -d chrome`.
