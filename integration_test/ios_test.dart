@@ -39,12 +39,26 @@ Finder _texto(String es, String en) =>
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
+  /// En el simulador la app puede escribir en la Mac: el flujo pasa la carpeta
+  /// del repositorio (al terminar, flutter test borra la app y su carpeta).
+  const carpetaCapturas = String.fromEnvironment('CAPTURAS');
+
   Future<void> captura(String nombre) async {
     final bytes = await binding.takeScreenshot(nombre);
-    final archivo = File('${Directory.systemTemp.path}/capturas_ios/$nombre.png');
+    final carpeta = carpetaCapturas.isEmpty ? '${Directory.systemTemp.path}/capturas_ios' : carpetaCapturas;
+    final archivo = File('$carpeta/$nombre.png');
     archivo.parent.createSync(recursive: true);
     archivo.writeAsBytesSync(bytes);
     debugPrint('CAPTURA: ${archivo.path}');
+  }
+
+  /// Cada paso con su límite de tiempo y su renglón en el registro, para saber
+  /// exactamente dónde se atora si algo falla.
+  Future<T> paso<T>(String nombre, Future<T> Function() hacer, {int segundos = 60}) async {
+    debugPrint('PASO $nombre…');
+    final r = await hacer().timeout(Duration(seconds: segundos));
+    debugPrint('PASO $nombre: listo');
+    return r;
   }
 
   testWidgets('Hanzi Dojo en el simulador de iPhone', timeout: const Timeout(Duration(minutes: 8)), (tester) async {
@@ -66,18 +80,6 @@ void main() {
     await _esperar(tester, 3);
     await captura('01_inicio');
 
-    // Las grabaciones: Ogg Opus → CAF, y el reproductor de iOS las acepta.
-    expect(Grabaciones.enIos, isTrue);
-    for (final ruta in ['assets/audio/silabas/ma1.opus', 'assets/audio/palabras/一下.opus']) {
-      final caf = await Grabaciones.archivoCaf(ruta);
-      final reproductor = AudioPlayer();
-      final duracion = await reproductor.setFilePath(caf);
-      debugPrint('Grabación $ruta → $caf: $duracion');
-      expect(duracion, isNotNull, reason: ruta);
-      expect(duracion!.inMilliseconds, greaterThan(150), reason: ruta);
-      await reproductor.dispose();
-    }
-
     // Estudiar → modo → niveles.
     await tester.tap(_texto('Estudiar', 'Study'));
     await _esperar(tester, 2);
@@ -85,5 +87,26 @@ void main() {
     await tester.tap(_texto('Soy novato', "I'm a beginner"));
     await _esperar(tester, 3);
     await captura('03_niveles');
+
+    // Las grabaciones: Ogg Opus → CAF, y el reproductor de iOS las acepta.
+    expect(Grabaciones.enIos, isTrue);
+    for (final ruta in ['assets/audio/silabas/ma1.opus', 'assets/audio/palabras/一下.opus']) {
+      final caf = await tester.runAsync(() => paso('CAF $ruta', () => Grabaciones.archivoCaf(ruta)));
+      final archivo = File(caf!);
+      final cabecera = String.fromCharCodes(archivo.readAsBytesSync().take(4));
+      debugPrint('CAF $ruta: ${archivo.lengthSync()} bytes, cabecera "$cabecera"');
+      expect(cabecera, 'caff', reason: ruta);
+      final duracion = await tester.runAsync(() async {
+        final reproductor = AudioPlayer();
+        try {
+          return await paso('cargar $ruta', () => reproductor.setFilePath(caf), segundos: 30);
+        } finally {
+          await reproductor.dispose();
+        }
+      });
+      debugPrint('Grabación $ruta: $duracion');
+      expect(duracion, isNotNull, reason: ruta);
+      expect(duracion!.inMilliseconds, greaterThan(150), reason: ruta);
+    }
   });
 }

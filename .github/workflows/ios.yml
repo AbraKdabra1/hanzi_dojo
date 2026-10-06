@@ -77,7 +77,9 @@ jobs:
           xcrun simctl spawn "$UDID" defaults write "Apple Global Domain" AppleLanguages -array es-MX || true
           xcrun simctl spawn "$UDID" defaults write "Apple Global Domain" AppleLocale -string es_MX || true
           xcrun simctl bootstatus "$UDID" -b 2>&1 | tail -2 | tee -a simulador.txt
-          flutter test integration_test/ios_test.dart -d "$UDID" --reporter expanded 2>&1 | tee -a simulador.txt
+          mkdir -p "$PWD/build/capturas_ios"
+          flutter test integration_test/ios_test.dart -d "$UDID" --reporter expanded \
+            --dart-define=CAPTURAS="$PWD/build/capturas_ios" 2>&1 | tee -a simulador.txt
 
       - name: Capturas del simulador
         if: always()
