@@ -545,8 +545,8 @@ const textosEn = <String, String>{
       'Learning is a treasure that will follow its owner everywhere.',
   'No temas ir despacio, teme solo a detenerte.':
       'Do not fear going slowly; fear only standing still.',
-  'La paciencia es una planta amarga, pero su fruto es dulce.':
-      'Patience is a bitter plant, but its fruit is sweet.',
+  'Con suficiente constancia, una barra de hierro se vuelve aguja.':
+      'With enough persistence, an iron rod can be ground into a needle.',
   '🛡️ Tu protector de racha cubrió el día que no practicaste. Hay uno por semana.':
       '🛡️ Your streak shield covered the day you didn\'t practice. You get one per week.',
   '🛡️ Tus protectores de racha cubrieron {0} días.':

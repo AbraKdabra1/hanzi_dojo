@@ -50,7 +50,7 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
     tr('El viaje de mil millas comienza con un solo paso.'),
     tr('Aprender es un tesoro que seguirá a su dueño a todas partes.'),
     tr('No temas ir despacio, teme solo a detenerte.'),
-    tr('La paciencia es una planta amarga, pero su fruto es dulce.'),
+    tr('Con suficiente constancia, una barra de hierro se vuelve aguja.'),
   ];
   int _indiceFrase = 0;
   Timer? _temporizador;
