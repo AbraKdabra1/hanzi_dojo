@@ -477,7 +477,8 @@ class _UltimosDias extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          height: alto + 34,
+          // Barra más alta + el número de hoy encima + la letra del día.
+          height: alto + 44,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -494,12 +495,16 @@ class _UltimosDias extends StatelessWidget {
                           Text('${porDia[d]!.repasos}',
                               style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700)),
                         const SizedBox(height: 2),
-                        Container(
-                          width: 18,
-                          height: ((porDia[d]?.repasos ?? 0) / maximo * alto).clamp(2.0, alto),
-                          decoration: BoxDecoration(
-                            color: d == hoyDia ? _rampaDe(context)[3] : const Color(0xFF9E9E9E),
-                            borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                        // Flexible: con letra grande del teléfono la barra
+                        // se acorta en vez de desbordar la columna.
+                        Flexible(
+                          child: Container(
+                            width: 18,
+                            height: ((porDia[d]?.repasos ?? 0) / maximo * alto).clamp(2.0, alto),
+                            decoration: BoxDecoration(
+                              color: d == hoyDia ? _rampaDe(context)[3] : const Color(0xFF9E9E9E),
+                              borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                            ),
                           ),
                         ),
                         const SizedBox(height: 4),

@@ -241,9 +241,9 @@ def main():
     por_nivel = dict(q("SELECT nivel_hsk, count(*) FROM palabras GROUP BY nivel_hsk"))
     if sum(por_nivel.values()) < 10500:
         error(f"Solo {sum(por_nivel.values())} palabras HSK en la tabla palabras (se esperaban ~10,900)")
-    sin_es_pal = q("SELECT count(*) FROM palabras WHERE nivel_hsk <= 6 AND (significado_es IS NULL OR significado_es = '')")[0][0]
+    sin_es_pal = q("SELECT count(*) FROM palabras WHERE significado_es IS NULL OR significado_es = ''")[0][0]
     if sin_es_pal:
-        msg = f"{sin_es_pal} palabras de HSK 1-6 sin significado en español"
+        msg = f"{sin_es_pal} palabras HSK sin significado en español"
         (aviso if PERMITIR_INCOMPLETO else error)(msg)
     malas = []
     for palabra, pinyin_num in q("SELECT palabra, pinyin_num FROM palabras"):

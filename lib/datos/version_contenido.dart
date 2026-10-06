@@ -3,4 +3,4 @@
 // Huella del contenido de assets/db/contenido.db. Cuando cambia, la app
 // reemplaza la copia local de la base de contenido (el progreso del
 // usuario vive en otra base y no se toca).
-const String kVersionContenido = '16e251a2ddeb';
+const String kVersionContenido = '94caef66a31b';

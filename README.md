@@ -88,7 +88,7 @@ que se copia al teléfono la primera vez (por eso la app abre rápido).
 | Ejemplos | Oraciones de [Tatoeba](https://tatoeba.org) (vía krmanik/chinese-example-sentences), traducidas al español | 4,518 ejemplos para 2,755 caracteres; cada ejemplo contiene su carácter |
 | Tradicional → simplificado | [OpenCC](https://github.com/BYVoid/OpenCC) `TSCharacters.txt` (para consultar libros propios) | — |
 | Libros de «Leer» | Historias clásicas chinas de dominio público, contadas de nuevo para la app (`herramientas_datos/fuentes/libros/`) | Pinyin al día; cada carácter tiene una sílaba válida; los adaptados cumplen la cobertura mínima de su nivel |
-| Vocabulario | Las palabras de la lista oficial HSK 3.0 (hsk30), con su pinyin partido por carácter y significado en español (traducido de CC-CEDICT para HSK 1-6; en 7-9, por ahora en inglés) | Cada palabra tiene una sílaba válida por carácter; HSK 1-6 con español |
+| Vocabulario | Las palabras de la lista oficial HSK 3.0 (hsk30), con su pinyin partido por carácter y significado en español (traducido de CC-CEDICT, todos los niveles) | Cada palabra tiene una sílaba válida por carácter y su significado en español |
 | Preguntas de comprensión | Escritas para Hanzi Dojo en español e inglés (`herramientas_datos/fuentes/libros/preguntas.json`); las opciones se barajan de forma fija al construir la base | 3 por capítulo, con 4 opciones distintas en cada idioma |
 | Pronunciación (audio) | [audio-cmn](https://github.com/hugolpz/audio-cmn): 1,707 sílabas (voz de Chen Wang) y 8,569 palabras HSK (voz de Yue Tan), en `assets/audio/` (Opus, ~23 MB) | `test/audio_test.dart`: cada palabra de la lista tiene su archivo |
 
