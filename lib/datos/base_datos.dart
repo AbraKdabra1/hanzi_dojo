@@ -31,20 +31,30 @@
 // primer arranque. Ahora solo copia un archivo: el arranque es inmediato.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
 
+import '../plataforma/almacen.dart';
+import '../plataforma/navegador.dart';
 import 'version_contenido.dart';
 
 /// Carga los bytes de la base de contenido empaquetada en la app.
 /// En las pruebas se reemplaza para leer el archivo directamente del disco.
 typedef CargadorContenido = Future<ByteData> Function();
 
-Future<ByteData> _cargarDesdeAssets() => rootBundle.load('assets/db/contenido.db');
+Future<ByteData> _cargarDesdeAssets() async {
+  // Versión web: la base viaja comprimida (43 MB → 15 MB; el flujo web.yml
+  // deja el .gz junto al original). Si no está, se baja la normal.
+  if (kIsWeb) {
+    final bytes = await Navegador.descargarGzip('assets/assets/db/contenido.db.gz');
+    if (bytes != null) return ByteData.sublistView(bytes);
+  }
+  return rootBundle.load('assets/db/contenido.db');
+}
 
 class BaseDatos {
   BaseDatos._(this.db, this.carpeta);
@@ -70,7 +80,7 @@ class BaseDatos {
     String versionEsperada = kVersionContenido,
   }) async {
     final dir = carpeta ?? await getDatabasesPath();
-    await Directory(dir).create(recursive: true);
+    await Almacen.crearCarpeta(dir);
 
     // 1. Base de progreso (se crea la primera vez).
     final db = await openDatabase(
@@ -90,7 +100,7 @@ class BaseDatos {
     final rutaContenido = p.join(dir, _archivoContenido);
     var adjunta = await _contenidoAdjunto(db);
     final versionLocal = await _leerAjuste(db, 'version_contenido');
-    if (versionLocal != versionEsperada || !await File(rutaContenido).exists()) {
+    if (versionLocal != versionEsperada || !await Almacen.existe(rutaContenido)) {
       if (adjunta) {
         await db.execute('DETACH DATABASE c');
         adjunta = false;
@@ -116,12 +126,7 @@ class BaseDatos {
   /// y luego se renombra. Si la app se cierra a la mitad, no queda corrupto.
   static Future<void> _copiarContenido(String destino, CargadorContenido cargar) async {
     final datos = await cargar();
-    final temporal = File('$destino.tmp');
-    await temporal.writeAsBytes(
-      datos.buffer.asUint8List(datos.offsetInBytes, datos.lengthInBytes),
-      flush: true,
-    );
-    await temporal.rename(destino);
+    await Almacen.escribir(destino, datos.buffer.asUint8List(datos.offsetInBytes, datos.lengthInBytes));
   }
 
   /// Tablas de progreso.db (instalación nueva: ya con la última versión).

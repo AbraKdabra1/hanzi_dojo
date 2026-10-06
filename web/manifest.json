@@ -1,0 +1,20 @@
+{
+  "name": "Hanzi Dojo · 汉字道场",
+  "short_name": "Hanzi Dojo",
+  "description": "Aprende a escribir chino (HSK 3.0) trazo a trazo. Gratis, sin anuncios y sin cuenta.",
+  "lang": "es",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#F8F4EE",
+  "theme_color": "#F8F4EE",
+  "categories": ["education"],
+  "prefer_related_applications": false,
+  "icons": [
+    { "src": "icons/Icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/Icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/Icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/Icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

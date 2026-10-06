@@ -2,7 +2,7 @@
 // archivos.dart — Guardar y abrir archivos con los diálogos del sistema
 //
 // Habla con MainActivity.kt (Android) o AppDelegate.swift (iOS) por el canal
-// "hanzi_dojo/archivos":
+// "hanzi_dojo/archivos" (en la web, plataforma/navegador.dart):
 //   guardar → diálogo "Guardar como…" del sistema (Descargas, Drive, la nube
 //             de Huawei… lo que tenga el teléfono). Sin permisos de
 //             almacenamiento: el usuario elige dónde y la app solo escribe ahí.
@@ -15,7 +15,10 @@
 // agrega dependencias y la app sigue sin pedir permiso de internet.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
+
+import '../plataforma/navegador.dart';
 
 /// Un archivo elegido por el usuario.
 class ArchivoAbierto {
@@ -63,24 +66,34 @@ class Archivos {
     required Uint8List bytes,
     String tipo = 'application/octet-stream',
   }) =>
-      _canal.invokeMethod<String>('guardar', {'nombre': nombre, 'bytes': bytes, 'tipo': tipo});
+      kIsWeb
+          ? Navegador.guardar(nombre, bytes, tipo)
+          : _canal.invokeMethod<String>('guardar', {'nombre': nombre, 'bytes': bytes, 'tipo': tipo});
 
   /// Abre el selector de archivos. [tipos] son tipos MIME ("*/*" = cualquiera).
   /// Devuelve null si el usuario canceló.
   static Future<ArchivoAbierto?> abrir({List<String> tipos = const ['*/*']}) async {
+    if (kIsWeb) {
+      final elegido = await Navegador.abrir(tipos);
+      return elegido == null ? null : ArchivoAbierto(elegido.$1, elegido.$2);
+    }
     final r = await _canal.invokeMapMethod<String, Object?>('abrir', {'tipos': tipos});
     if (r == null) return null;
     return ArchivoAbierto(r['nombre'] as String? ?? '', r['bytes'] as Uint8List);
   }
 
   /// Abre [url] en el navegador. false si no hay navegador.
-  static Future<bool> abrirEnlace(Uri url) async =>
-      await _canal.invokeMethod<bool>('abrirEnlace', {'url': url.toString()}) ?? false;
+  static Future<bool> abrirEnlace(Uri url) async => kIsWeb
+      ? Navegador.abrirEnlace(url)
+      : await _canal.invokeMethod<bool>('abrirEnlace', {'url': url.toString()}) ?? false;
 
   static InfoDispositivo? _info;
 
   static Future<InfoDispositivo> info() async {
     if (_info case final i?) return i;
+    if (kIsWeb) {
+      return _info = InfoDispositivo(version: 'web', compilacion: '-', modelo: 'Navegador', android: Navegador.agente);
+    }
     try {
       final r = await _canal.invokeMapMethod<String, Object?>('info');
       return _info = InfoDispositivo(

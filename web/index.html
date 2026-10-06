@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<!--
+  Hanzi Dojo, versión web (PWA). La compila .github/workflows/web.yml y se
+  publica en GitHub Pages. En iPhone/iPad: Safari → Compartir → "Agregar a
+  pantalla de inicio" y se abre como una app más (ver docs/web.md).
+-->
+<html lang="es">
+<head>
+  <!-- flutter build web cambia esto por la carpeta donde vive la app. -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Aprende a escribir chino (HSK 3.0) trazo a trazo. Gratis, sin anuncios y sin cuenta.">
+
+  <!-- Instalada en la pantalla de inicio: sin barras del navegador. -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Hanzi Dojo">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta name="theme-color" content="#F8F4EE" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#151311" media="(prefers-color-scheme: dark)">
+  <link rel="manifest" href="manifest.json">
+
+  <title>Hanzi Dojo · 汉字道场</title>
+
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #F8F4EE;
+      color: #181614;
+      font-family: -apple-system, "Segoe UI", Roboto, "Noto Sans SC", sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      html, body { background: #151311; color: #F0E8DA; }
+    }
+    /* Mientras carga el motor de la app (unos segundos la primera vez). */
+    #arranque {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      transition: opacity .3s;
+    }
+    #arranque img { width: 120px; height: 120px; }
+    #arranque p { margin: 0; font-size: 14px; opacity: .6; letter-spacing: .02em; }
+    #arranque.listo { opacity: 0; pointer-events: none; }
+    noscript { display: block; padding: 32px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div id="arranque">
+    <picture>
+      <source srcset="icons/arranque-oscuro.png" media="(prefers-color-scheme: dark)">
+      <img src="icons/arranque.png" alt="">
+    </picture>
+    <p id="arranque-texto">Preparando el dojo…</p>
+  </div>
+  <noscript>Hanzi Dojo necesita JavaScript.</noscript>
+
+  <script>
+    // Texto de la carga en el idioma del navegador.
+    if (!(navigator.language || '').toLowerCase().startsWith('es')) {
+      document.documentElement.lang = 'en';
+      document.getElementById('arranque-texto').textContent = 'Preparing the dojo…';
+    }
+    // Que el navegador no borre el progreso para hacer espacio.
+    if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
+    // Funcionar sin internet (ver sw_hanzi.js).
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw_hanzi.js').catch(function () {});
+      });
+    }
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

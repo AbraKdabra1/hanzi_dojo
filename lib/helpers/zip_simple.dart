@@ -6,14 +6,15 @@
 //      archivos que contiene, con su tamaño y dónde empieza cada uno).
 //   2. Para cada archivo, saltar su encabezado local y tomar sus bytes:
 //      guardados tal cual (método 0) o comprimidos con deflate (método 8),
-//      que dart:io ya sabe descomprimir.
+//      que descomprime package:archive (Dart puro: sirve también en la web).
 // No soporta ZIP64 (archivos de más de 4 GB) ni ZIP cifrados: un EPUB normal
 // no los usa.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'dart:convert';
-import 'dart:io' show ZLibDecoder;
 import 'dart:typed_data';
+
+import 'package:archive/archive.dart' show Inflate;
 
 class ZipSimple {
   ZipSimple._();
@@ -65,7 +66,7 @@ class ZipSimple {
       if (metodo == 0) {
         salida[nombre] = bytes;
       } else if (metodo == 8) {
-        salida[nombre] = Uint8List.fromList(ZLibDecoder(raw: true).convert(bytes));
+        salida[nombre] = Uint8List.fromList(Inflate(bytes).getBytes());
       }
       // Otros métodos de compresión no se usan en EPUB: ese archivo se ignora.
     }

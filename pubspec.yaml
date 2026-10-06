@@ -35,6 +35,12 @@ dependencies:
   just_audio: ^0.10.4
   # iOS: sesión de audio en modo voz (suena aunque esté en silencio).
   audio_session: ^0.2.1
+  # Versión web: SQLite en WebAssembly (bases en IndexedDB) y el navegador
+  # (descargar, elegir archivo, compartir).
+  sqflite_common_ffi_web: ^1.0.1
+  web: ^1.1.0
+  # gzip del respaldo y deflate de los EPUB, en Dart puro (también en la web).
+  archive: ^4.0.7
   # Íconos estilo iOS (se usan en algunos botones).
   cupertino_icons: ^1.0.8
 
@@ -76,3 +82,26 @@ flutter:
           weight: 500
         - asset: assets/fonts/NotoSansSC-Bold.ttf
           weight: 700
+    # Emoji y símbolos de la interfaz, solo para la versión web (en el teléfono
+    # los pone el sistema): herramientas_datos/preparar_simbolos_web.py. OFL.
+    - family: SimbolosHanzi0
+      fonts:
+        - asset: assets/fonts/simbolos/SimbolosHanzi0.ttf
+    - family: SimbolosHanzi1
+      fonts:
+        - asset: assets/fonts/simbolos/SimbolosHanzi1.ttf
+    - family: SimbolosHanzi2
+      fonts:
+        - asset: assets/fonts/simbolos/SimbolosHanzi2.ttf
+    - family: SimbolosHanzi3
+      fonts:
+        - asset: assets/fonts/simbolos/SimbolosHanzi3.ttf
+    - family: SimbolosHanzi4
+      fonts:
+        - asset: assets/fonts/simbolos/SimbolosHanzi4.ttf
+    - family: SimbolosHanzi5
+      fonts:
+        - asset: assets/fonts/simbolos/SimbolosHanzi5.ttf
+    - family: SimbolosHanzi6
+      fonts:
+        - asset: assets/fonts/simbolos/SimbolosHanzi6.ttf

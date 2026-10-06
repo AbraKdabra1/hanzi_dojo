@@ -15,8 +15,11 @@
 // Apariencia (Ajustes): Automática (la del teléfono), Clara u Oscura.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'simbolos_web.dart';
 
 @immutable
 class ColoresTinta extends ThemeExtension<ColoresTinta> {
@@ -171,6 +174,8 @@ ThemeData temaHanziDojo([Brightness brillo = Brightness.light]) {
   final c = oscuro ? ColoresTinta.oscuroTinta : ColoresTinta.claro;
   return ThemeData(
     fontFamily: 'NotoSansSC',
+    // Versión web: los emoji y símbolos viajan con la app (ver simbolos_web.dart).
+    fontFamilyFallback: kIsWeb ? familiasSimbolosWeb : null,
     colorScheme: ColorScheme.fromSeed(
       seedColor: Colors.black,
       brightness: brillo,

@@ -61,3 +61,8 @@ android/key.properties
 *.jks
 *.keystore
 llave_base64.txt
+
+# Versión web: los genera "dart run sqflite_common_ffi_web:setup" (web.yml)
+/web/sqlite3.wasm
+/web/sqflite_sw.js
+/node_modules/

@@ -9,6 +9,9 @@ una computadora (Windows o Mac). Nadie paga nada.
 > días**. Después hay que renovarlas (un clic, o automático con AltStore). Tu
 > progreso **no se pierde** al renovar.
 
+> **¿Sin computadora?** Usa la versión web: se abre en Safari y se agrega a
+> la pantalla de inicio, sin Apple ID y sin caducar ([web.md](web.md)).
+
 ## Qué descargar
 
 En la pestaña **Releases** del repositorio, junto a los APK de Android:

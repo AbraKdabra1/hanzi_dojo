@@ -37,3 +37,7 @@ Primera versión pública.
 - Interfaz en español o en inglés; se adapta a tabletas y a la pantalla en horizontal.
 - Sin anuncios, sin cuentas y sin internet: todo se queda en tu teléfono.
 - Si quieres apoyar el proyecto, hay un botón discreto para donar con PayPal (no desbloquea nada).
+
+**iPhone, iPad y navegador**
+- Versión web: se abre en Safari o Chrome y se agrega a la pantalla de inicio como una app más; después de la primera vez funciona sin internet. Es la forma más fácil en iPhone y iPad (sin computadora ni Apple ID). Sin recordatorio ni widget.
+- `.ipa` para iPhone y iPad, sin firmar: se instala gratis con tu propio Apple ID (Sideloadly o AltStore; Apple pide renovarla cada 7 días).

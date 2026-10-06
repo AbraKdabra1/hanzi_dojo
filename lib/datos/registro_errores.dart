@@ -18,10 +18,11 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
+
+import '../plataforma/almacen.dart';
 
 class EntradaError {
   const EntradaError({
@@ -148,16 +149,14 @@ class RegistroErrores {
       lista.add(entrada);
     }
     final ultimos = lista.length > maximo ? lista.sublist(lista.length - maximo) : lista;
-    final temporal = File('$ruta.tmp');
-    await temporal.writeAsString(ultimos.map((e) => '${jsonEncode(e.aJson())}\n').join(), flush: true);
-    await temporal.rename(ruta);
+    await Almacen.escribir(ruta, utf8.encode(ultimos.map((e) => '${jsonEncode(e.aJson())}\n').join()));
   }
 
   static Future<List<EntradaError>> _leerArchivo(String ruta) async {
-    final f = File(ruta);
-    if (!await f.exists()) return [];
+    final bytes = await Almacen.leer(ruta);
+    if (bytes == null) return [];
     final lista = <EntradaError>[];
-    for (final linea in await f.readAsLines()) {
+    for (final linea in const LineSplitter().convert(utf8.decode(bytes, allowMalformed: true))) {
       if (linea.trim().isEmpty) continue;
       try {
         final e = EntradaError.desdeJson(jsonDecode(linea));
@@ -182,7 +181,7 @@ class RegistroErrores {
     await _cola;
     _pendientes.clear();
     final ruta = _ruta;
-    if (ruta != null && await File(ruta).exists()) await File(ruta).delete();
+    if (ruta != null) await Almacen.borrar(ruta);
   }
 
   /// Texto listo para pegar en un reporte.
