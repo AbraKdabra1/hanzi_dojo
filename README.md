@@ -1,7 +1,7 @@
 # Hanzi Dojo · 汉字道场
 
-App de Android (Flutter) para **aprender a escribir caracteres chinos** trazo por
-trazo. Revisa cada trazo mientras escribes, programa los repasos con repetición
+App (Flutter) para **aprender a escribir caracteres chinos** trazo por
+trazo, en Android, iPhone/iPad y el navegador. Revisa cada trazo mientras escribes, programa los repasos con repetición
 espaciada (SM-2) y permite estudiar **por nivel HSK** o **por radical**.
 
 Es **software libre** (GPL-3.0): gratis, sin anuncios, sin cuentas y sin
@@ -193,6 +193,13 @@ sabes cuál). Cómo se publican (llave de firma, F-Droid, AppGallery):
 Privacidad: [`docs/privacidad.md`](docs/privacidad.md) — la app no tiene
 permiso de internet.
 
+- **iPhone y iPad**, sin computadora: la versión web,
+  https://abrakdabra1.github.io/hanzi_dojo/ → Safari → Compartir →
+  *Agregar a pantalla de inicio* ([`docs/web.md`](docs/web.md)). También
+  sirve en Android y en la computadora.
+- **iPhone y iPad**, como app: el `.ipa` de Releases, instalado con tu
+  propio Apple ID (gratis, se renueva cada 7 días): [`docs/ios.md`](docs/ios.md).
+
 ### Instalar el APK que genera GitHub
 
 Cada push corre la integración continua (pestaña **Actions** del repo). Al
@@ -295,6 +302,10 @@ código: [CONTRIBUTING.md](CONTRIBUTING.md).
 y oscuro (`test/capturas_test.dart`, con la base y las fuentes reales) y compilar
 el APK de perfil. En ramas de trabajo, los resultados y las capturas
 (`capturas/*.png`) se publican además en la rama `ci-registros`.
+
+`ios.yml` compila el `.ipa` en una Mac y prueba la app en el simulador de
+iPhone (rama `ci-ios`); `web.yml` compila la versión web, la prueba en Chrome
+y Safari (rama `ci-web`) y, desde `v2`, la publica en GitHub Pages.
 
 ---
 

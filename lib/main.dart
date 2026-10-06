@@ -46,7 +46,7 @@ import 'widgets/fondo_tinta.dart';
 
 /// Versión web con "?semantica=1" en la dirección: la accesibilidad encendida
 /// desde el arranque (las pruebas con navegador encuentran así los botones).
-SemanticsHandle? _semantica;
+Object? _semantica; // SemanticsHandle: mientras exista, la accesibilidad sigue encendida
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

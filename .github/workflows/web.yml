@@ -52,7 +52,7 @@ jobs:
         continue-on-error: true
         run: |
           set -o pipefail
-          flutter build web --release --base-href /hanzi_dojo/ --no-web-resources-cdn 2>&1 | tee build_web.txt
+          flutter build web --release --base-href /hanzi_dojo/ --no-web-resources-cdn --no-wasm-dry-run 2>&1 | tee build_web.txt
           # La base de contenido viaja comprimida (la app la descomprime).
           gzip -9 -k -f build/web/assets/assets/db/contenido.db
           touch build/web/.nojekyll
