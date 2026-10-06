@@ -5,6 +5,7 @@
 // Tablas (ver base_datos.dart):
 //   c.caracteres, c.radicales, c.ejemplos  → contenido (solo lectura)
 //   c.libros, c.capitulos, c.parrafos      → sección «Leer» (solo lectura)
+//   c.preguntas                            → preguntas de comprensión de cada capítulo
 //   progreso, historial, lectura, ajustes   → tu avance
 //   mis_libros, mis_capitulos, mis_parrafos → libros que agregaste tú
 //   c.palabras, progreso_palabras, ejercicios → práctica con audio
@@ -20,6 +21,7 @@ import 'estadisticas.dart';
 import 'importar_libro.dart';
 import 'modelos.dart';
 import 'srs.dart';
+import '../idioma.dart';
 
 /// Qué conjunto de caracteres se está estudiando en una sesión.
 class FiltroEstudio {
@@ -74,9 +76,9 @@ class FiltroEstudio {
   /// Título para la barra superior de la pantalla de estudio.
   String get titulo => switch (tipo) {
         TipoFiltro.nivel => nombreDeNivel(nivel),
-        TipoFiltro.familia => 'Familia del radical $radical',
-        TipoFiltro.radicales => 'Radicales Kangxi',
-        TipoFiltro.unico => 'Práctica libre',
+        TipoFiltro.familia => tr('Familia del radical {0}', [radical]),
+        TipoFiltro.radicales => tr('Radicales Kangxi'),
+        TipoFiltro.unico => tr('Práctica libre'),
       };
 }
 
@@ -330,6 +332,19 @@ class Repositorio {
     return filas.first['n'] as int? ?? 0;
   }
 
+  /// Medianas (JSON) de los caracteres HSK: para buscar dibujando
+  /// (helpers/reconocedor.dart).
+  Future<List<(String, String)>> medianasHsk() async {
+    final filas = await _db.rawQuery('SELECT caracter, medianas FROM c.caracteres WHERE nivel_hsk > 0');
+    return [for (final f in filas) (f['caracter'] as String, f['medianas'] as String)];
+  }
+
+  /// Pinyin de cada carácter HSK (para mostrar debajo de los candidatos).
+  Future<Map<String, String>> pinyinHsk() async {
+    final filas = await _db.rawQuery('SELECT caracter, pinyin FROM c.caracteres WHERE nivel_hsk > 0');
+    return {for (final f in filas) f['caracter'] as String: f['pinyin'] as String};
+  }
+
   /// Búsqueda por carácter, pinyin (con o sin tonos) o significado.
   /// Los caracteres HSK salen primero.
   Future<List<Caracter>> buscar(String texto) async {
@@ -426,6 +441,12 @@ class Repositorio {
             : 'SELECT chino, pinyin, nombres, espanol FROM c.parrafos WHERE capitulo_id = ? ORDER BY orden',
         [capituloId]);
     return filas.map(ParrafoLibro.desdeFila).toList();
+  }
+
+  /// Preguntas de comprensión de un capítulo (los libros propios no tienen).
+  Future<List<PreguntaComprension>> preguntasDeCapitulo(int capituloId) async {
+    final filas = await _db.rawQuery('SELECT * FROM c.preguntas WHERE capitulo_id = ? ORDER BY orden', [capituloId]);
+    return filas.map(PreguntaComprension.desdeFila).toList();
   }
 
   // ── Mis libros ────────────────────────────────────────────────────────
@@ -618,6 +639,16 @@ class Repositorio {
   /// ¿Los trazos correctos se acomodan en su forma caligráfica? (Activo por defecto.)
   Future<bool> ajusteCaligrafico() async => await base.leerAjuste('ajuste_caligrafico') != '0';
 
+  /// ¿Vibrar al trazar? (Activo por defecto.)
+  Future<bool> vibracion() async => await base.leerAjuste('vibracion') != '0';
+
+  Future<void> guardarVibracion(bool activa) => base.guardarAjuste('vibracion', activa ? '1' : '0');
+
+  /// ¿Sonido de pincel al acertar un trazo? (Apagado por defecto.)
+  Future<bool> sonidoPincel() async => await base.leerAjuste('sonido_pincel') == '1';
+
+  Future<void> guardarSonidoPincel(bool activo) => base.guardarAjuste('sonido_pincel', activo ? '1' : '0');
+
   Future<void> guardarAjusteCaligrafico(bool activo) =>
       base.guardarAjuste('ajuste_caligrafico', activo ? '1' : '0');
 
@@ -631,6 +662,11 @@ class Repositorio {
   Future<String> apariencia() async => await base.leerAjuste('apariencia') ?? 'auto';
 
   Future<void> guardarApariencia(String valor) => base.guardarAjuste('apariencia', valor);
+
+  /// Idioma de la interfaz: 'auto' (el del teléfono), 'es' o 'en'.
+  Future<String> idioma() async => await base.leerAjuste('idioma') ?? 'auto';
+
+  Future<void> guardarIdioma(String valor) => base.guardarAjuste('idioma', valor);
 }
 
 /// Preferencias del lector.

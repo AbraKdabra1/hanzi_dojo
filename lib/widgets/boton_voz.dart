@@ -26,6 +26,7 @@ import 'package:just_audio/just_audio.dart';
 import '../datos/audio.dart';
 import '../datos/registro_errores.dart';
 import '../tema.dart';
+import '../idioma.dart';
 
 enum ResultadoVoz { grabacion, vozDelTelefono, sinSonido }
 
@@ -137,6 +138,45 @@ class Voz {
     }
   }
 
+  /// Lee [texto] solo con grabaciones (no con la voz del teléfono: de ella
+  /// no se sabe qué palabra suena) y avisa con [alSonar] qué runas
+  /// [inicio, fin) suenan en cada momento; al terminar avisa (-1, -1).
+  /// Devuelve false si se interrumpió (otro sonido, detener()).
+  static Future<bool> leerResaltando(
+    String texto, {
+    List<String>? pinyin,
+    required void Function(int inicio, int fin) alSonar,
+    double? rapidez,
+  }) async {
+    if (desactivada) return false;
+    final turno = ++_turno;
+    await _detenerSonido();
+    try {
+      final (palabras, silabas) = await _cargarListas();
+      final plan = Audio.planDeLectura(texto, pinyin: pinyin, palabras: palabras, silabas: silabas);
+      final audio = _audio;
+      await audio.setSpeed(rapidez ?? velocidad);
+      for (final clip in plan.clips) {
+        if (turno != _turno) return false;
+        if (clip.esPausa) {
+          await Future<void>.delayed(Duration(milliseconds: clip.pausaMs));
+          continue;
+        }
+        alSonar(clip.inicio, clip.fin);
+        await audio.setAsset(clip.ruta);
+        if (turno != _turno) return false;
+        await audio.play();
+      }
+      return turno == _turno;
+    } catch (e, pila) {
+      RegistroErrores.registrar('Voz (leer en voz alta)', e, pila);
+      return false;
+    } finally {
+      if (turno == _turno) await _reproductor?.stop();
+      alSonar(-1, -1);
+    }
+  }
+
   /// Toca exactamente estas grabaciones (los ejercicios: una sílaba o una
   /// palabra concreta, sin pasar por la voz del teléfono). false si falló.
   static Future<bool> tocar(List<Clip> clips, {double? rapidez}) async {
@@ -214,9 +254,8 @@ class _BotonVozState extends State<BotonVoz> {
         pinyinPorPalabras: widget.pinyinPorPalabras,
         rapidez: lento ? Voz.velocidadLenta : null);
     if (resultado == ResultadoVoz.sinSonido && mounted) {
-      ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(
-        content: Text('No hay grabación de esto y tu teléfono no tiene voz en chino. '
-            'Puedes instalar una en Ajustes del teléfono › Texto a voz.'),
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(SnackBar(
+        content: Text(tr('No hay grabación de esto y tu teléfono no tiene voz en chino. Puedes instalar una en Ajustes del teléfono › Texto a voz.')),
       ));
     }
     // El resaltado dura al menos un momento (la voz del teléfono no avisa
@@ -233,7 +272,7 @@ class _BotonVozState extends State<BotonVoz> {
     final c = context.colores;
     return Semantics(
       button: true,
-      label: 'Escuchar pronunciación (mantén presionado para oírla lento)',
+      label: tr('Escuchar pronunciación (mantén presionado para oírla lento)'),
       child: GestureDetector(
         onTap: _hablar,
         onLongPress: () => _hablar(lento: true),

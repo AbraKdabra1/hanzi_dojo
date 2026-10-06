@@ -22,8 +22,11 @@ import 'package:hanzi_dojo/screens/pantalla_ajustes.dart';
 import 'package:hanzi_dojo/screens/pantalla_bateria.dart';
 import 'package:hanzi_dojo/screens/pantalla_biblioteca.dart';
 import 'package:hanzi_dojo/screens/pantalla_compartir.dart';
+import 'package:hanzi_dojo/screens/pantalla_creditos.dart';
 import 'package:hanzi_dojo/screens/pantalla_estadisticas.dart';
+import 'package:hanzi_dojo/screens/pantalla_buscar_dibujo.dart';
 import 'package:hanzi_dojo/screens/pantalla_escucha.dart';
+import 'package:hanzi_dojo/screens/pantalla_examen.dart';
 import 'package:hanzi_dojo/screens/pantalla_estudio.dart';
 import 'package:hanzi_dojo/screens/pantalla_inicio.dart';
 import 'package:hanzi_dojo/screens/pantalla_lectura.dart';
@@ -35,8 +38,11 @@ import 'package:hanzi_dojo/screens/pantalla_radicales.dart';
 import 'package:hanzi_dojo/screens/pantalla_seleccion.dart';
 import 'package:hanzi_dojo/screens/pantalla_tonos.dart';
 import 'package:hanzi_dojo/screens/pantalla_vocabulario.dart';
+import 'package:hanzi_dojo/idioma.dart';
 import 'package:hanzi_dojo/tema.dart';
 import 'package:hanzi_dojo/widgets/boton_voz.dart';
+import 'package:hanzi_dojo/widgets/ejercicio.dart';
+import 'package:hanzi_dojo/widgets/preguntas_comprension.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 final _pedidas = Platform.environment.containsKey('CAPTURAS');
@@ -51,6 +57,12 @@ Future<void> _cargarFuentes() async {
     noto.addFont(rootBundle.load('assets/fonts/NotoSansSC-$peso.ttf'));
   }
   await noto.load();
+  // Emojis (en CI: paquete fonts-noto-color-emoji). En el teléfono los pone Android.
+  final emojis = File('/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf');
+  if (emojis.existsSync()) {
+    final cargador = FontLoader('NotoColorEmoji')..addFont(Future.value(ByteData.sublistView(emojis.readAsBytesSync())));
+    await cargador.load();
+  }
   // Íconos de Material: vienen con Flutter.
   final artefactos = File(Platform.resolvedExecutable).parent.parent.parent;
   final iconos = File('${artefactos.path}/material_fonts/MaterialIcons-Regular.otf');
@@ -59,6 +71,11 @@ Future<void> _cargarFuentes() async {
     await cargador.load();
   }
 }
+
+/// El tema de la app con la fuente de emojis como respaldo (solo en pruebas).
+ThemeData _conEmojis(ThemeData tema) => tema.copyWith(
+      textTheme: tema.textTheme.apply(fontFamilyFallback: const ['NotoColorEmoji']),
+    );
 
 void main() {
   late Directory carpeta;
@@ -89,7 +106,7 @@ void main() {
           repo: repo,
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
-            theme: temaHanziDojo(oscuro ? Brightness.dark : Brightness.light),
+            theme: _conEmojis(temaHanziDojo(oscuro ? Brightness.dark : Brightness.light)),
             home: pantalla,
           ),
         ),
@@ -157,6 +174,15 @@ void main() {
     await capturar(tester, '07_lectura', PantallaLectura(libro: libro, capitulos: capitulos, indice: 0));
     await capturar(tester, '07b_ficha', PantallaLectura(libro: libro, capitulos: capitulos, indice: 0),
         accion: (t) => t.tap(find.text('四').first, warnIfMissed: false));
+    await capturar(tester, '07c_preguntas', PantallaLectura(libro: libro, capitulos: capitulos, indice: 0),
+        accion: (t) async {
+      await t.scrollUntilVisible(find.text('¿Qué entendiste?'), 400, scrollable: find.byType(Scrollable).first);
+      await t.drag(find.byType(ListView), const Offset(0, -420), warnIfMissed: false);
+      await t.pump(const Duration(milliseconds: 600));
+      final opciones = find.descendant(of: find.byType(PreguntasComprension), matching: find.byType(BotonOpcion));
+      await t.tap(opciones.at(1), warnIfMissed: false);
+      await t.tap(opciones.at(6), warnIfMissed: false);
+    });
     await capturar(tester, '08_estadisticas', const PantallaEstadisticas());
     await capturar(tester, '09_ajustes', const PantallaAjustes());
     await capturar(tester, '10_bateria', const PantallaBateria());
@@ -173,5 +199,19 @@ void main() {
     });
     await capturar(tester, '16_logros', const PantallaLogros());
     await capturar(tester, '17_compartir', const PantallaCompartir());
+    await capturar(tester, '18_simulacro', const PantallaExamen.simulacro(nivel: 1));
+    await capturar(tester, '19_buscar_dibujo', const PantallaBuscarDibujo());
+    await capturar(tester, '19b_apoyo', const PantallaCreditos(), accion: (t) async {
+      await t.scrollUntilVisible(find.text('Apoyar el proyecto'), 300, scrollable: find.byType(Scrollable).first);
+      await t.tap(find.text('Apoyar el proyecto'), warnIfMissed: false);
+    });
+
+    // La interfaz en inglés (Ajustes › Idioma).
+    Idioma.actual.value = Lengua.ingles;
+    await capturar(tester, '20_inicio_en', const PantallaInicio());
+    await capturar(tester, '21_estudio_en', PantallaEstudio(filtro: FiltroEstudio.unico(idHao), modoNovato: true));
+    await capturar(tester, '22_practica_en', const PantallaPractica());
+    await capturar(tester, '23_ajustes_en', const PantallaAjustes());
+    Idioma.actual.value = Lengua.espanol;
   }, skip: !_pedidas);
 }

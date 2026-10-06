@@ -21,6 +21,7 @@ import '../widgets/tarjeta_vidrio.dart';
 import '../tema.dart';
 import 'pantalla_estudio.dart';
 import 'pantalla_familia_radical.dart';
+import '../idioma.dart';
 
 class PantallaRadicales extends StatefulWidget {
   const PantallaRadicales({super.key, required this.modoNovato});
@@ -70,6 +71,7 @@ class _PantallaRadicalesState extends State<PantallaRadicales> {
                   r.todasLasFormas.contains(q) ||
                   '${r.numero}' == q ||
                   r.nombreEs.toLowerCase().contains(q) ||
+                  r.nombreEn.toLowerCase().contains(q) ||
                   r.pinyin.toLowerCase().contains(q))
               .toList();
     });
@@ -86,8 +88,8 @@ class _PantallaRadicalesState extends State<PantallaRadicales> {
     return FondoTintaChina(
       child: Scaffold(
         appBar: BarraSuperior(
-          titulo: 'Radicales Kangxi',
-          subtitulo: _cargando ? null : '$vistos de 214 practicados',
+          titulo: tr('Radicales Kangxi'),
+          subtitulo: _cargando ? null : tr('{0} de 214 practicados', [vistos]),
         ),
         body: _cargando
             ? Center(child: CircularProgressIndicator(color: context.colores.icono))
@@ -102,7 +104,7 @@ class _PantallaRadicalesState extends State<PantallaRadicales> {
                             controller: _busqueda,
                             onChanged: _filtrar,
                             decoration: InputDecoration(
-                              hintText: 'Buscar: 水, 85, agua, shui…',
+                              hintText: tr('Buscar: 水, 85, agua, shui…'),
                               prefixIcon: const Icon(Icons.search, size: 20),
                               isDense: true,
                               filled: true,
@@ -117,7 +119,7 @@ class _PantallaRadicalesState extends State<PantallaRadicales> {
                         const SizedBox(width: 10),
                         FilledButton.icon(
                           icon: const Icon(Icons.play_arrow_rounded, size: 20),
-                          label: const Text('Estudiar'),
+                          label: Text(tr('Estudiar')),
                           onPressed: () => _ir(PantallaEstudio(
                             filtro: const FiltroEstudio.radicales(),
                             modoNovato: widget.modoNovato,
@@ -199,7 +201,7 @@ class _CeldaRadical extends StatelessWidget {
               ])),
             ),
           ),
-          Text(r.nombreEs,
+          Text(r.nombre,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize: 11, color: context.colores.suave)),

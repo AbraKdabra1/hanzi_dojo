@@ -1,8 +1,22 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+}
+
+// Firma de lanzamiento: android/key.properties (NO se sube al repo; lo crea
+// herramientas/crear_llave_firma.ps1, y en GitHub lo arma el flujo
+// .github/workflows/lanzamiento.yml con los secretos). Ver docs/publicar.md.
+// Sin ese archivo el APK "release" se firma con la llave de depuración: sirve
+// para probar en tu teléfono, no para publicar.
+val propiedadesLlave = Properties()
+val archivoLlave = rootProject.file("key.properties")
+if (archivoLlave.exists()) {
+    FileInputStream(archivoLlave).use { propiedadesLlave.load(it) }
 }
 
 android {
@@ -20,21 +34,32 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.abrakdabra.hanzidojo"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        if (archivoLlave.exists()) {
+            create("lanzamiento") {
+                storeFile = file(propiedadesLlave.getProperty("storeFile"))
+                storePassword = propiedadesLlave.getProperty("storePassword")
+                keyAlias = propiedadesLlave.getProperty("keyAlias")
+                keyPassword = propiedadesLlave.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            // SIN_FIRMA=1: APK sin firmar (F-Droid firma con su propia llave).
+            signingConfig = when {
+                archivoLlave.exists() -> signingConfigs.getByName("lanzamiento")
+                System.getenv("SIN_FIRMA") != null -> null
+                else -> signingConfigs.getByName("debug")
+            }
         }
     }
 }

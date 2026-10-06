@@ -18,6 +18,7 @@ import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
 import '../tema.dart';
 import 'pantalla_estudio.dart';
+import '../idioma.dart';
 
 class PantallaFamiliaRadical extends StatefulWidget {
   const PantallaFamiliaRadical({super.key, required this.numero, required this.modoNovato});
@@ -66,7 +67,7 @@ class _PantallaFamiliaRadicalState extends State<PantallaFamiliaRadical> {
     final r = _radical;
     return FondoTintaChina(
       child: Scaffold(
-        appBar: BarraSuperior(titulo: 'Radical ${widget.numero}', subtitulo: r?.nombreEs),
+        appBar: BarraSuperior(titulo: tr('Radical {0}', [widget.numero]), subtitulo: r?.nombre),
         body: _cargando || r == null
             ? Center(child: CircularProgressIndicator(color: context.colores.icono))
             : CustomScrollView(
@@ -100,7 +101,7 @@ class _PantallaFamiliaRadicalState extends State<PantallaFamiliaRadical> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(r.pinyin, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                    Text('${r.trazos} ${r.trazos == 1 ? 'trazo' : 'trazos'}',
+                    Text(r.trazos == 1 ? tr('1 trazo') : tr('{0} trazos', [r.trazos]),
                         style: TextStyle(fontSize: 12, color: context.colores.tenue)),
                   ],
                 ),
@@ -109,14 +110,14 @@ class _PantallaFamiliaRadicalState extends State<PantallaFamiliaRadical> {
             const SizedBox(height: 4),
             Align(
               alignment: Alignment.centerLeft,
-              child: Text(r.nombreEs, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+              child: Text(r.nombre, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
             ),
             const SizedBox(height: 12),
             BarraAvance(valor: r.aprendidosHsk, total: r.totalHsk, color: (context.colores.oscuro ? const Color(0xFFCE93D8) : const Color(0xFF6A1B9A))),
             const SizedBox(height: 4),
             Align(
               alignment: Alignment.centerLeft,
-              child: Text('caracteres HSK de la familia que ya estudiaste',
+              child: Text(tr('caracteres HSK de la familia que ya estudiaste'),
                   style: TextStyle(fontSize: 11, color: context.colores.tenue)),
             ),
             const SizedBox(height: 14),
@@ -126,7 +127,7 @@ class _PantallaFamiliaRadicalState extends State<PantallaFamiliaRadical> {
                   Expanded(
                     child: OutlinedButton.icon(
                       icon: Icon(r.practicado ? Icons.check_circle : Icons.edit, size: 18),
-                      label: const Text('Practicar radical'),
+                      label: Text(tr('Practicar radical')),
                       onPressed: () => _abrir(FiltroEstudio.unico(r.caracterId!)),
                     ),
                   ),
@@ -134,7 +135,7 @@ class _PantallaFamiliaRadicalState extends State<PantallaFamiliaRadical> {
                 Expanded(
                   child: FilledButton.icon(
                     icon: const Icon(Icons.play_arrow_rounded, size: 20),
-                    label: const Text('Estudiar familia'),
+                    label: Text(tr('Estudiar familia')),
                     onPressed: r.totalHsk == 0 && !_incluirFueraHsk
                         ? null
                         : () => _abrir(FiltroEstudio.familia(r.numero, incluirFueraHsk: _incluirFueraHsk)),
@@ -155,7 +156,7 @@ class _PantallaFamiliaRadicalState extends State<PantallaFamiliaRadical> {
         SliverToBoxAdapter(
           child: Padding(
             padding: EdgeInsets.all(24),
-            child: Text('Ningún carácter HSK usa este radical.',
+            child: Text(tr('Ningún carácter HSK usa este radical.'),
                 textAlign: TextAlign.center, style: TextStyle(color: context.colores.tenue)),
           ),
         ),
@@ -204,8 +205,8 @@ class _PantallaFamiliaRadicalState extends State<PantallaFamiliaRadical> {
       padding: const EdgeInsets.fromLTRB(12, 16, 12, 0),
       child: SwitchListTile(
         value: _incluirFueraHsk,
-        title: Text('Mostrar caracteres fuera de HSK ($fuera)'),
-        subtitle: const Text('Poco comunes; útiles para leer, no para el examen'),
+        title: Text(tr('Mostrar caracteres fuera de HSK ({0})', [fuera])),
+        subtitle: Text(tr('Poco comunes; útiles para leer, no para el examen')),
         onChanged: (v) {
           setState(() => _incluirFueraHsk = v);
           _cargar();

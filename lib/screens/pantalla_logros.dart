@@ -17,10 +17,9 @@ import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
 import 'pantalla_compartir.dart';
+import '../idioma.dart';
 
-const _meses = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
-
-String _fecha(DateTime d) => '${d.day} ${_meses[d.month - 1]} ${d.year}';
+String _fecha(DateTime d) => '${d.day} ${mesesCortos[d.month - 1]} ${d.year}';
 
 class PantallaLogros extends StatefulWidget {
   const PantallaLogros({super.key});
@@ -68,12 +67,12 @@ class _PantallaLogrosState extends State<PantallaLogros> {
     return FondoTintaChina(
       child: Scaffold(
         appBar: BarraSuperior(
-          titulo: 'Logros',
-          subtitulo: datos == null ? null : '${_desbloqueados.length} de ${Logros.todos.length}',
+          titulo: tr('Logros'),
+          subtitulo: datos == null ? null : tr('{0} de {1}', [_desbloqueados.length, Logros.todos.length]),
           acciones: [
             IconButton(
               icon: const Icon(Icons.share_outlined),
-              tooltip: 'Compartir mi progreso',
+              tooltip: tr('Compartir mi progreso'),
               onPressed: _compartir,
             ),
           ],
@@ -95,16 +94,15 @@ class _PantallaLogrosState extends State<PantallaLogros> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${_racha.actual} ${_racha.actual == 1 ? 'día seguido' : 'días seguidos'}',
+                                    '${_racha.actual} ${_racha.actual == 1 ? tr('día seguido') : tr('días seguidos')}',
                                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                                   ),
-                                  Text('La más larga: ${_racha.maxima}', style: TextStyle(fontSize: 13, color: c.suave)),
+                                  Text(tr('La más larga: {0}', [_racha.maxima]), style: TextStyle(fontSize: 13, color: c.suave)),
                                   const SizedBox(height: 6),
                                   Text(
                                     _protector
-                                        ? '🛡️ Protector de racha disponible: si un día no practicas, '
-                                            'tu racha sigue. Hay uno por semana.'
-                                        : '🛡️ Ya usaste el protector de esta semana; vuelve el lunes.',
+                                        ? tr('🛡️ Protector de racha disponible: si un día no practicas, tu racha sigue. Hay uno por semana.')
+                                        : tr('🛡️ Ya usaste el protector de esta semana; vuelve el lunes.'),
                                     style: TextStyle(fontSize: 12, color: c.tenue, height: 1.3),
                                   ),
                                 ],
@@ -199,7 +197,7 @@ class _TarjetaLogro extends StatelessWidget {
             const SizedBox(height: 3),
             Text('$valor / ${logro.meta}', style: TextStyle(fontSize: 10, color: c.tenue)),
           ] else
-            Text('Pendiente', style: TextStyle(fontSize: 11, color: c.tenue)),
+            Text(tr('Pendiente'), style: TextStyle(fontSize: 11, color: c.tenue)),
         ],
       ),
     );

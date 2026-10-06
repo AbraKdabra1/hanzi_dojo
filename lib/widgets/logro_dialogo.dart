@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import '../datos/logros.dart';
 import '../screens/pantalla_compartir.dart';
 import '../tema.dart';
+import '../idioma.dart';
 
 Future<void> mostrarLogrosNuevos(BuildContext context, List<Logro> logros) async {
   if (logros.isEmpty) return;
@@ -45,7 +46,7 @@ class _DialogoLogros extends StatelessWidget {
           Text(principal.emoji, style: const TextStyle(fontSize: 64)),
           const SizedBox(height: 8),
           Text(
-            logros.length == 1 ? '¡Logro desbloqueado!' : '¡${logros.length} logros nuevos!',
+            logros.length == 1 ? tr('¡Logro desbloqueado!') : tr('¡{0} logros nuevos!', [logros.length]),
             style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: c.tenue, letterSpacing: 0.5),
           ),
           const SizedBox(height: 6),
@@ -90,9 +91,9 @@ class _DialogoLogros extends StatelessWidget {
         TextButton.icon(
           onPressed: () => Navigator.pop(context, principal),
           icon: const Icon(Icons.share_outlined, size: 18),
-          label: const Text('Compartir'),
+          label: Text(tr('Compartir')),
         ),
-        FilledButton(onPressed: () => Navigator.pop(context), child: const Text('¡Seguir!')),
+        FilledButton(onPressed: () => Navigator.pop(context), child: Text(tr('¡Seguir!'))),
       ],
     );
   }

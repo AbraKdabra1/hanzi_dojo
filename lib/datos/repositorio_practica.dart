@@ -84,6 +84,28 @@ extension PracticaRepositorio on Repositorio {
     return filas.isEmpty ? null : Palabra.desdeFila(filas.first);
   }
 
+  /// Las palabras HSK que existan entre [textos] (para encontrar en un libro
+  /// la palabra a la que pertenece un carácter).
+  Future<List<Palabra>> palabrasPorTextos(Iterable<String> textos) async {
+    final lista = textos.toSet().toList();
+    if (lista.isEmpty) return const [];
+    final marcas = List.filled(lista.length, '?').join(', ');
+    final filas = await _bd.rawQuery(
+        'SELECT $_columnasPalabra, $_progresoPalabra $_desdePalabras WHERE w.palabra IN ($marcas)', lista);
+    return filas.map(Palabra.desdeFila).toList();
+  }
+
+  /// Agrega una palabra al repaso de vocabulario (fase 7, desde «Leer»):
+  /// queda para repasar hoy mismo. Si ya estaba, no cambia nada.
+  Future<void> agregarPalabraARepaso(Palabra p, {DateTime? ahora}) async {
+    final t = _segundos(ahora ?? DateTime.now());
+    await _bd.rawInsert('''
+      INSERT OR IGNORE INTO progreso_palabras (palabra, intervalo, factor, aciertos_seguidos, veces_visto,
+                                               proximo_repaso, primera_vez, ultima_vez)
+      VALUES (?, 0, 2.5, 0, 0, ?, ?, ?)
+    ''', [p.palabra, t, t, t]);
+  }
+
   /// Guarda una respuesta de un ejercicio (tabla ejercicios).
   Future<void> registrarEjercicio(
     String tipo,
@@ -231,13 +253,40 @@ extension PracticaRepositorio on Repositorio {
     ''', [desde, TipoEjercicio.palabra]);
     final porTipo = {for (final f in filas) f['tipo'] as String: f};
     return [
-      for (final tipo in [TipoEjercicio.tono, TipoEjercicio.tonosPalabra, TipoEjercicio.escucha, TipoEjercicio.pinyin])
+      for (final tipo in [
+        TipoEjercicio.tono,
+        TipoEjercicio.tonosPalabra,
+        TipoEjercicio.escucha,
+        TipoEjercicio.pinyin,
+        TipoEjercicio.comprension,
+      ])
         ResumenEjercicio(
           tipo: tipo,
           total: porTipo[tipo]?['n'] as int? ?? 0,
           aciertos: porTipo[tipo]?['bien'] as int? ?? 0,
         ),
     ];
+  }
+
+  /// La mejor calificación de simulacro de cada nivel (nivel → 0-100).
+  Future<Map<int, int>> mejoresSimulacros() async {
+    final filas = await _bd.rawQuery(
+        "SELECT elemento, respuesta FROM ejercicios WHERE tipo = 'examen' AND elemento LIKE 'simulacro:%'");
+    final mejores = <int, int>{};
+    for (final f in filas) {
+      final nivel = int.tryParse((f['elemento'] as String).split(':').last);
+      final nota = int.tryParse(f['respuesta'] as String);
+      if (nivel == null || nota == null) continue;
+      if (nota > (mejores[nivel] ?? -1)) mejores[nivel] = nota;
+    }
+    return mejores;
+  }
+
+  /// Nivel sugerido por el último examen de ubicación (null si nunca lo hiciste).
+  Future<int?> ultimaUbicacion() async {
+    final filas = await _bd.rawQuery(
+        "SELECT respuesta FROM ejercicios WHERE tipo = 'examen' AND elemento = 'ubicacion' ORDER BY momento DESC, id DESC LIMIT 1");
+    return filas.isEmpty ? null : int.tryParse(filas.first['respuesta'] as String);
   }
 
   /// Los tonos que más confundes (de los ejercicios de tonos).

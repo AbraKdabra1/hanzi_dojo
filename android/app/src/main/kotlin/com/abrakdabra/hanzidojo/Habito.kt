@@ -84,6 +84,19 @@ object DatosHanzi {
         null
     }
 
+    /**
+     * ¿La app está en inglés? (Ajustes › Idioma: 'en', 'es' o 'auto' = el
+     * idioma del teléfono: español si está en español, si no, inglés.)
+     */
+    fun ingles(context: Context): Boolean {
+        val elegido = abrir(context, "progreso.db")?.use { ajuste(it, "idioma") }
+        return when (elegido) {
+            "en" -> true
+            "es" -> false
+            else -> java.util.Locale.getDefault().language != "es"
+        }
+    }
+
     /** Cuánto llevas hoy, tu meta y lo que toca repasar. */
     fun resumen(context: Context): Resumen? {
         val db = abrir(context, "progreso.db") ?: return null
@@ -120,7 +133,8 @@ object DatosHanzi {
         return contenido.use { db ->
             val ahora = System.currentTimeMillis()
             val dia = (ahora + TimeZone.getDefault().getOffset(ahora)) / 86_400_000L
-            val consulta = "SELECT caracter, pinyin, coalesce(significado_es, significado_en) FROM caracteres"
+            val significado = if (ingles(context)) "significado_en" else "coalesce(significado_es, significado_en)"
+            val consulta = "SELECT caracter, pinyin, $significado FROM caracteres"
             if (estudiados.size >= 10) {
                 val elegido = estudiados[((dia * 7919L) % estudiados.size).toInt()]
                 db.rawQuery("$consulta WHERE caracter = ?", arrayOf(elegido)).use { c ->
@@ -199,16 +213,31 @@ object Recordatorios {
         val r = DatosHanzi.resumen(context)
         if (r != null && r.hoy >= r.meta) return
         val avisos = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val en = DatosHanzi.ingles(context)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val canal = NotificationChannel(CANAL, "Recordatorio diario", NotificationManager.IMPORTANCE_DEFAULT)
-            canal.description = "Un aviso al día para practicar (solo si aún no cumples tu meta)"
+            val canal = NotificationChannel(
+                CANAL,
+                if (en) "Daily reminder" else "Recordatorio diario",
+                NotificationManager.IMPORTANCE_DEFAULT,
+            )
+            canal.description = if (en) "One reminder a day to practice (only if you haven't reached your goal)"
+            else "Un aviso al día para practicar (solo si aún no cumples tu meta)"
             avisos.createNotificationChannel(canal)
         }
-        val texto = when {
-            r == null -> "Unos minutos de práctica hoy 🌸"
-            r.pendientes > 0 -> "Tienes ${r.pendientes} repasos esperando. Unos minutos bastan 🌸"
-            r.hoy > 0 -> "Llevas ${r.hoy} de ${r.meta} hoy. ¡Ya casi! 🎯"
-            else -> "Tu práctica de hoy te espera 🖌️"
+        val texto = if (en) {
+            when {
+                r == null -> "A few minutes of practice today 🌸"
+                r.pendientes > 0 -> "You have ${r.pendientes} reviews waiting. A few minutes is enough 🌸"
+                r.hoy > 0 -> "${r.hoy} of ${r.meta} done today. Almost there! 🎯"
+                else -> "Today's practice is waiting for you 🖌️"
+            }
+        } else {
+            when {
+                r == null -> "Unos minutos de práctica hoy 🌸"
+                r.pendientes > 0 -> "Tienes ${r.pendientes} repasos esperando. Unos minutos bastan 🌸"
+                r.hoy > 0 -> "Llevas ${r.hoy} de ${r.meta} hoy. ¡Ya casi! 🎯"
+                else -> "Tu práctica de hoy te espera 🖌️"
+            }
         }
         val abrir = PendingIntent.getActivity(
             context,
@@ -268,14 +297,20 @@ class WidgetHanzi : AppWidgetProvider() {
 
         private fun vista(context: Context): RemoteViews {
             val v = RemoteViews(context.packageName, R.layout.widget_hanzi)
+            val en = DatosHanzi.ingles(context)
+            v.setTextViewText(R.id.widget_titulo, if (en) "Character of the day" else "Carácter del día")
             val c = DatosHanzi.caracterDelDia(context)
             v.setTextViewText(R.id.widget_caracter, c?.caracter ?: "汉")
             v.setTextViewText(R.id.widget_pinyin, c?.pinyin ?: "hàn")
-            v.setTextViewText(R.id.widget_significado, c?.significado ?: "Abre la app para empezar")
+            v.setTextViewText(R.id.widget_significado, c?.significado ?: if (en) "Open the app to begin" else "Abre la app para empezar")
             val r = DatosHanzi.resumen(context)
             v.setTextViewText(
                 R.id.widget_estado,
-                if (r == null) "Hanzi Dojo" else "${r.pendientes} repasos · ${minOf(r.hoy, 999)}/${r.meta} hoy",
+                when {
+                    r == null -> "Hanzi Dojo"
+                    en -> "${r.pendientes} reviews · ${minOf(r.hoy, 999)}/${r.meta} today"
+                    else -> "${r.pendientes} repasos · ${minOf(r.hoy, 999)}/${r.meta} hoy"
+                },
             )
             val abrir = PendingIntent.getActivity(
                 context,

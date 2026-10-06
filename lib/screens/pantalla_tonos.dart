@@ -29,6 +29,7 @@ import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/ejercicio.dart';
 import '../widgets/fondo_tinta.dart';
+import '../idioma.dart';
 
 enum _ModoTonos { silabas, palabras }
 
@@ -190,15 +191,14 @@ class _PantallaTonosState extends State<PantallaTonos> {
     final confusiones = confusionesDeTono(_errores, limite: 1);
     if (confusiones.isEmpty) return null;
     final c = confusiones.first;
-    return 'Lo que más confundiste: el ${c.esperado}.º tono (${nombreDeTono(c.esperado)}) '
-        'con el ${c.elegido}.º (${nombreDeTono(c.elegido)}), ${c.veces} veces.';
+    return tr('Lo que más confundiste: el {0}.º tono ({1}) con el {2}.º ({3}), {4} veces.', [c.esperado, nombreDeTono(c.esperado), c.elegido, nombreDeTono(c.elegido), c.veces]);
   }
 
   @override
   Widget build(BuildContext context) {
     return FondoTintaChina(
       child: Scaffold(
-        appBar: BarraSuperior(titulo: 'Tonos', subtitulo: nombreDeNivel(widget.nivel)),
+        appBar: BarraSuperior(titulo: tr('Tonos'), subtitulo: nombreDeNivel(widget.nivel)),
         body: SafeArea(top: false, child: _cuerpo(context)),
       ),
     );
@@ -215,9 +215,9 @@ class _PantallaTonosState extends State<PantallaTonos> {
           style: SegmentedButton.styleFrom(
             textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 14),
           ),
-          segments: const [
-            ButtonSegment(value: _ModoTonos.silabas, label: Text('Sílabas')),
-            ButtonSegment(value: _ModoTonos.palabras, label: Text('Palabras')),
+          segments: [
+            ButtonSegment(value: _ModoTonos.silabas, label: Text(tr('Sílabas'))),
+            ButtonSegment(value: _ModoTonos.palabras, label: Text(tr('Palabras'))),
           ],
           selected: {_modo},
           onSelectionChanged: (elegido) => _cambiarModo(elegido.first),
@@ -229,11 +229,11 @@ class _PantallaTonosState extends State<PantallaTonos> {
     if (_total == 0) {
       return Column(children: [
         selector,
-        const Expanded(
+        Expanded(
           child: MensajeCentrado(
             emoji: '🔇',
-            titulo: 'No encontré grabaciones para este nivel',
-            texto: 'Prueba con otro nivel o con el otro modo.',
+            titulo: tr('No encontré grabaciones para este nivel'),
+            texto: tr('Prueba con otro nivel o con el otro modo.'),
           ),
         ),
       ]);
@@ -277,8 +277,8 @@ class _PantallaTonosState extends State<PantallaTonos> {
                           ? _revelado(context)
                           : Text(
                               _modo == _ModoTonos.silabas
-                                  ? '¿Qué tono escuchaste?'
-                                  : '¿Qué tono tiene cada sílaba?',
+                                  ? tr('¿Qué tono escuchaste?')
+                                  : tr('¿Qué tono tiene cada sílaba?'),
                               key: const ValueKey('pregunta'),
                               style: TextStyle(fontSize: 16, color: c.suave),
                             ),
@@ -302,7 +302,7 @@ class _PantallaTonosState extends State<PantallaTonos> {
                     height: 50,
                     child: FilledButton(
                       onPressed: _siguiente,
-                      child: Text(_indice + 1 < _total ? 'Siguiente' : 'Ver resultado',
+                      child: Text(_indice + 1 < _total ? tr('Siguiente') : tr('Ver resultado'),
                           style: const TextStyle(fontSize: 16)),
                     ),
                   ),
@@ -323,7 +323,7 @@ class _PantallaTonosState extends State<PantallaTonos> {
         key: ValueKey('s$_indice'),
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(bien ? '¡Correcto!' : 'Era el ${s.tono}.º tono',
+          Text(bien ? tr('¡Correcto!') : tr('Era el {0}.º tono', [s.tono]),
               style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
@@ -356,7 +356,7 @@ class _PantallaTonosState extends State<PantallaTonos> {
       key: ValueKey('p$_indice'),
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(bien ? '¡Correcto!' : 'Era ${p.tonos.map((t) => t == 5 ? 'neutro' : '$t.º').join(' + ')}',
+        Text(bien ? tr('¡Correcto!') : tr('Era {0}', [p.tonos.map((t) => t == 5 ? tr('neutro') : tr('{0}.º', [t])).join(' + ')]),
             style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
@@ -398,7 +398,7 @@ class _PantallaTonosState extends State<PantallaTonos> {
               children: [
                 ContornoTono(tono: tono, ancho: 52, alto: 30),
                 const SizedBox(height: 6),
-                Text('$tono.º tono', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+                Text(tr('{0}.º tono', [tono]), style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                 Text(nombreDeTono(tono), style: TextStyle(fontSize: 12, color: context.colores.suave)),
               ],
             ),
@@ -423,7 +423,7 @@ class _PantallaTonosState extends State<PantallaTonos> {
             alignment: Alignment.centerLeft,
             child: Padding(
               padding: const EdgeInsets.only(bottom: 6, top: 4),
-              child: Text(k == 0 ? '1.ª sílaba' : '2.ª sílaba',
+              child: Text(k == 0 ? tr('1.ª sílaba') : tr('2.ª sílaba'),
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.colores.tenue)),
             ),
           ),

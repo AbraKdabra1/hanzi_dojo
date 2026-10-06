@@ -23,6 +23,7 @@ import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
 import '../tema.dart';
 import 'pantalla_libro.dart';
+import '../idioma.dart';
 
 class PantallaBiblioteca extends StatefulWidget {
   const PantallaBiblioteca({super.key});
@@ -78,27 +79,26 @@ class _PantallaBibliotecaState extends State<PantallaBiblioteca> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Padding(
+            Padding(
               padding: EdgeInsets.fromLTRB(16, 4, 16, 8),
-              child: Text('Agregar un libro', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+              child: Text(tr('Agregar un libro'), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
             ),
             ListTile(
               leading: const Icon(Icons.file_open_outlined),
-              title: const Text('Abrir un archivo'),
-              subtitle: const Text('TXT (UTF-8 o GBK) o EPUB sin protección'),
+              title: Text(tr('Abrir un archivo')),
+              subtitle: Text(tr('TXT (UTF-8 o GBK) o EPUB sin protección')),
               onTap: () => Navigator.pop(contexto, 'archivo'),
             ),
             ListTile(
               leading: const Icon(Icons.content_paste_rounded),
-              title: const Text('Pegar un texto'),
-              subtitle: const Text('Un artículo, un cuento, la letra de una canción…'),
+              title: Text(tr('Pegar un texto')),
+              subtitle: Text(tr('Un artículo, un cuento, la letra de una canción…')),
               onTap: () => Navigator.pop(contexto, 'texto'),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
               child: Text(
-                'Tus libros se quedan solo en este teléfono. La app calcula el pinyin y estima '
-                'su nivel HSK.',
+                tr('Tus libros se quedan solo en este teléfono. La app calcula el pinyin y estima su nivel HSK.'),
                 style: TextStyle(fontSize: 12, color: context.colores.tenue),
               ),
             ),
@@ -120,7 +120,7 @@ class _PantallaBibliotecaState extends State<PantallaBiblioteca> {
       archivo = await Archivos.abrir();
     } catch (e, pila) {
       RegistroErrores.registrar('Mis libros', e, pila);
-      _aviso('No se pudo abrir el selector de archivos: $e');
+      _aviso(tr('No se pudo abrir el selector de archivos: {0}', [e]));
       return;
     }
     if (archivo == null) return;
@@ -138,7 +138,7 @@ class _PantallaBibliotecaState extends State<PantallaBiblioteca> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (contexto) => AlertDialog(
-        title: const Text('Pegar un texto'),
+        title: Text(tr('Pegar un texto')),
         content: SizedBox(
           width: double.maxFinite,
           child: Column(
@@ -146,15 +146,15 @@ class _PantallaBibliotecaState extends State<PantallaBiblioteca> {
             children: [
               TextField(
                 controller: titulo,
-                decoration: const InputDecoration(labelText: 'Título (opcional)'),
+                decoration: InputDecoration(labelText: tr('Título (opcional)')),
               ),
               const SizedBox(height: 8),
               TextField(
                 controller: texto,
                 minLines: 6,
                 maxLines: 10,
-                decoration: const InputDecoration(
-                  labelText: 'Texto en chino',
+                decoration: InputDecoration(
+                  labelText: tr('Texto en chino'),
                   alignLabelWithHint: true,
                   border: OutlineInputBorder(),
                 ),
@@ -163,8 +163,8 @@ class _PantallaBibliotecaState extends State<PantallaBiblioteca> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(contexto, false), child: const Text('Cancelar')),
-          FilledButton(onPressed: () => Navigator.pop(contexto, true), child: const Text('Agregar')),
+          TextButton(onPressed: () => Navigator.pop(contexto, false), child: Text(tr('Cancelar'))),
+          FilledButton(onPressed: () => Navigator.pop(contexto, true), child: Text(tr('Agregar'))),
         ],
       ),
     );
@@ -185,11 +185,11 @@ class _PantallaBibliotecaState extends State<PantallaBiblioteca> {
     showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (_) => const AlertDialog(
+      builder: (_) => AlertDialog(
         content: Row(children: [
           SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2)),
           SizedBox(width: 16),
-          Expanded(child: Text('Preparando tu libro…')),
+          Expanded(child: Text(tr('Preparando tu libro…'))),
         ]),
       ),
     );
@@ -208,9 +208,9 @@ class _PantallaBibliotecaState extends State<PantallaBiblioteca> {
       cerrarEspera();
       await _cargar();
       final nivel = preparado.nivelEstimado == 0
-          ? 'más difícil que HSK 7-9'
-          : 'nivel estimado ${nombreDeNivel(preparado.nivelEstimado)}';
-      _aviso('Agregado: ${preparado.libro.titulo} · ${preparado.libro.capitulos.length} capítulos · $nivel');
+          ? tr('más difícil que HSK 7-9')
+          : tr('nivel estimado {0}', [nombreDeNivel(preparado.nivelEstimado)]);
+      _aviso(tr('Agregado: {0} · {1} capítulos · {2}', [preparado.libro.titulo, preparado.libro.capitulos.length, nivel]));
       final libro = await repo.miLibro(id);
       if (libro != null && mounted) _abrir(libro);
     } on LibroInvalido catch (e) {
@@ -219,7 +219,7 @@ class _PantallaBibliotecaState extends State<PantallaBiblioteca> {
     } catch (e, pila) {
       cerrarEspera();
       RegistroErrores.registrar('Mis libros', e, pila);
-      _aviso('No se pudo agregar el libro: $e');
+      _aviso(tr('No se pudo agregar el libro: {0}', [e]));
     }
   }
 
@@ -227,12 +227,11 @@ class _PantallaBibliotecaState extends State<PantallaBiblioteca> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (contexto) => AlertDialog(
-        title: const Text('¿Borrar este libro?'),
-        content: Text('«${libro.titulo}» se borrará del teléfono, con lo que llevas leído. '
-            'Tu archivo original no se toca.'),
+        title: Text(tr('¿Borrar este libro?')),
+        content: Text(tr('«{0}» se borrará del teléfono, con lo que llevas leído. Tu archivo original no se toca.', [libro.titulo])),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(contexto, false), child: const Text('Cancelar')),
-          FilledButton(onPressed: () => Navigator.pop(contexto, true), child: const Text('Borrar')),
+          TextButton(onPressed: () => Navigator.pop(contexto, false), child: Text(tr('Cancelar'))),
+          FilledButton(onPressed: () => Navigator.pop(contexto, true), child: Text(tr('Borrar'))),
         ],
       ),
     );
@@ -248,7 +247,7 @@ class _PantallaBibliotecaState extends State<PantallaBiblioteca> {
     final libros = _libros;
     return FondoTintaChina(
       child: Scaffold(
-        appBar: const BarraSuperior(titulo: 'Leer', subtitulo: 'Libros graduados por nivel HSK'),
+        appBar: BarraSuperior(titulo: tr('Leer'), subtitulo: tr('Libros graduados por nivel HSK')),
         body: libros == null
             ? Center(child: CircularProgressIndicator(color: context.colores.icono))
             : ListView(
@@ -257,8 +256,7 @@ class _PantallaBibliotecaState extends State<PantallaBiblioteca> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
                     child: Text(
-                      'Toca cualquier carácter para ver su significado y practicarlo. '
-                      'Los nombres propios van subrayados.',
+                      tr('Toca cualquier carácter para ver su significado y practicarlo. Los nombres propios van subrayados.'),
                       style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.35),
                     ),
                   ),
@@ -269,11 +267,11 @@ class _PantallaBibliotecaState extends State<PantallaBiblioteca> {
                     const SizedBox(height: 10),
                   ],
                   _Encabezado(
-                    texto: 'MIS LIBROS',
+                    texto: tr('MIS LIBROS'),
                     color: context.colores.tinta,
                     accion: TextButton.icon(
                       icon: const Icon(Icons.add, size: 18),
-                      label: const Text('Agregar'),
+                      label: Text(tr('Agregar')),
                       onPressed: _agregar,
                     ),
                   ),
@@ -286,8 +284,7 @@ class _PantallaBibliotecaState extends State<PantallaBiblioteca> {
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              'Agrega tus propios textos en chino: archivos TXT o EPUB sin '
-                              'protección, o un texto que pegues. Se quedan solo en tu teléfono.',
+                              tr('Agrega tus propios textos en chino: archivos TXT o EPUB sin protección, o un texto que pegues. Se quedan solo en tu teléfono.'),
                               style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.35),
                             ),
                           ),
@@ -345,7 +342,7 @@ class _TarjetaLibro extends StatelessWidget {
         ? (context.colores.oscuro ? const Color(0xFFBCAAA4) : const Color(0xFF5D4037))
         : EtiquetaNivel.colorPara(context, libro.nivelHsk);
     final nivel = libro.propio
-        ? (libro.nivelHsk == 0 ? ' · más difícil que HSK 7-9' : ' · ${nombreDeNivel(libro.nivelHsk)} aprox.')
+        ? (libro.nivelHsk == 0 ? tr(' · más difícil que HSK 7-9') : tr(' · {0} aprox.', [nombreDeNivel(libro.nivelHsk)]))
         : '';
     return TarjetaVidrio(
       onTap: onTap,
@@ -371,7 +368,7 @@ class _TarjetaLibro extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text(
                   '${tipoDeLibro(libro)} · ${libro.capitulos} '
-                  '${libro.capitulos == 1 ? 'capítulo' : 'capítulos'}$nivel',
+                  '${libro.capitulos == 1 ? tr('capítulo') : tr('capítulos')}$nivel',
                   style: TextStyle(fontSize: 12, color: context.colores.suave),
                 ),
                 const SizedBox(height: 8),
@@ -381,10 +378,10 @@ class _TarjetaLibro extends StatelessWidget {
           ),
           if (onBorrar != null)
             PopupMenuButton<String>(
-              tooltip: 'Opciones',
+              tooltip: tr('Opciones'),
               icon: Icon(Icons.more_vert, color: context.colores.icono),
               onSelected: (_) => onBorrar!(),
-              itemBuilder: (_) => const [PopupMenuItem(value: 'borrar', child: Text('Borrar'))],
+              itemBuilder: (_) => [PopupMenuItem(value: 'borrar', child: Text(tr('Borrar')))],
             ),
         ],
       ),

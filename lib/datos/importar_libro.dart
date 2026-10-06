@@ -25,6 +25,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import '../helpers/zip_simple.dart';
+import '../idioma.dart';
 
 /// El archivo no se puede convertir en libro (el mensaje se muestra al usuario).
 class LibroInvalido implements Exception {
@@ -124,11 +125,11 @@ class ImportadorLibros {
   /// Convierte un archivo en libro. [tablaGbk]: tabla "gbk" de contenido.db.
   static LibroImportado leer(String nombreArchivo, Uint8List bytes, {required String tablaGbk}) {
     if (bytes.length > tamanoMaximo) {
-      throw const LibroInvalido('El archivo es demasiado grande (máximo 20 MB).');
+      throw LibroInvalido(tr('El archivo es demasiado grande (máximo 20 MB).'));
     }
     final minusculas = nombreArchivo.toLowerCase();
     if (minusculas.endsWith('.pdf') || _empiezaCon(bytes, '%PDF')) {
-      throw const LibroInvalido('Los PDF todavía no se pueden abrir. Por ahora: TXT o EPUB.');
+      throw LibroInvalido(tr('Los PDF todavía no se pueden abrir. Por ahora: TXT o EPUB.'));
     }
     final titulo = _sinExtension(nombreArchivo);
     if (ZipSimple.esZip(bytes)) return _leerEpub(bytes, titulo);
@@ -139,7 +140,7 @@ class ImportadorLibros {
   static LibroImportado desdeTexto(String titulo, String texto, {String formato = 'texto'}) {
     final capitulos = partirEnCapitulos(texto);
     final libro = LibroImportado(
-      titulo: titulo.trim().isEmpty ? 'Mi libro' : titulo.trim(),
+      titulo: titulo.trim().isEmpty ? tr('Mi libro') : titulo.trim(),
       formato: formato,
       capitulos: capitulos,
     );
@@ -149,7 +150,7 @@ class ImportadorLibros {
 
   static void _revisar(LibroImportado libro) {
     if (libro.capitulos.isEmpty || libro.caracteresChinos < 10) {
-      throw const LibroInvalido('No encontré texto en chino en este archivo.');
+      throw LibroInvalido(tr('No encontré texto en chino en este archivo.'));
     }
   }
 
@@ -270,14 +271,14 @@ class ImportadorLibros {
       parte.add(p);
       largo += p.length;
       if (largo >= caracteresPorParte) {
-        capitulos.add(CapituloImportado('Parte ${capitulos.length + 1}', parte));
+        capitulos.add(CapituloImportado(tr('Parte {0}', [capitulos.length + 1]), parte));
         parte = [];
         largo = 0;
       }
     }
     if (parte.isNotEmpty) {
       capitulos.add(CapituloImportado(
-          capitulos.isEmpty ? 'Texto' : 'Parte ${capitulos.length + 1}', parte));
+          capitulos.isEmpty ? tr('Texto') : tr('Parte {0}', [capitulos.length + 1]), parte));
     }
     return capitulos;
   }
@@ -311,7 +312,7 @@ class ImportadorLibros {
     try {
       archivos = ZipSimple.leer(bytes);
     } catch (_) {
-      throw const LibroInvalido('El archivo está dañado o no es un EPUB.');
+      throw LibroInvalido(tr('El archivo está dañado o no es un EPUB.'));
     }
     String? texto(String ruta) {
       final b = archivos[ruta];
@@ -322,14 +323,14 @@ class ImportadorLibros {
     final rutaOpf = contenedor == null ? null : RegExp(r'full-path="([^"]+)"').firstMatch(contenedor)?[1];
     final opf = rutaOpf == null ? null : texto(rutaOpf);
     if (rutaOpf == null || opf == null) {
-      throw const LibroInvalido('Este archivo no es un EPUB.');
+      throw LibroInvalido(tr('Este archivo no es un EPUB.'));
     }
 
     // DRM: si el contenido (no solo las fuentes) está cifrado, no se puede leer.
     final cifrado = texto('META-INF/encryption.xml');
     if (cifrado != null &&
         RegExp(r'CipherReference[^>]*URI="[^"]+\.(x?html?|xml)"', caseSensitive: false).hasMatch(cifrado)) {
-      throw const LibroInvalido('Este EPUB tiene protección (DRM) y no se puede leer.');
+      throw LibroInvalido(tr('Este EPUB tiene protección (DRM) y no se puede leer.'));
     }
 
     final carpeta = rutaOpf.contains('/') ? rutaOpf.substring(0, rutaOpf.lastIndexOf('/') + 1) : '';
@@ -359,7 +360,7 @@ class ImportadorLibros {
       if (html == null) continue;
       final parrafos = _partirLargos(_parrafosHtml(html));
       if (parrafos.fold(0, (n, p) => n + contarHan(p)) < 10) continue; // portada, índice…
-      final tituloCap = _tituloHtml(html) ?? 'Capítulo ${capitulos.length + 1}';
+      final tituloCap = _tituloHtml(html) ?? tr('Capítulo {0}', [capitulos.length + 1]);
       // Si el primer párrafo es el mismo título, no se repite.
       if (parrafos.isNotEmpty && parrafos.first == tituloCap) parrafos.removeAt(0);
       if (parrafos.isNotEmpty) capitulos.add(CapituloImportado(tituloCap, parrafos));

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../datos/modelos.dart';
 import '../helpers/pinyin_helper.dart';
 import '../tema.dart';
+import '../idioma.dart';
 
 /// Barra superior transparente con flecha para regresar.
 class BarraSuperior extends StatelessWidget implements PreferredSizeWidget {
@@ -25,7 +26,7 @@ class BarraSuperior extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       leading: IconButton(
         icon: const Icon(Icons.arrow_back_ios_new, size: 20),
-        tooltip: 'Regresar',
+        tooltip: tr('Regresar'),
         onPressed: () => Navigator.maybePop(context),
       ),
       title: Column(
@@ -127,7 +128,7 @@ class PinyinColoreado extends StatelessWidget {
         ),
         if (caracter.otrasLecturas.isNotEmpty)
           TextSpan(
-            text: '   también ${caracter.otrasLecturas.replaceAll(' ', ', ')}',
+            text: tr('   también {0}', [caracter.otrasLecturas.replaceAll(' ', ', ')]),
             style: TextStyle(fontSize: tamano * 0.55, color: context.colores.tenue),
           ),
       ]),
@@ -150,12 +151,12 @@ class TextoSignificado extends StatelessWidget {
     final estilo = TextStyle(
       fontSize: tamano,
       color: c.tinta,
-      fontStyle: caracter.tieneEspanol ? FontStyle.normal : FontStyle.italic,
+      fontStyle: caracter.significadoEnIdioma ? FontStyle.normal : FontStyle.italic,
       height: 1.3,
     );
     return Text.rich(
       TextSpan(children: [
-        if (!caracter.tieneEspanol)
+        if (!caracter.significadoEnIdioma)
           TextSpan(
             text: 'EN  ',
             style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: c.tenue),

@@ -21,6 +21,7 @@ import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/ejercicio.dart';
 import '../widgets/fondo_tinta.dart';
+import '../idioma.dart';
 
 class PantallaPinyin extends StatefulWidget {
   const PantallaPinyin({super.key, required this.nivel});
@@ -133,7 +134,7 @@ class _PantallaPinyinState extends State<PantallaPinyin> {
   Widget build(BuildContext context) {
     return FondoTintaChina(
       child: Scaffold(
-        appBar: BarraSuperior(titulo: 'Pinyin', subtitulo: nombreDeNivel(widget.nivel)),
+        appBar: BarraSuperior(titulo: tr('Pinyin'), subtitulo: nombreDeNivel(widget.nivel)),
         body: SafeArea(top: false, child: _cuerpo(context)),
       ),
     );
@@ -143,7 +144,7 @@ class _PantallaPinyinState extends State<PantallaPinyin> {
     final c = context.colores;
     if (_cargando) return const Center(child: CircularProgressIndicator());
     if (_palabras.isEmpty) {
-      return const MensajeCentrado(emoji: '📭', titulo: 'No hay palabras en este nivel');
+      return MensajeCentrado(emoji: '📭', titulo: tr('No hay palabras en este nivel'));
     }
     if (_indice >= _palabras.length) {
       return ResumenRonda(aciertos: _aciertos, total: _palabras.length, onOtraRonda: _nuevaRonda);
@@ -180,7 +181,7 @@ class _PantallaPinyinState extends State<PantallaPinyin> {
                     textInputAction: TextInputAction.done,
                     style: const TextStyle(fontSize: 22, letterSpacing: 1),
                     decoration: InputDecoration(
-                      hintText: 'p. ej. ni3hao3 o nǐhǎo',
+                      hintText: tr('p. ej. ni3hao3 o nǐhǎo'),
                       hintStyle: TextStyle(color: c.tenue, fontSize: 16),
                       filled: true,
                       fillColor: c.tarjeta,
@@ -231,14 +232,14 @@ class _PantallaPinyinState extends State<PantallaPinyin> {
           child: resultado == null
               ? Row(
                   children: [
-                    TextButton(onPressed: () => _comprobar(rendirse: true), child: const Text('No sé')),
+                    TextButton(onPressed: () => _comprobar(rendirse: true), child: Text(tr('No sé'))),
                     const SizedBox(width: 12),
                     Expanded(
                       child: SizedBox(
                         height: 50,
                         child: FilledButton(
                           onPressed: _texto.text.trim().isEmpty ? null : _comprobar,
-                          child: const Text('Comprobar', style: TextStyle(fontSize: 16)),
+                          child: Text(tr('Comprobar'), style: TextStyle(fontSize: 16)),
                         ),
                       ),
                     ),
@@ -249,7 +250,7 @@ class _PantallaPinyinState extends State<PantallaPinyin> {
                   height: 50,
                   child: FilledButton(
                     onPressed: _siguiente,
-                    child: Text(_indice + 1 < _palabras.length ? 'Siguiente' : 'Ver resultado',
+                    child: Text(_indice + 1 < _palabras.length ? tr('Siguiente') : tr('Ver resultado'),
                         style: const TextStyle(fontSize: 16)),
                   ),
                 ),
@@ -261,9 +262,9 @@ class _PantallaPinyinState extends State<PantallaPinyin> {
   Widget _resultadoVista(BuildContext context, Palabra p, ResultadoPinyin r) {
     final c = context.colores;
     final (titulo, color) = switch (r.veredicto) {
-      Veredicto.correcto => ('¡Correcto!', ColoresRespuesta.bien(context)),
-      Veredicto.tonos => ('Casi: las sílabas están bien, revisa los tonos', ColoresRespuesta.mal(context)),
-      Veredicto.incorrecto => ('Se lee así:', ColoresRespuesta.mal(context)),
+      Veredicto.correcto => (tr('¡Correcto!'), ColoresRespuesta.bien(context)),
+      Veredicto.tonos => (tr('Casi: las sílabas están bien, revisa los tonos'), ColoresRespuesta.mal(context)),
+      Veredicto.incorrecto => (tr('Se lee así:'), ColoresRespuesta.mal(context)),
     };
     final escritas = _escritas;
     return Column(
@@ -281,7 +282,7 @@ class _PantallaPinyinState extends State<PantallaPinyin> {
         ),
         if (r.veredicto != Veredicto.correcto && escritas != null) ...[
           const SizedBox(height: 8),
-          Text('Escribiste: ${escritas.map(PinyinEntrada.numAAcentos).join(' ')}',
+          Text(tr('Escribiste: {0}', [escritas.map(PinyinEntrada.numAAcentos).join(' ')]),
               style: TextStyle(fontSize: 14, color: c.tenue)),
         ],
       ],

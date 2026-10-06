@@ -5,24 +5,33 @@
 // nuevas que conviene conocer antes de leer.
 // En medio: los párrafos (texto_lectura.dart). Toca un carácter para ver su
 // ficha; cada párrafo se puede escuchar y traducir.
-// Abajo: "Terminé este capítulo" (queda marcado ✓) y el siguiente.
+// Abajo: tres preguntas de comprensión (fase 7), "Terminé este capítulo"
+// (queda marcado ✓) y el siguiente.
 //
 // Botones de la barra (se recuerdan para la próxima vez):
 //   拼  pinyin encima de los caracteres
 //   🌐  traducción de todos los párrafos
 //   Aa  tamaño de letra
+//   🎧  leer el capítulo en voz alta, resaltando lo que suena (fase 7)
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 
 import '../datos/datos_app.dart';
 import '../datos/modelos.dart';
+import '../datos/practica.dart';
 import '../datos/repositorio.dart';
+import '../datos/repositorio_practica.dart';
+import '../helpers/sensaciones.dart';
+import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
+import '../widgets/preguntas_comprension.dart';
 import '../widgets/tarjeta_vidrio.dart';
 import '../widgets/texto_lectura.dart';
 import '../tema.dart';
+import '../idioma.dart';
 
 class PantallaLectura extends StatefulWidget {
   const PantallaLectura({super.key, required this.libro, required this.capitulos, required this.indice});
@@ -55,6 +64,18 @@ class _PantallaLecturaState extends State<PantallaLectura> {
 
   final ScrollController _desplazamiento = ScrollController();
 
+  /// Lectura en voz alta: si está sonando y qué (párrafo, inicio, fin).
+  bool _leyendo = false;
+  (int, int, int)? _sonando;
+
+  /// Para llevar a la vista el párrafo que se está leyendo.
+  final Map<int, GlobalKey> _claves = {};
+
+  /// Preguntas de comprensión del capítulo y lo que contestaste
+  /// (pregunta → opción).
+  List<PreguntaComprension> _preguntas = const [];
+  final Map<int, int> _respuestas = {};
+
   CapituloLibro get _capitulo => widget.capitulos[_indice];
   bool get _leido => _capitulo.leido || _leidosAhora.contains(_capitulo.orden);
 
@@ -70,19 +91,74 @@ class _PantallaLecturaState extends State<PantallaLectura> {
 
   @override
   void dispose() {
+    if (_leyendo) Voz.detener();
     _desplazamiento.dispose();
     super.dispose();
   }
 
+  /// Lee el capítulo párrafo por párrafo con las grabaciones, resaltando la
+  /// palabra que suena. Un segundo toque lo detiene.
+  Future<void> _leerCapitulo() async {
+    final parrafos = _parrafos;
+    if (parrafos == null) return;
+    if (_leyendo) {
+      setState(() {
+        _leyendo = false;
+        _sonando = null;
+      });
+      await Voz.detener();
+      return;
+    }
+    setState(() => _leyendo = true);
+    for (var i = 0; i < parrafos.length; i++) {
+      if (!mounted || !_leyendo || !identical(parrafos, _parrafos)) break;
+      _mostrarParrafo(i);
+      final completo = await Voz.leerResaltando(
+        parrafos[i].chino,
+        pinyin: parrafos[i].pinyin,
+        alSonar: (inicio, fin) {
+          if (mounted && _leyendo) setState(() => _sonando = inicio < 0 ? null : (i, inicio, fin));
+        },
+      );
+      if (!completo) break;
+      await Future<void>.delayed(const Duration(milliseconds: 450));
+    }
+    if (mounted) {
+      setState(() {
+        _leyendo = false;
+        _sonando = null;
+      });
+    }
+  }
+
+  void _mostrarParrafo(int i) {
+    final contexto = _claves[i]?.currentContext;
+    if (contexto == null) return;
+    Scrollable.ensureVisible(contexto,
+        alignment: 0.15, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
+  }
+
   Future<void> _cargar() async {
+    if (_leyendo) Voz.detener();
     setState(() {
       _parrafos = null;
       _invertidos.clear();
       _seleccion = null;
+      _leyendo = false;
+      _sonando = null;
+      _claves.clear();
+      _preguntas = const [];
+      _respuestas.clear();
     });
-    final parrafos = await DatosApp.de(context).parrafos(_capitulo.id, propio: widget.libro.propio);
+    final repo = DatosApp.de(context);
+    final parrafos = await repo.parrafos(_capitulo.id, propio: widget.libro.propio);
+    // Los libros propios no traen preguntas.
+    final preguntas = widget.libro.propio ? const <PreguntaComprension>[] : await repo.preguntasDeCapitulo(_capitulo.id);
     if (!mounted) return;
-    setState(() => _parrafos = parrafos);
+    setState(() {
+      _parrafos = parrafos;
+      _preguntas = preguntas;
+    });
     if (_desplazamiento.hasClients) _desplazamiento.jumpTo(0);
   }
 
@@ -102,6 +178,8 @@ class _PantallaLecturaState extends State<PantallaLectura> {
         texto: p.caracteres[posicion],
         pinyinEnTexto: p.pinyin[posicion],
         donde: widget.libro.propio ? null : _dondeReporte(p),
+        contexto: p.caracteres,
+        posicion: posicion,
       ),
     );
     if (mounted) setState(() => _seleccion = null);
@@ -111,7 +189,7 @@ class _PantallaLecturaState extends State<PantallaLectura> {
   String _dondeReporte(ParrafoLibro p) {
     final titulo = widget.libro.tituloEs.isEmpty ? widget.libro.titulo : widget.libro.tituloEs;
     final inicio = p.chino.length > 16 ? '${p.chino.substring(0, 16)}…' : p.chino;
-    return 'Libro «$titulo», capítulo ${_capitulo.orden} · párrafo «$inicio»';
+    return tr('Libro «{0}», capítulo {1} · párrafo «{2}»', [titulo, _capitulo.orden, inicio]);
   }
 
   Future<void> _terminar() async {
@@ -119,7 +197,21 @@ class _PantallaLecturaState extends State<PantallaLectura> {
     if (!mounted) return;
     setState(() => _leidosAhora.add(_capitulo.orden));
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Capítulo ${_capitulo.orden} leído ✓')),
+      SnackBar(content: Text(tr('Capítulo {0} leído ✓', [_capitulo.orden]))),
+    );
+  }
+
+  /// Contestar una pregunta de comprensión (una sola vez por visita).
+  void _responder(int pregunta, int opcion) {
+    if (_respuestas.containsKey(pregunta) || pregunta >= _preguntas.length) return;
+    final bien = opcion == _preguntas[pregunta].correcta;
+    setState(() => _respuestas[pregunta] = opcion);
+    Sensaciones.respuesta(bien);
+    DatosApp.de(context).registrarEjercicio(
+      TipoEjercicio.comprension,
+      '${widget.libro.clave}:${_capitulo.orden}:${pregunta + 1}',
+      correcto: bien,
+      respuesta: '$opcion',
     );
   }
 
@@ -134,11 +226,20 @@ class _PantallaLecturaState extends State<PantallaLectura> {
       padding: const EdgeInsets.only(top: 12),
       child: Column(
         children: [
+          if (_preguntas.isNotEmpty) ...[
+            PreguntasComprension(
+              preguntas: _preguntas,
+              respuestas: _respuestas,
+              onResponder: _responder,
+              color: EtiquetaNivel.colorPara(context, widget.libro.nivelHsk),
+            ),
+            const SizedBox(height: 18),
+          ],
           _leido
               ? Row(mainAxisSize: MainAxisSize.min, children: [
                   Icon(Icons.check_circle, color: EtiquetaNivel.colorPara(context, widget.libro.nivelHsk)),
                   const SizedBox(width: 6),
-                  const Text('Capítulo leído', style: TextStyle(fontWeight: FontWeight.w600)),
+                  Text(tr('Capítulo leído'), style: TextStyle(fontWeight: FontWeight.w600)),
                 ])
               : FilledButton.icon(
                   style: FilledButton.styleFrom(
@@ -147,14 +248,14 @@ class _PantallaLecturaState extends State<PantallaLectura> {
                     padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 14),
                   ),
                   icon: const Icon(Icons.check),
-                  label: const Text('Terminé este capítulo'),
+                  label: Text(tr('Terminé este capítulo')),
                   onPressed: _terminar,
                 ),
           if (hayMas) ...[
             const SizedBox(height: 14),
             OutlinedButton.icon(
               icon: const Icon(Icons.arrow_forward),
-              label: Text('Siguiente: ${widget.capitulos[_indice + 1].titulo}',
+              label: Text(tr('Siguiente: {0}', [widget.capitulos[_indice + 1].titulo]),
                   maxLines: 1, overflow: TextOverflow.ellipsis),
               onPressed: () => _irA(_indice + 1),
             ),
@@ -173,11 +274,11 @@ class _PantallaLecturaState extends State<PantallaLectura> {
       child: Scaffold(
         appBar: BarraSuperior(
           titulo: widget.libro.titulo,
-          subtitulo: 'Capítulo ${cap.orden} de ${widget.capitulos.length}',
+          subtitulo: tr('Capítulo {0} de {1}', [cap.orden, widget.capitulos.length]),
           acciones: [
             _BotonAjuste(
               activo: _ajustes.pinyin,
-              tooltip: 'Pinyin',
+              tooltip: tr('Pinyin'),
               onTap: () => _cambiarAjustes(_ajustes.copia(pinyin: !_ajustes.pinyin)),
               child: const Text('拼', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
             ),
@@ -185,7 +286,7 @@ class _PantallaLecturaState extends State<PantallaLectura> {
             if (!widget.libro.propio)
               _BotonAjuste(
                 activo: _ajustes.traduccion,
-                tooltip: 'Traducción',
+                tooltip: tr('Traducción'),
                 onTap: () {
                   _invertidos.clear();
                   _cambiarAjustes(_ajustes.copia(traduccion: !_ajustes.traduccion));
@@ -193,8 +294,14 @@ class _PantallaLecturaState extends State<PantallaLectura> {
                 child: const Icon(Icons.translate, size: 20),
               ),
             _BotonAjuste(
+              activo: _leyendo,
+              tooltip: _leyendo ? tr('Detener la lectura') : tr('Escuchar el capítulo'),
+              onTap: _leerCapitulo,
+              child: Icon(_leyendo ? Icons.stop_rounded : Icons.headphones_rounded, size: 20),
+            ),
+            _BotonAjuste(
               activo: false,
-              tooltip: 'Tamaño de letra',
+              tooltip: tr('Tamaño de letra'),
               onTap: () => _cambiarAjustes(_ajustes.copia(tamano: _ajustes.siguienteTamano)),
               child: const Icon(Icons.format_size, size: 21),
             ),
@@ -206,6 +313,9 @@ class _PantallaLecturaState extends State<PantallaLectura> {
             // cientos de párrafos y solo se construyen los que se ven.
             : ListView.builder(
                 controller: _desplazamiento,
+                // Algo más de margen construido: así el párrafo siguiente ya
+                // existe cuando la lectura en voz alta lo trae a la vista.
+                scrollCacheExtent: const ScrollCacheExtent.pixels(1200),
                 padding: const EdgeInsets.fromLTRB(16, 4, 16, 40),
                 itemCount: parrafos.length + 2,
                 itemBuilder: (context, k) {
@@ -218,6 +328,7 @@ class _PantallaLecturaState extends State<PantallaLectura> {
                   if (k == parrafos.length + 1) return _pie(hayMas);
                   final i = k - 1;
                   return Padding(
+                    key: _claves.putIfAbsent(i, GlobalKey.new),
                     padding: const EdgeInsets.only(bottom: 8),
                     child: ParrafoLectura(
                       parrafo: parrafos[i],
@@ -228,6 +339,7 @@ class _PantallaLecturaState extends State<PantallaLectura> {
                         if (!_invertidos.remove(i)) _invertidos.add(i);
                       }),
                       seleccionado: _seleccion?.$1 == i ? _seleccion?.$2 : null,
+                      sonando: _sonando?.$1 == i ? (_sonando!.$2, _sonando!.$3) : null,
                       onTocarCaracter: (posicion) => _tocarCaracter(i, posicion),
                     ),
                   );
@@ -274,7 +386,7 @@ class _Encabezado extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Palabras de este capítulo',
+                Text(tr('Palabras de este capítulo'),
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: context.colores.suave)),
                 const SizedBox(height: 6),
                 for (final p in capitulo.palabras)

@@ -14,6 +14,7 @@
 
 import 'dart:convert';
 import 'dart:ui' show Offset;
+import '../idioma.dart';
 
 /// Progreso del usuario con un carácter (tabla `progreso` de progreso.db).
 class Progreso {
@@ -119,11 +120,14 @@ class Caracter {
   /// Progreso del usuario (null si nunca lo ha estudiado).
   final Progreso? progreso;
 
-  /// Significado a mostrar: español si existe; si no, inglés.
-  String get significado =>
-      (significadoEs != null && significadoEs!.isNotEmpty) ? significadoEs! : significadoEn;
+  /// Significado a mostrar: con la interfaz en inglés, el inglés; en
+  /// español, el español si existe (si no, el inglés).
+  String get significado => Idioma.ingles || !tieneEspanol ? significadoEn : significadoEs!;
 
   bool get tieneEspanol => significadoEs != null && significadoEs!.isNotEmpty;
+
+  /// ¿El significado está en el idioma de la interfaz? (Si no, se marca "EN".)
+  bool get significadoEnIdioma => Idioma.ingles || tieneEspanol;
 
   bool get esHsk => nivelHsk > 0;
 
@@ -169,7 +173,7 @@ class Caracter {
 
 /// "HSK 3", "HSK 7-9" o "Fuera de HSK" para un número de nivel.
 String nombreDeNivel(int nivel) => switch (nivel) {
-      0 => 'Fuera de HSK',
+      0 => tr('Fuera de HSK'),
       7 => 'HSK 7-9',
       _ => 'HSK $nivel',
     };
@@ -181,6 +185,7 @@ class Radical {
     required this.formaPrincipal,
     required this.variantes,
     required this.nombreEs,
+    this.nombreEn = '',
     required this.pinyin,
     required this.trazos,
     required this.caracterId,
@@ -197,6 +202,10 @@ class Radical {
   final List<String> variantes;
 
   final String nombreEs;
+  final String nombreEn;
+
+  /// Nombre del radical en el idioma de la interfaz ("agua" / "water").
+  String get nombre => Idioma.ingles && nombreEn.isNotEmpty ? nombreEn : nombreEs;
   final String pinyin;
 
   /// Trazos del radical.
@@ -226,6 +235,7 @@ class Radical {
             .where((v) => v.isNotEmpty)
             .toList(),
         nombreEs: f['nombre_es'] as String? ?? '',
+        nombreEn: f['nombre_en'] as String? ?? '',
         pinyin: f['pinyin'] as String? ?? '',
         trazos: f['trazos'] as int? ?? 0,
         caracterId: f['caracter_id'] as int?,
@@ -250,8 +260,16 @@ class Ejemplo {
   final String? espanol;
   final String? ingles;
 
-  /// Traducción a mostrar: español si existe; si no, inglés.
-  String get traduccion => (espanol != null && espanol!.isNotEmpty) ? espanol! : (ingles ?? '');
+  bool get _hayEspanol => espanol != null && espanol!.isNotEmpty;
+  bool get _hayIngles => ingles != null && ingles!.isNotEmpty;
+
+  /// Traducción a mostrar en el idioma de la interfaz (si falta, la otra).
+  String get traduccion => Idioma.ingles
+      ? (_hayIngles ? ingles! : (espanol ?? ''))
+      : (_hayEspanol ? espanol! : (ingles ?? ''));
+
+  /// ¿La traducción está en el idioma de la interfaz?
+  bool get traduccionEnIdioma => Idioma.ingles ? _hayIngles : _hayEspanol;
 
   factory Ejemplo.desdeFila(Map<String, Object?> f) => Ejemplo(
         chino: f['chino'] as String,
@@ -418,7 +436,7 @@ class Libro {
       nivelHsk: f['nivel'] as int? ?? 0,
       adaptado: false,
       descripcion: '',
-      fuente: archivo.isEmpty ? 'Texto que pegaste.' : 'Agregado por ti desde «$archivo».',
+      fuente: archivo.isEmpty ? tr('Texto que pegaste.') : tr('Agregado por ti desde «{0}».', [archivo]),
       cobertura: (f['cobertura'] as num?)?.toDouble() ?? 0,
       caracteres: f['caracteres'] as int? ?? 0,
       capitulos: f['num_capitulos'] as int? ?? 0,
@@ -507,6 +525,40 @@ class CapituloLibro {
             ),
         ],
         leido: (f['leido'] as int? ?? 0) == 1,
+      );
+}
+
+/// Pregunta de comprensión al final de un capítulo (tabla c.preguntas).
+/// Trae los dos idiomas; [pregunta] y [opciones] dan el de la app.
+class PreguntaComprension {
+  const PreguntaComprension({
+    required this.id,
+    required this.preguntaEs,
+    required this.preguntaEn,
+    required this.opcionesEs,
+    required this.opcionesEn,
+    required this.correcta,
+  });
+
+  final int id;
+  final String preguntaEs;
+  final String preguntaEn;
+  final List<String> opcionesEs;
+  final List<String> opcionesEn;
+
+  /// Posición (0-3) de la opción correcta, la misma en los dos idiomas.
+  final int correcta;
+
+  String get pregunta => Idioma.ingles ? preguntaEn : preguntaEs;
+  List<String> get opciones => Idioma.ingles ? opcionesEn : opcionesEs;
+
+  factory PreguntaComprension.desdeFila(Map<String, Object?> f) => PreguntaComprension(
+        id: f['id'] as int,
+        preguntaEs: f['pregunta_es'] as String,
+        preguntaEn: f['pregunta_en'] as String,
+        opcionesEs: [for (final o in jsonDecode(f['opciones_es'] as String) as List) o as String],
+        opcionesEn: [for (final o in jsonDecode(f['opciones_en'] as String) as List) o as String],
+        correcta: f['correcta'] as int,
       );
 }
 

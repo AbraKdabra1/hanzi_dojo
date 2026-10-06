@@ -38,6 +38,7 @@ import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
 
 import 'base_datos.dart';
+import '../idioma.dart';
 
 /// El archivo no es un respaldo válido (el mensaje se muestra al usuario).
 class RespaldoInvalido implements Exception {
@@ -212,33 +213,33 @@ class Respaldo {
   /// tocar la base. Lanza [RespaldoInvalido] con un mensaje para el usuario.
   static DatosRespaldo leer(Uint8List bytes) {
     if (bytes.length > tamanoMaximo) {
-      throw const RespaldoInvalido('El archivo es demasiado grande para ser un respaldo.');
+      throw RespaldoInvalido(tr('El archivo es demasiado grande para ser un respaldo.'));
     }
     final Object? json;
     try {
       json = jsonDecode(utf8.decode(gzip.decode(bytes)));
     } catch (_) {
-      throw const RespaldoInvalido('Este archivo no es un respaldo de Hanzi Dojo.');
+      throw RespaldoInvalido(tr('Este archivo no es un respaldo de Hanzi Dojo.'));
     }
     if (json is! Map<String, Object?> || json['formato'] != formato) {
-      throw const RespaldoInvalido('Este archivo no es un respaldo de Hanzi Dojo.');
+      throw RespaldoInvalido(tr('Este archivo no es un respaldo de Hanzi Dojo.'));
     }
     final v = json['version'];
     if (v is! int || v < 1) {
-      throw const RespaldoInvalido('El respaldo está dañado (versión desconocida).');
+      throw RespaldoInvalido(tr('El respaldo está dañado (versión desconocida).'));
     }
     if (v > version) {
-      throw const RespaldoInvalido(
-          'Este respaldo viene de una versión más nueva de Hanzi Dojo. Actualiza la app para importarlo.');
+      throw RespaldoInvalido(
+          tr('Este respaldo viene de una versión más nueva de Hanzi Dojo. Actualiza la app para importarlo.'));
     }
 
     final ajustes = <String, String>{};
     final crudos = json['ajustes'] ?? const <String, Object?>{};
     if (crudos is! Map<String, Object?>) {
-      throw const RespaldoInvalido('El respaldo está dañado (ajustes).');
+      throw RespaldoInvalido(tr('El respaldo está dañado (ajustes).'));
     }
     for (final MapEntry(:key, :value) in crudos.entries) {
-      if (value is! String) throw const RespaldoInvalido('El respaldo está dañado (ajustes).');
+      if (value is! String) throw RespaldoInvalido(tr('El respaldo está dañado (ajustes).'));
       if (!_ajustesLocales.contains(key)) ajustes[key] = value;
     }
 
@@ -257,7 +258,7 @@ class Respaldo {
   }
 
   static List<Map<String, Object>> _filas(Object? lista, Map<String, _Tipo> columnas, String que) {
-    final error = RespaldoInvalido('El respaldo está dañado ($que).');
+    final error = RespaldoInvalido(tr('El respaldo está dañado ({0}).', [tr(que)]));
     if (lista is! List) throw error;
     return [
       for (final fila in lista)

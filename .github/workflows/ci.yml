@@ -19,7 +19,7 @@ name: CI
 
 on:
   push:
-    branches-ignore: [ci-registros]
+    branches-ignore: [ci-registros, ci-analisis]
   pull_request:
   workflow_dispatch:
 
@@ -33,9 +33,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # SQLite nativo para las pruebas de base de datos (sqflite_common_ffi).
-      - name: Instalar libsqlite3
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq libsqlite3-dev
+      # SQLite nativo (pruebas de base de datos con sqflite_common_ffi) y la
+      # fuente de emojis (para que las capturas los muestren).
+      - name: Instalar libsqlite3 y emojis
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq libsqlite3-dev fonts-noto-color-emoji
 
       - uses: actions/setup-java@v4
         with:

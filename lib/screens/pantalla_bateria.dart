@@ -21,6 +21,7 @@ import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
 import '../tema.dart';
+import '../idioma.dart';
 
 class PantallaBateria extends StatefulWidget {
   const PantallaBateria({super.key});
@@ -70,7 +71,7 @@ class _PantallaBateriaState extends State<PantallaBateria> {
     final suave = TextStyle(fontSize: 13, color: context.colores.suave, height: 1.3);
     return FondoTintaChina(
       child: Scaffold(
-        appBar: const BarraSuperior(titulo: 'Batería y fluidez'),
+        appBar: BarraSuperior(titulo: tr('Batería y fluidez')),
         body: ListView(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
           children: [
@@ -78,29 +79,28 @@ class _PantallaBateriaState extends State<PantallaBateria> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Fluidez de la pantalla', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                  Text(tr('Fluidez de la pantalla'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                   const SizedBox(height: 4),
                   Text(
-                    'Una pantalla a 120 Hz se ve más fluida, pero gasta más batería aunque nada se mueva.',
+                    tr('Una pantalla a 120 Hz se ve más fluida, pero gasta más batería aunque nada se mueva.'),
                     style: suave,
                   ),
                   RadioGroup<ModoFluidez>(
                     groupValue: _modo,
                     onChanged: _cambiarModo,
-                    child: const Column(
+                    child: Column(
                       children: [
                         RadioListTile<ModoFluidez>(
                           contentPadding: EdgeInsets.zero,
                           value: ModoFluidez.automatica,
-                          title: Text('Automática (recomendada)'),
-                          subtitle: Text('120 Hz solo mientras tocas o algo se desplaza; '
-                              'al quedarse quieta la pantalla, el teléfono baja la tasa.'),
+                          title: Text(tr('Automática (recomendada)')),
+                          subtitle: Text(tr('120 Hz solo mientras tocas o algo se desplaza; al quedarse quieta la pantalla, el teléfono baja la tasa.')),
                         ),
                         RadioListTile<ModoFluidez>(
                           contentPadding: EdgeInsets.zero,
                           value: ModoFluidez.maxima,
-                          title: Text('Siempre al máximo'),
-                          subtitle: Text('120 Hz todo el tiempo. Gasta más.'),
+                          title: Text(tr('Siempre al máximo')),
+                          subtitle: Text(tr('120 Hz todo el tiempo. Gasta más.')),
                         ),
                       ],
                     ),
@@ -111,8 +111,7 @@ class _PantallaBateriaState extends State<PantallaBateria> {
                         ? Padding(
                             padding: const EdgeInsets.only(top: 4),
                             child: Text(
-                              '🔋 Tu teléfono tiene activado el ahorro de batería: la app no pide 120 Hz '
-                              'y la rama del inicio no se mueve.',
+                              tr('🔋 Tu teléfono tiene activado el ahorro de batería: la app no pide 120 Hz y la rama del inicio no se mueve.'),
                               style: suave,
                             ),
                           )
@@ -130,14 +129,10 @@ class _PantallaBateriaState extends State<PantallaBateria> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Qué hace la app para ahorrar', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                  Text(tr('Qué hace la app para ahorrar'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                   const SizedBox(height: 6),
                   Text(
-                    '• 120 Hz solo cuando hace falta (modo automático).\n'
-                    '• La rama del inicio se anima a 30 cuadros por segundo, 30 segundos, y se apaga sola.\n'
-                    '• Nada se anima ni corre con otra pantalla encima o con la app en segundo plano.\n'
-                    '• Al escribir, la cuadrícula y la silueta se dibujan una sola vez.\n'
-                    '• El sonido suelta el reproductor al terminar.',
+                    tr('• 120 Hz solo cuando hace falta (modo automático).\n• La rama del inicio se anima a 30 cuadros por segundo, 30 segundos, y se apaga sola.\n• Nada se anima ni corre con otra pantalla encima o con la app en segundo plano.\n• Al escribir, la cuadrícula y la silueta se dibujan una sola vez.\n• El sonido suelta el reproductor al terminar.'),
                     style: suave,
                   ),
                 ],
@@ -164,21 +159,21 @@ class _Ahora extends StatelessWidget {
     final l = lectura;
     final filas = <(String, String)>[];
     if (l != null) {
-      filas.add(('Batería', '${l.nivel} %${l.cargando ? ' · cargando' : ''}'));
+      filas.add((tr('Batería'), '${l.nivel} %${l.cargando ? tr(' · cargando') : ''}'));
       final ma = l.miliamperios;
-      if (ma != null) filas.add(('Corriente', '${_numero(ma)} mA'));
+      if (ma != null) filas.add((tr('Corriente'), tr('{0} mA', [_numero(ma)])));
       final ph = l.porcentajePorHora;
-      if (ph != null) filas.add(('A este ritmo baja', '${_numero(ph, 1)} % por hora'));
-      if (l.temperatura > 0) filas.add(('Temperatura', '${_numero(l.temperatura, 1)} °C'));
-      if (l.tasaPantalla > 0) filas.add(('Pantalla', '${_numero(l.tasaPantalla)} Hz'));
+      if (ph != null) filas.add((tr('A este ritmo baja'), tr('{0} % por hora', [_numero(ph, 1)])));
+      if (l.temperatura > 0) filas.add((tr('Temperatura'), '${_numero(l.temperatura, 1)} °C'));
+      if (l.tasaPantalla > 0) filas.add((tr('Pantalla'), tr('{0} Hz', [_numero(l.tasaPantalla)])));
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Consumo ahora', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+        Text(tr('Consumo ahora'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
         const SizedBox(height: 6),
         if (sinLectura)
-          Text('No se pudo leer la batería en este teléfono.', style: estiloSuave)
+          Text(tr('No se pudo leer la batería en este teléfono.'), style: estiloSuave)
         else if (l == null)
           const Padding(
             padding: EdgeInsets.all(8),
@@ -189,16 +184,16 @@ class _Ahora extends StatelessWidget {
           if (l.cargando)
             Padding(
               padding: const EdgeInsets.only(top: 4),
-              child: Text('Desconecta el cargador para ver cuánto gasta.', style: estiloSuave),
+              child: Text(tr('Desconecta el cargador para ver cuánto gasta.'), style: estiloSuave),
             )
           else if (l.miliamperios == null)
             Padding(
               padding: const EdgeInsets.only(top: 4),
-              child: Text('Tu teléfono no informa la corriente; queda el porcentaje.', style: estiloSuave),
+              child: Text(tr('Tu teléfono no informa la corriente; queda el porcentaje.'), style: estiloSuave),
             ),
           Padding(
             padding: const EdgeInsets.only(top: 4),
-            child: Text('Incluye todo el teléfono (pantalla, señal, otras apps), no solo Hanzi Dojo.',
+            child: Text(tr('Incluye todo el teléfono (pantalla, señal, otras apps), no solo Hanzi Dojo.'),
                 style: estiloSuave.copyWith(fontSize: 12)),
           ),
         ],
@@ -220,26 +215,23 @@ class _Medicion extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Medir mi consumo', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+            Text(tr('Medir mi consumo'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
             const SizedBox(height: 4),
             Text(
               m == null
-                  ? 'Enciéndelo, desconecta el cargador y usa la app como siempre (por ejemplo, '
-                      'una práctica de 10 minutos). Al volver aquí verás el promedio. Lee la batería '
-                      'cada 15 s solo con la app abierta.'
-                  : 'Midiendo desde las ${TimeOfDay.fromDateTime(m.inicio).format(context)}. '
-                      'Sigue usando la app y vuelve aquí.',
+                  ? tr('Enciéndelo, desconecta el cargador y usa la app como siempre (por ejemplo, una práctica de 10 minutos). Al volver aquí verás el promedio. Lee la batería cada 15 s solo con la app abierta.')
+                  : tr('Midiendo desde las {0}. Sigue usando la app y vuelve aquí.', [TimeOfDay.fromDateTime(m.inicio).format(context)]),
               style: estiloSuave,
             ),
             if (m != null && m.ultima != null) ...[
               const SizedBox(height: 6),
-              _Fila(nombre: 'Tiempo medido', valor: '${(m.segundosEnPantalla / 60).toStringAsFixed(1)} min'),
-              if (m.promedioMa != null) _Fila(nombre: 'Corriente promedio', valor: '${_numero(m.promedioMa!)} mA'),
+              _Fila(nombre: tr('Tiempo medido'), valor: tr('{0} min', [(m.segundosEnPantalla / 60).toStringAsFixed(1)])),
+              if (m.promedioMa != null) _Fila(nombre: tr('Corriente promedio'), valor: tr('{0} mA', [_numero(m.promedioMa!)])),
               if (m.porcentajePorHora != null)
-                _Fila(nombre: 'Equivale a bajar', valor: '${_numero(m.porcentajePorHora!, 1)} % por hora'),
-              if (m.bajo != null) _Fila(nombre: 'Bajó la batería', valor: '${m.bajo} puntos'),
+                _Fila(nombre: tr('Equivale a bajar'), valor: tr('{0} % por hora', [_numero(m.porcentajePorHora!, 1)])),
+              if (m.bajo != null) _Fila(nombre: tr('Bajó la batería'), valor: tr('{0} puntos', [m.bajo])),
               if (m.huboCarga)
-                Text('⚠️ El teléfono estuvo cargando: esta medición no sirve. Reiníciala.', style: estiloSuave),
+                Text(tr('⚠️ El teléfono estuvo cargando: esta medición no sirve. Reiníciala.'), style: estiloSuave),
             ],
             const SizedBox(height: 8),
             Row(
@@ -247,13 +239,13 @@ class _Medicion extends StatelessWidget {
                 if (m == null)
                   FilledButton.icon(
                     icon: const Icon(Icons.play_arrow_rounded, size: 18),
-                    label: const Text('Empezar a medir'),
+                    label: Text(tr('Empezar a medir')),
                     onPressed: Energia.iniciarMedicion,
                   )
                 else ...[
-                  OutlinedButton(onPressed: Energia.iniciarMedicion, child: const Text('Reiniciar')),
+                  OutlinedButton(onPressed: Energia.iniciarMedicion, child: Text(tr('Reiniciar'))),
                   const SizedBox(width: 8),
-                  TextButton(onPressed: Energia.detenerMedicion, child: const Text('Terminar')),
+                  TextButton(onPressed: Energia.detenerMedicion, child: Text(tr('Terminar'))),
                 ],
               ],
             ),

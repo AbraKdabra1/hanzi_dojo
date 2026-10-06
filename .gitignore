@@ -55,3 +55,9 @@ herramientas_locales/
 # La base de contenido (assets/db/contenido.db) SÍ se sube al repo, para que
 # la app compile sin tener Python. Se regenera con herramientas_datos/construir_db.py.
 assets/db/*.tmp
+
+# Llave de firma de lanzamiento: NUNCA al repo (ver docs/publicar.md)
+android/key.properties
+*.jks
+*.keystore
+llave_base64.txt

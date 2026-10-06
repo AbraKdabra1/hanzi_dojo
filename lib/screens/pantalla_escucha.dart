@@ -22,6 +22,7 @@ import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/ejercicio.dart';
 import '../widgets/fondo_tinta.dart';
+import '../idioma.dart';
 
 enum _ModoEscucha { caracter, significado }
 
@@ -128,7 +129,7 @@ class _PantallaEscuchaState extends State<PantallaEscucha> {
   Widget build(BuildContext context) {
     return FondoTintaChina(
       child: Scaffold(
-        appBar: BarraSuperior(titulo: 'Escucha', subtitulo: nombreDeNivel(widget.nivel)),
+        appBar: BarraSuperior(titulo: tr('Escucha'), subtitulo: nombreDeNivel(widget.nivel)),
         body: SafeArea(top: false, child: _cuerpo(context)),
       ),
     );
@@ -145,9 +146,9 @@ class _PantallaEscuchaState extends State<PantallaEscucha> {
           style: SegmentedButton.styleFrom(
             textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 14),
           ),
-          segments: const [
-            ButtonSegment(value: _ModoEscucha.caracter, label: Text('Carácter')),
-            ButtonSegment(value: _ModoEscucha.significado, label: Text('Significado')),
+          segments: [
+            ButtonSegment(value: _ModoEscucha.caracter, label: Text(tr('Carácter'))),
+            ButtonSegment(value: _ModoEscucha.significado, label: Text(tr('Significado'))),
           ],
           selected: {_modo},
           onSelectionChanged: (elegido) => _cambiarModo(elegido.first),
@@ -159,8 +160,8 @@ class _PantallaEscuchaState extends State<PantallaEscucha> {
     if (_preguntas.isEmpty) {
       return Column(children: [
         selector,
-        const Expanded(
-          child: MensajeCentrado(emoji: '🔇', titulo: 'No encontré grabaciones para este nivel'),
+        Expanded(
+          child: MensajeCentrado(emoji: '🔇', titulo: tr('No encontré grabaciones para este nivel')),
         ),
       ]);
     }
@@ -235,7 +236,7 @@ class _PantallaEscuchaState extends State<PantallaEscucha> {
                                     style: TextStyle(fontSize: 13, color: c.suave)),
                               ],
                             )
-                          : Text(porSignificado ? '¿Qué significa?' : '¿Cuál escuchaste?',
+                          : Text(porSignificado ? tr('¿Qué significa?') : tr('¿Cuál escuchaste?'),
                               key: const ValueKey('pregunta'), style: TextStyle(fontSize: 16, color: c.suave)),
                     ),
                   ),
@@ -271,7 +272,7 @@ class _PantallaEscuchaState extends State<PantallaEscucha> {
               height: 50,
               child: FilledButton(
                 onPressed: _siguiente,
-                child: Text(_indice + 1 < _preguntas.length ? 'Siguiente' : 'Ver resultado',
+                child: Text(_indice + 1 < _preguntas.length ? tr('Siguiente') : tr('Ver resultado'),
                     style: const TextStyle(fontSize: 16)),
               ),
             ),

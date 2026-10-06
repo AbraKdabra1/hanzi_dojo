@@ -20,6 +20,7 @@ import '../helpers/pinyin_entrada.dart';
 import '../helpers/pinyin_helper.dart';
 import '../tema.dart';
 import 'comunes.dart';
+import '../idioma.dart';
 
 /// Verde y rojo de acierto/error, legibles en claro y oscuro.
 class ColoresRespuesta {
@@ -86,7 +87,7 @@ class BotonEscuchar extends StatelessWidget {
         if (onLento != null) SizedBox(width: tamano * 0.5 + 12),
         Semantics(
           button: true,
-          label: 'Escuchar otra vez',
+          label: tr('Escuchar otra vez'),
           child: Material(
             color: c.boton,
             shape: const CircleBorder(),
@@ -110,7 +111,7 @@ class BotonEscuchar extends StatelessWidget {
         if (onLento != null) ...[
           const SizedBox(width: 12),
           Tooltip(
-            message: 'Escuchar más lento',
+            message: tr('Escuchar más lento'),
             child: Material(
               color: c.tarjeta,
               shape: CircleBorder(side: BorderSide(color: c.bordeLienzo, width: 1.2)),
@@ -279,24 +280,24 @@ class ResumenRonda extends StatelessWidget {
   Widget build(BuildContext context) {
     final fraccion = total == 0 ? 0.0 : aciertos / total;
     final (emoji, titulo) = switch (fraccion) {
-      >= 0.9 => ('🏆', '¡Excelente oído!'),
-      >= 0.7 => ('🎯', '¡Muy bien!'),
-      >= 0.5 => ('👍', 'Vas por buen camino'),
-      _ => ('🌱', 'Cada ronda entrena el oído'),
+      >= 0.9 => ('🏆', tr('¡Excelente oído!')),
+      >= 0.7 => ('🎯', tr('¡Muy bien!')),
+      >= 0.5 => ('👍', tr('Vas por buen camino')),
+      _ => ('🌱', tr('Cada ronda entrena el oído')),
     };
     return MensajeCentrado(
       emoji: emoji,
-      titulo: '$titulo\n$aciertos de $total',
+      titulo: tr('{0}\n{1} de {2}', [titulo, aciertos, total]),
       texto: detalle,
       acciones: [
         FilledButton.icon(
           onPressed: onOtraRonda,
           icon: const Icon(Icons.replay_rounded),
-          label: const Text('Otra ronda'),
+          label: Text(tr('Otra ronda')),
         ),
         OutlinedButton(
           onPressed: () => Navigator.maybePop(context),
-          child: const Text('Terminar'),
+          child: Text(tr('Terminar')),
         ),
       ],
     );

@@ -2,218 +2,218 @@
 # forma_principal: la que se muestra (simplificada cuando existe)
 # variantes: otras formas del mismo radical, separadas por espacio (p. ej. 水 → 氵 氺)
 # trazos: número de trazos del radical en la tabla Kangxi
-numero	forma_principal	variantes	nombre_es	pinyin	trazos
-1	一		uno	yī	1
-2	丨		línea vertical	gǔn	1
-3	丶		punto	zhǔ	1
-4	丿		trazo oblicuo	piě	1
-5	乙	乚 乛	gancho	yǐ	1
-6	亅		gancho vertical	jué	1
-7	二		dos	èr	2
-8	亠		tapa	tóu	2
-9	人	亻	persona	rén	2
-10	儿		piernas	ér	2
-11	入		entrar	rù	2
-12	八		ocho	bā	2
-13	冂		borde	jiōng	2
-14	冖		cubierta	mì	2
-15	冫		hielo	bīng	2
-16	几		mesa	jǐ	2
-17	凵		recipiente	kǎn	2
-18	刀	刂 ⺈	cuchillo	dāo	2
-19	力		fuerza	lì	2
-20	勹		envolver	bāo	2
-21	匕		cuchara	bǐ	2
-22	匚		caja	fāng	2
-23	匸		ocultar	xì	2
-24	十		diez	shí	2
-25	卜	⺊	adivinación	bǔ	2
-26	卩	㔾	sello	jié	2
-27	厂		acantilado	hǎn	2
-28	厶		privado	sī	2
-29	又		otra vez	yòu	2
-30	口		boca	kǒu	3
-31	囗		recinto	wéi	3
-32	土		tierra	tǔ	3
-33	士		erudito	shì	3
-34	夂		caminar despacio	zhǐ	3
-35	夊		caminar despacio	suī	3
-36	夕		atardecer	xī	3
-37	大		grande	dà	3
-38	女		mujer	nǚ	3
-39	子		hijo	zǐ	3
-40	宀		techo	mián	3
-41	寸		pulgada	cùn	3
-42	小	⺌ ⺍	pequeño	xiǎo	3
-43	尢	尣	cojo	wāng	3
-44	尸		cuerpo	shī	3
-45	屮		brote	chè	3
-46	山		montaña	shān	3
-47	巛	川 巜	río	chuān	3
-48	工		trabajo	gōng	3
-49	己	已 巳	uno mismo	jǐ	3
-50	巾		tela	jīn	3
-51	干		seco	gān	3
-52	幺		pequeño	yāo	3
-53	广		cobertizo	guǎng	3
-54	廴		caminar largo	yǐn	3
-55	廾		manos unidas	gǒng	3
-56	弋		lanza	yì	3
-57	弓		arco	gōng	3
-58	彐	彑 ⺕	hocico	jì	3
-59	彡		pelo	shān	3
-60	彳		paso pequeño	chì	3
-61	心	忄 ⺗	corazón	xīn	4
-62	戈		lanza	gē	4
-63	户	戶 戸	puerta	hù	4
-64	手	扌	mano	shǒu	4
-65	支		rama	zhī	4
-66	攴	攵	golpear	pū	4
-67	文		escritura	wén	4
-68	斗		cucharón	dǒu	4
-69	斤		hacha	jīn	4
-70	方		cuadrado	fāng	4
-71	无	旡	sin	wú	4
-72	日		sol	rì	4
-73	曰		decir	yuē	4
-74	月		luna	yuè	4
-75	木		árbol	mù	4
-76	欠		deber	qiàn	4
-77	止		parar	zhǐ	4
-78	歹	歺	malo	dǎi	4
-79	殳		arma	shū	4
-80	毋	母	no	wú	4
-81	比		comparar	bǐ	4
-82	毛		pelo	máo	4
-83	氏		clan	shì	4
-84	气		aire	qì	4
-85	水	氵 氺	agua	shuǐ	4
-86	火	灬	fuego	huǒ	4
-87	爪	爫	garra	zhǎo	4
-88	父		padre	fù	4
-89	爻		líneas del I Ching	yáo	4
-90	爿	丬	tabla	pán	4
-91	片		rebanada	piàn	4
-92	牙		diente	yá	4
-93	牛	牜	vaca	niú	4
-94	犬	犭	perro	quǎn	4
-95	玄		misterioso	xuán	5
-96	玉	王	jade	yù	5
-97	瓜		melón	guā	5
-98	瓦		teja	wǎ	5
-99	甘		dulce	gān	5
-100	生		nacer	shēng	5
-101	用		usar	yòng	5
-102	田		campo	tián	5
-103	疋		tela	pǐ	5
-104	疒		enfermedad	nè	5
-105	癶		pasos	bō	5
-106	白		blanco	bái	5
-107	皮		piel	pí	5
-108	皿		vasija	mǐn	5
-109	目		ojo	mù	5
-110	矛		lanza larga	máo	5
-111	矢		flecha	shǐ	5
-112	石		piedra	shí	5
-113	示	礻	mostrar	shì	5
-114	禸		pista	róu	5
-115	禾		grano	hé	5
-116	穴		cueva	xué	5
-117	立		estar de pie	lì	5
-118	竹	⺮	bambú	zhú	6
-119	米		arroz	mǐ	6
-120	糸	纟 糹	hilo	mì	6
-121	缶		jarro	fǒu	6
-122	网	罒 ⺳ 罓 ⺲	red	wǎng	6
-123	羊		oveja	yáng	6
-124	羽		pluma	yǔ	6
-125	老	耂	viejo	lǎo	6
-126	而		y además	ér	6
-127	耒		arado	lěi	6
-128	耳		oreja	ěr	6
-129	聿	⺻	pincel	yù	6
-130	肉	⺼	carne	ròu	6
-131	臣		ministro	chén	6
-132	自		uno mismo	zì	6
-133	至		llegar	zhì	6
-134	臼		mortero	jiù	6
-135	舌		lengua	shé	6
-136	舛		error	chuǎn	6
-137	舟		bote	zhōu	6
-138	艮		límite	gèn	6
-139	色		color	sè	6
-140	艸	艹	hierba	cǎo	6
-141	虍		tigre	hū	6
-142	虫		insecto	chóng	6
-143	血		sangre	xuè	6
-144	行		caminar	xíng	6
-145	衣	衤	ropa	yī	6
-146	襾	西 覀	cubrir	yà	6
-147	见	見	ver	jiàn	7
-148	角		cuerno	jiǎo	7
-149	言	讠 訁	palabra	yán	7
-150	谷		valle	gǔ	7
-151	豆		frijol	dòu	7
-152	豕		cerdo	shǐ	7
-153	豸		animal	zhì	7
-154	贝	貝	concha	bèi	7
-155	赤		rojo	chì	7
-156	走		correr	zǒu	7
-157	足	⻊	pie	zú	7
-158	身		cuerpo	shēn	7
-159	车	車	vehículo	chē	7
-160	辛		amargo	xīn	7
-161	辰		hora del dragón	chén	7
-162	辵	辶 ⻌	caminar	chuò	7
-163	邑	阝	ciudad	yì	7
-164	酉		vino	yǒu	7
-165	釆		distinguir	biàn	7
-166	里		aldea	lǐ	7
-167	金	钅 釒	metal	jīn	8
-168	长	長	largo	cháng	8
-169	门	門	puerta	mén	8
-170	阜	阝	colina	fù	8
-171	隶		siervo	lì	8
-172	隹		pájaro	zhuī	8
-173	雨	⻗	lluvia	yǔ	8
-174	青	靑	azul-verde	qīng	8
-175	非		no	fēi	8
-176	面		cara	miàn	9
-177	革		cuero	gé	9
-178	韦	韋	cuero curtido	wéi	9
-179	韭		puerro	jiǔ	9
-180	音		sonido	yīn	9
-181	页	頁	página	yè	9
-182	风	風	viento	fēng	9
-183	飞	飛	volar	fēi	9
-184	食	饣 飠	comida	shí	9
-185	首		cabeza	shǒu	9
-186	香		fragante	xiāng	9
-187	马	馬	caballo	mǎ	10
-188	骨		hueso	gǔ	10
-189	高		alto	gāo	10
-190	髟		cabello largo	biāo	10
-191	鬥		pelear	dòu	10
-192	鬯		vino ceremonial	chàng	10
-193	鬲		trípode	lì	10
-194	鬼		fantasma	guǐ	10
-195	鱼	魚	pez	yú	11
-196	鸟	鳥	pájaro	niǎo	11
-197	卤	鹵	sal	lǔ	11
-198	鹿		ciervo	lù	11
-199	麦	麥	trigo	mài	11
-200	麻		cáñamo	má	11
-201	黄	黃	amarillo	huáng	12
-202	黍		mijo	shǔ	12
-203	黑		negro	hēi	12
-204	黹		bordado	zhǐ	12
-205	黾	黽	rana	mǐn	13
-206	鼎		caldero	dǐng	13
-207	鼓		tambor	gǔ	13
-208	鼠		ratón	shǔ	13
-209	鼻		nariz	bí	14
-210	齐	齊	uniforme	qí	14
-211	齿	齒	diente	chǐ	15
-212	龙	龍	dragón	lóng	16
-213	龟	龜	tortuga	guī	16
-214	龠		flauta	yuè	17
+numero	forma_principal	variantes	nombre_es	nombre_en	pinyin	trazos
+1	一		uno	one	yī	1
+2	丨		línea vertical	line	gǔn	1
+3	丶		punto	dot	zhǔ	1
+4	丿		trazo oblicuo	slash	piě	1
+5	乙	乚 乛	gancho	second	yǐ	1
+6	亅		gancho vertical	hook	jué	1
+7	二		dos	two	èr	2
+8	亠		tapa	lid	tóu	2
+9	人	亻	persona	person	rén	2
+10	儿		piernas	legs	ér	2
+11	入		entrar	enter	rù	2
+12	八		ocho	eight	bā	2
+13	冂		borde	down box	jiōng	2
+14	冖		cubierta	cover	mì	2
+15	冫		hielo	ice	bīng	2
+16	几		mesa	table	jǐ	2
+17	凵		recipiente	open box	kǎn	2
+18	刀	刂 ⺈	cuchillo	knife	dāo	2
+19	力		fuerza	power	lì	2
+20	勹		envolver	wrap	bāo	2
+21	匕		cuchara	spoon	bǐ	2
+22	匚		caja	right open box	fāng	2
+23	匸		ocultar	hiding enclosure	xì	2
+24	十		diez	ten	shí	2
+25	卜	⺊	adivinación	divination	bǔ	2
+26	卩	㔾	sello	seal	jié	2
+27	厂		acantilado	cliff	hǎn	2
+28	厶		privado	private	sī	2
+29	又		otra vez	again	yòu	2
+30	口		boca	mouth	kǒu	3
+31	囗		recinto	enclosure	wéi	3
+32	土		tierra	earth	tǔ	3
+33	士		erudito	scholar	shì	3
+34	夂		caminar despacio	go	zhǐ	3
+35	夊		caminar despacio	go slowly	suī	3
+36	夕		atardecer	evening	xī	3
+37	大		grande	big	dà	3
+38	女		mujer	woman	nǚ	3
+39	子		hijo	child	zǐ	3
+40	宀		techo	roof	mián	3
+41	寸		pulgada	inch	cùn	3
+42	小	⺌ ⺍	pequeño	small	xiǎo	3
+43	尢	尣	cojo	lame	wāng	3
+44	尸		cuerpo	corpse	shī	3
+45	屮		brote	sprout	chè	3
+46	山		montaña	mountain	shān	3
+47	巛	川 巜	río	river	chuān	3
+48	工		trabajo	work	gōng	3
+49	己	已 巳	uno mismo	oneself	jǐ	3
+50	巾		tela	cloth	jīn	3
+51	干		seco	dry	gān	3
+52	幺		pequeño	short thread	yāo	3
+53	广		cobertizo	dotted cliff	guǎng	3
+54	廴		caminar largo	long stride	yǐn	3
+55	廾		manos unidas	two hands	gǒng	3
+56	弋		lanza	shoot	yì	3
+57	弓		arco	bow	gōng	3
+58	彐	彑 ⺕	hocico	snout	jì	3
+59	彡		pelo	bristle	shān	3
+60	彳		paso pequeño	step	chì	3
+61	心	忄 ⺗	corazón	heart	xīn	4
+62	戈		lanza	halberd	gē	4
+63	户	戶 戸	puerta	door	hù	4
+64	手	扌	mano	hand	shǒu	4
+65	支		rama	branch	zhī	4
+66	攴	攵	golpear	rap	pū	4
+67	文		escritura	script	wén	4
+68	斗		cucharón	dipper	dǒu	4
+69	斤		hacha	axe	jīn	4
+70	方		cuadrado	square	fāng	4
+71	无	旡	sin	not	wú	4
+72	日		sol	sun	rì	4
+73	曰		decir	say	yuē	4
+74	月		luna	moon	yuè	4
+75	木		árbol	tree	mù	4
+76	欠		deber	lack	qiàn	4
+77	止		parar	stop	zhǐ	4
+78	歹	歺	malo	death	dǎi	4
+79	殳		arma	weapon	shū	4
+80	毋	母	no	do not	wú	4
+81	比		comparar	compare	bǐ	4
+82	毛		pelo	fur	máo	4
+83	氏		clan	clan	shì	4
+84	气		aire	steam	qì	4
+85	水	氵 氺	agua	water	shuǐ	4
+86	火	灬	fuego	fire	huǒ	4
+87	爪	爫	garra	claw	zhǎo	4
+88	父		padre	father	fù	4
+89	爻		líneas del I Ching	trigrams	yáo	4
+90	爿	丬	tabla	split wood	pán	4
+91	片		rebanada	slice	piàn	4
+92	牙		diente	fang	yá	4
+93	牛	牜	vaca	cow	niú	4
+94	犬	犭	perro	dog	quǎn	4
+95	玄		misterioso	profound	xuán	5
+96	玉	王	jade	jade	yù	5
+97	瓜		melón	melon	guā	5
+98	瓦		teja	tile	wǎ	5
+99	甘		dulce	sweet	gān	5
+100	生		nacer	life	shēng	5
+101	用		usar	use	yòng	5
+102	田		campo	field	tián	5
+103	疋		tela	bolt of cloth	pǐ	5
+104	疒		enfermedad	sickness	nè	5
+105	癶		pasos	footsteps	bō	5
+106	白		blanco	white	bái	5
+107	皮		piel	skin	pí	5
+108	皿		vasija	dish	mǐn	5
+109	目		ojo	eye	mù	5
+110	矛		lanza larga	spear	máo	5
+111	矢		flecha	arrow	shǐ	5
+112	石		piedra	stone	shí	5
+113	示	礻	mostrar	spirit	shì	5
+114	禸		pista	track	róu	5
+115	禾		grano	grain	hé	5
+116	穴		cueva	cave	xué	5
+117	立		estar de pie	stand	lì	5
+118	竹	⺮	bambú	bamboo	zhú	6
+119	米		arroz	rice	mǐ	6
+120	糸	纟 糹	hilo	silk	mì	6
+121	缶		jarro	jar	fǒu	6
+122	网	罒 ⺳ 罓 ⺲	red	net	wǎng	6
+123	羊		oveja	sheep	yáng	6
+124	羽		pluma	feather	yǔ	6
+125	老	耂	viejo	old	lǎo	6
+126	而		y además	and	ér	6
+127	耒		arado	plow	lěi	6
+128	耳		oreja	ear	ěr	6
+129	聿	⺻	pincel	brush	yù	6
+130	肉	⺼	carne	meat	ròu	6
+131	臣		ministro	minister	chén	6
+132	自		uno mismo	self	zì	6
+133	至		llegar	arrive	zhì	6
+134	臼		mortero	mortar	jiù	6
+135	舌		lengua	tongue	shé	6
+136	舛		error	oppose	chuǎn	6
+137	舟		bote	boat	zhōu	6
+138	艮		límite	stopping	gèn	6
+139	色		color	color	sè	6
+140	艸	艹	hierba	grass	cǎo	6
+141	虍		tigre	tiger	hū	6
+142	虫		insecto	insect	chóng	6
+143	血		sangre	blood	xuè	6
+144	行		caminar	walk	xíng	6
+145	衣	衤	ropa	clothes	yī	6
+146	襾	西 覀	cubrir	cover	yà	6
+147	见	見	ver	see	jiàn	7
+148	角		cuerno	horn	jiǎo	7
+149	言	讠 訁	palabra	speech	yán	7
+150	谷		valle	valley	gǔ	7
+151	豆		frijol	bean	dòu	7
+152	豕		cerdo	pig	shǐ	7
+153	豸		animal	badger	zhì	7
+154	贝	貝	concha	shell	bèi	7
+155	赤		rojo	red	chì	7
+156	走		correr	run	zǒu	7
+157	足	⻊	pie	foot	zú	7
+158	身		cuerpo	body	shēn	7
+159	车	車	vehículo	cart	chē	7
+160	辛		amargo	bitter	xīn	7
+161	辰		hora del dragón	morning	chén	7
+162	辵	辶 ⻌	caminar	walk	chuò	7
+163	邑	阝	ciudad	city	yì	7
+164	酉		vino	wine	yǒu	7
+165	釆		distinguir	distinguish	biàn	7
+166	里		aldea	village	lǐ	7
+167	金	钅 釒	metal	metal	jīn	8
+168	长	長	largo	long	cháng	8
+169	门	門	puerta	gate	mén	8
+170	阜	阝	colina	mound	fù	8
+171	隶		siervo	slave	lì	8
+172	隹		pájaro	short-tailed bird	zhuī	8
+173	雨	⻗	lluvia	rain	yǔ	8
+174	青	靑	azul-verde	blue	qīng	8
+175	非		no	wrong	fēi	8
+176	面		cara	face	miàn	9
+177	革		cuero	leather	gé	9
+178	韦	韋	cuero curtido	tanned leather	wéi	9
+179	韭		puerro	leek	jiǔ	9
+180	音		sonido	sound	yīn	9
+181	页	頁	página	leaf	yè	9
+182	风	風	viento	wind	fēng	9
+183	飞	飛	volar	fly	fēi	9
+184	食	饣 飠	comida	eat	shí	9
+185	首		cabeza	head	shǒu	9
+186	香		fragante	fragrant	xiāng	9
+187	马	馬	caballo	horse	mǎ	10
+188	骨		hueso	bone	gǔ	10
+189	高		alto	tall	gāo	10
+190	髟		cabello largo	hair	biāo	10
+191	鬥		pelear	fight	dòu	10
+192	鬯		vino ceremonial	sacrificial wine	chàng	10
+193	鬲		trípode	cauldron	lì	10
+194	鬼		fantasma	ghost	guǐ	10
+195	鱼	魚	pez	fish	yú	11
+196	鸟	鳥	pájaro	bird	niǎo	11
+197	卤	鹵	sal	salt	lǔ	11
+198	鹿		ciervo	deer	lù	11
+199	麦	麥	trigo	wheat	mài	11
+200	麻		cáñamo	hemp	má	11
+201	黄	黃	amarillo	yellow	huáng	12
+202	黍		mijo	millet	shǔ	12
+203	黑		negro	black	hēi	12
+204	黹		bordado	embroidery	zhǐ	12
+205	黾	黽	rana	frog	mǐn	13
+206	鼎		caldero	tripod	dǐng	13
+207	鼓		tambor	drum	gǔ	13
+208	鼠		ratón	rat	shǔ	13
+209	鼻		nariz	nose	bí	14
+210	齐	齊	uniforme	even	qí	14
+211	齿	齒	diente	tooth	chǐ	15
+212	龙	龍	dragón	dragon	lóng	16
+213	龟	龜	tortuga	turtle	guī	16
+214	龠		flauta	flute	yuè	17

@@ -26,6 +26,7 @@ Qué fuente aporta qué:
     Propias          radicales_kangxi.tsv, traducciones/*.tsv
                      libros/*.txt + libros_generado.json → sección «Leer»
                      (ver libros.py; el pinyin lo agrega preparar_libros.py)
+                     libros/preguntas.json → preguntas de comprensión
     OpenCC           TSCharacters.txt → tradicional → simplificado (para
                                        consultar caracteres de libros propios)
     Python (stdlib)  códec gb18030    → tabla para leer archivos TXT en GBK
@@ -441,6 +442,7 @@ CREATE TABLE radicales (
     forma_principal TEXT    NOT NULL,      -- la que se muestra (水)
     variantes       TEXT    NOT NULL,      -- otras formas, separadas por espacio (氵 氺)
     nombre_es       TEXT    NOT NULL,      -- "agua"
+    nombre_en       TEXT    NOT NULL,      -- "water" (interfaz en inglés)
     pinyin          TEXT    NOT NULL,      -- con acentos
     trazos          INTEGER NOT NULL,      -- trazos del radical
     caracter_id     INTEGER,               -- id en `caracteres` para practicarlo (NULL si no hay trazos)
@@ -521,6 +523,22 @@ CREATE TABLE parrafos (
     espanol       TEXT    NOT NULL
 );
 CREATE INDEX idx_parrafos_capitulo ON parrafos (capitulo_id, orden);
+
+-- Preguntas de comprensión al final de cada capítulo (libros/preguntas.json).
+-- Las opciones van barajadas de forma fija: la misma pregunta siempre
+-- muestra el mismo orden, y la respuesta correcta no cae siempre en el mismo
+-- lugar.
+CREATE TABLE preguntas (
+    id            INTEGER PRIMARY KEY,
+    capitulo_id   INTEGER NOT NULL REFERENCES capitulos (id),
+    orden         INTEGER NOT NULL,
+    pregunta_es   TEXT    NOT NULL,
+    pregunta_en   TEXT    NOT NULL,
+    opciones_es   TEXT    NOT NULL,         -- JSON: cuatro opciones
+    opciones_en   TEXT    NOT NULL,         -- JSON: las mismas, en el mismo orden
+    correcta      INTEGER NOT NULL          -- posición (0-3) de la opción correcta
+);
+CREATE INDEX idx_preguntas_capitulo ON preguntas (capitulo_id, orden);
 
 -- Tradicional → simplificado, carácter por carácter (OpenCC). Sirve para
 -- consultar los caracteres de libros propios escritos en tradicional.
@@ -627,6 +645,37 @@ def filas_de_libros(nivel_de):
                     "nombres": json.dumps(par["nombres"]), "espanol": par["espanol"],
                 })
     return libros, capitulos, parrafos
+
+
+def filas_de_preguntas(libros, capitulos):
+    """Preguntas de comprensión con las opciones barajadas de forma fija."""
+    import random
+    ruta = os.path.join(FUENTES, "libros", "preguntas.json")
+    if not os.path.exists(ruta):
+        return []
+    with open(ruta, encoding="utf-8") as f:
+        datos = json.load(f)
+    clave_de = {l["id"]: l["clave"] for l in libros}
+    capitulo_de = {(clave_de[c["libro_id"]], c["orden"]): c["id"] for c in capitulos}
+    filas = []
+    for clave, por_capitulo in datos.items():
+        if clave.startswith("_"):
+            continue
+        for cap, preguntas in por_capitulo.items():
+            cid = capitulo_de.get((clave, int(cap)))
+            if cid is None:
+                sys.exit(f"preguntas.json: el libro «{clave}» no tiene capítulo {cap}")
+            for k, q in enumerate(preguntas, 1):
+                orden = list(range(4))
+                random.Random(f"{clave}:{cap}:{k}").shuffle(orden)
+                filas.append({
+                    "id": len(filas) + 1, "capitulo_id": cid, "orden": k,
+                    "pregunta_es": q["es"][0], "pregunta_en": q["en"][0],
+                    "opciones_es": json.dumps([q["es"][1 + i] for i in orden], ensure_ascii=False),
+                    "opciones_en": json.dumps([q["en"][1 + i] for i in orden], ensure_ascii=False),
+                    "correcta": orden.index(q["c"]),
+                })
+    return filas
 
 
 # ═════════════════════════════════════════════════════════════════════════════
@@ -832,7 +881,8 @@ def construir():
             problemas.append(f"radical {n}: ninguna forma tiene datos de trazo")
         filas_radicales.append({
             "numero": n, "forma_principal": r["forma_principal"], "variantes": r["variantes"],
-            "nombre_es": r["nombre_es"], "pinyin": r["pinyin"], "trazos": int(r["trazos"]),
+            "nombre_es": r["nombre_es"], "nombre_en": r["nombre_en"],
+            "pinyin": r["pinyin"], "trazos": int(r["trazos"]),
             "caracter_id": practica, "total_hsk": total_hsk[n], "total": total[n],
         })
 
@@ -883,6 +933,8 @@ def construir():
     insertar("libros", filas_libros)
     insertar("capitulos", filas_capitulos)
     insertar("parrafos", filas_parrafos)
+    filas_preguntas = filas_de_preguntas(filas_libros, filas_capitulos)
+    insertar("preguntas", filas_preguntas)
     filas_trad = leer_tradicional()
     insertar("tradicional", filas_trad)
     # Para partir el pinyin de las palabras solo valen sílabas reales: CC-CEDICT
@@ -899,6 +951,7 @@ def construir():
     huella = hashlib.sha1()
     for tabla, orden_sql in (("caracteres", "id"), ("radicales", "numero"), ("ejemplos", "id"),
                              ("libros", "id"), ("capitulos", "id"), ("parrafos", "id"),
+                             ("preguntas", "id"),
                              ("tradicional", "trad"), ("decodificacion", "nombre"),
                              ("palabras", "id")):
         for fila in con.execute(f"SELECT * FROM {tabla} ORDER BY {orden_sql}"):
@@ -935,7 +988,8 @@ def construir():
     hsk_es = sum(1 for f in filas if f["nivel_hsk"] > 0 and f["significado_es"])
     print(f"  significados en español (HSK): {hsk_es} de {len(hsk)}")
     print(f"  radicales: {len(filas_radicales)}  | ejemplos: {len(filas_ejemplos)}")
-    print(f"  libros: {len(filas_libros)}  | capítulos: {len(filas_capitulos)}  | párrafos: {len(filas_parrafos)}")
+    print(f"  libros: {len(filas_libros)}  | capítulos: {len(filas_capitulos)}  | párrafos: {len(filas_parrafos)}"
+          f"  | preguntas: {len(filas_preguntas)}")
     print(f"  tradicional → simplificado: {len(filas_trad)} caracteres")
     con_es = sum(1 for f in filas_palabras if f["significado_es"])
     print(f"  palabras: {len(filas_palabras)}  | con español: {con_es}  | con grabación: "

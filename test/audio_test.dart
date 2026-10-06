@@ -122,4 +122,11 @@ void main() {
       expect(File('assets/audio/silabas/$s.opus').existsSync(), isTrue, reason: s);
     }
   });
+
+  test('cada grabación sabe qué parte del texto suena (para resaltarla)', () {
+    final plan = Audio.planDeLectura('我去图书馆。',
+        palabras: const {'图书馆', '我'}, silabas: const {'qu4'}, pinyin: const ['wǒ', 'qù', 'tú', 'shū', 'guǎn', '']);
+    final rangos = [for (final c in plan.clips) if (!c.esPausa) (c.inicio, c.fin)];
+    expect(rangos, [(0, 1), (1, 2), (2, 5)]);
+  });
 }
