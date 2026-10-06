@@ -13,10 +13,11 @@
 //
 // Cómo se evalúa cada trazo (ver evaluacion_trazo.dart):
 //   - Al levantar el dedo, tu trazo se compara con la "mediana" (línea
-//     central) del trazo que sigue, usando DTW (ver dtw_helper.dart).
-//   - Si el costo es menor que [umbralDtw] × ancho del lienzo y va en el
-//     sentido correcto, es correcto. Si la forma está bien pero va al revés,
-//     se te avisa y se muestra por dónde empieza.
+//     central) del trazo que sigue: lugar y forma (DTW, ver dtw_helper.dart),
+//     dirección punto por punto, ángulo si es recto, largo, y que no se
+//     parezca más a uno de los trazos que faltan.
+//   - Si pasa todo y va en el sentido correcto, es correcto. Si la forma está
+//     bien pero va al revés, se te avisa y se muestra por dónde empieza.
 //   - Los trazos deben hacerse en orden, como en la escritura real.
 //
 // Ajuste caligráfico (si está activo en Ajustes): un trazo correcto se
@@ -78,10 +79,6 @@ class LienzoEscritura extends StatefulWidget {
   /// true: cada trazo correcto se acomoda en su forma caligráfica exacta.
   /// false: se queda tal como lo dibujaste.
   final bool ajusteCaligrafico;
-
-  /// Qué tan tolerante es la evaluación: costo DTW máximo aceptado como
-  /// fracción del ancho del lienzo. Más alto = más permisivo.
-  static const double umbralDtw = 0.28;
 
   /// "Carácter" del resorte con el que se acomoda el trazo:
   ///   rigidez: más alta = más rápido (420 ≈ se asienta en ~0.35 s).
@@ -242,7 +239,8 @@ class LienzoEscrituraState extends State<LienzoEscritura>
     final resultado = EvaluacionTrazo.evaluar(
       puntos,
       _medianasLienzo[_siguienteTrazo],
-      _tamano.width * LienzoEscritura.umbralDtw,
+      ancho: _tamano.width,
+      pendientes: _medianasLienzo.sublist(_siguienteTrazo + 1),
     );
 
     if (resultado == ResultadoTrazo.correcto) {
