@@ -70,8 +70,9 @@ a ningún lado: se queda en el navegador. Ver [privacidad.md](privacidad.md).
 - `web/`: `index.html` (pantalla de carga e íconos de iPhone),
   `manifest.json`, `flutter_bootstrap.js` y `sw_hanzi.js` (sin internet).
   Los íconos salen de `herramientas_datos/generar_icono.py`.
-- Safari no toca Opus en Ogg: las grabaciones se reempacan a CAF en el
-  momento (`lib/helpers/ogg_a_caf.dart`), igual que en la app de iOS.
+- Si el navegador no toca Opus en Ogg (Safari en versiones de iOS
+  anteriores), las grabaciones se reempacan a CAF en el momento
+  (`lib/helpers/ogg_a_caf.dart`), igual que en la app de iOS.
 - `.github/workflows/web.yml` compila, prueba en Chrome y Safari
   (`herramientas/capturas_web.mjs`, registros y capturas en la rama
   `ci-web`) y, desde `v2`, publica en GitHub Pages. Para eso, una sola vez,
