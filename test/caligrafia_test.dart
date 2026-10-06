@@ -15,30 +15,30 @@ List<Offset> linea(Offset a, Offset b, [int n = 20]) =>
 
 void main() {
   group('Sentido del trazo', () {
-    const umbral = 400 * 0.28; // lienzo de 400 px, como en la app
+    const ancho = 400.0; // lienzo de 400 px, como en la app
     final mediana = linea(const Offset(75, 200), const Offset(325, 200));
 
     test('bien hecho: correcto', () {
       final trazo = linea(const Offset(80, 205), const Offset(320, 195));
-      expect(EvaluacionTrazo.evaluar(trazo, mediana, umbral), ResultadoTrazo.correcto);
+      expect(EvaluacionTrazo.evaluar(trazo, mediana, ancho: ancho), ResultadoTrazo.correcto);
     });
 
     test('trazo largo al revés: "al revés" (antes solo contaba como error)', () {
       final trazo = linea(const Offset(320, 195), const Offset(80, 205));
-      expect(EvaluacionTrazo.evaluar(trazo, mediana, umbral), ResultadoTrazo.alReves);
+      expect(EvaluacionTrazo.evaluar(trazo, mediana, ancho: ancho), ResultadoTrazo.alReves);
     });
 
     test('trazo corto (como 丶) al revés: "al revés" (antes pasaba como correcto)', () {
       final punto = linea(const Offset(180, 150), const Offset(215, 190));
       final alReves = linea(const Offset(213, 188), const Offset(182, 152));
       final bien = linea(const Offset(182, 152), const Offset(213, 188));
-      expect(EvaluacionTrazo.evaluar(bien, punto, umbral), ResultadoTrazo.correcto);
-      expect(EvaluacionTrazo.evaluar(alReves, punto, umbral), ResultadoTrazo.alReves);
+      expect(EvaluacionTrazo.evaluar(bien, punto, ancho: ancho), ResultadoTrazo.correcto);
+      expect(EvaluacionTrazo.evaluar(alReves, punto, ancho: ancho), ResultadoTrazo.alReves);
     });
 
     test('otro trazo lejos: incorrecto', () {
       final trazo = linea(const Offset(75, 380), const Offset(325, 380));
-      expect(EvaluacionTrazo.evaluar(trazo, mediana, umbral), ResultadoTrazo.incorrecto);
+      expect(EvaluacionTrazo.evaluar(trazo, mediana, ancho: ancho), ResultadoTrazo.incorrecto);
     });
   });
 

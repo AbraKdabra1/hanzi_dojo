@@ -66,20 +66,24 @@ class DTWHelper {
       return double.infinity;
     }
     const int n = puntosComparacion;
-    final a = normalizar(trazoUsuario, n);
-    final b = normalizar(trazoEsperado, n);
+    return alinear(normalizar(trazoUsuario, n), normalizar(trazoEsperado, n)).costo;
+  }
 
+  /// DTW entre dos trazos YA remuestreados ([normalizar]): el costo (distancia
+  /// promedio) y qué punto de [a] quedó emparejado con cuál de [b].
+  static ({double costo, List<(int, int)> camino}) alinear(List<Offset> a, List<Offset> b) {
+    final n = a.length, m = b.length;
     // matriz[i][j] = costo mínimo para emparejar a[0..i] con b[0..j].
-    final matriz = List.generate(n, (_) => List<double>.filled(n, double.infinity));
+    final matriz = List.generate(n, (_) => List<double>.filled(m, double.infinity));
     matriz[0][0] = _distancia(a[0], b[0]);
     for (int i = 1; i < n; i++) {
       matriz[i][0] = matriz[i - 1][0] + _distancia(a[i], b[0]);
     }
-    for (int j = 1; j < n; j++) {
+    for (int j = 1; j < m; j++) {
       matriz[0][j] = matriz[0][j - 1] + _distancia(a[0], b[j]);
     }
     for (int i = 1; i < n; i++) {
-      for (int j = 1; j < n; j++) {
+      for (int j = 1; j < m; j++) {
         final double previo = math.min(
           matriz[i - 1][j - 1],
           math.min(matriz[i - 1][j], matriz[i][j - 1]),
@@ -87,6 +91,58 @@ class DTWHelper {
         matriz[i][j] = _distancia(a[i], b[j]) + previo;
       }
     }
-    return matriz[n - 1][n - 1] / n;
+    // Camino de vuelta: de la esquina final al inicio, por el vecino más barato.
+    final camino = <(int, int)>[(n - 1, m - 1)];
+    var i = n - 1, j = m - 1;
+    while (i > 0 || j > 0) {
+      if (i == 0) {
+        j--;
+      } else if (j == 0) {
+        i--;
+      } else {
+        final diagonal = matriz[i - 1][j - 1], arriba = matriz[i - 1][j], izquierda = matriz[i][j - 1];
+        if (diagonal <= arriba && diagonal <= izquierda) {
+          i--;
+          j--;
+        } else if (arriba <= izquierda) {
+          i--;
+        } else {
+          j--;
+        }
+      }
+      camino.add((i, j));
+    }
+    return (costo: matriz[n - 1][m - 1] / n, camino: camino.reversed.toList());
+  }
+
+  /// Dirección (vector unitario) del trazo en cada punto.
+  static List<Offset> tangentes(List<Offset> p) => [
+        for (int i = 0; i < p.length; i++) _unitario(p[math.min(i + 1, p.length - 1)] - p[math.max(i - 1, 0)]),
+      ];
+
+  static Offset _unitario(Offset v) {
+    final d = v.distance;
+    return d == 0 ? Offset.zero : v / d;
+  }
+
+  /// ¿Van en la misma dirección? Promedio del coseno entre las direcciones de
+  /// los puntos que DTW emparejó: 1 = igual, 0 = perpendiculares (un
+  /// horizontal contra un vertical), −1 = al revés.
+  static double similitudDireccion(List<Offset> a, List<Offset> b, List<(int, int)> camino) {
+    final ta = tangentes(a), tb = tangentes(b);
+    var suma = 0.0;
+    for (final (i, j) in camino) {
+      suma += ta[i].dx * tb[j].dx + ta[i].dy * tb[j].dy;
+    }
+    return suma / camino.length;
+  }
+
+  /// Largo del recorrido.
+  static double longitud(List<Offset> p) {
+    var total = 0.0;
+    for (int i = 1; i < p.length; i++) {
+      total += _distancia(p[i - 1], p[i]);
+    }
+    return total;
   }
 }
