@@ -7,12 +7,11 @@
 //
 // Funciona sin internet: compara tu dibujo con las medianas de make-me-a-hanzi
 // (helpers/reconocedor.dart). La primera vez se preparan los 3,000 caracteres
-// HSK en segundo plano (Isolate.run) y quedan en memoria mientras la app esté
-// abierta.
+// HSK en segundo plano (compute; en la web, en el mismo hilo) y quedan en
+// memoria mientras la app esté abierta.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import 'dart:isolate';
-
+import 'package:flutter/foundation.dart' show compute;
 import 'package:flutter/material.dart';
 
 import '../datos/datos_app.dart';
@@ -33,9 +32,13 @@ class ModelosReconocimiento {
 
   static Future<List<ModeloTrazos>> de(Repositorio repo) => _modelos ??= () async {
         final filas = await repo.medianasHsk();
-        return Isolate.run(() => [for (final (c, json) in filas) Reconocedor.modeloDeJson(c, json)]);
+        return compute(_armarModelos, filas);
       }();
 }
+
+/// En otro isolate (compute necesita una función de primer nivel).
+List<ModeloTrazos> _armarModelos(List<(String, String)> filas) =>
+    [for (final (c, json) in filas) Reconocedor.modeloDeJson(c, json)];
 
 class PantallaBuscarDibujo extends StatefulWidget {
   const PantallaBuscarDibujo({super.key});

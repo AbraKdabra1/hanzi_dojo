@@ -1,0 +1,135 @@
+# ---------------------------------------------------------------------------
+# Versión web (PWA): se abre desde el navegador y se instala en la pantalla
+# de inicio, también en iPhone y iPad (Safari → Compartir → "Agregar a
+# pantalla de inicio"). Ver docs/web.md.
+#
+#   1. Compila la app para la web (SQLite en WebAssembly, todo servido desde
+#      el mismo sitio: sin pedir nada a otros servidores).
+#   2. La prueba en Chrome (como Android) y en Safari (como iPhone) con
+#      herramientas/capturas_web.mjs: primera vez, segunda vez y sin internet.
+#   3. En la rama v2 (o a mano): la publica en GitHub Pages,
+#      https://<usuario>.github.io/hanzi_dojo/
+#
+# Registros y capturas → rama ci-web.
+# ---------------------------------------------------------------------------
+name: Web
+
+on:
+  push:
+    branches-ignore: [ci-registros, ci-analisis, ci-ios, ci-web, main]
+  workflow_dispatch:
+
+permissions:
+  contents: write   # solo para publicar en la rama ci-web
+
+concurrency:
+  group: web-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.44.5   # la misma que en Android e iOS
+          cache: true
+
+      - name: Dependencias
+        run: |
+          set -o pipefail
+          flutter pub get 2>&1 | tee pub_get.txt
+          # SQLite en WebAssembly (web/sqlite3.wasm).
+          dart run sqflite_common_ffi_web:setup 2>&1 | tee -a pub_get.txt
+          ls -la web | tee -a pub_get.txt
+
+      - name: Compilar para la web
+        id: compilar
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          flutter build web --release --base-href /hanzi_dojo/ --no-web-resources-cdn 2>&1 | tee build_web.txt
+          # La base de contenido viaja comprimida (la app la descomprime).
+          gzip -9 -k -f build/web/assets/assets/db/contenido.db
+          touch build/web/.nojekyll
+          du -sh build/web build/web/assets/assets/db/* | tee -a build_web.txt
+
+      - uses: actions/setup-node@v4
+        if: steps.compilar.outcome == 'success'
+        with:
+          node-version: 22
+
+      - name: Probar en Chrome y Safari
+        id: navegadores
+        if: steps.compilar.outcome == 'success'
+        continue-on-error: true
+        timeout-minutes: 20
+        run: |
+          set -o pipefail
+          npm install --no-save --no-audit --no-fund playwright > /dev/null
+          npx playwright install --with-deps chromium webkit > /dev/null
+          mkdir -p sitio && ln -sfn "$PWD/build/web" sitio/hanzi_dojo
+          python3 - > servidor.txt 2>&1 <<'EOF' &
+          import functools, http.server
+          M = http.server.SimpleHTTPRequestHandler
+          M.extensions_map.update({'.wasm': 'application/wasm', '.mjs': 'text/javascript', '.js': 'text/javascript', '.json': 'application/json'})
+          http.server.ThreadingHTTPServer(('127.0.0.1', 8000), functools.partial(M, directory='sitio')).serve_forever()
+          EOF
+          sleep 2
+          node herramientas/capturas_web.mjs http://localhost:8000/hanzi_dojo/ capturas_web 2>&1 | tee navegadores.txt
+          # Bien si los dos navegadores completaron todo.
+          test "$(grep -c 'pasos completos: 5 de 5' capturas_web/resumen_navegadores.txt)" = 2
+
+      - name: Preparar para GitHub Pages
+        if: steps.compilar.outcome == 'success' && (github.ref == 'refs/heads/v2' || github.event_name == 'workflow_dispatch')
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+      - name: Publicar registros en la rama ci-web
+        if: always() && github.event_name == 'push'
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p /tmp/reg && cp -f *.txt pubspec.lock /tmp/reg/ 2>/dev/null || true
+          mkdir -p /tmp/reg/capturas && cp -f capturas_web/* /tmp/reg/capturas/ 2>/dev/null || true
+          cd /tmp/reg
+          {
+            echo "commit: $GITHUB_SHA"
+            echo "rama: $GITHUB_REF_NAME"
+            echo "compilar: ${{ steps.compilar.outcome }}"
+            echo "navegadores: ${{ steps.navegadores.outcome }}"
+          } > resumen.txt
+          git init -q && git checkout -q -b ci
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A && git commit -qm "Registros web de $GITHUB_REF_NAME @ ${GITHUB_SHA::7}"
+          git push -qf "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" ci:refs/heads/ci-web
+
+      - name: Resultado final
+        if: always()
+        run: |
+          echo "compilar=${{ steps.compilar.outcome }} navegadores=${{ steps.navegadores.outcome }}"
+          test "${{ steps.compilar.outcome }}" = "success" -a "${{ steps.navegadores.outcome }}" = "success"
+
+  pages:
+    needs: web
+    if: github.ref == 'refs/heads/v2' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - name: Publicar en GitHub Pages
+        id: despliegue
+        uses: actions/deploy-pages@v4

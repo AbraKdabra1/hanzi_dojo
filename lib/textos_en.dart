@@ -71,6 +71,8 @@ const textosEn = <String, String>{
       'The backup is damaged (settings).',
   'El respaldo está dañado ({0}).':
       'The backup is damaged ({0}).',
+  'La primera vez se descarga el diccionario (15 MB). Después funciona sin internet.':
+      'The first time, the dictionary is downloaded (15 MB). After that it works offline.',
   'No se pudo abrir la base de datos.\n\n{0}':
       'The database couldn\'t be opened.\n\n{0}',
   'No se pudo {0}: {1}':
@@ -155,6 +157,8 @@ const textosEn = <String, String>{
       'Your data',
   'Tu progreso vive solo en este teléfono. Exporta un respaldo para no perderlo si cambias de teléfono o lo reinicias.':
       'Your progress lives only on this phone. Export a backup so you don\'t lose it if you change or reset your phone.',
+  'Tu progreso vive solo en este navegador. Exporta un respaldo para no perderlo si borras los datos del navegador o cambias de equipo.':
+      'Your progress lives only in this browser. Export a backup so you don\'t lose it if you clear the browser\'s data or switch devices.',
   'Exportar progreso':
       'Export progress',
   'Guarda un archivo .hanzidojo donde elijas':

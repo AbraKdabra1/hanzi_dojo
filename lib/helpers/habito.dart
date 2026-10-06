@@ -12,16 +12,23 @@
 // app sigue normal.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 
 import '../datos/registro_errores.dart';
+import '../plataforma/navegador.dart';
 
 class Habito {
   Habito._();
 
   static const _canal = MethodChannel('hanzi_dojo/habito');
 
+  /// ¿Hay recordatorio diario? (En la web no: el navegador no avisa con la
+  /// página cerrada.)
+  static bool get hayRecordatorio => !kIsWeb;
+
   static Future<T?> _llamar<T>(String metodo, [Map<String, Object?>? argumentos]) async {
+    if (kIsWeb) return null;
     try {
       return await _canal.invokeMethod<T>(metodo, argumentos);
     } on MissingPluginException {
@@ -43,6 +50,7 @@ class Habito {
   static Future<void> actualizarWidget() => _llamar<void>('actualizarWidget');
 
   /// Abre el menú "Compartir" de Android con esta imagen PNG.
-  static Future<bool> compartirImagen(Uint8List png, {String texto = ''}) async =>
-      await _llamar<bool>('compartirImagen', {'png': png, 'texto': texto}) ?? false;
+  static Future<bool> compartirImagen(Uint8List png, {String texto = ''}) async => kIsWeb
+      ? Navegador.compartirImagen(png, texto)
+      : await _llamar<bool>('compartirImagen', {'png': png, 'texto': texto}) ?? false;
 }

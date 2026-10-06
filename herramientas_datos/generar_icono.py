@@ -15,6 +15,7 @@ Genera:
   fastlane/metadata/android/es-MX/images/icon.png (512 × 512, tiendas)
   ios/Runner/Assets.xcassets/AppIcon.appiconset/*.png       íconos de iPhone/iPad (sin transparencia)
   ios/Runner/Assets.xcassets/LaunchImage.imageset/*.png     字 de la pantalla de arranque (claro y oscuro)
+  web/favicon.png, web/icons/*.png                          versión web: pestaña, "Agregar a inicio" y arranque
 
 Requiere Pillow:  pip install pillow
 Uso:  python herramientas_datos/generar_icono.py
@@ -33,6 +34,7 @@ RES = os.path.join(RAIZ, "android", "app", "src", "main", "res")
 TIENDA = os.path.join(RAIZ, "fastlane", "metadata", "android", "es-MX", "images", "icon.png")
 IOS_ICONO = os.path.join(RAIZ, "ios", "Runner", "Assets.xcassets", "AppIcon.appiconset")
 IOS_ARRANQUE = os.path.join(RAIZ, "ios", "Runner", "Assets.xcassets", "LaunchImage.imageset")
+WEB = os.path.join(RAIZ, "web")
 
 PAPEL = (246, 240, 230, 255)
 PAPEL_SOMBRA = (233, 224, 210, 255)
@@ -195,6 +197,34 @@ def arranque_ios():
             guardar(img.resize((120 * escala, 120 * escala), Image.LANCZOS), os.path.join(IOS_ARRANQUE, nombre))
 
 
+def arranque(tinta):
+    """字 con su sello, sin fondo, 360 × 360 (pantalla de arranque)."""
+    frente = capa_frente(360 * 108 // 66, tinta_propia=tinta)
+    d = (frente.width - 360) // 2
+    return frente.crop((d, d, d + 360, d + 360))
+
+
+def iconos_web():
+    """Versión web (PWA). "maskable": a todo color hasta el borde, con el
+    dibujo dentro del círculo seguro (Android lo recorta a su forma).
+    apple-touch-icon sin transparencia (iPhone pone sus propias esquinas)."""
+    iconos = os.path.join(WEB, "icons")
+    guardar(legado(64), os.path.join(WEB, "favicon.png"))
+    for lado in (192, 512):
+        guardar(legado(lado), os.path.join(iconos, f"Icon-{lado}.png"))
+        # El círculo seguro de capa_frente (66 de 108) queda en el 78 % del
+        # ícono: dentro del 80 % que garantiza "maskable".
+        grande = fondo(lado * 4)
+        frente = capa_frente(lado * 4 * 108 // 85)
+        d = (frente.width - lado * 4) // 2
+        grande.alpha_composite(frente.crop((d, d, d + lado * 4, d + lado * 4)))
+        guardar(grande.resize((lado, lado), Image.LANCZOS), os.path.join(iconos, f"Icon-maskable-{lado}.png"))
+    guardar(cuadrado(180).convert("RGB"), os.path.join(iconos, "apple-touch-icon.png"))
+    guardar(arranque(TINTA).resize((240, 240), Image.LANCZOS), os.path.join(iconos, "arranque.png"))
+    guardar(arranque((240, 232, 218, 255)).resize((240, 240), Image.LANCZOS),
+            os.path.join(iconos, "arranque-oscuro.png"))
+
+
 def guardar(img, ruta):
     os.makedirs(os.path.dirname(ruta), exist_ok=True)
     img.save(ruta, optimize=True)
@@ -224,6 +254,7 @@ def main():
     guardar(cuadrado(512), TIENDA)
     iconos_ios()
     arranque_ios()
+    iconos_web()
     print("Ícono generado.")
 
 

@@ -17,7 +17,9 @@
 // desplaza; en segundo plano se suelta todo.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import 'package:flutter/foundation.dart' show LicenseEntryWithLineBreaks, LicenseRegistry;
+import 'dart:async';
+
+import 'package:flutter/foundation.dart' show LicenseEntryWithLineBreaks, LicenseRegistry, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -36,13 +38,22 @@ import 'helpers/sensaciones.dart';
 import 'idioma.dart';
 import 'helpers/habito.dart';
 import 'painters/rama_ciruelo.dart';
+import 'plataforma/base_web.dart';
 import 'screens/pantalla_inicio.dart';
 import 'tema.dart';
 import 'widgets/boton_voz.dart';
 import 'widgets/fondo_tinta.dart';
 
+/// Versión web con "?semantica=1" en la dirección: la accesibilidad encendida
+/// desde el arranque (las pruebas con navegador encuentran así los botones).
+SemanticsHandle? _semantica;
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  prepararBaseDeDatos(); // en la web: SQLite en WebAssembly
+  if (kIsWeb && Uri.base.queryParameters['semantica'] == '1') {
+    _semantica ??= WidgetsBinding.instance.ensureSemantics();
+  }
   RegistroErrores.instalar();
   // Mientras se abre la base: el idioma del teléfono (luego, el de Ajustes).
   Idioma.actual.value = Idioma.desdeTexto(null);
@@ -168,25 +179,59 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
   }
 }
 
-class _PantallaCarga extends StatelessWidget {
+class _PantallaCarga extends StatefulWidget {
   const _PantallaCarga({this.error});
   final Object? error;
 
   @override
+  State<_PantallaCarga> createState() => _PantallaCargaState();
+}
+
+class _PantallaCargaState extends State<_PantallaCarga> {
+  /// Versión web: si la carga tarda, se explica por qué (solo la primera vez).
+  bool _explicar = false;
+  Timer? _reloj;
+
+  @override
+  void initState() {
+    super.initState();
+    if (kIsWeb) _reloj = Timer(const Duration(seconds: 3), () => setState(() => _explicar = true));
+  }
+
+  @override
+  void dispose() {
+    _reloj?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final error = widget.error;
     return FondoTintaChina(
       child: Scaffold(
         body: Center(
           child: error == null
-              ? const Column(
+              ? Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('汉字道场', style: TextStyle(fontSize: 40, fontWeight: FontWeight.w300)),
-                    SizedBox(height: 24),
-                    SizedBox(
+                    const Text('汉字道场', style: TextStyle(fontSize: 40, fontWeight: FontWeight.w300)),
+                    const SizedBox(height: 24),
+                    const SizedBox(
                       width: 22,
                       height: 22,
                       child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                    AnimatedOpacity(
+                      opacity: _explicar ? 1 : 0,
+                      duration: const Duration(milliseconds: 400),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(40, 24, 40, 0),
+                        child: Text(
+                          tr('La primera vez se descarga el diccionario (15 MB). Después funciona sin internet.'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.4),
+                        ),
+                      ),
                     ),
                   ],
                 )

@@ -14,6 +14,7 @@
 //   (pantalla_errores.dart).
 // ─────────────────────────────────────────────────────────────────────────────
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 import '../datos/datos_app.dart';
@@ -335,6 +336,9 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                         },
                       ),
                     ),
+                  // En la versión web no hay avisos programados (el navegador
+                  // no puede despertar a la app a una hora).
+                  if (Habito.hayRecordatorio) ...[
                   const SizedBox(height: 6),
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
@@ -357,6 +361,7 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                         label: Text(tr('Cambiar hora ({0})', [_textoHora(_recordatorio!)])),
                       ),
                     ),
+                  ],
                 ],
               ),
             ),
@@ -509,6 +514,8 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                 ],
               ),
             ),
+            // Batería y 120 Hz: cosa del teléfono, no del navegador.
+            if (!kIsWeb) ...[
             const SizedBox(height: 12),
             TarjetaVidrio(
               onTap: () => Navigator.push(
@@ -533,6 +540,7 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                 ],
               ),
             ),
+            ],
             const SizedBox(height: 12),
             TarjetaVidrio(
               child: Column(
@@ -541,7 +549,9 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                   Text(tr('Tus datos'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                   const SizedBox(height: 4),
                   Text(
-                    tr('Tu progreso vive solo en este teléfono. Exporta un respaldo para no perderlo si cambias de teléfono o lo reinicias.'),
+                    kIsWeb
+                        ? tr('Tu progreso vive solo en este navegador. Exporta un respaldo para no perderlo si borras los datos del navegador o cambias de equipo.')
+                        : tr('Tu progreso vive solo en este teléfono. Exporta un respaldo para no perderlo si cambias de teléfono o lo reinicias.'),
                     style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.3),
                   ),
                   const SizedBox(height: 6),

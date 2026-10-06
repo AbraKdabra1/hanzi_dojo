@@ -31,12 +31,14 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
+
+import 'package:archive/archive.dart' show GZipDecoder, GZipEncoder;
 
 import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
 
+import '../plataforma/almacen.dart';
 import 'base_datos.dart';
 import '../idioma.dart';
 
@@ -202,7 +204,7 @@ class Respaldo {
           if (!_ajustesLocales.contains(f['clave'])) f['clave'] as String: f['valor'] as String,
       },
     };
-    return Uint8List.fromList(gzip.encode(utf8.encode(jsonEncode(json))));
+    return Uint8List.fromList(GZipEncoder().encodeBytes(utf8.encode(jsonEncode(json))));
   }
 
   // ═══════════════════════════════════════════════════════════════════════
@@ -217,7 +219,7 @@ class Respaldo {
     }
     final Object? json;
     try {
-      json = jsonDecode(utf8.decode(gzip.decode(bytes)));
+      json = jsonDecode(utf8.decode(GZipDecoder().decodeBytes(bytes)));
     } catch (_) {
       throw RespaldoInvalido(tr('Este archivo no es un respaldo de Hanzi Dojo.'));
     }
@@ -282,28 +284,25 @@ class Respaldo {
   // Importar y deshacer
   // ═══════════════════════════════════════════════════════════════════════
 
-  static File _previo(BaseDatos base) => File(p.join(base.carpeta, archivoPrevio));
+  static String _previo(BaseDatos base) => p.join(base.carpeta, archivoPrevio);
 
   /// Reemplaza tu progreso por el de [datos]. Antes guarda una copia de lo
   /// que había, para [deshacerImportacion].
   static Future<void> importar(BaseDatos base, DatosRespaldo datos) async {
     final copia = await exportar(base.db);
-    final previo = _previo(base);
-    final temporal = File('${previo.path}.tmp');
-    await temporal.writeAsBytes(copia, flush: true);
-    await temporal.rename(previo.path);
+    await Almacen.escribir(_previo(base), copia);
     await _reemplazar(base.db, datos);
   }
 
   /// ¿Hay una importación que se pueda deshacer?
-  static Future<bool> hayRespaldoPrevio(BaseDatos base) => _previo(base).exists();
+  static Future<bool> hayRespaldoPrevio(BaseDatos base) => Almacen.existe(_previo(base));
 
   /// Regresa al progreso que tenías antes de la última importación.
   static Future<void> deshacerImportacion(BaseDatos base) async {
     final previo = _previo(base);
-    final datos = leer(await previo.readAsBytes());
+    final datos = leer((await Almacen.leer(previo)) ?? Uint8List(0));
     await _reemplazar(base.db, datos);
-    await previo.delete();
+    await Almacen.borrar(previo);
   }
 
   /// Todo en una transacción: si algo falla, tu progreso queda como estaba.
