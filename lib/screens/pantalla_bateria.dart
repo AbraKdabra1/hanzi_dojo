@@ -193,7 +193,7 @@ class _Ahora extends StatelessWidget {
             ),
           Padding(
             padding: const EdgeInsets.only(top: 4),
-            child: Text(tr('Incluye todo el teléfono (pantalla, señal, otras apps), no solo Hanzi Dojo.'),
+            child: Text(tr('Incluye todo el teléfono (pantalla, señal, otras apps), no solo Meizi Hanzi.'),
                 style: estiloSuave.copyWith(fontSize: 12)),
           ),
         ],

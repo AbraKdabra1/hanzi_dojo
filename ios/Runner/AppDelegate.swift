@@ -346,7 +346,7 @@ enum Recordatorios {
       guard let cuando = calendario.date(from: partes), cuando > ahora else { continue }
       if dia == 0, let r = resumen, r.hoy >= r.meta { continue }  // hoy ya cumpliste
       let contenido = UNMutableNotificationContent()
-      contenido.title = "Hanzi Dojo · 汉字道场"
+      contenido.title = "Meizi Hanzi · 梅字"
       contenido.body = texto(dia == 0 ? resumen : nil, ingles: ingles)
       contenido.sound = .default
       let disparador = UNCalendarNotificationTrigger(dateMatching: partes, repeats: false)

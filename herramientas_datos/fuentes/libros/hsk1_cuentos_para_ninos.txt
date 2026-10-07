@@ -4,7 +4,7 @@ titulo_es: Cuentos chinos para niños
 nivel: 1
 tipo: adaptado
 descripcion: Cinco historias que casi todos los niños de China conocen, contadas con los caracteres de HSK 1.
-fuente: Anécdotas tradicionales de las dinastías Zhou, Han, Tang y Song (dominio público). Versión en chino graduado escrita para Hanzi Dojo.
+fuente: Anécdotas tradicionales de las dinastías Zhou, Han, Tang y Song (dominio público). Versión en chino graduado escrita para Meizi Hanzi.
 
 ## 孔融让梨
 titulo_es: Kong Rong cede las peras

@@ -1,4 +1,4 @@
-<b>Hanzi Dojo · 汉字道场</b> is a free and open-source app to learn to <b>write Chinese characters</b> stroke by stroke, with all 3,000 characters of the official <b>HSK 3.0</b> list.
+<b>Meizi Hanzi · 梅字</b> is a free and open-source app to learn to <b>write Chinese characters</b> stroke by stroke, with all 3,000 characters of the official <b>HSK 3.0</b> list.
 
 <b>Write</b>
 • Every stroke is checked as you write: shape, order and direction.

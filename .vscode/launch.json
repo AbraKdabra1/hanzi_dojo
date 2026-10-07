@@ -4,13 +4,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Hanzi Dojo (debug)",
+            "name": "Meizi Hanzi (debug)",
             "type": "dart",
             "request": "launch",
             "program": "lib/main.dart"
         },
         {
-            "name": "Hanzi Dojo (perfil: fluidez real)",
+            "name": "Meizi Hanzi (perfil: fluidez real)",
             "type": "dart",
             "request": "launch",
             "program": "lib/main.dart",

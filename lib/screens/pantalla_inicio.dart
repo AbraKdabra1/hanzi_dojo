@@ -192,9 +192,9 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
                 ],
               ),
               const Spacer(),
-              const Text('汉字道场', style: TextStyle(fontSize: 44, fontWeight: FontWeight.w400, letterSpacing: 4)),
+              const Text('梅字', style: TextStyle(fontSize: 54, fontWeight: FontWeight.w400, letterSpacing: 10)),
               const SizedBox(height: 4),
-              Text('Hanzi Dojo', style: TextStyle(fontSize: 14, color: c.tenue, letterSpacing: 2)),
+              Text('Meizi Hanzi', style: TextStyle(fontSize: 14, color: c.tenue, letterSpacing: 2)),
               const SizedBox(height: 28),
               _ResumenDelDia(
                 pendientes: _pendientes,

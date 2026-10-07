@@ -41,7 +41,7 @@ void main() {
         return const SizedBox.expand();
       })),
     ));
-    const aviso = '¿Te está sirviendo Hanzi Dojo? Es gratis y sin anuncios; si quieres, puedes apoyarlo.';
+    const aviso = '¿Te está sirviendo Meizi Hanzi? Es gratis y sin anuncios; si quieres, puedes apoyarlo.';
 
     Future<void> logro(String clave) =>
         tester.runAsync(() => base.db.insert('logros', {'clave': clave, 'momento': 1790000000}));

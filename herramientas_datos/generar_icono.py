@@ -4,7 +4,8 @@ generar_icono.py
 Dibuja el ícono de la app a partir de los trazos de Make Me a Hanzi (los
 mismos contornos de pincel que se usan para escribir en la app):
 
-    字 en tinta sobre papel de arroz, con un sello rojo (印章) con 汉.
+    字 en tinta sobre papel de arroz, con un sello rojo (印章) con 梅: 梅字
+    (méizì), el nombre de la app.
 
 Genera:
   android/app/src/main/res/mipmap-*/ic_launcher.png        ícono clásico (cuadrado redondeado)
@@ -125,7 +126,7 @@ def capa_frente(lado, monocromo=False, tinta_propia=None):
         s = zona * 0.22
         sx = sy = centro + zona * 0.23 - s / 2
         d.rounded_rectangle([sx, sy, sx + s, sy + s], radius=s * 0.12, fill=SELLO)
-        dibujar_caracter(d, "汉", sx + s * 0.12, sy + s * 0.10, s * 0.76, PAPEL)
+        dibujar_caracter(d, "梅", sx + s * 0.12, sy + s * 0.10, s * 0.76, PAPEL)
     return img
 
 

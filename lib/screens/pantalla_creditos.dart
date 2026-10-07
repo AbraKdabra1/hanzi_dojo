@@ -21,7 +21,7 @@ class PantallaCreditos extends StatelessWidget {
 
   static List<(String, String, String)> get _fuentes => [
     (
-      tr('Código de Hanzi Dojo'),
+      tr('Código de Meizi Hanzi'),
       tr('Software libre: puedes usarlo, estudiarlo, modificarlo y compartirlo. Las versiones modificadas que se distribuyan deben seguir siendo libres y publicar su código. Código fuente: github.com/AbraKdabra1/hanzi_dojo.'),
       'GPL-3.0',
     ),
@@ -57,7 +57,7 @@ class PantallaCreditos extends StatelessWidget {
     ),
     (
       tr('Libros de «Leer»'),
-      tr('Historias clásicas chinas de dominio público, contadas de nuevo para Hanzi Dojo (HSK 1 a 5). Textos originales del Zengguang Xianwen y poemas Tang tomados de github.com/chinese-poetry/chinese-poetry. Traducciones al español escritas para la app.'),
+      tr('Historias clásicas chinas de dominio público, contadas de nuevo para Meizi Hanzi (HSK 1 a 5). Textos originales del Zengguang Xianwen y poemas Tang tomados de github.com/chinese-poetry/chinese-poetry. Traducciones al español escritas para la app.'),
       tr('MIT (textos clásicos)'),
     ),
     (
@@ -77,7 +77,7 @@ class PantallaCreditos extends StatelessWidget {
     ),
     (
       tr('Rama de ciruelo (梅花)'),
-      tr('Ilustración original al estilo de la pintura china a tinta, dibujada por código para Hanzi Dojo (lib/painters/rama_ciruelo.dart).'),
+      tr('Ilustración original al estilo de la pintura china a tinta, dibujada por código para Meizi Hanzi (lib/painters/rama_ciruelo.dart).'),
       'GPL-3.0',
     ),
   ];
@@ -112,7 +112,7 @@ class PantallaCreditos extends StatelessWidget {
               child: OutlinedButton(
                 onPressed: () => showLicensePage(
                   context: context,
-                  applicationName: 'Hanzi Dojo',
+                  applicationName: 'Meizi Hanzi',
                   applicationLegalese: tr('Código: GPL-3.0 o posterior.\nDatos: CC-CEDICT, Make Me a Hanzi, Unihan, HSK 3.0, Tatoeba.'),
                 ),
                 child: Text(tr('Ver licencias completas')),

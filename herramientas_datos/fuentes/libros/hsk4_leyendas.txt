@@ -4,7 +4,7 @@ titulo_es: Leyendas populares chinas
 nivel: 4
 tipo: adaptado
 descripcion: Cuatro leyendas que todo el mundo conoce en China: dos historias de amor entre el cielo y la tierra, una de amor imposible y la de la joven que fue a la guerra en lugar de su padre.
-fuente: Leyendas tradicionales de transmisión oral, escritas en distintas épocas: el «Poema de Mulan» (siglos V–VI), relatos de la dinastía Tang y las «Historias para advertir al mundo» de Feng Menglong, dinastía Ming (dominio público). Versión en chino graduado escrita para Hanzi Dojo.
+fuente: Leyendas tradicionales de transmisión oral, escritas en distintas épocas: el «Poema de Mulan» (siglos V–VI), relatos de la dinastía Tang y las «Historias para advertir al mundo» de Feng Menglong, dinastía Ming (dominio público). Versión en chino graduado escrita para Meizi Hanzi.
 
 ## 牛郎织女
 titulo_es: El pastor y la tejedora

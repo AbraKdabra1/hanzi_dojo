@@ -54,10 +54,10 @@ void main() {
 
   testWidgets('el fondo animado se arma y al quitarlo no deja relojes encendidos', (tester) async {
     await tester.pumpWidget(const MaterialApp(
-      home: FondoTintaChina(ramaAnimada: true, child: Scaffold(body: Center(child: Text('汉字道场')))),
+      home: FondoTintaChina(ramaAnimada: true, child: Scaffold(body: Center(child: Text('梅字')))),
     ));
     await tester.pump(const Duration(seconds: 2));
-    await tester.tap(find.text('汉字道场')); // tocar hace soplar el viento
+    await tester.tap(find.text('梅字')); // tocar hace soplar el viento
     await tester.pump(const Duration(milliseconds: 500));
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox()); // si quedara un Timer activo, la prueba fallaría

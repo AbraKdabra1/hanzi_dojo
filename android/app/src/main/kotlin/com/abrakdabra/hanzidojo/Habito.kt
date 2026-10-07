@@ -249,7 +249,7 @@ object Recordatorios {
         )
         val aviso = constructor(context)
             .setSmallIcon(R.drawable.ic_notificacion)
-            .setContentTitle("Hanzi Dojo · 汉字道场")
+            .setContentTitle("Meizi Hanzi · 梅字")
             .setContentText(texto)
             .setStyle(Notification.BigTextStyle().bigText(texto))
             .setContentIntent(abrir)
@@ -309,7 +309,7 @@ class WidgetHanzi : AppWidgetProvider() {
             v.setTextViewText(
                 R.id.widget_estado,
                 when {
-                    r == null -> "Hanzi Dojo"
+                    r == null -> "Meizi Hanzi"
                     en -> "${r.pendientes} reviews · ${minOf(r.hoy, 999)}/${r.meta} today"
                     else -> "${r.pendientes} repasos · ${minOf(r.hoy, 999)}/${r.meta} hoy"
                 },

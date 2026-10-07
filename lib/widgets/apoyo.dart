@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // apoyo.dart — Apoyar el proyecto (donativos voluntarios)
 //
-// Hanzi Dojo es gratis, sin anuncios y de código abierto, y así se queda: el
+// Meizi Hanzi es gratis, sin anuncios y de código abierto, y así se queda: el
 // donativo no desbloquea nada. Aparece en tres lugares, siempre discreto:
 //   · Ajustes → «Apoyar el proyecto».
 //   · Créditos, al final.
@@ -53,7 +53,7 @@ class Apoyo {
     await repo.base.guardarAjuste(_ajusteSugerido, '1');
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(tr('¿Te está sirviendo Hanzi Dojo? Es gratis y sin anuncios; si quieres, puedes apoyarlo.')),
+      content: Text(tr('¿Te está sirviendo Meizi Hanzi? Es gratis y sin anuncios; si quieres, puedes apoyarlo.')),
       duration: const Duration(seconds: 8),
       action: SnackBarAction(label: tr('Ver cómo'), onPressed: () => mostrar(context)),
     ));
@@ -126,11 +126,11 @@ class _HojaApoyo extends StatelessWidget {
             const SizedBox(height: 18),
             Text('心', textAlign: TextAlign.center, style: TextStyle(fontSize: 44, color: c.icono)),
             const SizedBox(height: 6),
-            Text(tr('Apoyar Hanzi Dojo'),
+            Text(tr('Apoyar Meizi Hanzi'),
                 textAlign: TextAlign.center, style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w700)),
             const SizedBox(height: 14),
             Text(
-              tr('Hanzi Dojo es gratis, sin anuncios ni cuentas, y de código abierto. Así va a seguir.'),
+              tr('Meizi Hanzi es gratis, sin anuncios ni cuentas, y de código abierto. Así va a seguir.'),
               style: texto,
             ),
             const SizedBox(height: 8),

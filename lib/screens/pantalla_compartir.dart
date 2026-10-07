@@ -110,14 +110,14 @@ class _PantallaCompartirState extends State<PantallaCompartir> {
   }
 
   Future<void> _compartir() => _hacer((png) async {
-        final ok = await Habito.compartirImagen(png, texto: tr('Aprendo chino con Hanzi Dojo · 汉字道场'));
+        final ok = await Habito.compartirImagen(png, texto: tr('Aprendo chino con Meizi Hanzi · 梅字'));
         if (!ok && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(tr('No se pudo abrir el menú para compartir.'))));
         }
       });
 
   Future<void> _guardar() => _hacer((png) async {
-        final nombre = await Archivos.guardar(nombre: 'hanzi_dojo_progreso.png', bytes: png, tipo: 'image/png');
+        final nombre = await Archivos.guardar(nombre: 'meizi_hanzi_progreso.png', bytes: png, tipo: 'image/png');
         if (nombre != null && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(tr('Imagen guardada: {0}', [nombre]))));
         }
@@ -204,8 +204,8 @@ class TarjetaProgreso extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    const Text('汉字道场', style: TextStyle(fontSize: 22, letterSpacing: 2)),
-                    Text('Hanzi Dojo', style: TextStyle(fontSize: 11, color: c.tenue, letterSpacing: 1.5)),
+                    const Text('梅字', style: TextStyle(fontSize: 22, letterSpacing: 2)),
+                    Text('Meizi Hanzi', style: TextStyle(fontSize: 11, color: c.tenue, letterSpacing: 1.5)),
                   ],
                 ),
                 const Spacer(),

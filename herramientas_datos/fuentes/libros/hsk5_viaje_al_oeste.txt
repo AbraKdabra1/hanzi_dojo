@@ -4,7 +4,7 @@ titulo_es: Viaje al Oeste
 nivel: 5
 tipo: adaptado
 descripcion: Las aventuras de Sun Wukong, el Rey Mono, desde que nace de una piedra hasta que acompaña al monje Tang a la India en busca de las escrituras sagradas. La novela más querida de China, contada en seis capítulos.
-fuente: Basado en la novela «Viaje al Oeste» de Wu Cheng'en (siglo XVI, dinastía Ming), una de las Cuatro Grandes Novelas clásicas (dominio público). Versión en chino graduado escrita para Hanzi Dojo.
+fuente: Basado en la novela «Viaje al Oeste» de Wu Cheng'en (siglo XVI, dinastía Ming), una de las Cuatro Grandes Novelas clásicas (dominio público). Versión en chino graduado escrita para Meizi Hanzi.
 
 ## 美猴王出世
 titulo_es: Nace el Rey Mono

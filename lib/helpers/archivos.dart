@@ -51,7 +51,7 @@ class InfoDispositivo {
   String get sistema => RegExp(r'^\d').hasMatch(android) ? 'Android $android' : android;
 
   @override
-  String toString() => 'Hanzi Dojo $version ($compilacion) · $modelo · $sistema';
+  String toString() => 'Meizi Hanzi $version ($compilacion) · $modelo · $sistema';
 }
 
 class Archivos {

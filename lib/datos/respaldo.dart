@@ -6,7 +6,8 @@
 // existe, así que si cambias de teléfono o lo reinicias, se perdería. Con
 // "Exportar progreso" te llevas un archivo y con "Importar" lo recuperas.
 //
-// El archivo .hanzidojo es un JSON comprimido con gzip:
+// El archivo .meizi (antes .hanzidojo, que se sigue aceptando) es un JSON
+// comprimido con gzip:
 //
 //   {
 //     "formato":   "hanzi-dojo-respaldo",
@@ -90,12 +91,17 @@ enum _Tipo { texto, entero, real }
 class Respaldo {
   Respaldo._();
 
+  // El formato y la copia previa conservan el nombre de cuando la app se
+  // llamaba Hanzi Dojo: así los respaldos de antes se siguen importando.
   static const formato = 'hanzi-dojo-respaldo';
   static const version = 1;
-  static const extension = 'hanzidojo';
+
+  /// Extensión de los respaldos nuevos. Importar no mira la extensión (revisa
+  /// el contenido), así que los .hanzidojo de antes también sirven.
+  static const extension = 'meizi';
 
   /// Copia de lo que había antes de la última importación.
-  static const archivoPrevio = 'respaldo_previo.$extension';
+  static const archivoPrevio = 'respaldo_previo.hanzidojo';
 
   /// Ajustes propios de esta instalación: no viajan en el respaldo.
   static const _ajustesLocales = {'version_contenido'};
@@ -163,17 +169,17 @@ class Respaldo {
     'momento': _Tipo.entero,
   };
 
-  /// Nombre sugerido para el archivo: hanzi_dojo_2026-09-30.hanzidojo
+  /// Nombre sugerido para el archivo: meizi_hanzi_2026-09-30.meizi
   static String nombreSugerido(DateTime fecha) {
     String dos(int n) => n.toString().padLeft(2, '0');
-    return 'hanzi_dojo_${fecha.year}-${dos(fecha.month)}-${dos(fecha.day)}.$extension';
+    return 'meizi_hanzi_${fecha.year}-${dos(fecha.month)}-${dos(fecha.day)}.$extension';
   }
 
   // ═══════════════════════════════════════════════════════════════════════
   // Exportar
   // ═══════════════════════════════════════════════════════════════════════
 
-  /// Todo tu progreso como bytes de un archivo .hanzidojo.
+  /// Todo tu progreso como bytes de un archivo .meizi.
   static Future<Uint8List> exportar(Database db, {DateTime? ahora}) async {
     final progreso = await db.rawQuery(
         'SELECT ${_columnasProgreso.keys.join(', ')} FROM progreso ORDER BY caracter');
@@ -211,7 +217,7 @@ class Respaldo {
   // Leer y revisar
   // ═══════════════════════════════════════════════════════════════════════
 
-  /// Lee un archivo .hanzidojo y revisa que todo esté en orden ANTES de
+  /// Lee un archivo .meizi (o .hanzidojo) y revisa que todo esté en orden ANTES de
   /// tocar la base. Lanza [RespaldoInvalido] con un mensaje para el usuario.
   static DatosRespaldo leer(Uint8List bytes) {
     if (bytes.length > tamanoMaximo) {
@@ -221,10 +227,10 @@ class Respaldo {
     try {
       json = jsonDecode(utf8.decode(GZipDecoder().decodeBytes(bytes)));
     } catch (_) {
-      throw RespaldoInvalido(tr('Este archivo no es un respaldo de Hanzi Dojo.'));
+      throw RespaldoInvalido(tr('Este archivo no es un respaldo de Meizi Hanzi.'));
     }
     if (json is! Map<String, Object?> || json['formato'] != formato) {
-      throw RespaldoInvalido(tr('Este archivo no es un respaldo de Hanzi Dojo.'));
+      throw RespaldoInvalido(tr('Este archivo no es un respaldo de Meizi Hanzi.'));
     }
     final v = json['version'];
     if (v is! int || v < 1) {
@@ -232,7 +238,7 @@ class Respaldo {
     }
     if (v > version) {
       throw RespaldoInvalido(
-          tr('Este respaldo viene de una versión más nueva de Hanzi Dojo. Actualiza la app para importarlo.'));
+          tr('Este respaldo viene de una versión más nueva de Meizi Hanzi. Actualiza la app para importarlo.'));
     }
 
     final ajustes = <String, String>{};

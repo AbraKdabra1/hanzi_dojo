@@ -1,11 +1,13 @@
 # Cambios
 
-Todas las versiones de Hanzi Dojo. El flujo de lanzamiento toma de aquí las
+Todas las versiones de Meizi Hanzi. El flujo de lanzamiento toma de aquí las
 notas de cada versión (la sección `## X.Y.Z`).
 
 ## 2.1.0
 
 Primera versión pública.
+
+**Nuevo nombre: Meizi Hanzi · 梅字** (antes Hanzi Dojo). 梅 es el ciruelo de la rama del inicio y 字, el carácter que escribes. Se instala encima de la versión anterior sin perder nada; los respaldos `.hanzidojo` se siguen importando (los nuevos se guardan como `.meizi`).
 
 **Escribir**
 - Los 3,000 caracteres de la lista oficial HSK 3.0 y los 214 radicales Kangxi con sus familias.

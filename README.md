@@ -1,4 +1,8 @@
-# Hanzi Dojo · 汉字道场
+# Meizi Hanzi · 梅字
+
+*Antes se llamaba Hanzi Dojo.* **梅字** (méizì): 梅, el ciruelo chino de la
+rama que se dibuja en la app, que florece en pleno invierno; y 字, el carácter
+que escribes. Suena casi como 美字 (měizì), "letra bonita".
 
 App (Flutter) para **aprender a escribir caracteres chinos** trazo por
 trazo, en Android, iPhone/iPad y el navegador. Revisa cada trazo mientras escribes, programa los repasos con repetición
@@ -42,7 +46,7 @@ rastreo. La app no pide permiso de internet.
 | Estadísticas | Caracteres estudiados, dominados, repasos para hoy, avance por nivel (caracteres y vocabulario), aciertos de cada ejercicio con audio y los tonos que más confundes. |
 | Historial | Cada repaso queda registrado: cuánto tardaste, qué trazos fallaste (y si fue al revés), en qué modo y con qué calificación. Es la base de las estadísticas que vienen. |
 | Apoyar el proyecto | Ajustes → Apoyar el proyecto (también al final de Créditos): un donativo voluntario con PayPal. No desbloquea nada; la app es igual para todos. Se sugiere una sola vez, después de un logro, y no vuelve a aparecer. La versión para Google Play se compila sin este botón. |
-| Exportar / importar | Ajustes → Tus datos. Guarda tu progreso en un archivo `.hanzidojo` y recupéralo en otro teléfono. Antes de importar se guarda una copia para poder deshacerlo. |
+| Exportar / importar | Ajustes → Tus datos. Guarda tu progreso en un archivo `.meizi` (los `.hanzidojo` de antes también se importan) y recupéralo en otro teléfono. Antes de importar se guarda una copia para poder deshacerlo. |
 | Informe de errores | Ajustes → Informe de errores. Si algo falla, los detalles se guardan en el teléfono (los últimos 50) para copiarlos al reportar un problema. No se envía nada solo. |
 | Modo oscuro «tinta» | Ajustes → Apariencia: Automática (la del teléfono), Clara u Oscura. En pantallas OLED la oscura gasta bastante menos batería. La rama del inicio se vuelve «ciruelo bajo la luna». |
 | Idioma | Ajustes → Idioma · Language: español, inglés o el del teléfono. En inglés, los significados vienen de CC-CEDICT y los ejemplos de Tatoeba en inglés; el recordatorio y el widget también cambian. |
@@ -54,7 +58,7 @@ El progreso se guarda **solo en el teléfono** (`progreso.db`). Las actualizacio
 del contenido no lo borran. En teléfonos sin servicios de Google (por ejemplo,
 Huawei) no existe el respaldo automático de Android: usa **Exportar progreso**.
 
-### El archivo `.hanzidojo`
+### El archivo `.meizi`
 
 Es un JSON comprimido con gzip (se puede abrir con cualquier descompresor):
 
@@ -70,6 +74,8 @@ Es un JSON comprimido con gzip (se puede abrir con cualquier descompresor):
 ```
 
 Todo va por carácter, así que un respaldo sirve aunque cambie el contenido de la app.
+El `"formato"` conserva el nombre anterior de la app para que los respaldos `.hanzidojo`
+de antes se sigan importando.
 
 ---
 
@@ -90,7 +96,7 @@ que se copia al teléfono la primera vez (por eso la app abre rápido).
 | Tradicional → simplificado | [OpenCC](https://github.com/BYVoid/OpenCC) `TSCharacters.txt` (para consultar libros propios) | — |
 | Libros de «Leer» | Historias clásicas chinas de dominio público, contadas de nuevo para la app (`herramientas_datos/fuentes/libros/`) | Pinyin al día; cada carácter tiene una sílaba válida; los adaptados cumplen la cobertura mínima de su nivel |
 | Vocabulario | Las palabras de la lista oficial HSK 3.0 (hsk30), con su pinyin partido por carácter y significado en español (traducido de CC-CEDICT, todos los niveles) | Cada palabra tiene una sílaba válida por carácter y su significado en español |
-| Preguntas de comprensión | Escritas para Hanzi Dojo en español e inglés (`herramientas_datos/fuentes/libros/preguntas.json`); las opciones se barajan de forma fija al construir la base | 3 por capítulo, con 4 opciones distintas en cada idioma |
+| Preguntas de comprensión | Escritas para Meizi Hanzi en español e inglés (`herramientas_datos/fuentes/libros/preguntas.json`); las opciones se barajan de forma fija al construir la base | 3 por capítulo, con 4 opciones distintas en cada idioma |
 | Pronunciación (audio) | [audio-cmn](https://github.com/hugolpz/audio-cmn): 1,707 sílabas (voz de Chen Wang) y 8,569 palabras HSK (voz de Yue Tan), en `assets/audio/` (Opus, ~23 MB) | `test/audio_test.dart`: cada palabra de la lista tiene su archivo |
 
 ### Los libros de «Leer»
@@ -101,7 +107,7 @@ con comodidad en HSK 7-9 (medido: el *Clásico de tres caracteres* o las
 
 - **HSK 1 a 5: historias adaptadas.** Las historias son clásicas y de dominio
   público (mitos, fábulas, leyendas, anécdotas históricas); el texto en chino
-  moderno está escrito para Hanzi Dojo con el vocabulario de cada nivel.
+  moderno está escrito para Meizi Hanzi con el vocabulario de cada nivel.
 - **HSK 6 y 7-9: textos originales** con su traducción.
 
 | Nivel | Libro | Tipo | Capítulos |
@@ -116,7 +122,7 @@ con comodidad en HSK 7-9 (medido: el *Clásico de tres caracteres* o las
 
 Los textos originales vienen de [chinese-poetry](https://github.com/chinese-poetry/chinese-poetry)
 (MIT), convertidos a simplificados. Todas las traducciones al español y las
-versiones graduadas están escritas para Hanzi Dojo.
+versiones graduadas están escritas para Meizi Hanzi.
 
 Cada libro es un archivo de texto fácil de editar (el formato está explicado en
 `herramientas_datos/libros.py`). `preparar_libros.py` le agrega el pinyin y
@@ -187,7 +193,7 @@ flutter test              # pruebas automáticas
 ### Descargar la app
 
 Las versiones firmadas están en la pestaña **Releases** del repositorio
-(`Hanzi_Dojo_X.Y.Z_arm64.apk` para casi todos los teléfonos; `universal` si no
+(`Meizi_Hanzi_X.Y.Z_arm64.apk` para casi todos los teléfonos; `universal` si no
 sabes cuál). Cómo se publican (llave de firma, F-Droid, AppGallery):
 [`docs/publicar.md`](docs/publicar.md). Novedades: [`CHANGELOG.md`](CHANGELOG.md).
 Privacidad: [`docs/privacidad.md`](docs/privacidad.md) — la app no tiene
@@ -226,7 +232,7 @@ lib/
 │   ├── examen.dart               Simulacros HSK y examen de ubicación (armar y calificar)
 │   ├── sesion_estudio.dart       Orden de las tarjetas en una sesión (repasos, nuevos, "Difícil")
 │   ├── srs.dart                  Algoritmo SM-2
-│   ├── respaldo.dart             Exportar / importar el progreso (.hanzidojo)
+│   ├── respaldo.dart             Exportar / importar el progreso (.meizi)
 │   ├── registro_errores.dart     Errores guardados en el teléfono (informe)
 │   ├── importar_libro.dart       Mis libros: TXT/EPUB → capítulos, pinyin y nivel
 │   ├── reporte.dart              Reporte de problema (formulario de GitHub prellenado)
@@ -311,7 +317,7 @@ y Safari (rama `ci-web`) y, desde `v2`, la publica en GitHub Pages.
 
 ## Licencias
 
-El **código** de Hanzi Dojo es software libre bajo la
+El **código** de Meizi Hanzi es software libre bajo la
 [GNU GPL versión 3 o posterior](LICENSE) (GPL-3.0-or-later): puedes usarlo,
 estudiarlo, modificarlo y compartirlo, siempre que las versiones que distribuyas
 también sean libres y publiquen su código.

@@ -1,8 +1,8 @@
-# Aviso de privacidad de Hanzi Dojo
+# Aviso de privacidad de Meizi Hanzi
 
 *Vigente desde octubre de 2026.*
 
-Hanzi Dojo es una app gratuita y de código abierto (GPL-3.0) para aprender a
+Meizi Hanzi es una app gratuita y de código abierto (GPL-3.0) para aprender a
 escribir caracteres chinos. **No recopila, no envía y no vende ningún dato.**
 
 ## Qué guarda y dónde
