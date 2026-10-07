@@ -57,8 +57,10 @@ class _PantallaBienvenidaState extends State<PantallaBienvenida> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final repo = DatosApp.de(context);
-      final yong = await repo.caracterPorTexto('永');
-      final ren = await repo.caracterPorTexto('人');
+      // Con sus trazos (caracterPorTexto no los trae): sin ellos no hay
+      // animación ni silueta, y el lienzo daría el carácter por escrito.
+      final yong = await repo.caracterConTrazos('永');
+      final ren = await repo.caracterConTrazos('人');
       if (mounted) {
         setState(() {
           _yong = yong;
@@ -358,17 +360,28 @@ class _PrimerCaracter extends StatelessWidget {
               style: TextStyle(fontSize: 17, color: c.suave),
             ),
             const SizedBox(height: 16),
-            SizedBox.square(
-              dimension: lado,
-              child: ren == null
-                  ? const SizedBox()
-                  : LienzoEscritura(
-                      caracter: ren.caracter,
-                      trazosSvg: ren.trazosSvg,
-                      medianas: ren.medianas,
-                      modoNovato: true,
-                      onCompletado: (_) => onEscrito(),
-                    ),
+            // El mismo marco que el lienzo de Estudiar.
+            Container(
+              width: lado,
+              height: lado,
+              decoration: BoxDecoration(
+                color: c.lienzo,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: c.bordeLienzo, width: 1.5),
+                boxShadow: [BoxShadow(color: c.sombra, blurRadius: 18, offset: const Offset(0, 8))],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: ren == null
+                    ? const SizedBox.expand()
+                    : LienzoEscritura(
+                        caracter: ren.caracter,
+                        trazosSvg: ren.trazosSvg,
+                        medianas: ren.medianas,
+                        modoNovato: true,
+                        onCompletado: (_) => onEscrito(),
+                      ),
+              ),
             ),
             const SizedBox(height: 14),
             AnimatedSwitcher(
