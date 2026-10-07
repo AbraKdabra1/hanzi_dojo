@@ -155,6 +155,14 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
   };
 
   await paso('primera vez', async () => {
+    // La primera vez sale el tutorial: se captura y se omite.
+    const inicio = Date.now();
+    await pagina.goto(url.href, { waitUntil: 'load' });
+    await pagina.getByText('Omitir', { exact: true }).first().waitFor({ timeout: 240000 });
+    anotar(`tutorial a los ${((Date.now() - inicio) / 1000).toFixed(1)} s`);
+    await pagina.waitForTimeout(1500);
+    await captura('00_tutorial');
+    await tocar('Omitir');
     await abrir('primera vez', 240000);
     await captura('01_inicio');
     await esperarGuardado();

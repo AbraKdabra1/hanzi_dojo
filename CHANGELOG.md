@@ -9,6 +9,9 @@ Primera versión pública.
 
 **Nuevo nombre: Meizi Hanzi · 梅字** (antes Hanzi Dojo). 梅 es el ciruelo de la rama del inicio y 字, el carácter que escribes. Se instala encima de la versión anterior sin perder nada; los respaldos `.hanzidojo` se siguen importando (los nuevos se guardan como `.meizi`).
 
+**Primeros pasos**
+- Tutorial de bienvenida: cinco pantallas cortas (se puede omitir) que terminan escribiendo tu primer carácter, 人. Se vuelve a ver desde Ajustes.
+
 **Escribir**
 - Los 3,000 caracteres de la lista oficial HSK 3.0 y los 214 radicales Kangxi con sus familias.
 - Revisión de cada trazo (forma y sentido), modo novato con silueta y modo experto de memoria.

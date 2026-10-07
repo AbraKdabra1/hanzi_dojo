@@ -32,6 +32,7 @@ import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
 import '../tema.dart';
 import 'pantalla_bateria.dart';
+import 'pantalla_bienvenida.dart';
 import 'pantalla_creditos.dart';
 import 'pantalla_errores.dart';
 import 'pantalla_reporte.dart';
@@ -668,6 +669,21 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                   Icon(Icons.bug_report_outlined),
                   SizedBox(width: 12),
                   Expanded(child: Text(tr('Informe de errores'), style: TextStyle(fontSize: 15))),
+                  Icon(Icons.arrow_forward_ios, size: 14, color: context.colores.tenue),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            TarjetaVidrio(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => const PantallaBienvenida()),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.school_outlined),
+                  SizedBox(width: 12),
+                  Expanded(child: Text(tr('Ver el tutorial'), style: TextStyle(fontSize: 15))),
                   Icon(Icons.arrow_forward_ios, size: 14, color: context.colores.tenue),
                 ],
               ),

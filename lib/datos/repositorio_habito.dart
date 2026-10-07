@@ -181,6 +181,27 @@ extension HabitoRepositorio on Repositorio {
     return (int.parse(m.group(1)!), int.parse(m.group(2)!));
   }
 
+  // ═══════════════════════════════════════════════════════════════════════
+  // Tutorial de bienvenida
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// ¿Ya viste (u omitiste) el tutorial? Quien ya tenía progreso al
+  /// actualizar la app cuenta como visto: no se le muestra.
+  Future<bool> tutorialVisto() async {
+    if (await base.leerAjuste('tutorial_visto') == '1') return true;
+    final filas = await _bd.rawQuery(
+      'SELECT (SELECT count(*) FROM progreso) + (SELECT count(*) FROM historial) + '
+      '(SELECT count(*) FROM ejercicios) AS n',
+    );
+    if ((filas.first['n'] as int? ?? 0) > 0) {
+      await marcarTutorialVisto();
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> marcarTutorialVisto() => base.guardarAjuste('tutorial_visto', '1');
+
   Future<void> guardarCaracterDia((int, int)? hora) =>
       base.guardarAjuste('caracter_dia', hora == null ? '' : '${hora.$1}:${_dos(hora.$2)}');
 }

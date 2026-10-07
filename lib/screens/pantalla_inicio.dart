@@ -31,6 +31,7 @@ import '../widgets/apoyo.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/logro_dialogo.dart';
 import 'pantalla_ajustes.dart';
+import 'pantalla_bienvenida.dart';
 import 'pantalla_biblioteca.dart';
 import 'pantalla_estadisticas.dart';
 import 'pantalla_logros.dart';
@@ -67,6 +68,9 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
 
   bool _visible = true;
   bool _enPrimerPlano = true;
+
+  /// El tutorial se revisa una sola vez por apertura de la app.
+  bool _tutorialRevisado = false;
 
   @override
   void initState() {
@@ -111,6 +115,17 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
 
   Future<void> _cargarResumen() async {
     final repo = DatosApp.de(context);
+    // La primera vez: el tutorial (se puede omitir).
+    if (!_tutorialRevisado) {
+      _tutorialRevisado = true;
+      if (!await repo.tutorialVisto() && mounted) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => const PantallaBienvenida()),
+        );
+        if (!mounted) return;
+      }
+    }
     final cubiertos = await repo.aplicarProtector();
     final pendientes = await repo.repasosPendientes() + await repo.palabrasPendientes();
     final nuevos = await repo.nuevosHoy();

@@ -75,9 +75,16 @@ void main() {
     });
 
     app.main();
-    // La primera vez copia la base de contenido (~43 MB).
-    for (var i = 0; i < 90 && _texto('Estudiar', 'Study').evaluate().isEmpty; i++) {
+    // La primera vez copia la base de contenido (~43 MB) y abre el tutorial.
+    bool listo() => _texto('Estudiar', 'Study').evaluate().isNotEmpty || _texto('Omitir', 'Skip').evaluate().isNotEmpty;
+    for (var i = 0; i < 90 && !listo(); i++) {
       await _esperar(tester, 1);
+    }
+    if (_texto('Omitir', 'Skip').evaluate().isNotEmpty) {
+      await _esperar(tester, 2);
+      await captura('00_tutorial');
+      await tester.tap(_texto('Omitir', 'Skip'));
+      await _esperar(tester, 2);
     }
     expect(_texto('Estudiar', 'Study'), findsOneWidget);
     await _esperar(tester, 3);

@@ -17,10 +17,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hanzi_dojo/datos/base_datos.dart';
 import 'package:hanzi_dojo/datos/datos_app.dart';
 import 'package:hanzi_dojo/datos/repositorio.dart';
+import 'package:hanzi_dojo/datos/repositorio_habito.dart';
 import 'package:hanzi_dojo/painters/rama_ciruelo.dart';
 import 'package:hanzi_dojo/screens/pantalla_ajustes.dart';
 import 'package:hanzi_dojo/screens/pantalla_bateria.dart';
 import 'package:hanzi_dojo/screens/pantalla_biblioteca.dart';
+import 'package:hanzi_dojo/screens/pantalla_bienvenida.dart';
 import 'package:hanzi_dojo/screens/pantalla_compartir.dart';
 import 'package:hanzi_dojo/screens/pantalla_creditos.dart';
 import 'package:hanzi_dojo/screens/pantalla_estadisticas.dart';
@@ -164,6 +166,17 @@ void main() {
       return (libro, capitulos, hao!.id);
     }))!;
 
+    // El tutorial de la primera vez: la portada y la última pantalla.
+    await capturar(tester, '00a_bienvenida', const PantallaBienvenida());
+    await capturar(tester, '00b_primer_caracter', const PantallaBienvenida(), accion: (t) async {
+      for (var i = 1; i < PantallaBienvenida.paginas; i++) {
+        await t.tap(find.text('Siguiente'));
+        await t.pump(const Duration(milliseconds: 500));
+        await t.pump(const Duration(milliseconds: 500));
+      }
+    });
+    // Para las demás capturas, ya visto (si no, el inicio lo abriría encima).
+    await tester.runAsync(repo.marcarTutorialVisto);
     await capturar(tester, '01_inicio', const PantallaInicio());
     await capturar(tester, '02_modo', const PantallaModo(),
         accion: (t) => t.tap(find.text('Soy novato'), warnIfMissed: false));

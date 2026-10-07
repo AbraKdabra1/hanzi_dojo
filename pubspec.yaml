@@ -9,7 +9,7 @@ publish_to: 'none'
 
 # versión visible + número de compilación (Android versionCode).
 # Súbelos cada vez que publiques en Play Store: 1.1.0+2, 1.2.0+3, ...
-version: 2.0.0+2
+version: 2.1.0-beta.1+3
 
 environment:
   sdk: ^3.11.4
