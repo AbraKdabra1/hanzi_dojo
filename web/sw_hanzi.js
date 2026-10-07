@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// sw_hanzi.js — Hanzi Dojo sin internet (versión web)
+// sw_hanzi.js — Meizi Hanzi sin internet (versión web)
 //
 // Después de abrirla una vez con internet, la app funciona sin conexión:
 //   · La app (index.html, main.dart.js, el motor de dibujo…): primero la red,

@@ -61,8 +61,8 @@ void main() {
   test('borrar deja el informe vacío; el texto para copiar lleva el encabezado', () async {
     await RegistroErrores.iniciar(carpeta.path);
     await RegistroErrores.registrar('Voz', Exception('sin voz china'), null);
-    final texto = RegistroErrores.comoTexto(await RegistroErrores.leer(), 'Hanzi Dojo 2.0.0');
-    expect(texto, startsWith('Hanzi Dojo 2.0.0'));
+    final texto = RegistroErrores.comoTexto(await RegistroErrores.leer(), 'Meizi Hanzi 2.0.0');
+    expect(texto, startsWith('Meizi Hanzi 2.0.0'));
     expect(texto, contains('Voz'));
     expect(texto, contains('sin voz china'));
 

@@ -27,7 +27,7 @@ body:
     id: dispositivo
     attributes:
       label: Versión de la app y teléfono
-      placeholder: Hanzi Dojo 2.0.0 (2) · HUAWEI ALN-AL80 · Android 12
+      placeholder: Meizi Hanzi 2.0.0 (2) · HUAWEI ALN-AL80 · Android 12
   - type: textarea
     id: informe
     attributes:

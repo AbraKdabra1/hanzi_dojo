@@ -4,7 +4,7 @@ titulo_es: Mitos chinos
 nivel: 2
 tipo: adaptado
 descripcion: Cómo nació el mundo según la tradición china, quién hizo a las personas, por qué hay un solo sol y quién vive en la Luna. Cinco mitos con los caracteres de HSK 1 y 2.
-fuente: Mitos de la antigua China recogidos en el «Clásico de las montañas y los mares», el «Huainanzi» y otros textos de hace más de dos mil años (dominio público). Versión en chino graduado escrita para Hanzi Dojo.
+fuente: Mitos de la antigua China recogidos en el «Clásico de las montañas y los mares», el «Huainanzi» y otros textos de hace más de dos mil años (dominio público). Versión en chino graduado escrita para Meizi Hanzi.
 
 ## 盘古开天
 titulo_es: Pangu separa el cielo de la tierra

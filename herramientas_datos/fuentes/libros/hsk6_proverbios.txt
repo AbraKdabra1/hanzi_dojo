@@ -4,7 +4,7 @@ titulo_es: Proverbios del Zengguang Xianwen
 nivel: 6
 tipo: original
 descripcion: Una selección de los refranes más citados del «Zengguang Xianwen», el libro de sabiduría popular con el que aprendían los niños en la China imperial. Texto original con traducción.
-fuente: «Zengguang Xianwen» (dinastía Ming, autor anónimo; dominio público). Texto tomado de github.com/chinese-poetry/chinese-poetry (MIT), convertido a caracteres simplificados. Traducción al español escrita para Hanzi Dojo.
+fuente: «Zengguang Xianwen» (dinastía Ming, autor anónimo; dominio público). Texto tomado de github.com/chinese-poetry/chinese-poetry (MIT), convertido a caracteres simplificados. Traducción al español escrita para Meizi Hanzi.
 
 ## 时间与学习
 titulo_es: El tiempo y el estudio

@@ -1,6 +1,6 @@
-# Hanzi Dojo en iPhone y iPad
+# Meizi Hanzi en iPhone y iPad
 
-Hanzi Dojo no está en la App Store: Apple cobra 99 USD al año por publicar,
+Meizi Hanzi no está en la App Store: Apple cobra 99 USD al año por publicar,
 aunque la app sea gratis, y este proyecto no cobra ni paga por existir. Por
 eso se instala como **app propia**: con tu Apple ID normal y gratuito, desde
 una computadora (Windows o Mac). Nadie paga nada.
@@ -15,11 +15,11 @@ una computadora (Windows o Mac). Nadie paga nada.
 ## Qué descargar
 
 En la pestaña **Releases** del repositorio, junto a los APK de Android:
-`Hanzi_Dojo_X.Y.Z_iOS_sin_firmar.ipa`. ("Sin firmar" quiere decir que la
+`Meizi_Hanzi_X.Y.Z_iOS_sin_firmar.ipa`. ("Sin firmar" quiere decir que la
 firma se la pone tu propio Apple ID al instalarla.)
 
 Las versiones de prueba también están en **Actions → iOS → Artifacts**
-(`hanzi-dojo-ios-sin-firmar`, viene en un .zip).
+(`meizi-hanzi-ios-sin-firmar`, viene en un .zip).
 
 ## Opción 1: Sideloadly (la más sencilla)
 
@@ -40,7 +40,7 @@ instala encima y conserva tu progreso.
 
 ## Opción 2: AltStore (se renueva sola)
 
-AltStore (altstore.io) pone en el iPhone una app que renueva Hanzi Dojo por
+AltStore (altstore.io) pone en el iPhone una app que renueva Meizi Hanzi por
 Wi-Fi, siempre que **AltServer** esté abierto en tu computadora y ambos estén
 en la misma red. Se instala una vez con cable; luego, para agregar Hanzi
 Dojo, abre AltStore en el iPhone → **Mis apps → +** → elige el `.ipa`.

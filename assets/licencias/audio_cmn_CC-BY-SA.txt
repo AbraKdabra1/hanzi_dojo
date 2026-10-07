@@ -14,7 +14,7 @@ fines comerciales, siempre que des crédito a sus autores y compartas tus
 adaptaciones con la misma licencia.
 Texto completo: https://creativecommons.org/licenses/by-sa/4.0/legalcode.es
 
-Cambios hechos para Hanzi Dojo (herramientas_datos/preparar_audio.py):
+Cambios hechos para Meizi Hanzi (herramientas_datos/preparar_audio.py):
 se recortó el silencio de antes y después de cada grabación, se igualó el
 volumen y se convirtieron a formato Opus. Las grabaciones así modificadas
 (carpeta assets/audio/) se distribuyen bajo la misma licencia CC BY-SA.

@@ -1,4 +1,4 @@
-# Hanzi Dojo en el navegador (iPhone, iPad, Android o computadora)
+# Meizi Hanzi en el navegador (iPhone, iPad, Android o computadora)
 
 La misma app, abierta desde una página web. No hay que descargar nada de una
 tienda ni pagar nada: se abre la dirección y se agrega a la pantalla de
@@ -15,7 +15,7 @@ ID, y no caduca a los 7 días como el `.ipa` (ver [ios.md](ios.md)).
 1. Abre la dirección en **Safari**.
 2. Toca **Compartir** (el cuadro con la flecha hacia arriba) → **Agregar a
    pantalla de inicio** → **Agregar**.
-3. Abre Hanzi Dojo **desde el ícono** de la pantalla de inicio. La primera
+3. Abre Meizi Hanzi **desde el ícono** de la pantalla de inicio. La primera
    vez descarga el diccionario (15 MB, unos segundos con Wi-Fi).
 
 > Úsala siempre desde el ícono: así Safari guarda tu progreso aparte y no lo
@@ -42,7 +42,7 @@ es táctil.
 - **Sin el ajuste de batería y 120 Hz** (eso lo decide el navegador).
 - Tu progreso vive **en ese navegador** (en esa pantalla de inicio, en
   iPhone). Para pasarlo a otro teléfono, o al APK, usa Ajustes → Tus datos →
-  **Exportar progreso** (se descarga un archivo `.hanzidojo`) y luego
+  **Exportar progreso** (se descarga un archivo `.meizi`) y luego
   **Importar** en el otro lado. Conviene exportar de vez en cuando.
 - Las pronunciaciones son las mismas grabaciones; la voz de "leer en voz
   alta" es la del navegador.

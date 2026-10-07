@@ -17,7 +17,7 @@ void main() {
     final r = Reporte(
       tipo: TipoReporte.error,
       descripcion: 'La app se cierra al importar un respaldo grande',
-      dispositivo: 'Hanzi Dojo 2.0.0 (2) · HUAWEI ALN-AL80 · Android 12 (API 31)',
+      dispositivo: 'Meizi Hanzi 2.0.0 (2) · HUAWEI ALN-AL80 · Android 12 (API 31)',
       errores: [_error(1)],
     );
     expect(r.titulo, '[Error] La app se cierra al importar un respaldo grande');

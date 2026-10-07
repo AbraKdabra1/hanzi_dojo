@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------
-# Integración continua de Hanzi Dojo
+# Integración continua de Meizi Hanzi
 #
 # En cada push, GitHub (en sus servidores) hace lo mismo que harías tú:
 #   1. Valida la base de datos (python herramientas_datos/validar_db.py)

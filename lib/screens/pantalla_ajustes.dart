@@ -619,7 +619,7 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                   _FilaAccion(
                     icono: Icons.save_alt_rounded,
                     titulo: tr('Exportar progreso'),
-                    subtitulo: tr('Guarda un archivo .hanzidojo donde elijas'),
+                    subtitulo: tr('Guarda un archivo .meizi donde elijas'),
                     onTap: _ocupado ? null : _exportar,
                   ),
                   _FilaAccion(

@@ -1,6 +1,6 @@
-# Cómo colaborar con Hanzi Dojo
+# Cómo colaborar con Meizi Hanzi
 
-¡Gracias por querer ayudar! Hanzi Dojo es software libre (GPL-3.0) y mejora con
+¡Gracias por querer ayudar! Meizi Hanzi es software libre (GPL-3.0) y mejora con
 cada reporte.
 
 ## Reportar un problema o sugerir algo

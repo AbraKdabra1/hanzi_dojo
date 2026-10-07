@@ -61,12 +61,12 @@ const textosEn = <String, String>{
       'Free practice',
   'El archivo es demasiado grande para ser un respaldo.':
       'The file is too large to be a backup.',
-  'Este archivo no es un respaldo de Hanzi Dojo.':
-      'This file isn\'t a Hanzi Dojo backup.',
+  'Este archivo no es un respaldo de Meizi Hanzi.':
+      'This file isn\'t a Meizi Hanzi backup.',
   'El respaldo está dañado (versión desconocida).':
       'The backup is damaged (unknown version).',
-  'Este respaldo viene de una versión más nueva de Hanzi Dojo. Actualiza la app para importarlo.':
-      'This backup comes from a newer version of Hanzi Dojo. Update the app to import it.',
+  'Este respaldo viene de una versión más nueva de Meizi Hanzi. Actualiza la app para importarlo.':
+      'This backup comes from a newer version of Meizi Hanzi. Update the app to import it.',
   'El respaldo está dañado (ajustes).':
       'The backup is damaged (settings).',
   'El respaldo está dañado ({0}).':
@@ -161,8 +161,8 @@ const textosEn = <String, String>{
       'Your progress lives only in this browser. Export a backup so you don\'t lose it if you clear the browser\'s data or switch devices.',
   'Exportar progreso':
       'Export progress',
-  'Guarda un archivo .hanzidojo donde elijas':
-      'Save a .hanzidojo file wherever you like',
+  'Guarda un archivo .meizi donde elijas':
+      'Save a .meizi file wherever you like',
   'Importar progreso':
       'Import progress',
   'Reemplaza tu progreso por el de un respaldo':
@@ -217,8 +217,8 @@ const textosEn = <String, String>{
       'Unplug the charger to see how much it uses.',
   'Tu teléfono no informa la corriente; queda el porcentaje.':
       'Your phone doesn\'t report the current; only the percentage is available.',
-  'Incluye todo el teléfono (pantalla, señal, otras apps), no solo Hanzi Dojo.':
-      'This includes the whole phone (screen, signal, other apps), not just Hanzi Dojo.',
+  'Incluye todo el teléfono (pantalla, señal, otras apps), no solo Meizi Hanzi.':
+      'This includes the whole phone (screen, signal, other apps), not just Meizi Hanzi.',
   'Medir mi consumo':
       'Measure my usage',
   'Enciéndelo, desconecta el cargador y usa la app como siempre (por ejemplo, una práctica de 10 minutos). Al volver aquí verás el promedio. Lee la batería cada 15 s solo con la app abierta.':
@@ -301,8 +301,8 @@ const textosEn = <String, String>{
       'Options',
   'No se pudo preparar la imagen: {0}':
       'The image couldn\'t be prepared: {0}',
-  'Aprendo chino con Hanzi Dojo · 汉字道场':
-      'I\'m learning Chinese with Hanzi Dojo · 汉字道场',
+  'Aprendo chino con Meizi Hanzi · 梅字':
+      'I\'m learning Chinese with Meizi Hanzi · 梅字',
   'No se pudo abrir el menú para compartir.':
       'The share menu couldn\'t be opened.',
   'Imagen guardada: {0}':
@@ -321,8 +321,8 @@ const textosEn = <String, String>{
       '{1} {0}, {2}',
   'Aprende a escribir chino · gratis y de código abierto':
       'Learn to write Chinese · free and open source',
-  'Código de Hanzi Dojo':
-      'Hanzi Dojo code',
+  'Código de Meizi Hanzi':
+      'Meizi Hanzi code',
   'Software libre: puedes usarlo, estudiarlo, modificarlo y compartirlo. Las versiones modificadas que se distribuyan deben seguir siendo libres y publicar su código. Código fuente: github.com/AbraKdabra1/hanzi_dojo.':
       'Free software: you can use, study, modify and share it. Modified versions that are distributed must remain free and publish their code. Source code: github.com/AbraKdabra1/hanzi_dojo.',
   'Niveles HSK 3.0':
@@ -355,8 +355,8 @@ const textosEn = <String, String>{
       'Tatoeba (tatoeba.org), via github.com/krmanik/chinese-example-sentences. English translations from Tatoeba; Spanish translations made from the Chinese with AI help.',
   'Libros de «Leer»':
       '“Read” books',
-  'Historias clásicas chinas de dominio público, contadas de nuevo para Hanzi Dojo (HSK 1 a 5). Textos originales del Zengguang Xianwen y poemas Tang tomados de github.com/chinese-poetry/chinese-poetry. Traducciones al español escritas para la app.':
-      'Public-domain classic Chinese stories, retold for Hanzi Dojo (HSK 1 to 5). Original texts of the Zengguang Xianwen and Tang poems taken from github.com/chinese-poetry/chinese-poetry. Spanish translations written for the app.',
+  'Historias clásicas chinas de dominio público, contadas de nuevo para Meizi Hanzi (HSK 1 a 5). Textos originales del Zengguang Xianwen y poemas Tang tomados de github.com/chinese-poetry/chinese-poetry. Traducciones al español escritas para la app.':
+      'Public-domain classic Chinese stories, retold for Meizi Hanzi (HSK 1 to 5). Original texts of the Zengguang Xianwen and Tang poems taken from github.com/chinese-poetry/chinese-poetry. Spanish translations written for the app.',
   'MIT (textos clásicos)':
       'MIT (classic texts)',
   'Tradicional → simplificado':
@@ -377,8 +377,8 @@ const textosEn = <String, String>{
       'SIL Open Font License 1.1',
   'Rama de ciruelo (梅花)':
       'Plum branch (梅花)',
-  'Ilustración original al estilo de la pintura china a tinta, dibujada por código para Hanzi Dojo (lib/painters/rama_ciruelo.dart).':
-      'Original illustration in the style of Chinese ink painting, drawn in code for Hanzi Dojo (lib/painters/rama_ciruelo.dart).',
+  'Ilustración original al estilo de la pintura china a tinta, dibujada por código para Meizi Hanzi (lib/painters/rama_ciruelo.dart).':
+      'Original illustration in the style of Chinese ink painting, drawn in code for Meizi Hanzi (lib/painters/rama_ciruelo.dart).',
   'Créditos y licencias':
       'Credits and licenses',
   'Código: GPL-3.0 o posterior.\nDatos: CC-CEDICT, Make Me a Hanzi, Unihan, HSK 3.0, Tatoeba.':
@@ -931,8 +931,8 @@ const textosEn = <String, String>{
       'A thousand reviews',
   'Haz 1,000 repasos y ejercicios':
       'Do 1,000 reviews and exercises',
-  'Hanzi Dojo (código de la app)':
-      'Hanzi Dojo (app code)',
+  'Meizi Hanzi (código de la app)':
+      'Meizi Hanzi (app code)',
   'CC-CEDICT (significados)':
       'CC-CEDICT (meanings)',
   'Make Me a Hanzi – graphics.txt (trazos)':
@@ -1085,8 +1085,8 @@ const textosEn = <String, String>{
       '{0} of {1} correct',
   '¿Qué entendiste?':
       'How much did you understand?',
-  '¿Te está sirviendo Hanzi Dojo? Es gratis y sin anuncios; si quieres, puedes apoyarlo.':
-      'Is Hanzi Dojo helping you? It\'s free and ad-free; if you\'d like, you can support it.',
+  '¿Te está sirviendo Meizi Hanzi? Es gratis y sin anuncios; si quieres, puedes apoyarlo.':
+      'Is Meizi Hanzi helping you? It\'s free and ad-free; if you\'d like, you can support it.',
   'Ver cómo':
       'See how',
   'Apoyar el proyecto':
@@ -1095,10 +1095,10 @@ const textosEn = <String, String>{
       'Optional: the app is free and complete for everyone',
   'No se pudo abrir el navegador.':
       'Couldn\'t open the browser.',
-  'Apoyar Hanzi Dojo':
-      'Support Hanzi Dojo',
-  'Hanzi Dojo es gratis, sin anuncios ni cuentas, y de código abierto. Así va a seguir.':
-      'Hanzi Dojo is free, with no ads or accounts, and open source. It will stay that way.',
+  'Apoyar Meizi Hanzi':
+      'Support Meizi Hanzi',
+  'Meizi Hanzi es gratis, sin anuncios ni cuentas, y de código abierto. Así va a seguir.':
+      'Meizi Hanzi is free, with no ads or accounts, and open source. It will stay that way.',
   'Si te está ayudando a aprender y quieres apoyar su desarrollo (más libros, grabaciones y ejercicios), puedes dejar un donativo voluntario. No desbloquea nada: la app es igual para todos.':
       'If it\'s helping you learn and you\'d like to support its development (more books, recordings and exercises), you can leave an optional donation. It doesn\'t unlock anything: the app is the same for everyone.',
   'Donar con PayPal':

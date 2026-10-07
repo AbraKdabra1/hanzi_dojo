@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// main.dart — Punto de entrada de Hanzi Dojo
+// main.dart — Punto de entrada de Meizi Hanzi
 //
 // Arranque:
 //   0. Se instala el registro de errores (registro_errores.dart): desde aquí,
@@ -153,7 +153,7 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
         if (repo == null) {
           // Pantalla de carga (o de error) mientras se abre la base.
           return MaterialApp(
-            title: 'Hanzi Dojo',
+            title: 'Meizi Hanzi',
             debugShowCheckedModeBanner: false,
             theme: temaHanziDojo(),
             darkTheme: temaHanziDojo(Brightness.dark),
@@ -170,7 +170,7 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
             // Al cambiar de idioma se arma la app de nuevo (vuelve al inicio):
             // los textos de tr() se leen al construir cada pantalla.
             key: ValueKey(lengua),
-            title: 'Hanzi Dojo',
+            title: 'Meizi Hanzi',
             debugShowCheckedModeBanner: false,
             theme: temaHanziDojo(),
             darkTheme: temaHanziDojo(Brightness.dark),
@@ -230,7 +230,7 @@ class _PantallaCargaState extends State<_PantallaCarga> {
               ? Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text('汉字道场', style: TextStyle(fontSize: 40, fontWeight: FontWeight.w300)),
+                    const Text('梅字', style: TextStyle(fontSize: 48, fontWeight: FontWeight.w300, letterSpacing: 8)),
                     const SizedBox(height: 24),
                     const SizedBox(
                       width: 22,
@@ -268,7 +268,7 @@ class _PantallaCargaState extends State<_PantallaCarga> {
 /// licencias de Flutter (Créditos → "Ver licencias completas").
 void _registrarLicencias() {
   const licencias = {
-    'Hanzi Dojo (código de la app)': 'assets/licencias/hanzi_dojo_GPL-3.0.txt',
+    'Meizi Hanzi (código de la app)': 'assets/licencias/hanzi_dojo_GPL-3.0.txt',
     'CC-CEDICT (significados)': 'assets/licencias/cc_cedict_CC-BY-SA-4.0.txt',
     'Make Me a Hanzi – graphics.txt (trazos)': 'assets/licencias/make_me_a_hanzi_graphics_ARPHIC.txt',
     'Make Me a Hanzi – dictionary.txt (lecturas)': 'assets/licencias/make_me_a_hanzi_dictionary_LGPL.txt',

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  Hanzi Dojo, versión web (PWA). La compila .github/workflows/web.yml y se
+  Meizi Hanzi, versión web (PWA). La compila .github/workflows/web.yml y se
   publica en GitHub Pages. En iPhone/iPad: Safari → Compartir → "Agregar a
   pantalla de inicio" y se abre como una app más (ver docs/web.md).
 -->
@@ -17,14 +17,14 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Hanzi Dojo">
+  <meta name="apple-mobile-web-app-title" content="Meizi Hanzi">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <link rel="icon" type="image/png" href="favicon.png">
   <meta name="theme-color" content="#F8F4EE" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#151311" media="(prefers-color-scheme: dark)">
   <link rel="manifest" href="manifest.json">
 
-  <title>Hanzi Dojo · 汉字道场</title>
+  <title>Meizi Hanzi · 梅字</title>
 
   <style>
     html, body {
@@ -60,15 +60,15 @@
       <source srcset="icons/arranque-oscuro.png" media="(prefers-color-scheme: dark)">
       <img src="icons/arranque.png" alt="">
     </picture>
-    <p id="arranque-texto">Preparando el dojo…</p>
+    <p id="arranque-texto">Preparando el pincel…</p>
   </div>
-  <noscript>Hanzi Dojo necesita JavaScript.</noscript>
+  <noscript>Meizi Hanzi necesita JavaScript.</noscript>
 
   <script>
     // Texto de la carga en el idioma del navegador.
     if (!(navigator.language || '').toLowerCase().startsWith('es')) {
       document.documentElement.lang = 'en';
-      document.getElementById('arranque-texto').textContent = 'Preparing the dojo…';
+      document.getElementById('arranque-texto').textContent = 'Preparing the brush…';
     }
     // Que el navegador no borre el progreso para hacer espacio.
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist();

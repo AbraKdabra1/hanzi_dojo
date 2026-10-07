@@ -6,5 +6,5 @@ https://creativecommons.org/licenses/by/2.0/fr/
 
 Las oraciones en chino de los ejemplos vienen de Tatoeba, a través del
 conjunto "Chinese Example Sentences" (github.com/krmanik/chinese-example-sentences),
-que agregó el pinyin automáticamente. Las traducciones al español de Hanzi Dojo
+que agregó el pinyin automáticamente. Las traducciones al español de Meizi Hanzi
 se hicieron a partir del chino.

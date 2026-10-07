@@ -1,4 +1,4 @@
-# Publicar Hanzi Dojo
+# Publicar Meizi Hanzi
 
 Guía para sacar una versión: firmarla, subirla a GitHub y llevarla a F-Droid
 y a Huawei AppGallery.
@@ -59,8 +59,8 @@ firmados y crea la versión en la pestaña *Releases* con:
 
 | Archivo | Para quién |
 |---|---|
-| `Hanzi_Dojo_2.1.0_arm64.apk` | Casi todos los teléfonos actuales (el más ligero) |
-| `Hanzi_Dojo_2.1.0_universal.apk` | Si no sabes cuál: funciona en todos |
+| `Meizi_Hanzi_2.1.0_arm64.apk` | Casi todos los teléfonos actuales (el más ligero) |
+| `Meizi_Hanzi_2.1.0_universal.apk` | Si no sabes cuál: funciona en todos |
 | `…_arm32.apk`, `…_x86_64.apk` | Teléfonos viejos y emuladores |
 | `SHA256SUMS.txt` | Sumas para comprobar las descargas |
 
@@ -70,7 +70,7 @@ pueda verificar que el APK es el oficial.
 ## 3. F-Droid
 
 F-Droid compila la app **desde el código** en sus servidores. Requisitos que
-Hanzi Dojo ya cumple: licencia libre (GPL-3.0), sin servicios de Google, sin
+Meizi Hanzi ya cumple: licencia libre (GPL-3.0), sin servicios de Google, sin
 rastreadores ni anuncios, y todo el contenido con licencias libres
 (ver *Créditos* en la app).
 

@@ -1,8 +1,8 @@
 # ─────────────────────────────────────────────────────────────────────────────
-# Hanzi Dojo — configuración del paquete Flutter
+# Meizi Hanzi — configuración del paquete Flutter
 # ─────────────────────────────────────────────────────────────────────────────
 name: hanzi_dojo
-description: "Hanzi Dojo: app para aprender a escribir caracteres chinos (HSK 3.0) con repaso espaciado."
+description: "Meizi Hanzi: app para aprender a escribir caracteres chinos (HSK 3.0) con repaso espaciado."
 
 # No se publica en pub.dev (es una app, no una biblioteca).
 publish_to: 'none'

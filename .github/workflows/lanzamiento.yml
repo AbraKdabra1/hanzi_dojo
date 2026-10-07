@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------
-# Lanzamiento de Hanzi Dojo
+# Lanzamiento de Meizi Hanzi
 #
 # Al subir una etiqueta de versión (git tag v2.1.0 && git push origin v2.1.0):
 #   1. Arma android/key.properties con la llave de firma guardada en los
@@ -88,20 +88,20 @@ jobs:
         run: |
           mkdir -p salida
           cd build/app/outputs/flutter-apk
-          cp app-arm64-v8a-release.apk   "$GITHUB_WORKSPACE/salida/Hanzi_Dojo_${VERSION}_arm64.apk"
-          cp app-armeabi-v7a-release.apk "$GITHUB_WORKSPACE/salida/Hanzi_Dojo_${VERSION}_arm32.apk"
-          cp app-x86_64-release.apk      "$GITHUB_WORKSPACE/salida/Hanzi_Dojo_${VERSION}_x86_64.apk"
-          cp app-release.apk             "$GITHUB_WORKSPACE/salida/Hanzi_Dojo_${VERSION}_universal.apk"
+          cp app-arm64-v8a-release.apk   "$GITHUB_WORKSPACE/salida/Meizi_Hanzi_${VERSION}_arm64.apk"
+          cp app-armeabi-v7a-release.apk "$GITHUB_WORKSPACE/salida/Meizi_Hanzi_${VERSION}_arm32.apk"
+          cp app-x86_64-release.apk      "$GITHUB_WORKSPACE/salida/Meizi_Hanzi_${VERSION}_x86_64.apk"
+          cp app-release.apk             "$GITHUB_WORKSPACE/salida/Meizi_Hanzi_${VERSION}_universal.apk"
           cd "$GITHUB_WORKSPACE/salida"
           sha256sum *.apk > SHA256SUMS.txt
           # Huella del certificado: quien instale puede comprobar que el APK es el oficial.
           APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
-          "$APKSIGNER" verify --print-certs "Hanzi_Dojo_${VERSION}_universal.apk" \
+          "$APKSIGNER" verify --print-certs "Meizi_Hanzi_${VERSION}_universal.apk" \
             | grep -E 'SHA-256' | head -1 | sed -E 's/.*SHA-256 digest: //' > huella.txt
           cat SHA256SUMS.txt huella.txt
           # Permisos del APK final (la app no debe pedir internet).
           AAPT2=$(ls "$ANDROID_HOME"/build-tools/*/aapt2 | sort -V | tail -1)
-          "$AAPT2" dump permissions "Hanzi_Dojo_${VERSION}_universal.apk" | tee permisos.txt
+          "$AAPT2" dump permissions "Meizi_Hanzi_${VERSION}_universal.apk" | tee permisos.txt
           if grep -q 'android.permission.INTERNET' permisos.txt; then
             echo "::warning::El APK de lanzamiento pide permiso de internet"
           fi
@@ -131,7 +131,7 @@ jobs:
       - name: Guardar APK como artefacto
         uses: actions/upload-artifact@v4
         with:
-          name: hanzi-dojo-${{ steps.version.outputs.version }}
+          name: meizi-hanzi-${{ steps.version.outputs.version }}
           path: salida/
           retention-days: 30
 
@@ -142,7 +142,7 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           gh release create "$GITHUB_REF_NAME" salida/*.apk salida/SHA256SUMS.txt \
-            --title "Hanzi Dojo $VERSION" --notes-file notas.md
+            --title "Meizi Hanzi $VERSION" --notes-file notas.md
 
       - name: Borrar la llave del equipo de GitHub
         if: always()
@@ -169,13 +169,13 @@ jobs:
           flutter pub get
           flutter build ios --release --no-codesign
           mkdir Payload && cp -R build/ios/iphoneos/Runner.app Payload/
-          zip -qry "Hanzi_Dojo_${VERSION}_iOS_sin_firmar.ipa" Payload
-          shasum -a 256 "Hanzi_Dojo_${VERSION}_iOS_sin_firmar.ipa"
+          zip -qry "Meizi_Hanzi_${VERSION}_iOS_sin_firmar.ipa" Payload
+          shasum -a 256 "Meizi_Hanzi_${VERSION}_iOS_sin_firmar.ipa"
 
       - name: Guardar .ipa como artefacto
         uses: actions/upload-artifact@v4
         with:
-          name: hanzi-dojo-${{ steps.version.outputs.version }}-ios
+          name: meizi-hanzi-${{ steps.version.outputs.version }}-ios
           path: "*.ipa"
           retention-days: 30
 

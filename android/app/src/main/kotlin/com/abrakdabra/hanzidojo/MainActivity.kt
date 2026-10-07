@@ -165,7 +165,7 @@ class MainActivity : FlutterActivity() {
         }
         val carpeta = File(cacheDir, "compartir")
         carpeta.mkdirs()
-        val archivo = File(carpeta, "hanzi_dojo_progreso.png")
+        val archivo = File(carpeta, "meizi_hanzi_progreso.png")
         archivo.writeBytes(png)
         val uri = Uri.parse("content://$packageName.archivos/${archivo.name}")
         val envio = Intent(Intent.ACTION_SEND).apply {

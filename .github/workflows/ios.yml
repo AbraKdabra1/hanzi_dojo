@@ -2,7 +2,7 @@
 # iOS: compila la app para iPhone/iPad en una Mac de GitHub (gratis en
 # repositorios públicos) y la prueba en el simulador.
 #
-#   · Hanzi_Dojo_sin_firmar.ipa (artifact "hanzi-dojo-ios-sin-firmar"): se
+#   · Meizi_Hanzi_sin_firmar.ipa (artifact "meizi-hanzi-ios-sin-firmar"): se
 #     instala con AltStore o Sideloadly usando tu propio Apple ID, sin pagar
 #     nada (ver docs/ios.md).
 #   · Simulador: integration_test/ios_test.dart abre la app, revisa que las
@@ -49,15 +49,15 @@ jobs:
           flutter build ios --release --no-codesign 2>&1 | tee build_ios.txt
           rm -rf Payload && mkdir Payload
           cp -R build/ios/iphoneos/Runner.app Payload/
-          zip -qry Hanzi_Dojo_sin_firmar.ipa Payload
-          ls -la Hanzi_Dojo_sin_firmar.ipa | tee -a build_ios.txt
+          zip -qry Meizi_Hanzi_sin_firmar.ipa Payload
+          ls -la Meizi_Hanzi_sin_firmar.ipa | tee -a build_ios.txt
 
       - name: Guardar .ipa
         if: steps.ipa.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: hanzi-dojo-ios-sin-firmar
-          path: Hanzi_Dojo_sin_firmar.ipa
+          name: meizi-hanzi-ios-sin-firmar
+          path: Meizi_Hanzi_sin_firmar.ipa
           retention-days: 14
 
       - name: Probar en el simulador de iPhone
@@ -92,7 +92,7 @@ jobs:
                 --dart-define=CAPTURAS="$PWD/build/capturas_ios" 2>&1 | tee -a simulador.txt; then
               exit 0
             fi
-            grep -q 'Hanzi Dojo en el simulador de iPhone' simulador.txt && grep -q '\[E\]' simulador.txt && exit 1
+            grep -q 'Meizi Hanzi en el simulador de iPhone' simulador.txt && grep -q '\[E\]' simulador.txt && exit 1
             xcrun simctl shutdown "$UDID" || true
             xcrun simctl boot "$UDID" || true
             xcrun simctl bootstatus "$UDID" -b > /dev/null 2>&1 || true

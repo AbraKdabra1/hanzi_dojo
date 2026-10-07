@@ -4,7 +4,7 @@ titulo_es: Poemas de la dinastía Tang
 nivel: 7
 tipo: original
 descripcion: Veintidós de los poemas más famosos de la dinastía Tang (618–907), la época de oro de la poesía china: los que los niños chinos aprenden de memoria. Texto original con traducción.
-fuente: Poemas de Li Bai, Du Fu, Wang Wei y otros poetas Tang (dominio público). Texto de las antologías «Trescientos poemas Tang» y «Poemas de mil poetas», tomado de github.com/chinese-poetry/chinese-poetry (MIT) y convertido a caracteres simplificados. Traducción al español escrita para Hanzi Dojo.
+fuente: Poemas de Li Bai, Du Fu, Wang Wei y otros poetas Tang (dominio público). Texto de las antologías «Trescientos poemas Tang» y «Poemas de mil poetas», tomado de github.com/chinese-poetry/chinese-poetry (MIT) y convertido a caracteres simplificados. Traducción al español escrita para Meizi Hanzi.
 
 ## 思乡
 titulo_es: Nostalgia del hogar

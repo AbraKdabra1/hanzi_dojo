@@ -4,7 +4,7 @@ titulo_es: Historias de chengyu
 nivel: 3
 tipo: adaptado
 descripcion: Los chengyu son expresiones de cuatro caracteres que los chinos usan todos los días. Cada una guarda una historia de hace más de dos mil años: aquí están seis de las más conocidas.
-fuente: Fábulas de los filósofos de los periodos de Primaveras y Otoños y de los Reinos Combatientes: «Han Feizi», «Zhuangzi», «Estrategias de los Reinos Combatientes» y «Anales de Lü Buwei» (dominio público). Versión en chino graduado escrita para Hanzi Dojo.
+fuente: Fábulas de los filósofos de los periodos de Primaveras y Otoños y de los Reinos Combatientes: «Han Feizi», «Zhuangzi», «Estrategias de los Reinos Combatientes» y «Anales de Lü Buwei» (dominio público). Versión en chino graduado escrita para Meizi Hanzi.
 
 ## 守株待兔
 titulo_es: Esperar conejos junto al tronco

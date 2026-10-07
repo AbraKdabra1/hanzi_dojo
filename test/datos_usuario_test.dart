@@ -260,7 +260,7 @@ void main() {
     });
 
     test('nombre sugerido con la fecha', () {
-      expect(Respaldo.nombreSugerido(DateTime(2026, 9, 3)), 'hanzi_dojo_2026-09-03.hanzidojo');
+      expect(Respaldo.nombreSugerido(DateTime(2026, 9, 3)), 'meizi_hanzi_2026-09-03.meizi');
     });
   });
 }
