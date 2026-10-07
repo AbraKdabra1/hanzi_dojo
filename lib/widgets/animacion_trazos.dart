@@ -162,14 +162,17 @@ class _AnimacionTrazosState extends State<AnimacionTrazos> with SingleTickerProv
           builder: (context, _) {
             final k = math.min((_control.value * _n).floor() + 1, _n);
             final terminado = _control.isCompleted;
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            // Wrap: en pantallas angostas o con letra grande, el botón baja
+            // a la siguiente línea en vez de salirse.
+            return Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 12,
               children: [
                 Text(
                   terminado ? tr('{0} trazos', [_n]) : tr('Trazo {0} de {1}', [k, _n]),
                   style: TextStyle(fontSize: 14, color: c.suave),
                 ),
-                const SizedBox(width: 12),
                 TextButton.icon(
                   onPressed: _repetir,
                   icon: const Icon(Icons.replay_rounded, size: 18),

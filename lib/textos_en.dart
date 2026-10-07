@@ -1047,6 +1047,46 @@ const textosEn = <String, String>{
       'A few questions per level to find out where to start.',
   'Detener la lectura':
       'Stop reading',
+  'Omitir':
+      'Skip',
+  'Empezar':
+      'Start',
+  'Aprende a escribir chino, trazo a trazo':
+      'Learn to write Chinese, stroke by stroke',
+  'Los 3,000 caracteres del HSK 3.0, con grabaciones de hablantes nativos. Gratis, sin anuncios y sin internet.':
+      'All 3,000 HSK 3.0 characters, with recordings by native speakers. Free, ad-free and offline.',
+  'Escribe con el dedo':
+      'Write with your finger',
+  'La app revisa cada trazo: la forma, el orden y la dirección. En modo novato ves la silueta y, si te equivocas, cómo va el trazo; en modo experto escribes de memoria.':
+      'The app checks every stroke: its shape, order and direction. In beginner mode you see the outline and, if you slip, how the stroke goes; in expert mode you write from memory.',
+  'Repasos a tiempo':
+      'Timely reviews',
+  'Meta diaria':
+      'Daily goal',
+  'Racha':
+      'Streak',
+  'Un poco cada día':
+      'A little every day',
+  'La app te dice qué repasar y cuándo, justo antes de que lo olvides. Ponte una meta diaria y cuida tu racha: diez minutos bastan.':
+      'The app tells you what to review and when, right before you forget it. Set a daily goal and keep your streak: ten minutes is enough.',
+  'Tonos, escucha, vocabulario, pinyin y simulacros del examen HSK.':
+      'Tones, listening, vocabulary, pinyin and HSK mock exams.',
+  'Cuentos y leyendas por nivel, con pinyin, traducción y audio.':
+      'Graded stories and legends, with pinyin, translation and audio.',
+  'Más allá de escribir':
+      'Beyond writing',
+  'Todo se queda en tu teléfono: tu progreso es tuyo.':
+      'Everything stays on your phone: your progress is yours.',
+  'Escribe tu primer carácter':
+      'Write your first character',
+  '人 · rén · persona':
+      '人 · rén · person',
+  '¡Muy bien! Así se escribe con Meizi Hanzi. Toca «Empezar».':
+      'Well done! That\'s how writing works in Meizi Hanzi. Tap «Start».',
+  'Dos trazos: primero el de la izquierda, de arriba hacia abajo. Sigue la silueta.':
+      'Two strokes: first the left one, from top to bottom. Follow the outline.',
+  'Ver el tutorial':
+      'View the tutorial',
   'Carácter del día':
       'Character of the day',
   'Un carácter al día en tu pantalla de bloqueo, para repasarlo de un vistazo. Sin sonido.':

@@ -105,6 +105,9 @@ jobs:
         if: always() && github.event_name == 'push' && github.ref != 'refs/heads/main'
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Solo si existen (true/false), nunca su valor: para saber si
+          # lanzamiento.yml podrá firmar antes de crear una etiqueta.
+          HAY_LLAVE: ${{ secrets.LLAVE_BASE64 != '' && secrets.LLAVE_CLAVE != '' && secrets.LLAVE_ALIAS != '' }}
         run: |
           mkdir -p /tmp/reg && cp -f *.txt pubspec.lock /tmp/reg/ 2>/dev/null || true
           mkdir -p /tmp/reg/capturas && cp -f build/capturas/*.png /tmp/reg/capturas/ 2>/dev/null || true
@@ -117,6 +120,7 @@ jobs:
             echo "test: ${{ steps.test.outcome }}"
             echo "capturas: ${{ steps.capturas.outcome }}"
             echo "apk: ${{ steps.apk.outcome }}"
+            if [ "$HAY_LLAVE" = "true" ]; then echo "llave_firma: configurada"; else echo "llave_firma: falta"; fi
           } > resumen.txt
           git init -q && git checkout -q -b ci
           git config user.name "github-actions[bot]"

@@ -12,7 +12,7 @@ Es **software libre** (GPL-3.0): gratis, sin anuncios, sin cuentas y sin
 rastreo. La app no pide permiso de internet.
 
 - Identificador de la app: `com.abrakdabra.hanzidojo`
-- Versión: 2.0.0
+- Versión: 2.1.0 (beta pública: [`docs/beta.md`](docs/beta.md))
 
 ---
 
