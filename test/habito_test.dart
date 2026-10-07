@@ -156,6 +156,15 @@ void main() {
       expect(await repo.recordatorio(), isNull);
     });
 
+    test('carácter del día: hora guardada o apagado (aparte del recordatorio)', () async {
+      expect(await repo.caracterDia(), isNull);
+      await repo.guardarCaracterDia((8, 0));
+      expect(await repo.caracterDia(), (8, 0));
+      expect(await repo.recordatorio(), isNull);
+      await repo.guardarCaracterDia(null);
+      expect(await repo.caracterDia(), isNull);
+    });
+
     test('el respaldo lleva logros y días protegidos', () async {
       final hao = await repo.caracterPorTexto('好');
       await repo.registrarRespuesta(hao!, Calificacion.facil, ahora: DateTime(2026, 10, 5, 20));

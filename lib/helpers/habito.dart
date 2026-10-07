@@ -46,6 +46,19 @@ class Habito {
 
   static Future<void> cancelarRecordatorio() => _llamar<void>('cancelarRecordatorio');
 
+  /// ¿Hay carácter del día en la pantalla de bloqueo? (En la web no.)
+  static bool get hayCaracterDia => !kIsWeb;
+
+  /// Carácter del día: una notificación silenciosa al día a esa hora, con un
+  /// carácter para repasar de un vistazo (visible en la pantalla de bloqueo).
+  /// [mostrarAhora]: además, la de hoy enseguida (al activarlo). false si no
+  /// hay permiso de notificaciones.
+  static Future<bool> programarCaracterDia(int hora, int minuto, {bool mostrarAhora = false}) async =>
+      await _llamar<bool>('programarCaracterDia', {'hora': hora, 'minuto': minuto, 'mostrarAhora': mostrarAhora}) ??
+      false;
+
+  static Future<void> cancelarCaracterDia() => _llamar<void>('cancelarCaracterDia');
+
   /// Pide al widget de la pantalla de inicio que se vuelva a dibujar.
   static Future<void> actualizarWidget() => _llamar<void>('actualizarWidget');
 

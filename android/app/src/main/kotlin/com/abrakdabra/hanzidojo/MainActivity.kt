@@ -44,7 +44,8 @@ import java.io.File
  *       batería" en Ajustes, para medir cuánto gasta la app).
  *
  *  3. Hábito (canal "hanzi_dojo/habito", ver lib/helpers/habito.dart y
- *     Habito.kt): programar o quitar el recordatorio diario (pide el permiso
+ *     Habito.kt): programar o quitar el recordatorio diario y el carácter del
+ *     día en la pantalla de bloqueo (CaracterDiario.kt; ambos piden el permiso
  *     de notificaciones en Android 13+), actualizar el widget y compartir la
  *     imagen de progreso.
  */
@@ -67,9 +68,9 @@ class MainActivity : FlutterActivity() {
     /** Lo que se va a escribir cuando el usuario elija dónde guardar. */
     private var bytesPorGuardar: ByteArray? = null
 
-    /** Respuesta y hora pendientes mientras se pide el permiso de notificaciones. */
+    /** Respuesta y acción pendientes mientras se pide el permiso de notificaciones. */
     private var pendientePermiso: MethodChannel.Result? = null
-    private var horaPendiente: Pair<Int, Int> = Pair(20, 0)
+    private var alConceder: (() -> Unit)? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -89,23 +90,23 @@ class MainActivity : FlutterActivity() {
                 "programarRecordatorio" -> {
                     val hora = llamada.argument<Int>("hora") ?: 20
                     val minuto = llamada.argument<Int>("minuto") ?: 0
-                    val faltaPermiso = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                        checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
-                    if (!faltaPermiso) {
-                        Recordatorios.programar(this, hora, minuto)
-                        resultado.success(true)
-                    } else if (pendientePermiso != null) {
-                        resultado.success(false)
-                    } else {
-                        pendientePermiso = resultado
-                        horaPendiente = Pair(hora, minuto)
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), PEDIR_NOTIFICACIONES)
-                        }
-                    }
+                    conPermisoDeAvisos(resultado) { Recordatorios.programar(this, hora, minuto) }
                 }
                 "cancelarRecordatorio" -> {
                     Recordatorios.cancelar(this)
+                    resultado.success(null)
+                }
+                "programarCaracterDia" -> {
+                    val hora = llamada.argument<Int>("hora") ?: 8
+                    val minuto = llamada.argument<Int>("minuto") ?: 0
+                    val mostrarAhora = llamada.argument<Boolean>("mostrarAhora") ?: false
+                    conPermisoDeAvisos(resultado) {
+                        CaracterDiario.programar(this, hora, minuto)
+                        if (mostrarAhora) CaracterDiario.mostrar(this)
+                    }
+                }
+                "cancelarCaracterDia" -> {
+                    CaracterDiario.cancelar(this)
                     resultado.success(null)
                 }
                 "actualizarWidget" -> {
@@ -120,13 +121,38 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    /**
+     * Hace [accion] y responde true; en Android 13+ antes pide el permiso de
+     * notificaciones si falta (responde false si no lo dan).
+     */
+    private fun conPermisoDeAvisos(resultado: MethodChannel.Result, accion: () -> Unit) {
+        val faltaPermiso = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+        when {
+            !faltaPermiso -> {
+                accion()
+                resultado.success(true)
+            }
+            pendientePermiso != null -> resultado.success(false) // ya se está preguntando
+            else -> {
+                pendientePermiso = resultado
+                alConceder = accion
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), PEDIR_NOTIFICACIONES)
+                }
+            }
+        }
+    }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode != PEDIR_NOTIFICACIONES) return
         val resultado = pendientePermiso ?: return
+        val accion = alConceder
         pendientePermiso = null
+        alConceder = null
         val concedido = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
-        if (concedido) Recordatorios.programar(this, horaPendiente.first, horaPendiente.second)
+        if (concedido) accion?.invoke()
         resultado.success(concedido)
     }
 

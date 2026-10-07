@@ -12,6 +12,8 @@
 //   · planDeLectura(...) → la lista de grabaciones para leer un texto: las
 //     palabras grabadas más largas que quepan y, para lo demás, la sílaba de
 //     cada carácter según su pinyin en ESE texto (长 de 长大 = zhǎng).
+//   · leerRecortes(...) → dónde empieza y termina la voz en cada grabación,
+//     para encadenarlas sin el silencio que traen a los lados.
 // La reproducción está en widgets/boton_voz.dart.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -38,6 +40,15 @@ class Clip {
   final int fin;
 
   bool get esPausa => pausaMs > 0;
+
+  /// Su línea en assets/audio/recortes.txt ('s/ma1', 'p/56fe-4e66'), o null.
+  String? get claveRecorte {
+    final m = _rutaGrabacion.firstMatch(ruta);
+    if (m == null) return null;
+    return '${m.group(1) == 'silabas' ? 's' : 'p'}/${m.group(2)}';
+  }
+
+  static final _rutaGrabacion = RegExp(r'^assets/audio/(silabas|palabras)/(.+)\.opus$');
 
   @override
   String toString() => esPausa ? 'pausa($pausaMs)' : ruta.split('/').last;
@@ -134,6 +145,19 @@ class Audio {
       }
     }
     return null;
+  }
+
+  /// assets/audio/recortes.txt → clave → (inicio, fin) en ms de la parte con
+  /// voz de cada grabación (ver herramientas_datos/medir_recortes.py).
+  static Map<String, (int, int)> leerRecortes(String texto) {
+    final recortes = <String, (int, int)>{};
+    for (final linea in texto.split('\n')) {
+      final partes = linea.trim().split(' ');
+      if (partes.length != 3 || partes[0].startsWith('#')) continue;
+      final inicio = int.tryParse(partes[1]), fin = int.tryParse(partes[2]);
+      if (inicio != null && fin != null && fin > inicio) recortes[partes[0]] = (inicio, fin);
+    }
+    return recortes;
   }
 
   /// '图书馆' → '56fe-4e66-9986' (igual que en preparar_audio.py).

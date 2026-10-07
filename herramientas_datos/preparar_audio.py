@@ -28,6 +28,7 @@ Genera (se borra y se rehace todo):
         图书馆 → 56fe-4e66-9986.opus (nombres ASCII: más seguros en Android)
   assets/audio/palabras.txt   lista de palabras grabadas, una por línea
   assets/audio/silabas.txt    lista de sílabas grabadas, una por línea
+  assets/audio/recortes.txt   dónde empieza y termina la voz (medir_recortes.py)
 """
 
 from __future__ import annotations
@@ -151,6 +152,10 @@ def main() -> None:
     (DESTINO / "silabas.txt").write_text("\n".join(silabas) + "\n", encoding="utf-8")
     n_sil = len(tareas) - len(palabras)
     print(f"Listo: {n_sil} sílabas + {len(palabras)} palabras, {total / 2**20:.1f} MB en {DESTINO}")
+
+    # Dónde está la voz en cada una, para encadenarlas sin huecos al leer.
+    import medir_recortes
+    medir_recortes.main()
 
 
 if __name__ == "__main__":

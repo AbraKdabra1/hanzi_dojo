@@ -57,6 +57,9 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
   /// Hora del recordatorio (null = apagado).
   (int, int)? _recordatorio;
 
+  /// Hora del carácter del día en la pantalla de bloqueo (null = apagado).
+  (int, int)? _caracterDia;
+
   /// ¿Hay una importación que se pueda deshacer?
   bool _hayPrevio = false;
 
@@ -80,6 +83,7 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
     final sonidoPincel = await repo.sonidoPincel();
     final metaDiaria = await repo.metaDiaria();
     final recordatorio = await repo.recordatorio();
+    final caracterDia = await repo.caracterDia();
     final previo = await Respaldo.hayRespaldoPrevio(repo.base);
     if (mounted) {
       setState(() {
@@ -92,6 +96,7 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
         _sonidoPincel = sonidoPincel;
         _metaDiaria = metaDiaria;
         _recordatorio = recordatorio;
+        _caracterDia = caracterDia;
         _hayPrevio = previo;
       });
     }
@@ -207,6 +212,39 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
       helpText: tr('¿A qué hora te recuerdo?'),
     );
     if (elegida != null) await _ponerRecordatorio((elegida.hour, elegida.minute));
+  }
+
+  /// Enciende el carácter del día a [hora]; al encenderlo por primera vez
+  /// muestra el de hoy para que lo veas enseguida.
+  Future<void> _ponerCaracterDia((int, int) hora) async {
+    final repo = DatosApp.de(context);
+    final primeraVez = _caracterDia == null;
+    final ok = await Habito.programarCaracterDia(hora.$1, hora.$2, mostrarAhora: primeraVez);
+    if (!ok) {
+      _aviso(tr('Sin permiso de notificaciones no puedo mostrarte el carácter del día. Actívalo en los ajustes del teléfono.'));
+      return;
+    }
+    await repo.guardarCaracterDia(hora);
+    if (!mounted) return;
+    setState(() => _caracterDia = hora);
+    if (primeraVez) _aviso(tr('Listo: el carácter de hoy ya está en tus notificaciones.'));
+  }
+
+  Future<void> _quitarCaracterDia() async {
+    await Habito.cancelarCaracterDia();
+    if (!mounted) return;
+    await DatosApp.de(context).guardarCaracterDia(null);
+    if (mounted) setState(() => _caracterDia = null);
+  }
+
+  Future<void> _elegirHoraCaracter() async {
+    final actual = _caracterDia ?? (8, 0);
+    final elegida = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay(hour: actual.$1, minute: actual.$2),
+      helpText: tr('¿A qué hora te muestro el carácter del día?'),
+    );
+    if (elegida != null) await _ponerCaracterDia((elegida.hour, elegida.minute));
   }
 
   static String _textoHora((int, int) h) => '${h.$1}:${h.$2.toString().padLeft(2, '0')}';
@@ -361,6 +399,29 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                         label: Text(tr('Cambiar hora ({0})', [_textoHora(_recordatorio!)])),
                       ),
                     ),
+                  ],
+                  if (Habito.hayCaracterDia) ...[
+                    SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(tr('Carácter del día'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                      subtitle: Text(
+                        _caracterDia == null
+                            ? tr('Un carácter al día en tu pantalla de bloqueo, para repasarlo de un vistazo. Sin sonido.')
+                            : tr('Todos los días a las {0}, en tu pantalla de bloqueo. Sin sonido.', [_textoHora(_caracterDia!)]),
+                        style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.3),
+                      ),
+                      value: _caracterDia != null,
+                      onChanged: (v) => v ? _ponerCaracterDia(_caracterDia ?? (8, 0)) : _quitarCaracterDia(),
+                    ),
+                    if (_caracterDia != null)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton.icon(
+                          onPressed: _elegirHoraCaracter,
+                          icon: const Icon(Icons.schedule_rounded, size: 18),
+                          label: Text(tr('Cambiar hora ({0})', [_textoHora(_caracterDia!)])),
+                        ),
+                      ),
                   ],
                 ],
               ),

@@ -12,7 +12,10 @@
 //   拼  pinyin encima de los caracteres
 //   🌐  traducción de todos los párrafos
 //   Aa  tamaño de letra
-//   🎧  leer el capítulo en voz alta, resaltando lo que suena (fase 7)
+//   🎧  leer el capítulo en voz alta, resaltando lo que suena, desde el
+//       párrafo que tienes a la vista. Abajo aparece una barra para pausar,
+//       detener y elegir la velocidad (0.6× a 1.5×, también al momento).
+//       El 🔊 de cada párrafo lee solo ese párrafo, igual, resaltando.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
@@ -64,9 +67,16 @@ class _PantallaLecturaState extends State<PantallaLectura> {
 
   final ScrollController _desplazamiento = ScrollController();
 
-  /// Lectura en voz alta: si está sonando y qué (párrafo, inicio, fin).
+  /// Lectura en voz alta: si está sonando, si está en pausa, qué párrafo y
+  /// qué parte de él (párrafo, inicio, fin).
   bool _leyendo = false;
+  bool _pausado = false;
+  int _parrafoLeyendo = 0;
   (int, int, int)? _sonando;
+
+  /// Cada lectura nueva invalida la anterior (si tocas otro párrafo a media
+  /// lectura, la vieja se calla y deja de mover la pantalla).
+  int _sesionLectura = 0;
 
   /// Para llevar a la vista el párrafo que se está leyendo.
   final Map<int, GlobalKey> _claves = {};
@@ -96,39 +106,97 @@ class _PantallaLecturaState extends State<PantallaLectura> {
     super.dispose();
   }
 
-  /// Lee el capítulo párrafo por párrafo con las grabaciones, resaltando la
-  /// palabra que suena. Un segundo toque lo detiene.
+  /// 🎧: lee el capítulo desde el párrafo que tienes a la vista. Un segundo
+  /// toque lo detiene.
   Future<void> _leerCapitulo() async {
-    final parrafos = _parrafos;
-    if (parrafos == null) return;
     if (_leyendo) {
-      setState(() {
-        _leyendo = false;
-        _sonando = null;
-      });
-      await Voz.detener();
+      await _detenerLectura();
       return;
     }
-    setState(() => _leyendo = true);
-    for (var i = 0; i < parrafos.length; i++) {
-      if (!mounted || !_leyendo || !identical(parrafos, _parrafos)) break;
+    await _leerDesde(_primerParrafoVisible());
+  }
+
+  /// Lee con las grabaciones, párrafo por párrafo desde [desde] (solo ese si
+  /// [soloUno]), resaltando la palabra que suena.
+  Future<void> _leerDesde(int desde, {bool soloUno = false}) async {
+    final parrafos = _parrafos;
+    if (parrafos == null || desde >= parrafos.length) return;
+    final sesion = ++_sesionLectura;
+    setState(() {
+      _leyendo = true;
+      _pausado = false;
+    });
+    final hasta = soloUno ? desde + 1 : parrafos.length;
+    for (var i = desde; i < hasta; i++) {
+      if (!await _sigueLectura(sesion, parrafos)) return;
+      setState(() => _parrafoLeyendo = i);
       _mostrarParrafo(i);
       final completo = await Voz.leerResaltando(
         parrafos[i].chino,
         pinyin: parrafos[i].pinyin,
+        rapidez: _ajustes.velocidad,
         alSonar: (inicio, fin) {
-          if (mounted && _leyendo) setState(() => _sonando = inicio < 0 ? null : (i, inicio, fin));
+          if (mounted && sesion == _sesionLectura) {
+            setState(() => _sonando = inicio < 0 ? null : (i, inicio, fin));
+          }
         },
       );
       if (!completo) break;
-      await Future<void>.delayed(const Duration(milliseconds: 450));
+      // Un respiro entre párrafos (más largo si lees despacio).
+      if (i + 1 < hasta) await Future<void>.delayed(Duration(milliseconds: (500 / _ajustes.velocidad).round()));
     }
-    if (mounted) {
+    if (mounted && sesion == _sesionLectura) {
       setState(() {
         _leyendo = false;
+        _pausado = false;
         _sonando = null;
       });
     }
+  }
+
+  /// ¿Sigue esta lectura? Si está en pausa, espera a que la reanudes.
+  Future<bool> _sigueLectura(int sesion, List<ParrafoLibro> parrafos) async {
+    while (mounted && sesion == _sesionLectura && _pausado) {
+      await Future<void>.delayed(const Duration(milliseconds: 150));
+    }
+    return mounted && sesion == _sesionLectura && _leyendo && identical(parrafos, _parrafos);
+  }
+
+  Future<void> _detenerLectura() async {
+    _sesionLectura++;
+    setState(() {
+      _leyendo = false;
+      _pausado = false;
+      _sonando = null;
+    });
+    await Voz.detener();
+  }
+
+  void _pausarOReanudar() {
+    setState(() => _pausado = !_pausado);
+    if (_pausado) {
+      Voz.pausar();
+    } else {
+      Voz.reanudar();
+    }
+  }
+
+  void _cambiarVelocidad(double velocidad) {
+    _cambiarAjustes(_ajustes.copia(velocidad: velocidad));
+    if (_leyendo) Voz.cambiarVelocidad(velocidad);
+  }
+
+  /// El primer párrafo que se ve en la pantalla (0 si estás arriba).
+  int _primerParrafoVisible() {
+    final arriba = MediaQuery.paddingOf(context).top + kToolbarHeight + 24;
+    final indices = _claves.keys.toList()..sort();
+    for (final i in indices) {
+      final caja = _claves[i]?.currentContext?.findRenderObject();
+      if (caja is! RenderBox || !caja.attached || !caja.hasSize) continue;
+      final abajo = caja.localToGlobal(Offset(0, caja.size.height)).dy;
+      if (abajo > arriba) return i;
+    }
+    return 0;
   }
 
   void _mostrarParrafo(int i) {
@@ -140,11 +208,13 @@ class _PantallaLecturaState extends State<PantallaLectura> {
 
   Future<void> _cargar() async {
     if (_leyendo) Voz.detener();
+    _sesionLectura++;
     setState(() {
       _parrafos = null;
       _invertidos.clear();
       _seleccion = null;
       _leyendo = false;
+      _pausado = false;
       _sonando = null;
       _claves.clear();
       _preguntas = const [];
@@ -340,11 +410,131 @@ class _PantallaLecturaState extends State<PantallaLectura> {
                       }),
                       seleccionado: _seleccion?.$1 == i ? _seleccion?.$2 : null,
                       sonando: _sonando?.$1 == i ? (_sonando!.$2, _sonando!.$3) : null,
+                      leyendo: _leyendo && _parrafoLeyendo == i,
+                      onEscuchar: () => _leyendo && _parrafoLeyendo == i ? _detenerLectura() : _leerDesde(i, soloUno: true),
                       onTocarCaracter: (posicion) => _tocarCaracter(i, posicion),
                     ),
                   );
                 },
               ),
+        bottomNavigationBar: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 250),
+          transitionBuilder: (hijo, animacion) => SizeTransition(sizeFactor: animacion, child: hijo),
+          child: _leyendo && parrafos != null
+              ? _BarraLectura(
+                  parrafo: _parrafoLeyendo,
+                  total: parrafos.length,
+                  pausado: _pausado,
+                  velocidad: _ajustes.velocidad,
+                  onPausa: _pausarOReanudar,
+                  onDetener: _detenerLectura,
+                  onVelocidad: _cambiarVelocidad,
+                )
+              : const SizedBox.shrink(),
+        ),
+      ),
+    );
+  }
+}
+
+/// Abajo, mientras se lee en voz alta: pausa, detener, en qué párrafo va y
+/// la velocidad (se aplica al momento).
+class _BarraLectura extends StatelessWidget {
+  const _BarraLectura({
+    required this.parrafo,
+    required this.total,
+    required this.pausado,
+    required this.velocidad,
+    required this.onPausa,
+    required this.onDetener,
+    required this.onVelocidad,
+  });
+
+  final int parrafo;
+  final int total;
+  final bool pausado;
+  final double velocidad;
+  final VoidCallback onPausa;
+  final VoidCallback onDetener;
+  final ValueChanged<double> onVelocidad;
+
+  static String _etiqueta(double v) => '${v.toString().replaceFirst(RegExp(r'\.0$'), '')}×';
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colores;
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 4, 12, 10),
+        child: TarjetaVidrio(
+          relleno: const EdgeInsets.fromLTRB(10, 8, 10, 10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  IconButton.filled(
+                    style: IconButton.styleFrom(backgroundColor: c.boton, foregroundColor: c.textoBoton),
+                    tooltip: pausado ? tr('Seguir leyendo') : tr('Pausa'),
+                    onPressed: onPausa,
+                    icon: Icon(pausado ? Icons.play_arrow_rounded : Icons.pause_rounded),
+                  ),
+                  IconButton(
+                    tooltip: tr('Detener la lectura'),
+                    onPressed: onDetener,
+                    icon: Icon(Icons.stop_rounded, color: c.icono),
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      tr('Párrafo {0} de {1}', [parrafo + 1, total]),
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: c.suave),
+                    ),
+                  ),
+                  Icon(Icons.speed_rounded, size: 18, color: c.tenue),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Row(
+                children: [
+                  for (final v in AjustesLectura.velocidades)
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 3),
+                        child: Semantics(
+                          button: true,
+                          selected: v == velocidad,
+                          label: tr('Velocidad {0}', [_etiqueta(v)]),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(12),
+                            onTap: () => onVelocidad(v),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              height: 34,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: v == velocidad ? c.boton : c.separador,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                _etiqueta(v),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: v == velocidad ? FontWeight.w700 : FontWeight.w500,
+                                  color: v == velocidad ? c.textoBoton : c.suave,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

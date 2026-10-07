@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Carácter del día (CaracterDiario.kt), notificación cerrada: lo que se ve
+     en la pantalla de bloqueo. Los estilos de notificación del sistema dan
+     los colores correctos en modo claro y oscuro. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/notif_caracter"
+        style="@android:style/TextAppearance.Material.Notification.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:text="汉"
+        android:textSize="34sp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/notif_pinyin"
+            style="@android:style/TextAppearance.Material.Notification.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="hàn"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/notif_significado"
+            style="@android:style/TextAppearance.Material.Notification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="" />
+    </LinearLayout>
+</LinearLayout>

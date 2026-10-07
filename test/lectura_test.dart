@@ -120,12 +120,14 @@ void main() {
       expect(porDefecto.pinyin, isTrue);
       expect(porDefecto.traduccion, isFalse);
       expect(porDefecto.tamano, AjustesLectura.tamanoPorDefecto);
+      expect(porDefecto.velocidad, 1.0);
 
-      await repo.guardarAjustesLectura(porDefecto.copia(pinyin: false, traduccion: true, tamano: 30));
+      await repo.guardarAjustesLectura(porDefecto.copia(pinyin: false, traduccion: true, tamano: 30, velocidad: 0.8));
       final guardados = await repo.ajustesLectura();
       expect(guardados.pinyin, isFalse);
       expect(guardados.traduccion, isTrue);
       expect(guardados.tamano, 30);
+      expect(guardados.velocidad, 0.8);
       expect(guardados.siguienteTamano, 34);
       expect(guardados.copia(tamano: 34).siguienteTamano, AjustesLectura.tamanos.first);
     });

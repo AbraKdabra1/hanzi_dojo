@@ -72,6 +72,8 @@ class ParrafoLectura extends StatelessWidget {
     required this.onAlternarTraduccion,
     this.seleccionado,
     this.sonando,
+    this.leyendo = false,
+    this.onEscuchar,
     required this.onTocarCaracter,
   });
 
@@ -86,6 +88,13 @@ class ParrafoLectura extends StatelessWidget {
 
   /// Lo que suena al leer en voz alta: posiciones [inicio, fin).
   final (int, int)? sonando;
+
+  /// Este párrafo se está leyendo en voz alta.
+  final bool leyendo;
+
+  /// 🔊 del párrafo. Si se da, lo lee la pantalla (resaltando y a su
+  /// velocidad); si no, el botón de voz de siempre.
+  final VoidCallback? onEscuchar;
   final ValueChanged<int> onTocarCaracter;
 
   @override
@@ -171,7 +180,19 @@ class ParrafoLectura extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            BotonVoz(texto: p.chino, pinyin: p.pinyin, tamano: 16),
+            if (onEscuchar == null)
+              BotonVoz(texto: p.chino, pinyin: p.pinyin, tamano: 16)
+            else
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                tooltip: leyendo ? tr('Detener la lectura') : tr('Escuchar este párrafo'),
+                onPressed: onEscuchar,
+                icon: Icon(
+                  leyendo ? Icons.stop_circle_outlined : Icons.volume_up_outlined,
+                  size: 20,
+                  color: leyendo ? const Color(0xFF007AFF) : colores.icono,
+                ),
+              ),
             if (p.espanol.isNotEmpty)
               IconButton(
                 visualDensity: VisualDensity.compact,

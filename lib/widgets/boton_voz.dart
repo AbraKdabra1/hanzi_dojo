@@ -13,10 +13,20 @@
 // dos, el botón lo dice en vez de quedarse callado.
 //
 // Velocidad: Voz.velocidad (1.0 normal; 0.75 con «Voz lenta» en Ajustes). Los
-// ejercicios tienen además un botón 🐢 para repetir algo más despacio.
+// ejercicios tienen además un botón 🐢 para repetir algo más despacio, y Leer
+// tiene su propia velocidad (0.6× a 1.5×) que se puede cambiar mientras suena.
+//
+// Varias grabaciones seguidas (una oración, un párrafo) se tocan como UNA lista
+// de reproducción: el reproductor encadena una con otra sin huecos, y cada
+// una suena sin el margen de silencio que trae a los lados
+// (assets/audio/recortes.txt). Antes se cargaba y se tocaba una por una, y
+// como play() regresa de inmediato si el reproductor sigue "tocando" (así se
+// queda al terminar una grabación), cada palabra cortaba a la anterior.
 //
 // Batería: el reproductor se detiene (y suelta el decodificador) al terminar.
 // ─────────────────────────────────────────────────────────────────────────────
+
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -60,6 +70,17 @@ class Voz {
   static double _velocidadTts = 1.0;
 
   static AudioPlayer get _audio => _reproductor ??= AudioPlayer();
+
+  /// Parte con voz de cada grabación (ver Audio.leerRecortes).
+  static Future<Map<String, (int, int)>>? _recortes;
+
+  static Future<Map<String, (int, int)>> _cargarRecortes() => _recortes ??= rootBundle
+      .loadString('assets/audio/recortes.txt')
+      .then(Audio.leerRecortes)
+      .catchError((Object _) => <String, (int, int)>{});
+
+  /// Para las pausas de la puntuación dentro de una lista de reproducción.
+  static const _silencio = 'assets/sonidos/silencio.opus';
 
   /// Palabras y sílabas grabadas: (palabras, sílabas).
   static Future<(Set<String>, Set<String>)> listas() => _cargarListas();
@@ -164,27 +185,32 @@ class Voz {
     try {
       final (palabras, silabas) = await _cargarListas();
       final plan = Audio.planDeLectura(texto, pinyin: pinyin, palabras: palabras, silabas: silabas);
-      final audio = _audio;
-      await audio.setSpeed(rapidez ?? velocidad);
-      for (final clip in plan.clips) {
-        if (turno != _turno) return false;
-        if (clip.esPausa) {
-          await Future<void>.delayed(Duration(milliseconds: clip.pausaMs));
-          continue;
-        }
-        alSonar(clip.inicio, clip.fin);
-        await Grabaciones.cargar(audio, clip.ruta);
-        if (turno != _turno) return false;
-        await audio.play();
-      }
-      return turno == _turno;
+      return await _reproducir(plan.clips, turno, rapidez ?? velocidad, alCambiar: (k) {
+        final clip = plan.clips[k];
+        if (!clip.esPausa) alSonar(clip.inicio, clip.fin);
+      });
     } catch (e, pila) {
       RegistroErrores.registrar('Voz (leer en voz alta)', e, pila);
       return false;
     } finally {
-      if (turno == _turno) await _reproductor?.stop();
       alSonar(-1, -1);
     }
+  }
+
+  /// Pausa lo que suena (la lectura en voz alta sigue donde iba con
+  /// [reanudar]).
+  static Future<void> pausar() async {
+    await _reproductor?.pause();
+  }
+
+  static void reanudar() {
+    final audio = _reproductor;
+    if (audio != null && !audio.playing) unawaited(audio.play().catchError((Object _) {}));
+  }
+
+  /// Cambia la velocidad de lo que está sonando, sin cortarlo.
+  static Future<void> cambiarVelocidad(double rapidez) async {
+    await _reproductor?.setSpeed(rapidez);
   }
 
   /// Toca exactamente estas grabaciones (los ejercicios: una sílaba o una
@@ -203,23 +229,105 @@ class Voz {
   }
 
   static Future<void> _tocar(List<Clip> clips, int turno, double rapidez) async {
+    await _reproducir(clips, turno, rapidez);
+  }
+
+  /// Toca [clips] de corrido y termina cuando acaban de sonar (true) o si
+  /// algo lo interrumpe (false). [alCambiar] avisa qué clip empieza.
+  ///
+  /// Una sola grabación suena completa; varias se recortan a su parte con
+  /// voz para que la lectura no suene entrecortada.
+  static Future<bool> _reproducir(List<Clip> clips, int turno, double rapidez,
+      {void Function(int indice)? alCambiar}) async {
+    final grabaciones = clips.where((c) => !c.esPausa).length;
+    if (grabaciones == 0) return true;
     final audio = _audio;
+    StreamSubscription<int?>? avisos;
     try {
-      await audio.setSpeed(rapidez);
-      for (final clip in clips) {
-        if (turno != _turno) return;
-        if (clip.esPausa) {
-          await Future<void>.delayed(Duration(milliseconds: clip.pausaMs));
-          continue;
-        }
-        await Grabaciones.cargar(audio, clip.ruta);
-        if (turno != _turno) return;
-        await audio.play(); // termina cuando acaba la grabación (o si se detiene)
+      try {
+        final fuentes = await _fuentes(clips, recortar: grabaciones > 1);
+        if (turno != _turno) return false;
+        await audio.stop(); // play() no hace nada si el reproductor sigue "tocando"
+        await audio.setSpeed(rapidez);
+        await audio.setAudioSources(fuentes);
+      } catch (e, pila) {
+        if (turno != _turno) return false; // la interrumpió otro sonido
+        // Si la lista no se pudo armar (un formato que este teléfono no
+        // recorta, por ejemplo), una por una.
+        RegistroErrores.registrar('Voz (lista de reproducción)', e, pila);
+        return await _reproducirUnaPorUna(clips, turno, rapidez, alCambiar: alCambiar);
       }
+      if (turno != _turno) return false;
+      if (alCambiar != null) {
+        avisos = audio.currentIndexStream.distinct().listen((k) {
+          if (k != null && k < clips.length && turno == _turno) alCambiar(k);
+        });
+      }
+      await _tocarHastaElFinal(audio);
+      return turno == _turno;
     } finally {
+      await avisos?.cancel();
       // Al terminar se suelta el decodificador (ahorra batería y memoria).
       if (turno == _turno) await audio.stop();
     }
+  }
+
+  /// Plan B de [_reproducir]: cada grabación por separado.
+  static Future<bool> _reproducirUnaPorUna(List<Clip> clips, int turno, double rapidez,
+      {void Function(int indice)? alCambiar}) async {
+    final audio = _audio;
+    await audio.setSpeed(rapidez);
+    for (var k = 0; k < clips.length; k++) {
+      if (turno != _turno) return false;
+      final clip = clips[k];
+      if (clip.esPausa) {
+        await Future<void>.delayed(Duration(milliseconds: (clip.pausaMs / rapidez).round()));
+        continue;
+      }
+      await audio.stop();
+      await Grabaciones.cargar(audio, clip.ruta);
+      if (turno != _turno) return false;
+      alCambiar?.call(k);
+      await _tocarHastaElFinal(audio);
+    }
+    return turno == _turno;
+  }
+
+  /// Toca lo cargado y espera a que termine o a que lo detengan (una pausa
+  /// sigue esperando: [reanudar] continúa).
+  static Future<void> _tocarHastaElFinal(AudioPlayer audio) async {
+    final fin = audio.processingStateStream
+        .firstWhere((s) => s == ProcessingState.completed || s == ProcessingState.idle);
+    unawaited(audio.play().catchError((Object _) {}));
+    await fin;
+  }
+
+  /// [clips] como fuentes para una lista de reproducción. Las pausas son un
+  /// trozo de silencio de la duración pedida.
+  static Future<List<AudioSource>> _fuentes(List<Clip> clips, {required bool recortar}) async {
+    final recortes = recortar ? await _cargarRecortes() : const <String, (int, int)>{};
+    final fuentes = <AudioSource>[];
+    for (final clip in clips) {
+      if (clip.esPausa) {
+        // Cada pausa con su propia fuente: una misma no puede estar dos
+        // veces en la lista.
+        fuentes.add(ClippingAudioSource(
+          child: await Grabaciones.fuente(_silencio),
+          end: Duration(milliseconds: clip.pausaMs.clamp(1, 1000)),
+        ));
+        continue;
+      }
+      final fuente = await Grabaciones.fuente(clip.ruta);
+      final recorte = recortes[clip.claveRecorte];
+      fuentes.add(recorte == null
+          ? fuente
+          : ClippingAudioSource(
+              child: fuente,
+              start: Duration(milliseconds: recorte.$1),
+              end: Duration(milliseconds: recorte.$2),
+            ));
+    }
+    return fuentes;
   }
 
   static Future<void> _detenerSonido() async {
@@ -235,7 +343,7 @@ class Voz {
 }
 
 class BotonVoz extends StatefulWidget {
-  const BotonVoz({super.key, required this.texto, this.pinyin, this.pinyinPorPalabras, this.tamano = 20});
+  const BotonVoz({super.key, required this.texto, this.pinyin, this.pinyinPorPalabras, this.tamano = 20, this.rapidez});
 
   /// Texto en chino que se va a leer.
   final String texto;
@@ -247,6 +355,9 @@ class BotonVoz extends StatefulWidget {
   /// Alternativa a [pinyin] cuando viene escrito por palabras ('wǒ xǐhuan…').
   final String? pinyinPorPalabras;
   final double tamano;
+
+  /// Velocidad (null = la de Ajustes). Leer usa la suya.
+  final double? rapidez;
 
   @override
   State<BotonVoz> createState() => _BotonVozState();
@@ -262,7 +373,7 @@ class _BotonVozState extends State<BotonVoz> {
     final resultado = await Voz.decir(widget.texto,
         pinyin: widget.pinyin,
         pinyinPorPalabras: widget.pinyinPorPalabras,
-        rapidez: lento ? Voz.velocidadLenta : null);
+        rapidez: lento ? Voz.velocidadLenta : widget.rapidez);
     if (resultado == ResultadoVoz.sinSonido && mounted) {
       ScaffoldMessenger.maybeOf(context)?.showSnackBar(SnackBar(
         content: Text(tr('No hay grabación de esto y tu teléfono no tiene voz en chino. Puedes instalar una en Ajustes del teléfono › Texto a voz.')),

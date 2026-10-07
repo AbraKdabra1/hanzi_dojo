@@ -1047,6 +1047,28 @@ const textosEn = <String, String>{
       'A few questions per level to find out where to start.',
   'Detener la lectura':
       'Stop reading',
+  'Carácter del día':
+      'Character of the day',
+  'Un carácter al día en tu pantalla de bloqueo, para repasarlo de un vistazo. Sin sonido.':
+      'One character a day on your lock screen, to review at a glance. Silent.',
+  'Todos los días a las {0}, en tu pantalla de bloqueo. Sin sonido.':
+      'Every day at {0}, on your lock screen. Silent.',
+  'Sin permiso de notificaciones no puedo mostrarte el carácter del día. Actívalo en los ajustes del teléfono.':
+      'Without notification permission I can\'t show you the character of the day. Turn it on in your phone settings.',
+  'Listo: el carácter de hoy ya está en tus notificaciones.':
+      'Done: today\'s character is already in your notifications.',
+  '¿A qué hora te muestro el carácter del día?':
+      'What time should I show you the character of the day?',
+  'Seguir leyendo':
+      'Keep reading',
+  'Pausa':
+      'Pause',
+  'Párrafo {0} de {1}':
+      'Paragraph {0} of {1}',
+  'Velocidad {0}':
+      'Speed {0}',
+  'Escuchar este párrafo':
+      'Listen to this paragraph',
   'Escuchar el capítulo':
       'Listen to the chapter',
   'Ya está en tu vocabulario':

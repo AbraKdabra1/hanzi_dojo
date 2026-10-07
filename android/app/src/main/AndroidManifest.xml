@@ -36,6 +36,10 @@
         <receiver
             android:name=".ReceptorRecordatorio"
             android:exported="false" />
+        <!-- Carácter del día en la pantalla de bloqueo (CaracterDiario.kt). -->
+        <receiver
+            android:name=".ReceptorCaracterDia"
+            android:exported="false" />
         <receiver
             android:name=".ReceptorArranque"
             android:exported="false">

@@ -35,7 +35,8 @@ import java.util.TimeZone
  *    a la hora elegida, con AlarmManager (no necesita servicios de Google, así
  *    que funciona en Huawei). Si ese día ya cumpliste tu meta, no avisa.
  *  · WidgetHanzi: widget de la pantalla de inicio (carácter del día, repasos
- *    pendientes y avance de hoy).
+ *    pendientes y avance de hoy). El mismo carácter sale en la notificación
+ *    diaria de la pantalla de bloqueo (CaracterDiario.kt).
  *  · ProveedorArchivos: entrega a otra app (WhatsApp, etc.) la imagen que se
  *    comparte, sin pedir permisos de almacenamiento.
  *
@@ -275,6 +276,7 @@ class ReceptorRecordatorio : BroadcastReceiver() {
 class ReceptorArranque : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Recordatorios.reprogramar(context)
+        CaracterDiario.reprogramar(context)
     }
 }
 

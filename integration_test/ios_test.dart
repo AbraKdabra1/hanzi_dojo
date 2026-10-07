@@ -5,7 +5,8 @@
 // en iOS hace falta Xcode:
 //   1. La app arranca y copia la base de contenido.
 //   2. Una sílaba y una palabra se reempacan a CAF y el reproductor de iOS
-//      las puede cargar (el iPhone no lee Opus en Ogg).
+//      las puede cargar (el iPhone no lee Opus en Ogg); una oración suena de
+//      corrido, palabra por palabra (lista de reproducción con recortes).
 //   3. Capturas del inicio, la elección de modo, los niveles y el estudio.
 //
 // Cada captura se guarda en la carpeta temporal de la app (en el simulador es
@@ -22,6 +23,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hanzi_dojo/helpers/grabaciones.dart';
 import 'package:hanzi_dojo/main.dart' as app;
+import 'package:hanzi_dojo/widgets/boton_voz.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -111,5 +113,25 @@ void main() {
       expect(duracion, isNotNull, reason: ruta);
       expect(duracion!.inMilliseconds, greaterThan(150), reason: ruta);
     }
+
+    // Una oración de corrido (lista de reproducción con recortes y pausas),
+    // como al leer un cuento: suena cada palabra y termina.
+    final sonaron = <(int, int)>[];
+    final reloj = Stopwatch()..start();
+    final completa = await tester.runAsync(() => paso(
+          'leer una oración',
+          () => Voz.leerResaltando(
+            '你好，我很好。',
+            pinyin: const ['nǐ', 'hǎo', '', 'wǒ', 'hěn', 'hǎo', ''],
+            rapidez: 1.25,
+            alSonar: (inicio, fin) {
+              if (inicio >= 0) sonaron.add((inicio, fin));
+            },
+          ),
+          segundos: 40,
+        ));
+    debugPrint('Oración: ${reloj.elapsedMilliseconds} ms, sonaron $sonaron');
+    expect(completa, isTrue);
+    expect(sonaron.map((s) => s.$1), containsAll([0, 3]));
   });
 }

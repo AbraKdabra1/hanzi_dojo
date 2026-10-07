@@ -219,10 +219,30 @@ final class HanziDojoNativo: NSObject, FlutterPlugin, UIDocumentPickerDelegate {
       Recordatorios.cancelar()
       resultado(nil)
 
+    case "programarCaracterDia":
+      let hora = args["hora"] as? Int ?? 8
+      let minuto = args["minuto"] as? Int ?? 0
+      let mostrarAhora = args["mostrarAhora"] as? Bool ?? false
+      UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { permitido, _ in
+        DispatchQueue.main.async {
+          guard permitido else {
+            resultado(false)
+            return
+          }
+          CaracterDiario.programar(hora: hora, minuto: minuto, mostrarAhora: mostrarAhora)
+          resultado(true)
+        }
+      }
+
+    case "cancelarCaracterDia":
+      CaracterDiario.cancelar()
+      resultado(nil)
+
     case "actualizarWidget":
-      // Sin widget todavía; es el momento de rehacer los recordatorios
-      // (se llama al salir de la app).
+      // Sin widget todavía; es el momento de rehacer los avisos (se llama
+      // al salir de la app): el recordatorio y el carácter del día.
       Recordatorios.reprogramar()
+      CaracterDiario.reprogramar()
       resultado(nil)
 
     case "compartirImagen":
@@ -351,6 +371,82 @@ enum Recordatorios {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
+// Carácter del día en la pantalla de bloqueo, como CaracterDiario.kt
+//
+// iOS no deja programar algo que corra cada día por su cuenta: se dejan
+// programadas las notificaciones de las próximas dos semanas, cada una con el
+// carácter de su día, y se rehacen cada vez que sales de la app. Llegan en
+// silencio (sin sonido ni encender la pantalla) y se ven en la pantalla de
+// bloqueo y en el centro de notificaciones.
+// ═════════════════════════════════════════════════════════════════════════════
+
+enum CaracterDiario {
+  private static let preferencias = UserDefaults.standard
+  private static let dias = 14
+  private static func identificador(_ dia: Int) -> String { "caracter-\(dia)" }
+  private static let ahoraId = "caracter-ahora"
+
+  static func programar(hora: Int, minuto: Int, mostrarAhora: Bool) {
+    preferencias.set(true, forKey: "caracter_activo")
+    preferencias.set(hora, forKey: "caracter_hora")
+    preferencias.set(minuto, forKey: "caracter_minuto")
+    reprogramar()
+    if mostrarAhora { mostrarEnUnMomento() }
+  }
+
+  static func cancelar() {
+    preferencias.set(false, forKey: "caracter_activo")
+    let ids = (0..<dias).map(identificador) + [ahoraId]
+    let centro = UNUserNotificationCenter.current()
+    centro.removePendingNotificationRequests(withIdentifiers: ids)
+    centro.removeDeliveredNotifications(withIdentifiers: ids)
+  }
+
+  static func reprogramar() {
+    let centro = UNUserNotificationCenter.current()
+    centro.removePendingNotificationRequests(withIdentifiers: (0..<dias).map(identificador))
+    guard preferencias.bool(forKey: "caracter_activo") else { return }
+    let hora = preferencias.integer(forKey: "caracter_hora")
+    let minuto = preferencias.integer(forKey: "caracter_minuto")
+    let ingles = DatosHanzi.ingles()
+    let calendario = Calendar.current
+    let ahora = Date()
+    for dia in 0..<dias {
+      guard let fecha = calendario.date(byAdding: .day, value: dia, to: ahora) else { continue }
+      var partes = calendario.dateComponents([.year, .month, .day], from: fecha)
+      partes.hour = hora
+      partes.minute = minuto
+      guard let cuando = calendario.date(from: partes), cuando > ahora,
+            let c = DatosHanzi.caracterDelDia(fecha: cuando) else { continue }
+      let disparador = UNCalendarNotificationTrigger(dateMatching: partes, repeats: false)
+      centro.add(UNNotificationRequest(identifier: identificador(dia), content: contenido(c, ingles: ingles),
+                                       trigger: disparador))
+    }
+  }
+
+  /// Al activarlo: el de hoy enseguida, para verlo ya en la pantalla de bloqueo.
+  private static func mostrarEnUnMomento() {
+    guard let c = DatosHanzi.caracterDelDia(fecha: Date()) else { return }
+    let disparador = UNTimeIntervalNotificationTrigger(timeInterval: 2, repeats: false)
+    UNUserNotificationCenter.current().add(
+      UNNotificationRequest(identifier: ahoraId, content: contenido(c, ingles: DatosHanzi.ingles()), trigger: disparador))
+  }
+
+  private static func contenido(_ c: DatosHanzi.CaracterDia, ingles: Bool) -> UNMutableNotificationContent {
+    let contenido = UNMutableNotificationContent()
+    contenido.title = "\(c.caracter)  ·  \(c.pinyin)"
+    contenido.subtitle = ingles ? "Character of the day" : "Carácter del día"
+    contenido.body = c.significado
+    contenido.sound = nil  // en silencio
+    contenido.threadIdentifier = "caracter-del-dia"
+    if #available(iOS 15.0, *) {
+      contenido.interruptionLevel = .passive  // no enciende la pantalla
+    }
+    return contenido
+  }
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
 // Lectura de progreso.db (solo lectura), como DatosHanzi en Habito.kt
 // ═════════════════════════════════════════════════════════════════════════════
 
@@ -415,6 +511,61 @@ enum DatosHanzi {
       let meta = ajuste(db, "meta_diaria").flatMap { Int($0) } ?? 20
       return Resumen(hoy: hoy, meta: meta, pendientes: pendientes)
     }
+  }
+
+  struct CaracterDia {
+    let caracter: String
+    let pinyin: String
+    let significado: String
+  }
+
+  /// Textos de una consulta (una fila).
+  private static func fila(_ db: OpaquePointer, _ sql: String, _ arg: String? = nil) -> [String]? {
+    var consulta: OpaquePointer?
+    guard sqlite3_prepare_v2(db, sql, -1, &consulta, nil) == SQLITE_OK else { return nil }
+    defer { sqlite3_finalize(consulta) }
+    if let arg = arg {
+      let transitorio = unsafeBitCast(-1, to: sqlite3_destructor_type.self)  // SQLITE_TRANSIENT
+      sqlite3_bind_text(consulta, 1, arg, -1, transitorio)
+    }
+    guard sqlite3_step(consulta) == SQLITE_ROW else { return nil }
+    return (0..<sqlite3_column_count(consulta)).map { i in
+      sqlite3_column_text(consulta, i).map { String(cString: $0) } ?? ""
+    }
+  }
+
+  /// El carácter del día [fecha], con la misma regla que Android (Habito.kt,
+  /// DatosHanzi.caracterDelDia): uno de los que ya estudiaste o, si llevas
+  /// menos de 10, uno de HSK 1. Es el mismo todo el día.
+  static func caracterDelDia(fecha: Date) -> CaracterDia? {
+    let estudiados: [String] = conBase("progreso.db") { db -> [String] in
+      var consulta: OpaquePointer?
+      guard sqlite3_prepare_v2(db, "SELECT caracter FROM progreso ORDER BY caracter", -1, &consulta, nil) == SQLITE_OK
+      else { return [] }
+      defer { sqlite3_finalize(consulta) }
+      var lista: [String] = []
+      while sqlite3_step(consulta) == SQLITE_ROW {
+        if let t = sqlite3_column_text(consulta, 0) { lista.append(String(cString: t)) }
+      }
+      return lista
+    } ?? []
+    let segundos = fecha.timeIntervalSince1970 + Double(TimeZone.current.secondsFromGMT(for: fecha))
+    let dia = Int64(floor(segundos / 86_400))
+    let significado = ingles() ? "significado_en" : "coalesce(significado_es, significado_en)"
+    let consulta = "SELECT caracter, pinyin, \(significado) FROM caracteres"
+    return conBase("contenido.db") { db -> CaracterDia? in
+      if estudiados.count >= 10 {
+        let elegido = estudiados[Int((dia * 7919) % Int64(estudiados.count))]
+        if let f = fila(db, "\(consulta) WHERE caracter = ?", elegido) {
+          return CaracterDia(caracter: f[0], pinyin: f[1], significado: f[2])
+        }
+      }
+      let total = Int64(numero(db, "SELECT count(*) FROM caracteres WHERE nivel_hsk = 1"))
+      guard total > 0 else { return nil }
+      let desde = (dia * 7919) % total
+      guard let f = fila(db, "\(consulta) WHERE nivel_hsk = 1 ORDER BY id LIMIT 1 OFFSET \(desde)") else { return nil }
+      return CaracterDia(caracter: f[0], pinyin: f[1], significado: f[2])
+    } ?? nil
   }
 
   /// Ajustes › Idioma: 'en', 'es' o 'auto' (el del teléfono).
