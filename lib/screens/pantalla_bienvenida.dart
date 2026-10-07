@@ -287,7 +287,7 @@ class _Etiqueta extends StatelessWidget {
         children: [
           Text(emoji, style: const TextStyle(fontSize: 22)),
           const SizedBox(width: 8),
-          Text(texto, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+          Flexible(child: Text(texto, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600))),
         ],
       ),
     );
