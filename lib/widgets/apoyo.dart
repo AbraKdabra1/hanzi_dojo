@@ -8,7 +8,7 @@
 //   · Una sola vez en la vida de la app, después de celebrar un logro (cuando
 //     ya llevas 3 o más): un aviso abajo que se puede ignorar.
 //
-// El enlace se abre en el navegador; la app sigue sin permiso de internet.
+// El enlace se abre en el navegador; la app no envía nada.
 //
 // Google Play solo permite enlaces de donativos dentro de la app a
 // organizaciones sin fines de lucro. Para esa tienda se compila con

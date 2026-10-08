@@ -169,6 +169,44 @@ void main() {
       expect(opacidadAviso(tester), 0);
     });
 
+    testWidgets('un trazo rechazado se avisa con tus puntos en 1024 × 1024', (tester) async {
+      final avisos = <(int, bool, List<Offset>)>[];
+      tester.binding.defaultBinaryMessenger
+          .setMockMethodCallHandler(SystemChannels.platform, (llamada) async => null);
+      await tester.pumpWidget(MaterialApp(
+        home: Align(
+          alignment: Alignment.topLeft,
+          child: SizedBox(
+            width: 400,
+            height: 400,
+            child: LienzoEscritura(
+              caracter: 'prueba',
+              trazosSvg: svg,
+              medianas: mediana,
+              modoNovato: false,
+              onCompletado: (_) {},
+              onTrazoRechazado: (i, alReves, puntos) => avisos.add((i, alReves, puntos)),
+            ),
+          ),
+        ),
+      ));
+      await trazar(tester, fin, inicio); // al revés
+      expect(avisos, hasLength(1));
+      final (indice, alReves, puntos) = avisos.single;
+      expect(indice, 0);
+      expect(alReves, isTrue);
+      // Empieza donde termina la mediana (900, 380) y acaba donde empieza.
+      expect(puntos.first.dx, closeTo(900, 12));
+      expect(puntos.first.dy, closeTo(380, 12));
+      expect(puntos.last.dx, closeTo(100, 12));
+      await tester.pump(const Duration(seconds: 2));
+
+      await trazar(tester, inicio, fin); // bien: no se avisa
+      await tester.pumpAndSettle();
+      expect(avisos, hasLength(1));
+      await tester.pump(const Duration(seconds: 2));
+    });
+
     testWidgets('los trazos fallados quedan anotados para el historial', (tester) async {
       final clave = GlobalKey<LienzoEscrituraState>();
       await montar(tester, clave: clave);

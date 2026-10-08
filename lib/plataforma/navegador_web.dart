@@ -70,6 +70,26 @@ class Navegador {
     return true;
   }
 
+  /// Menú Compartir del teléfono con un texto; si el navegador no lo tiene
+  /// (o se cancela), el texto se copia al portapapeles.
+  static Future<bool> compartirTexto(String texto) async {
+    final datos = web.ShareData(text: texto);
+    try {
+      if (web.window.navigator.canShare(datos)) {
+        await web.window.navigator.share(datos).toDart;
+        return true;
+      }
+    } catch (_) {
+      // Cancelado o no permitido: se copia.
+    }
+    try {
+      await web.window.navigator.clipboard.writeText(texto).toDart;
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   /// Navegador y sistema (para el informe de errores).
   static String get agente => web.window.navigator.userAgent;
 

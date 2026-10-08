@@ -11,6 +11,7 @@ class Navegador {
   static Future<(String, Uint8List)?> abrir(List<String> tipos) async => _no();
   static bool abrirEnlace(Uri url) => _no();
   static Future<bool> compartirImagen(Uint8List png, String texto) async => _no();
+  static Future<bool> compartirTexto(String texto) async => _no();
   static String get agente => _no();
   static bool get oggOpus => true;
   static String urlDeBytes(Uint8List bytes, String tipo) => _no();

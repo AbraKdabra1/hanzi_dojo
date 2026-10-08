@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import '../datos/datos_app.dart';
 import '../datos/modelos.dart';
 import '../datos/repositorio_habito.dart';
+import '../datos/resumen_beta.dart';
 import '../helpers/sensaciones.dart';
 import '../idioma.dart';
 import '../tema.dart';
@@ -76,9 +77,12 @@ class _PantallaBienvenidaState extends State<PantallaBienvenida> {
     super.dispose();
   }
 
-  /// "Omitir" o "Empezar": queda visto y se cierra.
-  Future<void> _terminar() async {
-    await DatosApp.de(context).marcarTutorialVisto();
+  /// "Omitir" o "Empezar": queda visto y se cierra. Cómo terminó la primera
+  /// vez va en el resumen de la beta (datos/resumen_beta.dart).
+  Future<void> _terminar({bool omitido = false}) async {
+    final repo = DatosApp.de(context);
+    await repo.marcarTutorialVisto();
+    await repo.guardarResultadoTutorial(omitido ? 'omitido' : (_escrito ? 'escrito' : 'terminado'));
     if (mounted) Navigator.of(context).maybePop();
   }
 
@@ -118,7 +122,7 @@ class _PantallaBienvenidaState extends State<PantallaBienvenida> {
                     const Spacer(),
                     if (!_ultima)
                       TextButton(
-                        onPressed: _terminar,
+                        onPressed: () => _terminar(omitido: true),
                         child: Text(tr('Omitir'), style: TextStyle(fontSize: 15, color: c.suave)),
                       )
                     else

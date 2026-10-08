@@ -3,7 +3,6 @@
 //   flutter test test/bienvenida_test.dart
 
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +11,7 @@ import 'package:hanzi_dojo/datos/base_datos.dart';
 import 'package:hanzi_dojo/datos/datos_app.dart';
 import 'package:hanzi_dojo/datos/repositorio.dart';
 import 'package:hanzi_dojo/datos/repositorio_habito.dart';
+import 'package:hanzi_dojo/datos/resumen_beta.dart';
 import 'package:hanzi_dojo/helpers/sensaciones.dart';
 import 'package:hanzi_dojo/painters/geometria.dart';
 import 'package:hanzi_dojo/screens/pantalla_bienvenida.dart';
@@ -82,7 +82,7 @@ void main() {
   }
 
   Future<void> esperarGuardado(WidgetTester tester) async {
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < 10; i++) {
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
       await tester.pump(const Duration(milliseconds: 50));
     }
@@ -138,6 +138,7 @@ void main() {
     await tester.tap(find.text('Empezar'));
     await esperarGuardado(tester);
     expect(await tester.runAsync(repo.tutorialVisto), isTrue);
+    expect(await tester.runAsync(repo.resultadoTutorial), 'escrito');
     await tester.pump(const Duration(seconds: 2)); // vencen los temporizadores del lienzo
   });
 
@@ -146,5 +147,6 @@ void main() {
     await tester.tap(find.text('Omitir'));
     await esperarGuardado(tester);
     expect(await tester.runAsync(repo.tutorialVisto), isTrue);
+    expect(await tester.runAsync(repo.resultadoTutorial), 'omitido');
   });
 }

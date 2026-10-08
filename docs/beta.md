@@ -20,6 +20,18 @@ No necesitas saber chino: si nunca lo has estudiado, tu opinión vale doble.
    desconocido** para tu navegador o tu administrador de archivos.
 4. Las siguientes betas se instalan encima, sin perder tu progreso.
 
+**Versiones nuevas.** Desde la beta 2, la app te pregunta si quieres que te
+avise cuando salga una nueva (lo cambias en Ajustes → Versiones nuevas). Si
+aceptas, en el inicio aparece «Hay una versión nueva» con un botón para
+descargarla; ábrela al terminar y se instala encima. Si tienes la beta 1,
+instala la beta 2 a mano una última vez (pasos de arriba).
+
+¿Prefieres que se actualice sola? Instala
+[Obtainium](https://github.com/ImranR98/Obtainium) (gratis y de código
+abierto), toca **Add app**, pega
+`https://github.com/AbraKdabra1/hanzi_dojo`, activa **Include prereleases**
+y listo: te avisa y la instala cuando sale una versión.
+
 ### iPhone y iPad
 
 Sin computadora y sin Apple ID: abre
@@ -42,11 +54,18 @@ El mismo enlace en Chrome, Edge o Safari. Se puede escribir con el mouse.
 - [ ] **Leer**: un capítulo con 🎧 y cambia la velocidad en la barra de abajo.
 - [ ] **Ajustes → Carácter del día** (app de Android).
 - [ ] **Ajustes → Tus datos → Exportar progreso**: que se guarde el archivo.
+- [ ] Si la app marca mal un trazo que hiciste bien, toca **«¿Ese trazo
+      estaba bien? Avísanos»** debajo del lienzo.
+- [ ] Al final de cada semana: **Ajustes → Enviar mi opinión**.
 
 ## Cómo contarnos
 
-- **Lo más fácil:** un mensaje a quien te invitó, con qué hacías, qué pasó y,
-  si puedes, una captura de pantalla.
+- **Lo más fácil: Ajustes → Enviar mi opinión.** La app arma un resumen de
+  cómo la usas (días, repasos, secciones, trazos que reportaste, errores), le
+  agregas tu comentario y lo compartes por WhatsApp o correo con quien te
+  invitó. Lo ves completo antes de mandarlo.
+- **Un mensaje** a quien te invitó, con qué hacías, qué pasó y, si puedes, una
+  captura de pantalla.
 - **Desde la app:** Ajustes → **Reportar un problema** (abre un formulario de
   GitHub; necesitas una cuenta gratuita). Si la app falló, en Ajustes →
   **Informe de errores** puedes copiar el detalle y pegarlo en tu mensaje.
@@ -60,8 +79,9 @@ Cuatro preguntas que nos ayudan mucho:
 
 ## Privacidad
 
-La app no tiene cuentas ni envía nada por su cuenta: solo sabemos lo que tú
-nos escribas. Ver [privacidad.md](privacidad.md).
+La app no tiene cuentas ni envía nada sobre ti: solo sabemos lo que tú nos
+compartas. Lo único que hace por internet, si lo aceptas, es preguntar a
+GitHub cuál es la versión más reciente. Ver [privacidad.md](privacidad.md).
 
 ## Lo que ya sabemos
 

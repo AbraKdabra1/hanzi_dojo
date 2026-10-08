@@ -85,6 +85,20 @@ final class HanziDojoNativo: NSObject, FlutterPlugin, UIDocumentPickerDelegate {
       }
       UIApplication.shared.open(url, options: [:]) { ok in resultado(ok) }
 
+    case "compartirTexto":
+      guard let texto = args["texto"] as? String, let vc = presentador() else {
+        resultado(false)
+        return
+      }
+      let hoja = UIActivityViewController(activityItems: [texto], applicationActivities: nil)
+      if let globo = hoja.popoverPresentationController {
+        globo.sourceView = vc.view
+        globo.sourceRect = CGRect(x: vc.view.bounds.midX, y: vc.view.bounds.midY, width: 0, height: 0)
+        globo.permittedArrowDirections = []
+      }
+      vc.present(hoja, animated: true)
+      resultado(true)
+
     case "info":
       let info = Bundle.main.infoDictionary ?? [:]
       let datos: [String: String] = [

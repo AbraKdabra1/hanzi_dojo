@@ -22,6 +22,7 @@ import '../datos/modelos.dart';
 import '../datos/repositorio.dart';
 import '../datos/sesion_estudio.dart';
 import '../datos/reporte.dart' show TipoReporte;
+import '../datos/resumen_beta.dart';
 import '../datos/srs.dart';
 import '../tema.dart';
 import '../widgets/animacion_trazos.dart';
@@ -56,6 +57,11 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
   Radical? _radical;
   bool _cargando = true;
   bool _completado = false;
+
+  /// El último trazo que la app rechazó en esta tarjeta (para «¿Ese trazo
+  /// estaba bien?») y si ya se avisó.
+  TrazoReportado? _rechazo;
+  bool _rechazoAvisado = false;
   bool _guardando = false;
   int _errores = 0;
   /// Ajuste caligráfico (de Ajustes); se lee una vez al abrir la sesión.
@@ -96,6 +102,8 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
         _cargando = false;
         _completado = false;
         _errores = 0;
+        _rechazo = null;
+        _rechazoAvisado = false;
         _claveLienzo = GlobalKey();
       });
       _cronometro
@@ -177,6 +185,8 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
                   setState(() {
                     _completado = false;
                     _errores = 0;
+                    _rechazo = null;
+                    _rechazoAvisado = false;
                   });
                 },
               ),
@@ -320,6 +330,17 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
                   _completado = true;
                   _errores = errores;
                 }),
+                onTrazoRechazado: (indice, alReves, puntos) => setState(() {
+                  _rechazo = TrazoReportado(
+                    caracter: c.caracter,
+                    indice: indice,
+                    alReves: alReves,
+                    modoNovato: widget.modoNovato,
+                    momento: DateTime.now(),
+                    puntos: TrazoReportado.simplificar(puntos),
+                  );
+                  _rechazoAvisado = false;
+                }),
               ),
             ),
           ),
@@ -330,13 +351,47 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
 
   // ── Panel inferior: calificación ─────────────────────────────────────────
 
+  /// «¿Ese trazo estaba bien?»: se guarda para el resumen de la beta.
+  Future<void> _avisarTrazo() async {
+    final trazo = _rechazo;
+    if (trazo == null || _rechazoAvisado) return;
+    setState(() => _rechazoAvisado = true);
+    final aviso = ScaffoldMessenger.of(context);
+    await DatosApp.de(context).reportarTrazo(trazo);
+    aviso.showSnackBar(SnackBar(
+      content: Text(tr('¡Gracias! Lo anotamos para revisarlo. Va en tu resumen (Ajustes → Enviar mi opinión).')),
+    ));
+  }
+
+  Widget _botonAvisarTrazo(String texto) => TextButton.icon(
+        style: TextButton.styleFrom(
+          minimumSize: Size.zero,
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          foregroundColor: context.colores.suave,
+        ),
+        icon: const Icon(Icons.flag_outlined, size: 16),
+        label: Text(texto, style: const TextStyle(fontSize: 13)),
+        onPressed: _avisarTrazo,
+      );
+
   Widget _panelInferior() {
     final colores = context.colores;
+    final puedeAvisar = _rechazo != null && !_rechazoAvisado;
     if (!_completado) {
       return Center(
-        child: Text(
-          tr('Escribe el carácter trazo por trazo'),
-          style: TextStyle(color: colores.tenue, fontSize: 15, fontStyle: FontStyle.italic),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              tr('Escribe el carácter trazo por trazo'),
+              style: TextStyle(color: colores.tenue, fontSize: 15, fontStyle: FontStyle.italic),
+            ),
+            if (puedeAvisar) ...[
+              const SizedBox(height: 6),
+              _botonAvisarTrazo(tr('¿Ese trazo estaba bien? Avísanos')),
+            ],
+          ],
         ),
       );
     }
@@ -344,9 +399,17 @@ class _PantallaEstudioState extends State<PantallaEstudio> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          _errores == 0 ? tr('Sin errores ✨') : (_errores == 1 ? tr('1 error de trazo') : tr('{0} errores de trazo', [_errores])),
-          style: TextStyle(fontSize: 13, color: colores.suave),
+        Wrap(
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 4,
+          children: [
+            Text(
+              _errores == 0 ? tr('Sin errores ✨') : (_errores == 1 ? tr('1 error de trazo') : tr('{0} errores de trazo', [_errores])),
+              style: TextStyle(fontSize: 13, color: colores.suave),
+            ),
+            if (puedeAvisar) _botonAvisarTrazo(tr('¿Alguno estaba bien?')),
+          ],
         ),
         const SizedBox(height: 10),
         Row(

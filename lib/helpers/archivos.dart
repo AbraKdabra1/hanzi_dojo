@@ -10,9 +10,11 @@
 //   info    → versión de la app y modelo del teléfono (para el informe de
 //             errores; solo se muestra en pantalla, no se envía a ningún lado).
 //   abrirEnlace → abre una URL en el navegador (reportar un problema).
+//   compartirTexto → el menú Compartir del sistema con un texto (resumen de
+//             la beta).
 //
-// Se usa un canal propio en vez de un paquete externo: son pocas líneas, no
-// agrega dependencias y la app sigue sin pedir permiso de internet.
+// Se usa un canal propio en vez de un paquete externo: son pocas líneas y no
+// agrega dependencias.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -34,6 +36,7 @@ class InfoDispositivo {
     required this.compilacion,
     required this.modelo,
     required this.android,
+    this.abis = const [],
   });
 
   /// Cuando no hay plataforma (pruebas) o falla la consulta.
@@ -47,6 +50,10 @@ class InfoDispositivo {
   /// Versión del sistema: "14 (API 34)" en Android; en iPhone/iPad ya viene
   /// con el nombre ("iOS 18.2", "iPadOS 18.2").
   final String android;
+
+  /// Arquitecturas del procesador, de la preferida a la menos ("arm64-v8a",
+  /// "armeabi-v7a"…). Solo en Android; sirve para descargar el APK correcto.
+  final List<String> abis;
 
   String get sistema => RegExp(r'^\d').hasMatch(android) ? 'Android $android' : android;
 
@@ -87,6 +94,12 @@ class Archivos {
       ? Navegador.abrirEnlace(url)
       : await _canal.invokeMethod<bool>('abrirEnlace', {'url': url.toString()}) ?? false;
 
+  /// Abre el menú Compartir con [texto] (en la web, el del navegador; si no
+  /// lo tiene, se copia). false si no se pudo.
+  static Future<bool> compartirTexto(String texto, {String titulo = ''}) async => kIsWeb
+      ? Navegador.compartirTexto(texto)
+      : await _canal.invokeMethod<bool>('compartirTexto', {'texto': texto, 'titulo': titulo}) ?? false;
+
   static InfoDispositivo? _info;
 
   static Future<InfoDispositivo> info() async {
@@ -101,6 +114,10 @@ class Archivos {
         compilacion: '${r?['compilacion'] ?? '?'}',
         modelo: r?['modelo'] as String? ?? '?',
         android: r?['android'] as String? ?? '?',
+        abis: [
+          for (final a in (r?['abis'] as String? ?? '').split(','))
+            if (a.trim().isNotEmpty) a.trim(),
+        ],
       );
     } on MissingPluginException {
       return InfoDispositivo.desconocida;

@@ -43,6 +43,13 @@ class GeometriaLienzo {
     return Offset(s.width * margen + p.dx * e, s.height * margen + (techo - p.dy) * e);
   }
 
+  /// Lo contrario de [aLienzo]: de píxeles del lienzo a make-me-a-hanzi
+  /// (para guardar un trazo del usuario sin depender del tamaño de pantalla).
+  static Offset deLienzo(Offset p, Size s) {
+    final e = escala(s);
+    return Offset((p.dx - s.width * margen) / e, techo - (p.dy - s.height * margen) / e);
+  }
+
   /// La misma transformación que [aplicar], como matriz para Path.transform.
   static Float64List matriz(Size s) {
     final e = escala(s);
