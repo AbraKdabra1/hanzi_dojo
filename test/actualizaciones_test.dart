@@ -164,8 +164,8 @@ void main() {
       await Actualizaciones.revisar(repo, ahora: hoy.add(const Duration(hours: 5)), info: info, forzar: true);
       expect(consultas, 2);
 
-      // Al día siguiente, otra vez.
-      await Actualizaciones.revisar(repo, ahora: hoy.add(const Duration(days: 1)), info: info);
+      // Al día siguiente (más de 20 h después de la última), otra vez.
+      await Actualizaciones.revisar(repo, ahora: hoy.add(const Duration(days: 1, hours: 2)), info: info);
       expect(consultas, 3);
     });
 
