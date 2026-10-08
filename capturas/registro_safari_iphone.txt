@@ -1,0 +1,37 @@
+18:13:15 [consola debug] Injecting <script> tag. Using callback.
+18:13:15 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+18:13:16 [consola log] Arranque: carpeta de datos
+18:13:18 [consola log] Arranque: registro de errores
+18:13:18 [consola log] Arranque: base de datos
+18:13:20 [consola log] Arranque: ajustes
+18:13:21 [consola log] Arranque: dibujos del fondo
+18:13:21 [consola log] Arranque: listo
+18:13:23 tutorial a los 8.6 s
+18:13:25 captura 00_tutorial
+18:13:28 [consola debug] Injecting <script> tag. Using callback.
+18:13:28 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+18:13:29 [consola log] Arranque: carpeta de datos
+18:13:31 [consola log] Arranque: registro de errores
+18:13:31 [consola log] Arranque: base de datos
+18:13:31 [consola log] Arranque: ajustes
+18:13:31 [consola log] Arranque: dibujos del fondo
+18:13:31 [consola log] Arranque: listo
+18:13:31 primera vez: "Estudiar" a los 3.7 s
+18:13:35 captura 01_inicio
+18:13:35 guardado en IndexedDB: {"bloques":10532,"ms":32}
+18:13:38 captura 02_modo
+18:13:41 captura 03_niveles
+18:13:44 captura 04_hsk
+18:13:44 audio: Ogg Opus "probably", CAF Opus "", ma1 200 1604 bytes
+18:13:44 [consola debug] Injecting <script> tag. Using callback.
+18:13:45 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+18:13:45 [consola log] Arranque: carpeta de datos
+18:13:47 [consola log] Arranque: registro de errores
+18:13:47 [consola log] Arranque: base de datos
+18:13:47 [consola log] Arranque: ajustes
+18:13:47 [consola log] Arranque: dibujos del fondo
+18:13:47 [consola log] Arranque: listo
+18:13:47 segunda vez: "Estudiar" a los 3.1 s
+18:13:50 captura 05_segunda_vez
+18:13:50 sin internet: no se prueba en WebKit de Playwright (sin service workers)
+18:13:50 pasos completos: 5 de 5

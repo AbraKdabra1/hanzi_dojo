@@ -1,0 +1,46 @@
+18:12:09 [consola debug] Injecting <script> tag. Using callback.
+18:12:10 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+18:12:11 [consola log] Arranque: carpeta de datos
+18:12:11 [consola log] Arranque: registro de errores
+18:12:11 [consola log] Arranque: base de datos
+18:12:20 [consola log] Arranque: ajustes
+18:12:21 [consola log] Arranque: dibujos del fondo
+18:12:21 [consola log] Arranque: listo
+18:12:22 tutorial a los 12.8 s
+18:12:24 captura 00_tutorial
+18:12:27 [consola debug] Injecting <script> tag. Using callback.
+18:12:27 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+18:12:27 [consola log] Arranque: carpeta de datos
+18:12:29 [consola log] Arranque: registro de errores
+18:12:29 [consola log] Arranque: base de datos
+18:12:30 [consola log] Arranque: ajustes
+18:12:31 [consola log] Arranque: dibujos del fondo
+18:12:31 [consola log] Arranque: listo
+18:12:31 primera vez: "Estudiar" a los 4.5 s
+18:12:35 captura 01_inicio
+18:12:36 guardado en IndexedDB: {"bloques":10532,"ms":285}
+18:12:39 captura 02_modo
+18:12:42 captura 03_niveles
+18:12:45 captura 04_hsk
+18:12:45 audio: Ogg Opus "probably", CAF Opus "", ma1 200 1604 bytes
+18:12:45 [consola debug] Injecting <script> tag. Using callback.
+18:12:46 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+18:12:46 [consola log] Arranque: carpeta de datos
+18:12:48 [consola log] Arranque: registro de errores
+18:12:48 [consola log] Arranque: base de datos
+18:12:49 [consola log] Arranque: ajustes
+18:12:49 [consola log] Arranque: dibujos del fondo
+18:12:49 [consola log] Arranque: listo
+18:12:50 segunda vez: "Estudiar" a los 5.1 s
+18:12:54 captura 05_segunda_vez
+18:12:57 [consola debug] Injecting <script> tag. Using callback.
+18:12:58 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+18:12:58 [consola log] Arranque: carpeta de datos
+18:13:00 [consola log] Arranque: registro de errores
+18:13:00 [consola log] Arranque: base de datos
+18:13:01 [consola log] Arranque: ajustes
+18:13:02 [consola log] Arranque: dibujos del fondo
+18:13:02 [consola log] Arranque: listo
+18:13:02 sin internet: "Estudiar" a los 5.5 s
+18:13:06 captura 06_sin_internet
+18:13:07 pasos completos: 5 de 5
