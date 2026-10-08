@@ -1,0 +1,181 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// pantalla_errores.dart — Informe de errores (Ajustes → Informe de errores)
+//
+// Muestra los errores que la app guardó en el teléfono (registro_errores.dart),
+// del más reciente al más antiguo. Desde aquí se pueden copiar (para pegarlos
+// en un reporte) o borrar. No se envía nada a ningún lado.
+// ─────────────────────────────────────────────────────────────────────────────
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import '../datos/registro_errores.dart';
+import '../helpers/archivos.dart';
+import '../widgets/comunes.dart';
+import '../widgets/fondo_tinta.dart';
+import '../widgets/tarjeta_vidrio.dart';
+import '../tema.dart';
+import 'pantalla_reporte.dart';
+import '../idioma.dart';
+
+class PantallaErrores extends StatefulWidget {
+  const PantallaErrores({super.key});
+
+  @override
+  State<PantallaErrores> createState() => _PantallaErroresState();
+}
+
+class _PantallaErroresState extends State<PantallaErrores> {
+  List<EntradaError>? _errores;
+  InfoDispositivo _info = InfoDispositivo.desconocida;
+
+  @override
+  void initState() {
+    super.initState();
+    _cargar();
+  }
+
+  Future<void> _cargar() async {
+    final errores = await RegistroErrores.leer();
+    final info = await Archivos.info();
+    if (mounted) {
+      setState(() {
+        _errores = errores;
+        _info = info;
+      });
+    }
+  }
+
+  Future<void> _copiar() async {
+    final texto = RegistroErrores.comoTexto(_errores ?? const [], _info.toString());
+    await Clipboard.setData(ClipboardData(text: texto));
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(tr('Informe copiado. Pégalo en tu reporte.'))),
+    );
+  }
+
+  Future<void> _borrar() async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (contexto) => AlertDialog(
+        title: Text(tr('¿Borrar el informe?')),
+        content: Text(tr('Se borrarán todos los errores guardados.')),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(contexto, false), child: Text(tr('Cancelar'))),
+          FilledButton(onPressed: () => Navigator.pop(contexto, true), child: Text(tr('Borrar'))),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    await RegistroErrores.borrar();
+    await _cargar();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final errores = _errores;
+    final hay = errores != null && errores.isNotEmpty;
+    return FondoTintaChina(
+      child: Scaffold(
+        appBar: BarraSuperior(
+          titulo: tr('Informe de errores'),
+          acciones: [
+            IconButton(
+              icon: Icon(Icons.flag_outlined, color: context.colores.icono),
+              tooltip: tr('Reportar un problema'),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute<void>(builder: (_) => const PantallaReporte()),
+              ),
+            ),
+            if (errores != null)
+              IconButton(
+                icon: Icon(Icons.copy_rounded, color: context.colores.icono),
+                tooltip: tr('Copiar informe'),
+                onPressed: _copiar,
+              ),
+            if (hay)
+              IconButton(
+                icon: Icon(Icons.delete_outline, color: context.colores.icono),
+                tooltip: tr('Borrar'),
+                onPressed: _borrar,
+              ),
+          ],
+        ),
+        body: errores == null
+            ? Center(child: CircularProgressIndicator(color: context.colores.icono))
+            : ListView(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+                children: [
+                  TarjetaVidrio(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          tr('Si algo falla, la app guarda aquí los detalles. Nada se envía solo: si quieres reportarlo, cópialo y pégalo en tu reporte.'),
+                          style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.35),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(_info.toString(), style: TextStyle(fontSize: 12, color: context.colores.tenue)),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  if (!hay)
+                    MensajeCentrado(
+                      emoji: '✅',
+                      titulo: tr('Sin errores registrados'),
+                      texto: tr('Todo ha funcionado bien hasta ahora.'),
+                    )
+                  else
+                    for (final e in errores) ...[
+                      _TarjetaError(error: e),
+                      const SizedBox(height: 8),
+                    ],
+                ],
+              ),
+      ),
+    );
+  }
+}
+
+class _TarjetaError extends StatelessWidget {
+  const _TarjetaError({required this.error});
+
+  final EntradaError error;
+
+  @override
+  Widget build(BuildContext context) {
+    final veces = error.veces > 1 ? ' · ×${error.veces}' : '';
+    return TarjetaVidrio(
+      child: Theme(
+        // Sin las líneas que ExpansionTile dibuja al abrirse.
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          tilePadding: EdgeInsets.zero,
+          childrenPadding: const EdgeInsets.only(bottom: 4),
+          title: Text(
+            error.mensaje,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          ),
+          subtitle: Text(
+            '${RegistroErrores.fechaCorta(error.momento)} · ${error.origen}$veces',
+            style: TextStyle(fontSize: 12, color: context.colores.tenue),
+          ),
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: SelectableText(
+                error.pila.isEmpty ? error.mensaje : '${error.mensaje}\n\n${error.pila}',
+                style: const TextStyle(fontFamily: 'monospace', fontSize: 11, height: 1.3),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

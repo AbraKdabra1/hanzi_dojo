@@ -1,0 +1,182 @@
+clave: mitos-chinos
+titulo: 中国神话
+titulo_es: Mitos chinos
+nivel: 2
+tipo: adaptado
+descripcion: Cómo nació el mundo según la tradición china, quién hizo a las personas, por qué hay un solo sol y quién vive en la Luna. Cinco mitos con los caracteres de HSK 1 y 2.
+fuente: Mitos de la antigua China recogidos en el «Clásico de las montañas y los mares», el «Huainanzi» y otros textos de hace más de dos mil años (dominio público). Versión en chino graduado escrita para Meizi Hanzi.
+
+## 盘古开天
+titulo_es: Pangu separa el cielo de la tierra
+origen: El mito más antiguo sobre el origen del mundo; aparece por escrito en el siglo III.
+palabras: 巨人 = gigante; 鸡蛋 = huevo; 推 = empujar; 变成 = convertirse en
+
+很久很久以前，天和地还在一起，像一个很大很大的鸡蛋。里面黑黑的，什么也看不见。
+> Hace muchísimo tiempo, el cielo y la tierra todavía estaban juntos, como un huevo enorme. Adentro todo estaba oscuro y no se veía nada.
+
+在这个"鸡蛋"里，睡着[zhe]一个巨人。他叫{盘古}。他睡了一万八千年。
+> Dentro de ese «huevo» dormía un gigante. Se llamaba Pangu. Durmió dieciocho mil años.
+
+有一天，盘古醒了。他觉得这里又黑又小，很不舒服，就用力一推——"鸡蛋"破了！
+> Un día, Pangu despertó. Sintió que aquel lugar era oscuro y pequeño, muy incómodo, así que empujó con fuerza... ¡y el «huevo» se rompió!
+
+轻的东西慢慢往上走，变成了天；重[zhòng]的东西慢慢往下走，变成了地。
+> Lo ligero subió poco a poco y se convirtió en el cielo; lo pesado bajó poco a poco y se convirtió en la tierra.
+
+盘古怕天和地又合在一起，就站在中间，用手把天往上推，用脚站在地上。
+> Pangu temía que el cielo y la tierra se juntaran otra vez, así que se quedó en medio: con las manos empujaba el cielo hacia arriba y con los pies se apoyaba en la tierra.
+
+以后，天一天比一天高，地一天比一天低，盘古也一天比一天高。
+> Desde entonces, el cielo estaba cada día más alto, la tierra cada día más baja y Pangu cada día más grande.
+
+就这样，又过了一万八千年。天非常高了，地也非常低了。
+> Así pasaron otros dieciocho mil años. El cielo ya estaba altísimo y la tierra, muy abajo.
+
+最后，盘古太累了，倒在了地上，再也没有起来。
+> Al final, Pangu estaba tan cansado que cayó al suelo y ya no volvió a levantarse.
+
+他的两只眼睛变成了太阳和月亮，他的头发变成了天上的星星。
+> Sus dos ojos se convirtieron en el sol y la luna, y su cabello en las estrellas del cielo.
+
+他的身体变成了大山，他的血变成了河，他说话的声音变成了天上的雷。
+> Su cuerpo se convirtió en las montañas, su sangre en los ríos y su voz en el trueno del cielo.
+
+从那时候起，世界上有了山，有了河，有了太阳和月亮。这就是"盘古开天"的故事。
+> Desde entonces, el mundo tuvo montañas, ríos, sol y luna. Esa es la historia de «Pangu separa el cielo de la tierra».
+
+## 女娲造人
+titulo_es: Nüwa crea a las personas
+origen: Uno de los mitos más antiguos de China; ya se cuenta en textos de la dinastía Han.
+palabras: 泥 = barro; 补 = remendar, reparar; 洞 = agujero; 害怕 = tener miedo
+
+盘古以后，地上有了山和河，有了花和草，有了鸟和鱼，可是还没有人。
+> Después de Pangu, en la tierra había montañas y ríos, flores y hierba, pájaros y peces, pero todavía no había personas.
+
+有一位女神，叫{女娲}。她一个人在河边走来走去，觉得一个人太没意思了。
+> Había una diosa llamada Nüwa. Paseaba sola por la orilla del río y sentía que estar sola era muy aburrido.
+
+她在水里看到了自己的样子，就想："我可以做一些像我一样的小人。"
+> Vio su reflejo en el agua y pensó: «Puedo hacer unas personitas parecidas a mí».
+
+她用河边的黄泥做了一个小人，放在地上。小人一下子就活了，还叫她"妈妈"！
+> Con el barro amarillo de la orilla hizo una personita y la puso en el suelo. ¡La personita cobró vida en ese instante y hasta la llamó «mamá»!
+
+女娲很高兴，就做了一个又一个。后来她累了，就拿一根长[cháng]长的草，放进泥里，用力一拉，地上就出现了很多很多人。
+> Nüwa se puso muy contenta e hizo una tras otra. Cuando se cansó, tomó una larga hierba, la metió en el barro y tiró con fuerza: en la tierra aparecieron muchísimas personas.
+
+有一年，天上破了一个大洞。大水从天上流下来，山上着[zháo]了大火，人们都非常害怕。
+> Un año se abrió un gran agujero en el cielo. Caía agua a raudales desde arriba, los montes se incendiaron y la gente tenía muchísimo miedo.
+
+女娲看到她的孩子们这么难过，心里很疼。她说："我要把天补好！"
+> Nüwa vio a sus hijos tan tristes que le dolió el corazón. Dijo: «¡Voy a remendar el cielo!».
+
+她找来了五种颜色的石头，用大火把石头变成了水，再用这些水把天上的洞补上了。
+> Reunió piedras de cinco colores, las derritió con un gran fuego y con ese líquido tapó el agujero del cielo.
+
+天补好了，大水不再流了，大火也没有了。人们又可以好好地生活了。
+> El cielo quedó reparado: el agua dejó de caer y el fuego se apagó. La gente pudo volver a vivir tranquila.
+
+所以，很多中国人说：女娲是所有人的妈妈。
+> Por eso muchos chinos dicen que Nüwa es la madre de todas las personas.
+
+## 后羿射日
+titulo_es: Houyi derriba los soles
+origen: Mito recogido en el «Huainanzi» (siglo II a. C.).
+palabras: 射 = disparar (con arco); 弓 = arco; 箭 = flecha; 感谢 = agradecer
+
+很久以前，天上有十个太阳。它们是十个兄弟，一天出来一个，给地上的人们光和热。
+> Hace mucho tiempo había diez soles en el cielo. Eran diez hermanos y salía uno cada día para dar luz y calor a la gente de la tierra.
+
+可是有一天，十个太阳想一起出来玩。
+> Pero un día, los diez soles quisieron salir a jugar juntos.
+
+天上一下子有了十个太阳，地上热得不得了。河里没有水了，地里的菜都干[gān]了，人们也快活[huó]不下去了。
+> De pronto había diez soles en el cielo y en la tierra hacía un calor terrible. Los ríos se secaron, las verduras de los campos se marchitaron y la gente ya casi no podía sobrevivir.
+
+那时候，有一个人叫{后羿}。他射箭射得非常好。
+> En aquel tiempo había un hombre llamado Houyi. Disparaba flechas con muchísima puntería.
+
+后羿看到人们这么难过，就拿起他的弓，走到最高的山上。
+> Houyi vio a la gente sufrir tanto que tomó su arco y subió a la montaña más alta.
+
+他一箭一个，一个，两个，三个……一下子射下来九个太阳！
+> Una flecha, un sol: uno, dos, tres... ¡en un momento derribó nueve soles!
+
+最后一个太阳很害怕，说："请别射我！我以后天天早上出来，晚上回去，给人们光和热。"
+> El último sol, muy asustado, dijo: «¡Por favor, no me dispares! Desde ahora saldré cada mañana y me iré cada noche, y daré luz y calor a la gente».
+
+后羿就没有射它。从那以后，天上只有一个太阳了。
+> Así que Houyi no le disparó. Desde entonces solo hay un sol en el cielo.
+
+人们又可以种[zhòng]地、吃饭、好好地过日子了。大家都非常感谢后羿。
+> La gente pudo volver a cultivar, comer y vivir en paz. Todos le agradecieron muchísimo a Houyi.
+
+## 嫦娥奔月
+titulo_es: Chang'e vuela a la Luna
+origen: Mito antiguo, contado en el «Huainanzi»; es el origen de la Fiesta del Medio Otoño.
+palabras: 妻子 = esposa; 神仙 = inmortal (ser divino); 窗户 = ventana; 中秋节 = Fiesta del Medio Otoño
+
+后羿有一个很漂亮的妻子，叫{嫦娥}。他们非常相爱。
+> Houyi tenía una esposa muy hermosa llamada Chang'e. Se amaban muchísimo.
+
+一位神仙送给后羿一种药。吃了这种药，人就可以飞到天上，永远不会老。
+> Un inmortal le regaló a Houyi una medicina. Quien la tomara podría volar al cielo y nunca envejecería.
+
+可是后羿不想离开嫦娥，就让嫦娥把药放好。
+> Pero Houyi no quería separarse de Chang'e, así que le pidió a ella que guardara bien la medicina.
+
+后羿有一个学生，叫{逢蒙}。他是一个坏人。他知道了这件事，就想把药拿走。
+> Houyi tenía un alumno llamado Fengmeng. Era un hombre malo. Se enteró de lo de la medicina y quiso robarla.
+
+八月十五那天，后羿出去了，不在家。逢蒙来到他们家，要嫦娥把药给他。
+> El día quince del octavo mes, Houyi salió y no estaba en casa. Fengmeng llegó y le exigió a Chang'e que le diera la medicina.
+
+嫦娥不想让坏人拿到药，就自己把药吃了。
+> Chang'e no quería que el malvado se quedara con ella, así que se la tomó.
+
+她的身体变得很轻很轻，慢慢地飞了起来，飞出了窗户，一直飞到了月亮上。
+> Su cuerpo se volvió ligerísimo; poco a poco se elevó, salió volando por la ventana y no se detuvo hasta llegar a la luna.
+
+后羿回到家，找不到嫦娥了。他向天上一看，月亮又大又亮[liàng]，上面好像有嫦娥的影子。
+> Cuando Houyi volvió a casa, no encontró a Chang'e. Miró al cielo: la luna estaba grande y brillante, y en ella parecía verse la silueta de Chang'e.
+
+从那以后，每年八月十五，人们都会一边看月亮，一边想家里的人。这一天就是中秋节。
+> Desde entonces, cada quince del octavo mes, la gente mira la luna mientras piensa en su familia. Ese día es la Fiesta del Medio Otoño.
+
+## 精卫填海
+titulo_es: Jingwei quiere llenar el mar
+origen: Mito del «Clásico de las montañas y los mares», escrito hace más de dos mil años.
+palabras: 海 = mar; 填 = rellenar; 翻 = volcar; 一直 = sin parar, siempre
+
+很久以前，{炎帝}有一个小女儿，叫{女娃}。
+> Hace mucho tiempo, el emperador Yan tenía una hija pequeña llamada Nüwa (女娃).
+
+女娃很喜欢大海。有一天，她一个人坐着小船去东海玩。
+> A Nüwa le encantaba el mar. Un día se fue sola en una barquita a jugar al mar del Este.
+
+海上一下子起了大风，大水把小船打翻了。女娃再也没有回来。
+> De repente se levantó un fuerte viento en el mar y el agua volcó la barquita. Nüwa nunca regresó.
+
+女娃变成了一只小鸟。她的头上有花，嘴是白的，脚是红的。她天天叫着"精卫、精卫"，人们就叫她{精卫}。
+> Nüwa se convirtió en un pajarito. Tenía la cabeza con dibujos de colores, el pico blanco y las patas rojas. Cada día cantaba «jingwei, jingwei», así que la gente la llamó Jingwei.
+
+精卫对大海说："大海，你太坏了！我要把你填平！"
+> Jingwei le dijo al mar: «¡Mar, eres muy malo! ¡Voy a llenarte hasta dejarte plano!».
+
+她天天从西山上找来小石头和小树，飞到东海，把它们放进海里。
+> Cada día recogía piedritas y ramitas en los montes del Oeste, volaba hasta el mar del Este y las dejaba caer en el agua.
+
+一次，两次，三次……一年，两年，三年……
+> Una vez, dos veces, tres veces... un año, dos años, tres años...
+
+大海笑她："小鸟，你别做了！一百万年，你也填不平我！"
+> El mar se reía de ella: «¡Pajarito, ya déjalo! ¡Ni en un millón de años podrás llenarme!».
+
+精卫说："一千万年、一万万年，我也要填！"
+> Jingwei respondió: «¡Aunque sean diez millones de años, o cien millones, voy a llenarte!».
+
+她没有停下来，一直飞来飞去，飞来飞去……
+> No se detuvo: siguió volando de ida y vuelta, de ida y vuelta...
+
+今天，中国人用"精卫填海"说那些不怕难、一直做下去的人。
+> Hoy, los chinos dicen «Jingwei llena el mar» para hablar de quienes no le temen a lo difícil y nunca se rinden.

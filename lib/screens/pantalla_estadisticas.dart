@@ -1,5 +1,48 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// pantalla_estadisticas.dart — Mi progreso
+//
+// De arriba hacia abajo:
+//   · Cifras: caracteres estudiados, dominados, repasos para hoy, racha de
+//     días seguidos y minutos de esta semana.
+//   · Calendario de los últimos 4 meses: cada cuadrito es un día; más oscuro =
+//     más repasos (un solo tono, de claro a oscuro). Al tocarlo dice cuántos.
+//   · Últimos 7 días: barras con los repasos de cada día.
+//   · Precisión: repasos sin ningún trazo fallado (novato y experto).
+//   · Los caracteres que más te cuestan, con un botón para practicarlos.
+//   · Los trazos que más fallas, dibujados en rojo dentro de su carácter.
+//   · Práctica con audio: aciertos por ejercicio y qué tonos confundes.
+//   · Avance por nivel HSK (caracteres y vocabulario).
+// Todo sale del historial de repasos (fase 1) y de los ejercicios (fase 5).
+// ─────────────────────────────────────────────────────────────────────────────
+
 import 'package:flutter/material.dart';
-import '../database/db_helper.dart';
+
+import '../datos/datos_app.dart';
+import '../datos/estadisticas.dart';
+import '../datos/modelos.dart';
+import '../datos/practica.dart';
+import '../datos/repositorio.dart';
+import '../datos/repositorio_habito.dart';
+import '../datos/repositorio_practica.dart';
+import '../helpers/cache_trazos.dart';
+import '../painters/geometria.dart';
+import '../widgets/comunes.dart';
+import '../widgets/ejercicio.dart';
+import '../widgets/fondo_tinta.dart';
+import '../widgets/tarjeta_vidrio.dart';
+import '../tema.dart';
+import 'pantalla_estudio.dart';
+import '../idioma.dart';
+
+/// Rampa de un solo tono (verde), de poco a mucho. El primero es "sin nada".
+const _rampaClara = [Color(0x14000000), Color(0xFFC8E6C9), Color(0xFF81C784), Color(0xFF43A047), Color(0xFF1B5E20)];
+
+/// De noche la rampa va de verde apagado a verde vivo (más días = más brillo).
+const _rampaOscura = [Color(0x1FFFFFFF), Color(0xFF0E4429), Color(0xFF006D32), Color(0xFF26A641), Color(0xFF39D353)];
+
+List<Color> _rampaDe(BuildContext context) => context.colores.oscuro ? _rampaOscura : _rampaClara;
+
+String _fecha(DateTime d) => '${diasCortos[d.weekday - 1]} ${d.day} ${mesesCortos[d.month - 1]}';
 
 class PantallaEstadisticas extends StatefulWidget {
   const PantallaEstadisticas({super.key});
@@ -9,131 +52,613 @@ class PantallaEstadisticas extends StatefulWidget {
 }
 
 class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
-  List<Map<String, dynamic>> _datosPorNivel = [];
-  bool _cargando = true;
+  List<AvanceNivel>? _niveles;
+  int _total = 0;
+  int _pendientes = 0;
+  List<DiaActividad> _actividad = const [];
+  Racha _racha = const Racha(actual: 0, maxima: 0);
+  Precision? _precision;
+  List<CaracterDificil> _dificiles = const [];
+  List<(TrazoFallado, Caracter?)> _trazos = const [];
+  List<ResumenEjercicio> _ejercicios = const [];
+  List<ConfusionTono> _confusiones = const [];
+  Map<int, AvancePalabras> _palabras = const {};
+  Set<DateTime> _protegidos = const {};
 
   @override
   void initState() {
     super.initState();
-    _cargarDatos();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _cargar());
   }
 
-  Future<void> _cargarDatos() async {
-    final db = await DatabaseHelper.instance.database;
-    // ✅ CAMBIO: nivel → nivel_hsk
-    final stats = await db.rawQuery('''
-      SELECT nivel_hsk,
-             COUNT(id) as total,
-             SUM(CASE WHEN veces_visto > 0 THEN 1 ELSE 0 END) as estudiados
-      FROM caracteres
-      GROUP BY nivel_hsk
-      ORDER BY nivel_hsk ASC
-    ''');
-    if (mounted) {
-      setState(() {
-        _datosPorNivel = stats;
-        _cargando      = false;
-      });
-    }
+  Future<void> _cargar() async {
+    final repo = DatosApp.de(context);
+    final hoy = DateTime.now();
+    final niveles = await repo.avancePorNivel();
+    final total = await repo.totalEstudiados();
+    final pendientes = await repo.repasosPendientes();
+    final actividad = await repo.actividadPorDia();
+    final precision = await repo.precision();
+    final dificiles = await repo.caracteresDificiles();
+    final trazos = <(TrazoFallado, Caracter?)>[
+      for (final t in await repo.trazosFallados()) (t, await repo.caracterConTrazos(t.caracter)),
+    ];
+    final ejercicios = await repo.resumenEjercicios();
+    final confusiones = await repo.confusionTonos();
+    final palabras = {for (final a in await repo.avancePalabras()) a.nivel: a};
+    final racha = await repo.rachaConProtector(ahora: hoy);
+    final protegidos = (await repo.diasProtegidos()).toSet();
+    if (!mounted) return;
+    setState(() {
+      _ejercicios = ejercicios;
+      _confusiones = confusiones;
+      _palabras = palabras;
+      _niveles = niveles;
+      _total = total;
+      _pendientes = pendientes;
+      _actividad = actividad;
+      _racha = racha;
+      _protegidos = protegidos;
+      _precision = precision;
+      _dificiles = dificiles;
+      _trazos = trazos;
+    });
+  }
+
+  Future<void> _practicar(Caracter c) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute<void>(builder: (_) => PantallaEstudio(filtro: FiltroEstudio.unico(c.id), modoNovato: true)),
+    );
+    _cargar();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text('Mi Progreso',
-            style: TextStyle(
-                color: Colors.black87, fontWeight: FontWeight.w600)),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios,
-              color: Colors.black87, size: 20),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: _cargando
-          ? const Center(
-              child: CircularProgressIndicator(color: Colors.black))
-          : ListView.builder(
-              padding: const EdgeInsets.all(20),
-              itemCount: _datosPorNivel.length,
-              itemBuilder: (context, index) {
-                final d = _datosPorNivel[index];
-                // ✅ CAMBIO: nivel_hsk en lugar de nivel
-                final int nivel      = d['nivel_hsk'];
-                final int total      = d['total'];
-                final int estudiados = d['estudiados'] ?? 0;
-                final double pct =
-                    total > 0 ? estudiados / total : 0.0;
-
-                // Solo mostrar niveles 1-7
-                if (nivel < 1 || nivel > 7) {
-                  return const SizedBox.shrink();
-                }
-
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 20),
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.grey.shade100),
-                  ),
-                  child: Row(
+    final niveles = _niveles;
+    final hoy = DateTime.now();
+    final lunes = Estadisticas.lunes(hoy);
+    final minutosSemana =
+        _actividad.where((d) => !d.dia.isBefore(lunes)).fold(0, (s, d) => s + d.segundos) ~/ 60;
+    return FondoTintaChina(
+      child: Scaffold(
+        appBar: BarraSuperior(titulo: tr('Mi progreso')),
+        body: niveles == null
+            ? Center(child: CircularProgressIndicator(color: context.colores.icono))
+            : ListView(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+                children: [
+                  Row(
                     children: [
-                      // Dona de progreso
-                      SizedBox(
-                        width: 60,
-                        height: 60,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            CircularProgressIndicator(
-                              value: pct,
-                              strokeWidth: 6,
-                              backgroundColor: Colors.grey.shade200,
-                              color: Colors.black87,
-                            ),
-                            Text(
-                              "${(pct * 100).toStringAsFixed(0)}%",
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 20),
+                      Expanded(child: _Cifra(valor: '$_total', etiqueta: tr('caracteres estudiados'))),
+                      const SizedBox(width: 10),
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              nivel == 7
-                                  ? "HSK 7-9 (Avanzado)"
-                                  : "Nivel HSK $nivel",
-                              style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              "$estudiados de $total hanzi aprendidos",
-                              style: TextStyle(
-                                  color: Colors.grey.shade600,
-                                  fontSize: 14),
-                            ),
-                          ],
+                        child: _Cifra(
+                          valor: '${niveles.fold(0, (s, n) => s + n.dominados)}',
+                          etiqueta: 'dominados',
                         ),
                       ),
+                      const SizedBox(width: 10),
+                      Expanded(child: _Cifra(valor: '$_pendientes', etiqueta: tr('repasos para hoy'))),
                     ],
                   ),
-                );
-              },
-            ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _Cifra(
+                          valor: '🔥 ${_racha.actual}',
+                          etiqueta: _racha.actual == 1 ? tr('día seguido') : tr('días seguidos'),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(child: _Cifra(valor: '${_racha.maxima}', etiqueta: tr('racha más larga'))),
+                      const SizedBox(width: 10),
+                      Expanded(child: _Cifra(valor: '$minutosSemana', etiqueta: tr('minutos esta semana'))),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  if (_actividad.isEmpty)
+                    TarjetaVidrio(
+                      child: Text(
+                        tr('Cuando practiques, aquí verás tu calendario, tu racha y los caracteres y trazos que más te cuestan.'),
+                        style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.35),
+                      ),
+                    )
+                  else ...[
+                    _Seccion(
+                      titulo: tr('Tu calendario'),
+                      child: _Calendario(actividad: _actividad, hoy: hoy, protegidos: _protegidos),
+                    ),
+                    _Seccion(
+                      titulo: tr('Últimos 7 días'),
+                      child: _UltimosDias(actividad: _actividad, hoy: hoy),
+                    ),
+                    if (_precision case final p? when p.total != null)
+                      _Seccion(titulo: tr('Precisión (últimos 30 días)'), child: _VistaPrecision(precision: p)),
+                    if (_dificiles.isNotEmpty)
+                      _Seccion(
+                        titulo: tr('Los que más te cuestan'),
+                        child: Column(
+                          children: [
+                            for (final d in _dificiles) _FilaDificil(dificil: d, onPracticar: () => _practicar(d.caracter)),
+                          ],
+                        ),
+                      ),
+                    if (_trazos.isNotEmpty)
+                      _Seccion(
+                        titulo: tr('Los trazos que más fallas'),
+                        child: Column(
+                          children: [
+                            for (final (t, c) in _trazos)
+                              _FilaTrazo(trazo: t, caracter: c, onPracticar: c == null ? null : () => _practicar(c)),
+                          ],
+                        ),
+                      ),
+                    if (_ejercicios.any((e) => e.total > 0))
+                      _Seccion(
+                        titulo: tr('Práctica con audio (últimos 30 días)'),
+                        child: _VistaPractica(resumen: _ejercicios, confusiones: _confusiones),
+                      ),
+                  ],
+                  const SizedBox(height: 6),
+                  for (final n in niveles) ...[
+                    TarjetaVidrio(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(children: [
+                            EtiquetaNivel(nivel: n.nivel),
+                            const Spacer(),
+                            Text('${(n.fraccion * 100).round()} %',
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+                          ]),
+                          const SizedBox(height: 10),
+                          BarraAvance(valor: n.estudiados, total: n.total, color: EtiquetaNivel.colorPara(context, n.nivel)),
+                          const SizedBox(height: 4),
+                          Text(tr('{0} dominados', [n.dominados]),
+                              style: TextStyle(fontSize: 11, color: context.colores.tenue)),
+                          if (_palabras[n.nivel] case final w? when w.estudiadas > 0) ...[
+                            const SizedBox(height: 8),
+                            Text(tr('Vocabulario'), style: TextStyle(fontSize: 11, color: context.colores.tenue)),
+                            const SizedBox(height: 4),
+                            BarraAvance(
+                              valor: w.estudiadas,
+                              total: w.total,
+                              color: EtiquetaNivel.colorPara(context, n.nivel).withValues(alpha: 0.6),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ],
+              ),
+      ),
     );
   }
+}
+
+// ─── Piezas ──────────────────────────────────────────────────────────────────
+
+/// Aciertos de cada ejercicio con audio y los tonos que más confundes.
+class _VistaPractica extends StatelessWidget {
+  const _VistaPractica({required this.resumen, required this.confusiones});
+
+  final List<ResumenEjercicio> resumen;
+  final List<ConfusionTono> confusiones;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colores;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final r in resumen)
+          if (r.total > 0)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: [
+                  SizedBox(width: 120, child: Text(TipoEjercicio.nombre(r.tipo), style: const TextStyle(fontSize: 13))),
+                  Expanded(
+                    child: LinearProgressIndicator(
+                      value: r.precision ?? 0,
+                      minHeight: 6,
+                      borderRadius: BorderRadius.circular(4),
+                      backgroundColor: c.separador,
+                      color: ColoresRespuesta.bien(context),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    width: 64,
+                    child: Text(tr('{0} % de {1}', [((r.precision ?? 0) * 100).round(), r.total]),
+                        textAlign: TextAlign.end, style: TextStyle(fontSize: 11, color: c.tenue)),
+                  ),
+                ],
+              ),
+            ),
+        if (confusiones.isNotEmpty) ...[
+          const SizedBox(height: 6),
+          Text(tr('Tonos que confundes'), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: c.suave)),
+          const SizedBox(height: 6),
+          for (final k in confusiones)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Row(
+                children: [
+                  ContornoTono(tono: k.esperado, ancho: 26, alto: 14),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      tr('Oyes el {0}.º y eliges el {1}.º ({2} veces)', [k.esperado, k.elegido, k.veces]),
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                  ),
+                  ContornoTono(tono: k.elegido, ancho: 26, alto: 14),
+                ],
+              ),
+            ),
+        ],
+      ],
+    );
+  }
+}
+
+class _Cifra extends StatelessWidget {
+  const _Cifra({required this.valor, required this.etiqueta});
+
+  final String valor;
+  final String etiqueta;
+
+  @override
+  Widget build(BuildContext context) {
+    return TarjetaVidrio(
+      relleno: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+      child: Column(
+        children: [
+          Text(valor, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+          const SizedBox(height: 2),
+          Text(etiqueta,
+              textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: context.colores.tenue)),
+        ],
+      ),
+    );
+  }
+}
+
+class _Seccion extends StatelessWidget {
+  const _Seccion({required this.titulo, required this.child});
+
+  final String titulo;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: TarjetaVidrio(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(titulo, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 10),
+            child,
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Calendario tipo mapa de calor: columnas = semanas (lunes arriba), las
+/// últimas [semanas]. Cada cuadrito tiene su tooltip con el detalle del día.
+class _Calendario extends StatelessWidget {
+  const _Calendario({required this.actividad, required this.hoy, this.protegidos = const {}});
+
+  final List<DiaActividad> actividad;
+  final DateTime hoy;
+
+  /// Días que cubrió el protector de racha (se marcan con un borde azul).
+  final Set<DateTime> protegidos;
+
+  static const semanas = 18;
+  static const separacion = 2.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final porDia = {for (final d in actividad) d.dia: d};
+    final hoyDia = DateTime(hoy.year, hoy.month, hoy.day);
+    final primerLunes = Estadisticas.lunes(hoyDia).subtract(const Duration(days: 7 * (semanas - 1)));
+    final etiqueta = TextStyle(fontSize: 10, color: context.colores.tenue);
+
+    return LayoutBuilder(builder: (context, restricciones) {
+      const anchoDias = 14.0;
+      final lado = ((restricciones.maxWidth - anchoDias) / semanas - separacion).clamp(6.0, 22.0);
+      DateTime diaDe(int semana, int fila) =>
+          DateTime(primerLunes.year, primerLunes.month, primerLunes.day + semana * 7 + fila);
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Meses: sobre la semana donde empieza cada uno.
+          Row(children: [
+            const SizedBox(width: anchoDias),
+            for (int s = 0; s < semanas; s++)
+              SizedBox(
+                width: lado + separacion,
+                child: Builder(builder: (_) {
+                  final inicio = diaDe(s, 0);
+                  final nuevo = s == 0 || diaDe(s - 1, 0).month != inicio.month;
+                  return nuevo
+                      ? Text(mesesCortos[inicio.month - 1], style: etiqueta, softWrap: false, overflow: TextOverflow.visible)
+                      : const SizedBox.shrink();
+                }),
+              ),
+          ]),
+          const SizedBox(height: 3),
+          for (int fila = 0; fila < 7; fila++)
+            Row(children: [
+              SizedBox(
+                width: anchoDias,
+                height: lado + separacion,
+                child: fila.isEven ? Text(diasLetra[fila], style: etiqueta) : null,
+              ),
+              for (int s = 0; s < semanas; s++)
+                Builder(builder: (_) {
+                  final dia = diaDe(s, fila);
+                  if (dia.isAfter(hoyDia)) return SizedBox(width: lado + separacion);
+                  final a = porDia[dia];
+                  final n = a?.repasos ?? 0;
+                  final protegido = protegidos.contains(dia);
+                  return Tooltip(
+                    message: n == 0
+                        ? '${_fecha(dia)} · ${protegido ? tr('protegido 🛡️') : tr('sin repasos')}'
+                        : tr('{0} · {1} · {2} min', [_fecha(dia), n == 1 ? tr('1 repaso') : tr('{0} repasos', [n]), a!.minutos]),
+                    triggerMode: TooltipTriggerMode.tap,
+                    child: Container(
+                      width: lado,
+                      height: lado,
+                      margin: const EdgeInsets.only(right: separacion, bottom: separacion),
+                      decoration: BoxDecoration(
+                        color: _rampaDe(context)[Estadisticas.nivelCalendario(n)],
+                        borderRadius: BorderRadius.circular(3),
+                        border: dia == hoyDia
+                            ? Border.all(color: context.colores.icono, width: 1.2)
+                            : protegido
+                                ? Border.all(color: const Color(0xFF42A5F5), width: 1.4)
+                                : null,
+                      ),
+                    ),
+                  );
+                }),
+            ]),
+          const SizedBox(height: 6),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(tr('Menos '), style: etiqueta),
+              for (final c in _rampaDe(context))
+                Container(
+                  width: 10,
+                  height: 10,
+                  margin: const EdgeInsets.only(left: 2),
+                  decoration: BoxDecoration(color: c, borderRadius: BorderRadius.circular(2)),
+                ),
+              Text(tr('  Más'), style: etiqueta),
+            ],
+          ),
+        ],
+      );
+    });
+  }
+}
+
+/// Barras de los últimos 7 días (repasos). Hoy va resaltado; el resto en gris.
+class _UltimosDias extends StatelessWidget {
+  const _UltimosDias({required this.actividad, required this.hoy});
+
+  final List<DiaActividad> actividad;
+  final DateTime hoy;
+
+  @override
+  Widget build(BuildContext context) {
+    final porDia = {for (final d in actividad) d.dia: d};
+    final hoyDia = DateTime(hoy.year, hoy.month, hoy.day);
+    final dias = [for (int i = 6; i >= 0; i--) DateTime(hoyDia.year, hoyDia.month, hoyDia.day - i)];
+    final maximo = dias.map((d) => porDia[d]?.repasos ?? 0).fold(1, (a, b) => a > b ? a : b);
+    final deHoy = porDia[hoyDia];
+    final etiqueta = TextStyle(fontSize: 11, color: context.colores.suave);
+    const alto = 90.0;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          // Barra más alta + el número de hoy encima + la letra del día.
+          height: alto + 44,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              for (final d in dias)
+                Expanded(
+                  child: Tooltip(
+                    message:
+                        tr('{0} · {1} repasos · {2} min', [_fecha(d), porDia[d]?.repasos ?? 0, porDia[d]?.minutos ?? 0]),
+                    triggerMode: TooltipTriggerMode.tap,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        if (d == hoyDia && (porDia[d]?.repasos ?? 0) > 0)
+                          Text('${porDia[d]!.repasos}',
+                              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700)),
+                        const SizedBox(height: 2),
+                        // Flexible: con letra grande del teléfono la barra
+                        // se acorta en vez de desbordar la columna.
+                        Flexible(
+                          child: Container(
+                            width: 18,
+                            height: ((porDia[d]?.repasos ?? 0) / maximo * alto).clamp(2.0, alto),
+                            decoration: BoxDecoration(
+                              color: d == hoyDia ? _rampaDe(context)[3] : const Color(0xFF9E9E9E),
+                              borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(diasLetra[d.weekday - 1],
+                            style: etiqueta.copyWith(fontWeight: d == hoyDia ? FontWeight.w800 : FontWeight.w400)),
+                      ],
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          deHoy == null ? tr('Hoy aún no practicas.') : tr('Hoy: {0} repasos en {1} min.', [deHoy.repasos, deHoy.minutos]),
+          style: etiqueta,
+        ),
+      ],
+    );
+  }
+}
+
+class _VistaPrecision extends StatelessWidget {
+  const _VistaPrecision({required this.precision});
+
+  final Precision precision;
+
+  @override
+  Widget build(BuildContext context) {
+    String pct(double f) => '${(f * 100).round()} %';
+    final p = precision;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(tr('{0} de tus repasos sin ningún trazo fallado', [pct(p.total!)]),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 4),
+        Text(
+          [
+            if (p.novato != null) tr('Novato: {0}', [pct(p.novato!)]),
+            if (p.experto != null) tr('Experto: {0}', [pct(p.experto!)]),
+            tr('{0} repasos', [p.repasos]),
+          ].join(' · '),
+          style: TextStyle(fontSize: 12, color: context.colores.suave),
+        ),
+      ],
+    );
+  }
+}
+
+class _FilaDificil extends StatelessWidget {
+  const _FilaDificil({required this.dificil, required this.onPracticar});
+
+  final CaracterDificil dificil;
+  final VoidCallback onPracticar;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = dificil.caracter;
+    final promedio = dificil.erroresPromedio.toStringAsFixed(1);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          SizedBox(width: 44, child: Text(c.caracter, style: const TextStyle(fontSize: 30))),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('${c.pinyin} · ${c.significado}',
+                    maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13)),
+                Text(
+                  tr('{0} trazos fallados en promedio · {1}', [promedio, dificil.veces == 1 ? tr('1 repaso') : tr('{0} repasos', [dificil.veces])]),
+                  style: TextStyle(fontSize: 11.5, color: context.colores.tenue),
+                ),
+              ],
+            ),
+          ),
+          TextButton(onPressed: onPracticar, child: Text(tr('Practicar'))),
+        ],
+      ),
+    );
+  }
+}
+
+class _FilaTrazo extends StatelessWidget {
+  const _FilaTrazo({required this.trazo, required this.caracter, required this.onPracticar});
+
+  final TrazoFallado trazo;
+  final Caracter? caracter;
+  final VoidCallback? onPracticar;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = caracter;
+    final total = c?.trazosSvg.length ?? 0;
+    final contornos = c == null ? const <Path>[] : CacheTrazos.contornos(c.caracter, c.trazosSvg);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Container(
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              color: context.colores.lienzo,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: context.colores.bordeLienzo),
+            ),
+            child: contornos.isEmpty || trazo.indice >= contornos.length
+                ? Center(child: Text(trazo.caracter, style: const TextStyle(fontSize: 30)))
+                : CustomPaint(painter: _MiniaturaTrazo(contornos, trazo.indice)),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(tr('{0} · trazo {1}{2}', [trazo.caracter, trazo.indice + 1, total > 0 ? tr(' de {0}', [total]) : '']),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                Text(
+                  tr('Fallado {0} veces{1}', [trazo.veces, trazo.alReves > 0 ? tr(' ({0} al revés)', [trazo.alReves]) : '']),
+                  style: TextStyle(fontSize: 11.5, color: context.colores.tenue),
+                ),
+              ],
+            ),
+          ),
+          if (onPracticar != null) TextButton(onPressed: onPracticar, child: Text(tr('Practicar'))),
+        ],
+      ),
+    );
+  }
+}
+
+/// El carácter en gris con el trazo [indice] en rojo.
+class _MiniaturaTrazo extends CustomPainter {
+  _MiniaturaTrazo(this.contornos, this.indice);
+
+  final List<Path> contornos;
+  final int indice;
+
+  static final Paint _gris = Paint()..color = const Color(0xFFBDBDBD);
+  static final Paint _rojo = Paint()..color = const Color(0xFFD32F2F);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.save();
+    GeometriaLienzo.aplicar(canvas, size);
+    for (int i = 0; i < contornos.length; i++) {
+      canvas.drawPath(contornos[i], i == indice ? _rojo : _gris);
+    }
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(_MiniaturaTrazo old) => old.indice != indice || !identical(old.contornos, contornos);
 }

@@ -1,0 +1,69 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// tarjeta_vidrio.dart — Efecto "vidrio" sin desenfoque
+//
+// Antes cada tarjeta usaba BackdropFilter (desenfoque del fondo). Es el efecto
+// más caro de Flutter: se recalcula en CADA cuadro mientras algo se mueve en
+// pantalla, y la cuadrícula de radicales tenía uno por celda. Eso era lo que
+// hacía sentir la app "a 30 Hz".
+//
+// Aquí el aspecto de vidrio se logra con un relleno blanco translúcido, un
+// borde claro y una sombra suave. Sobre el fondo claro de la app se ve casi
+// igual y cuesta prácticamente nada.
+//
+// Tampoco se recorta la tarjeta (clipBehavior): un recorte con antialias es
+// una capa extra por tarjeta en cada cuadro del scroll. El brillo al tocar
+// (InkWell) ya se limita solo a las esquinas redondeadas con borderRadius.
+// ─────────────────────────────────────────────────────────────────────────────
+
+import 'package:flutter/material.dart';
+
+import '../tema.dart';
+
+class TarjetaVidrio extends StatelessWidget {
+  const TarjetaVidrio({
+    super.key,
+    required this.child,
+    this.onTap,
+    this.radio = 18,
+    this.relleno = const EdgeInsets.all(16),
+    this.color,
+    this.colorBorde,
+    this.sombra = true,
+  });
+
+  final Widget child;
+  final VoidCallback? onTap;
+  final double radio;
+  final EdgeInsetsGeometry relleno;
+
+  /// Color de relleno (translúcido). null = el del tema (claro u oscuro).
+  final Color? color;
+  final Color? colorBorde;
+  final bool sombra;
+
+  @override
+  Widget build(BuildContext context) {
+    final forma = BorderRadius.circular(radio);
+    final c = context.colores;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: forma,
+        boxShadow: sombra
+            ? [BoxShadow(color: c.sombra, blurRadius: 10, offset: const Offset(0, 4))]
+            : null,
+      ),
+      child: Material(
+        color: color ?? c.tarjeta,
+        shape: RoundedRectangleBorder(
+          borderRadius: forma,
+          side: BorderSide(color: colorBorde ?? c.bordeTarjeta, width: 1.2),
+        ),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: forma,
+          child: Padding(padding: relleno, child: child),
+        ),
+      ),
+    );
+  }
+}

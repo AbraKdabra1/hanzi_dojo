@@ -1,0 +1,1 @@
+Beta 2: "Send my feedback" (a summary of how you use the app that you see before sharing), a "Was that stroke right?" button for strokes the app marks wrong, and an optional new-version notice.

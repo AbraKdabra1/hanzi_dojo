@@ -1,26 +1,290 @@
-import 'package:flutter/material.dart';
-import 'database/db_helper.dart';
-import 'screens/pantalla_inicio.dart';
+// ─────────────────────────────────────────────────────────────────────────────
+// main.dart — Punto de entrada de Meizi Hanzi
+//
+// Arranque:
+//   0. Se instala el registro de errores (registro_errores.dart): desde aquí,
+//      cualquier falla se guarda en el teléfono para el informe de errores.
+//   1. Se registra el texto de las licencias (pantalla de Créditos).
+//   2. Se muestra de inmediato una pantalla de carga (sin esperar a nada).
+//   3. Mientras tanto se abren las bases de datos (la primera vez se copia
+//      la base de contenido, ~1 s; las siguientes es instantáneo) y se
+//      dibujan las flores de la rama de ciruelo del fondo (unos ms), para que
+//      aparezcan completas desde el primer cuadro.
+//   4. Al terminar, se muestra la pantalla de inicio.
+//
+// Batería (helpers/energia.dart): DetectorActividad, en el builder de
+// MaterialApp, sube la pantalla a 120 Hz solo mientras tocas o algo se
+// desplaza; en segundo plano se suelta todo.
+// ─────────────────────────────────────────────────────────────────────────────
 
-void main() async {
+import 'dart:async';
+
+import 'package:flutter/foundation.dart' show LicenseEntryWithLineBreaks, LicenseRegistry, kIsWeb;
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'package:sqflite/sqflite.dart' show getDatabasesPath;
+
+import 'datos/base_datos.dart';
+import 'datos/datos_app.dart';
+import 'datos/registro_errores.dart';
+import 'datos/repositorio.dart';
+import 'datos/repositorio_habito.dart';
+import 'datos/repositorio_practica.dart';
+import 'helpers/energia.dart';
+import 'helpers/grabaciones.dart';
+import 'helpers/sensaciones.dart';
+import 'idioma.dart';
+import 'helpers/habito.dart';
+import 'painters/rama_ciruelo.dart';
+import 'plataforma/base_web.dart';
+import 'screens/pantalla_inicio.dart';
+import 'tema.dart';
+import 'widgets/boton_voz.dart';
+import 'widgets/fondo_tinta.dart';
+
+/// Versión web con "?semantica=1" en la dirección: la accesibilidad encendida
+/// desde el arranque (las pruebas con navegador encuentran así los botones).
+Object? _semantica; // SemanticsHandle: mientras exista, la accesibilidad sigue encendida
+
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await DatabaseHelper.instance.poblarBaseDeDatos();
-  runApp(const MyApp());
+  prepararBaseDeDatos(); // en la web: SQLite en WebAssembly
+  if (kIsWeb && Uri.base.queryParameters['semantica'] == '1') {
+    _semantica ??= WidgetsBinding.instance.ensureSemantics();
+  }
+  RegistroErrores.instalar();
+  // Mientras se abre la base: el idioma del teléfono (luego, el de Ajustes).
+  Idioma.actual.value = Idioma.desdeTexto(null);
+  _registrarLicencias();
+  runApp(const HanziDojoApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class HanziDojoApp extends StatefulWidget {
+  const HanziDojoApp({super.key});
+
+  @override
+  State<HanziDojoApp> createState() => _HanziDojoAppState();
+}
+
+class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver {
+  Repositorio? _repo;
+  Object? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _abrirDatos());
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  /// Batería: en segundo plano se sueltan los 120 Hz; al volver se revisa si
+  /// el teléfono activó el ahorro de batería mientras tanto.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      Energia.alVolver();
+    } else if (state == AppLifecycleState.paused || state == AppLifecycleState.hidden) {
+      Energia.enPausa();
+      // El widget de la pantalla de inicio refleja lo que acabas de practicar.
+      if (state == AppLifecycleState.paused) Habito.actualizarWidget();
+    }
+  }
+
+  /// Versión web: cada paso del arranque en la consola del navegador (si algo
+  /// se atora, se ve dónde).
+  void _marca(String paso) {
+    if (kIsWeb) debugPrint('Arranque: $paso');
+  }
+
+  Future<void> _abrirDatos() async {
+    try {
+      final fondo = SpritesCiruelo.cargar();
+      _marca('carpeta de datos');
+      final carpetaDatos = await getDatabasesPath();
+      _marca('registro de errores');
+      await RegistroErrores.iniciar(carpetaDatos);
+      _marca('base de datos');
+      final base = await BaseDatos.abrir();
+      _marca('ajustes');
+      final repo = Repositorio(base);
+      await Energia.iniciar(await repo.fluidezMaxima() ? ModoFluidez.maxima : ModoFluidez.automatica);
+      Apariencia.modo.value = Apariencia.desdeTexto(await repo.apariencia());
+      Idioma.actual.value = Idioma.desdeTexto(await repo.idioma());
+      Sensaciones.vibracion = await repo.vibracion();
+      Sensaciones.sonidoPincel = await repo.sonidoPincel();
+      Voz.velocidad = await repo.vozLenta() ? 0.75 : 1.0;
+      // iOS: que las pronunciaciones suenen aunque esté en silencio.
+      Grabaciones.prepararIos().catchError((Object e, StackTrace pila) => RegistroErrores.registrar('Audio iOS', e, pila));
+      // El recordatorio lo programa el sistema; se vuelve a poner por si la app se
+      // reinstaló o se importó un respaldo (si ya estaba, no cambia nada).
+      final recordatorio = await repo.recordatorio();
+      if (recordatorio != null) Habito.programarRecordatorio(recordatorio.$1, recordatorio.$2);
+      // Lo mismo con el carácter del día de la pantalla de bloqueo.
+      final caracterDia = await repo.caracterDia();
+      if (caracterDia != null) Habito.programarCaracterDia(caracterDia.$1, caracterDia.$2);
+      _marca('dibujos del fondo');
+      await fondo;
+      _marca('listo');
+      if (mounted) setState(() => _repo = repo);
+    } catch (e, pila) {
+      debugPrint('Error al abrir la base de datos: $e\n$pila');
+      RegistroErrores.registrar('Inicio', e, pila);
+      if (mounted) setState(() => _error = e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Hanzi Dojo',
-      theme: ThemeData(
-        fontFamily: 'SFPro',
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
-        useMaterial3: true,
+    // La apariencia y el idioma (Ajustes) cambian al momento, sin reiniciar.
+    return ValueListenableBuilder<Lengua>(
+      valueListenable: Idioma.actual,
+      builder: (context, lengua, _) => ValueListenableBuilder<ThemeMode>(
+      valueListenable: Apariencia.modo,
+      builder: (context, modo, _) {
+        final repo = _repo;
+        if (repo == null) {
+          // Pantalla de carga (o de error) mientras se abre la base.
+          return MaterialApp(
+            title: 'Meizi Hanzi',
+            debugShowCheckedModeBanner: false,
+            theme: temaHanziDojo(),
+            darkTheme: temaHanziDojo(Brightness.dark),
+            themeMode: modo,
+            locale: Idioma.locale,
+            supportedLocales: Idioma.locales,
+            localizationsDelegates: GlobalMaterialLocalizations.delegates,
+            home: _PantallaCarga(error: _error),
+          );
+        }
+        return DatosApp(
+          repo: repo,
+          child: MaterialApp(
+            // Al cambiar de idioma se arma la app de nuevo (vuelve al inicio):
+            // los textos de tr() se leen al construir cada pantalla.
+            key: ValueKey(lengua),
+            title: 'Meizi Hanzi',
+            debugShowCheckedModeBanner: false,
+            theme: temaHanziDojo(),
+            darkTheme: temaHanziDojo(Brightness.dark),
+            themeMode: modo,
+            locale: Idioma.locale,
+            supportedLocales: Idioma.locales,
+            localizationsDelegates: GlobalMaterialLocalizations.delegates,
+            builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
+              // Íconos de la barra de estado legibles también en pantallas sin AppBar.
+              value: Theme.of(context).brightness == Brightness.dark
+                  ? SystemUiOverlayStyle.light
+                  : SystemUiOverlayStyle.dark,
+              // Cada toque o desplazamiento sube la pantalla a 120 Hz un momento.
+              child: DetectorActividad(child: child ?? const SizedBox()),
+            ),
+            home: const PantallaInicio(),
+          ),
+        );
+      },
       ),
-      home: PantallaInicio(),
     );
   }
+}
+
+class _PantallaCarga extends StatefulWidget {
+  const _PantallaCarga({this.error});
+  final Object? error;
+
+  @override
+  State<_PantallaCarga> createState() => _PantallaCargaState();
+}
+
+class _PantallaCargaState extends State<_PantallaCarga> {
+  /// Versión web: si la carga tarda, se explica por qué (solo la primera vez).
+  bool _explicar = false;
+  Timer? _reloj;
+
+  @override
+  void initState() {
+    super.initState();
+    if (kIsWeb) _reloj = Timer(const Duration(seconds: 3), () => setState(() => _explicar = true));
+  }
+
+  @override
+  void dispose() {
+    _reloj?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final error = widget.error;
+    return FondoTintaChina(
+      child: Scaffold(
+        body: Center(
+          child: error == null
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('梅字', style: TextStyle(fontSize: 48, fontWeight: FontWeight.w300, letterSpacing: 8)),
+                    const SizedBox(height: 24),
+                    const SizedBox(
+                      width: 22,
+                      height: 22,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                    AnimatedOpacity(
+                      opacity: _explicar ? 1 : 0,
+                      duration: const Duration(milliseconds: 400),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(40, 24, 40, 0),
+                        child: Text(
+                          tr('La primera vez se descarga el diccionario (15 MB). Después funciona sin internet.'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.4),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(32),
+                  child: Text(
+                    tr('No se pudo abrir la base de datos.\n\n{0}', [error]),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Agrega las licencias de los datos y la tipografía a la página de
+/// licencias de Flutter (Créditos → "Ver licencias completas").
+void _registrarLicencias() {
+  const licencias = {
+    'Meizi Hanzi (código de la app)': 'assets/licencias/hanzi_dojo_GPL-3.0.txt',
+    'CC-CEDICT (significados)': 'assets/licencias/cc_cedict_CC-BY-SA-4.0.txt',
+    'Make Me a Hanzi – graphics.txt (trazos)': 'assets/licencias/make_me_a_hanzi_graphics_ARPHIC.txt',
+    'Make Me a Hanzi – dictionary.txt (lecturas)': 'assets/licencias/make_me_a_hanzi_dictionary_LGPL.txt',
+    'Unihan (radicales)': 'assets/licencias/unihan_UNICODE.txt',
+    'Lista HSK 3.0 (ivankra/hsk30)': 'assets/licencias/hsk30_MIT.txt',
+    'Tatoeba (oraciones de ejemplo)': 'assets/licencias/tatoeba_CC-BY-2.0-FR.txt',
+    'Noto Sans SC (tipografía)': 'assets/licencias/noto_sans_sc_OFL.txt',
+    'Noto Color Emoji y Noto Sans Math (símbolos de la versión web)': 'assets/licencias/noto_emoji_math_OFL.txt',
+    'OpenCC (tradicional → simplificado)': 'assets/licencias/opencc_APACHE-2.0.txt',
+    'chinese-poetry (textos clásicos de «Leer»)': 'assets/licencias/chinese_poetry_MIT.txt',
+    'audio-cmn (grabaciones de pronunciación)': 'assets/licencias/audio_cmn_CC-BY-SA.txt',
+  };
+  LicenseRegistry.addLicense(() async* {
+    for (final entrada in licencias.entries) {
+      final texto = await rootBundle.loadString(entrada.value);
+      yield LicenseEntryWithLineBreaks([tr(entrada.key)], texto);
+    }
+  });
 }

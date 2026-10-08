@@ -1,0 +1,32 @@
+<b>Meizi Hanzi · 梅字</b> is a free and open-source app to learn to <b>write Chinese characters</b> stroke by stroke, with all 3,000 characters of the official <b>HSK 3.0</b> list.
+
+<b>Write</b>
+• Every stroke is checked as you write: shape, order and direction.
+• Beginner mode with outline and hints, or expert mode from memory.
+• Correct strokes snap, with a soft spring, into the exact brush shape.
+• Spaced repetition (SM-2) brings each character back right before you forget it.
+• Study by HSK level or by the 214 Kangxi radicals and their families.
+• Watch animated stroke order, or draw a character you can't read to look it up.
+
+<b>Listen and speak</b>
+• Native speaker recordings (syllables and ~8,500 words) that work offline.
+• Tone trainer, listening drills and pinyin typing.
+• Vocabulary with spaced repetition: about 10,900 HSK words.
+• Timed HSK mock exams and a placement test to find where to start.
+
+<b>Read</b>
+• Seven graded readers from HSK 1 to 7-9 with pinyin, translation and audio.
+• Listen to each chapter with the current word highlighted, then answer comprehension questions.
+• Add your own texts (TXT, EPUB or pasted text).
+
+<b>Make it a habit</b>
+• Daily goal, reminder, streak with a weekly freeze and achievements.
+• Home screen widget and a shareable progress card.
+• Statistics: calendar, accuracy, hardest characters and strokes, confused tones.
+
+<b>Respects your phone and your privacy</b>
+• No ads, no accounts, and it works offline: everything stays on your phone.
+• "Ink" dark mode and 120 Hz only when needed, to save battery.
+• Export and import your progress when you change phones.
+
+English and Spanish interface, for phones and tablets. GPL-3.0 license.

@@ -1,0 +1,1872 @@
+{
+ "_formato": "libro → capítulo → preguntas. Cada pregunta: es/en = [pregunta, opción 1, opción 2, opción 3, opción 4]; c = número de la opción correcta (0-3). Las lee construir_db.py (tabla preguntas).",
+ "cuentos-para-ninos": {
+  "1": [
+   {
+    "es": [
+     "¿Qué pera tomó Kong Rong?",
+     "La más grande",
+     "La más pequeña",
+     "La más dulce",
+     "Ninguna"
+    ],
+    "en": [
+     "Which pear did Kong Rong take?",
+     "The biggest one",
+     "The smallest one",
+     "The sweetest one",
+     "None"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Por qué se la quedó?",
+     "Porque no tenía hambre",
+     "Porque las grandes eran para sus hermanos",
+     "Porque su papá se lo ordenó",
+     "Porque no le gustaban las peras"
+    ],
+    "en": [
+     "Why did he keep that one?",
+     "Because he wasn't hungry",
+     "Because the big ones were for his brothers",
+     "Because his father told him to",
+     "Because he didn't like pears"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Cómo se sintió su papá?",
+     "Enojado",
+     "Preocupado",
+     "Muy contento",
+     "Triste"
+    ],
+    "en": [
+     "How did his father feel?",
+     "Angry",
+     "Worried",
+     "Very happy",
+     "Sad"
+    ],
+    "c": 2
+   }
+  ],
+  "2": [
+   {
+    "es": [
+     "¿Qué le pasó a uno de los niños?",
+     "Se perdió en el jardín",
+     "Se cayó dentro de una tinaja con agua",
+     "Se subió a un árbol",
+     "Se rompió una pierna"
+    ],
+    "en": [
+     "What happened to one of the children?",
+     "He got lost in the garden",
+     "He fell into a big jar of water",
+     "He climbed a tree",
+     "He broke his leg"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué hizo Sima Guang?",
+     "Fue a buscar a los adultos",
+     "Se echó a llorar",
+     "Rompió la tinaja con una piedra",
+     "Se metió al agua"
+    ],
+    "en": [
+     "What did Sima Guang do?",
+     "He ran to get the adults",
+     "He started crying",
+     "He broke the jar with a stone",
+     "He jumped into the water"
+    ],
+    "c": 2
+   },
+   {
+    "es": [
+     "¿Por qué no esperó a los adultos?",
+     "Porque no había adultos en el pueblo",
+     "Porque llegarían demasiado tarde",
+     "Porque tenía miedo de que lo regañaran",
+     "Porque los adultos estaban dormidos"
+    ],
+    "en": [
+     "Why didn't he wait for the adults?",
+     "There were no adults in the village",
+     "They would arrive too late",
+     "He was afraid of being scolded",
+     "The adults were asleep"
+    ],
+    "c": 1
+   }
+  ],
+  "3": [
+   {
+    "es": [
+     "¿Qué quería saber Cao Cao?",
+     "Cuánto comía el elefante",
+     "Cuánto pesaba el elefante",
+     "De dónde venía el elefante",
+     "Cuántos años tenía el elefante"
+    ],
+    "en": [
+     "What did Cao Cao want to know?",
+     "How much the elephant ate",
+     "How much the elephant weighed",
+     "Where the elephant came from",
+     "How old the elephant was"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué marcó Cao Chong en el barco?",
+     "El nombre del elefante",
+     "Hasta dónde llegaba el agua",
+     "El número de piedras",
+     "El camino de regreso"
+    ],
+    "en": [
+     "What did Cao Chong mark on the boat?",
+     "The elephant's name",
+     "How high the water came",
+     "The number of stones",
+     "The way back"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Por qué pesaron las piedras?",
+     "Porque pesaban lo mismo que el elefante",
+     "Para construir una casa",
+     "Porque eran valiosas",
+     "Para que el barco no se hundiera"
+    ],
+    "en": [
+     "Why did they weigh the stones?",
+     "Because they weighed the same as the elephant",
+     "To build a house",
+     "Because they were valuable",
+     "So the boat wouldn't sink"
+    ],
+    "c": 0
+   }
+  ],
+  "4": [
+   {
+    "es": [
+     "¿Junto a qué vivieron primero?",
+     "Un mercado",
+     "Una escuela",
+     "Unas tumbas",
+     "Un río"
+    ],
+    "en": [
+     "What did they first live next to?",
+     "A market",
+     "A school",
+     "Some graves",
+     "A river"
+    ],
+    "c": 2
+   },
+   {
+    "es": [
+     "¿Qué hacía Mencio junto al mercado?",
+     "Estudiaba mucho",
+     "Jugaba a comprar y vender",
+     "Ayudaba a su mamá a vender",
+     "Lloraba todo el día"
+    ],
+    "en": [
+     "What did Mencius do next to the market?",
+     "He studied a lot",
+     "He played at buying and selling",
+     "He helped his mother sell",
+     "He cried all day"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué enseña la historia?",
+     "Que hay que mudarse seguido",
+     "Que los mercados son peligrosos",
+     "Que el lugar donde vive un niño es muy importante",
+     "Que los niños no deben jugar"
+    ],
+    "en": [
+     "What does the story teach?",
+     "That you should move often",
+     "That markets are dangerous",
+     "That the place where a child lives is very important",
+     "That children shouldn't play"
+    ],
+    "c": 2
+   }
+  ],
+  "5": [
+   {
+    "es": [
+     "¿Qué hacía la anciana junto al río?",
+     "Lavaba ropa",
+     "Pescaba",
+     "Frotaba una barra de hierro sobre una piedra",
+     "Cosía con una aguja"
+    ],
+    "en": [
+     "What was the old woman doing by the river?",
+     "Washing clothes",
+     "Fishing",
+     "Rubbing an iron bar on a stone",
+     "Sewing with a needle"
+    ],
+    "c": 2
+   },
+   {
+    "es": [
+     "¿Qué quería hacer con la barra?",
+     "Una aguja",
+     "Un cuchillo",
+     "Una espada",
+     "Un bastón"
+    ],
+    "en": [
+     "What did she want to make from the bar?",
+     "A needle",
+     "A knife",
+     "A sword",
+     "A walking stick"
+    ],
+    "c": 0
+   },
+   {
+    "es": [
+     "¿Qué hizo Li Bai después?",
+     "Siguió jugando",
+     "Le ayudó a frotar la barra",
+     "Volvió a la escuela y estudió cada día",
+     "Se fue a vivir con la anciana"
+    ],
+    "en": [
+     "What did Li Bai do afterwards?",
+     "He kept playing",
+     "He helped her rub the bar",
+     "He went back to school and studied every day",
+     "He went to live with the old woman"
+    ],
+    "c": 2
+   }
+  ]
+ },
+ "mitos-chinos": {
+  "1": [
+   {
+    "es": [
+     "¿Cómo eran el cielo y la tierra al principio?",
+     "Estaban juntos, como un huevo enorme",
+     "Estaban muy lejos",
+     "Eran de colores",
+     "Estaban llenos de luz"
+    ],
+    "en": [
+     "What were heaven and earth like at the beginning?",
+     "Joined together, like a huge egg",
+     "Very far apart",
+     "Full of colors",
+     "Full of light"
+    ],
+    "c": 0
+   },
+   {
+    "es": [
+     "¿Qué hizo Pangu para que no se volvieran a juntar?",
+     "Construyó una pared",
+     "Se quedó en medio empujando el cielo hacia arriba",
+     "Pidió ayuda a otros gigantes",
+     "Durmió encima de la tierra"
+    ],
+    "en": [
+     "What did Pangu do so they wouldn't join again?",
+     "He built a wall",
+     "He stood in the middle pushing the sky up",
+     "He asked other giants for help",
+     "He slept on top of the earth"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿En qué se convirtieron sus ojos?",
+     "En los ríos",
+     "En las estrellas",
+     "En el sol y la luna",
+     "En las montañas"
+    ],
+    "en": [
+     "What did his eyes become?",
+     "The rivers",
+     "The stars",
+     "The sun and the moon",
+     "The mountains"
+    ],
+    "c": 2
+   }
+  ],
+  "2": [
+   {
+    "es": [
+     "¿Por qué Nüwa hizo personas?",
+     "Porque se sentía sola y aburrida",
+     "Porque se lo pidió Pangu",
+     "Para que trabajaran para ella",
+     "Para que cuidaran los ríos"
+    ],
+    "en": [
+     "Why did Nüwa make people?",
+     "Because she felt lonely and bored",
+     "Because Pangu asked her to",
+     "So they would work for her",
+     "So they would look after the rivers"
+    ],
+    "c": 0
+   },
+   {
+    "es": [
+     "¿Con qué hizo a las personas?",
+     "Con piedras",
+     "Con barro amarillo",
+     "Con madera",
+     "Con agua del río"
+    ],
+    "en": [
+     "What did she make people from?",
+     "Stones",
+     "Yellow clay",
+     "Wood",
+     "River water"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Cómo tapó el agujero del cielo?",
+     "Con una gran tela",
+     "Con piedras de cinco colores derretidas",
+     "Con sus manos",
+     "Con nubes"
+    ],
+    "en": [
+     "How did she patch the hole in the sky?",
+     "With a big cloth",
+     "With melted five-colored stones",
+     "With her hands",
+     "With clouds"
+    ],
+    "c": 1
+   }
+  ],
+  "3": [
+   {
+    "es": [
+     "¿Qué problema causaron los diez soles?",
+     "Una gran inundación",
+     "Un calor terrible",
+     "Mucha nieve",
+     "Que nunca era de noche en el mar"
+    ],
+    "en": [
+     "What problem did the ten suns cause?",
+     "A great flood",
+     "Terrible heat",
+     "A lot of snow",
+     "Endless night at sea"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Cuántos soles derribó Houyi?",
+     "Diez",
+     "Uno",
+     "Nueve",
+     "Cinco"
+    ],
+    "en": [
+     "How many suns did Houyi shoot down?",
+     "Ten",
+     "One",
+     "Nine",
+     "Five"
+    ],
+    "c": 2
+   },
+   {
+    "es": [
+     "¿Qué prometió el último sol?",
+     "Irse para siempre",
+     "Salir cada mañana e irse cada noche",
+     "Brillar el doble",
+     "Quedarse siempre en el cielo"
+    ],
+    "en": [
+     "What did the last sun promise?",
+     "To leave forever",
+     "To rise every morning and set every night",
+     "To shine twice as bright",
+     "To stay in the sky all the time"
+    ],
+    "c": 1
+   }
+  ],
+  "4": [
+   {
+    "es": [
+     "¿Qué hacía la medicina del inmortal?",
+     "Curaba cualquier enfermedad",
+     "Permitía volar al cielo y no envejecer",
+     "Daba mucha fuerza",
+     "Hacía invisible a quien la tomaba"
+    ],
+    "en": [
+     "What did the immortal's medicine do?",
+     "It cured any illness",
+     "It let you fly to the sky and never grow old",
+     "It gave great strength",
+     "It made you invisible"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Por qué Chang'e se tomó la medicina?",
+     "Porque quería vivir en la luna",
+     "Para que el malvado Fengmeng no se la quedara",
+     "Porque estaba enferma",
+     "Porque Houyi se lo pidió"
+    ],
+    "en": [
+     "Why did Chang'e take the medicine?",
+     "Because she wanted to live on the moon",
+     "So the wicked Fengmeng wouldn't get it",
+     "Because she was ill",
+     "Because Houyi asked her to"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué fiesta recuerda esta historia?",
+     "El Año Nuevo",
+     "La Fiesta del Medio Otoño",
+     "La Fiesta de los Faroles",
+     "La Fiesta del Bote del Dragón"
+    ],
+    "en": [
+     "Which festival does this story remember?",
+     "New Year",
+     "The Mid-Autumn Festival",
+     "The Lantern Festival",
+     "The Dragon Boat Festival"
+    ],
+    "c": 1
+   }
+  ],
+  "5": [
+   {
+    "es": [
+     "¿Qué le pasó a la hija del emperador Yan en el mar?",
+     "Encontró un tesoro",
+     "El viento volcó su barquita y no regresó",
+     "Aprendió a nadar",
+     "Se hizo amiga de un pez"
+    ],
+    "en": [
+     "What happened to Emperor Yan's daughter at sea?",
+     "She found a treasure",
+     "The wind overturned her little boat and she never returned",
+     "She learned to swim",
+     "She made friends with a fish"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué hace Jingwei cada día?",
+     "Canta para el mar",
+     "Deja caer piedritas y ramitas en el mar",
+     "Busca a su papá",
+     "Construye un nido en la playa"
+    ],
+    "en": [
+     "What does Jingwei do every day?",
+     "Sings to the sea",
+     "Drops pebbles and twigs into the sea",
+     "Looks for her father",
+     "Builds a nest on the beach"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "Hoy, «Jingwei llena el mar» se dice de quien…",
+     "nunca se rinde ante lo difícil",
+     "le tiene miedo al mar",
+     "habla demasiado",
+     "trabaja poco"
+    ],
+    "en": [
+     "Today, “Jingwei fills the sea” describes someone who…",
+     "never gives up in the face of difficulty",
+     "is afraid of the sea",
+     "talks too much",
+     "works very little"
+    ],
+    "c": 0
+   }
+  ]
+ },
+ "historias-de-chengyu": {
+  "1": [
+   {
+    "es": [
+     "¿Cómo consiguió el campesino el primer conejo?",
+     "Lo cazó con una flecha",
+     "El conejo chocó contra un árbol y murió",
+     "Se lo regaló un vecino",
+     "Lo compró en el mercado"
+    ],
+    "en": [
+     "How did the farmer get the first rabbit?",
+     "He shot it with an arrow",
+     "The rabbit ran into a tree and died",
+     "A neighbor gave it to him",
+     "He bought it at the market"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué hizo al día siguiente?",
+     "Trabajó más que nunca",
+     "Se sentó junto al árbol a esperar otro conejo",
+     "Se fue de viaje",
+     "Puso trampas en el campo"
+    ],
+    "en": [
+     "What did he do the next day?",
+     "He worked harder than ever",
+     "He sat by the tree waiting for another rabbit",
+     "He went on a trip",
+     "He set traps in the field"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué les pasó a sus verduras?",
+     "Crecieron muy bien",
+     "Se las comió el conejo",
+     "Se murieron",
+     "Las vendió"
+    ],
+    "en": [
+     "What happened to his vegetables?",
+     "They grew very well",
+     "The rabbit ate them",
+     "They died",
+     "He sold them"
+    ],
+    "c": 2
+   }
+  ],
+  "2": [
+   {
+    "es": [
+     "¿Qué ganaba el primero en terminar su dibujo?",
+     "Una serpiente",
+     "Una jarra de vino",
+     "Un libro",
+     "Dinero"
+    ],
+    "en": [
+     "What did the first to finish the drawing win?",
+     "A snake",
+     "A jar of wine",
+     "A book",
+     "Money"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Por qué perdió el más rápido?",
+     "Porque dibujó mal la cabeza",
+     "Porque se puso a dibujarle patas a la serpiente",
+     "Porque se le cayó el vino",
+     "Porque se quedó dormido"
+    ],
+    "en": [
+     "Why did the fastest one lose?",
+     "He drew the head badly",
+     "He started drawing legs on the snake",
+     "He spilled the wine",
+     "He fell asleep"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué enseña este chengyu?",
+     "Que hay que dibujar rápido",
+     "Que añadir lo innecesario puede arruinar algo bien hecho",
+     "Que no hay que beber vino",
+     "Que las serpientes son peligrosas"
+    ],
+    "en": [
+     "What does this chengyu teach?",
+     "That you should draw quickly",
+     "That adding something unnecessary can ruin a good result",
+     "That you shouldn't drink wine",
+     "That snakes are dangerous"
+    ],
+    "c": 1
+   }
+  ],
+  "3": [
+   {
+    "es": [
+     "¿Qué le dijo el zorro al tigre?",
+     "Que era muy pequeño para comérselo",
+     "Que el Emperador del Cielo lo mandó a gobernar a los animales",
+     "Que conocía un lugar con mucha comida",
+     "Que era su amigo"
+    ],
+    "en": [
+     "What did the fox tell the tiger?",
+     "That he was too small to eat",
+     "That the Emperor of Heaven sent him to rule the animals",
+     "That he knew a place with lots of food",
+     "That he was his friend"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Por qué huían los animales?",
+     "Le tenían miedo al zorro",
+     "Le tenían miedo al tigre que iba detrás",
+     "Iba a llover",
+     "Había cazadores"
+    ],
+    "en": [
+     "Why did the animals run away?",
+     "They were afraid of the fox",
+     "They were afraid of the tiger behind him",
+     "It was going to rain",
+     "There were hunters"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿De quién se dice este chengyu?",
+     "De quien usa el poder de otro para intimidar",
+     "De quien es muy valiente",
+     "De quien ayuda a los débiles",
+     "De quien corre muy rápido"
+    ],
+    "en": [
+     "Who is this chengyu said about?",
+     "Someone who uses another's power to intimidate",
+     "Someone very brave",
+     "Someone who helps the weak",
+     "Someone who runs very fast"
+    ],
+    "c": 0
+   }
+  ],
+  "4": [
+   {
+    "es": [
+     "¿Qué pensaba la rana de su pozo?",
+     "Que era pequeño y feo",
+     "Que no había en el mundo un lugar mejor",
+     "Que estaba demasiado lleno de agua",
+     "Que quería irse de ahí"
+    ],
+    "en": [
+     "What did the frog think of its well?",
+     "That it was small and ugly",
+     "That there was no better place in the world",
+     "That it had too much water",
+     "That it wanted to leave"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Por qué la tortuga no pudo bajar?",
+     "Le daba miedo el agua",
+     "Era demasiado grande",
+     "La rana no la dejó",
+     "Estaba cansada"
+    ],
+    "en": [
+     "Why couldn't the turtle go down?",
+     "She was afraid of the water",
+     "She was too big",
+     "The frog didn't let her",
+     "She was tired"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿De quién se dice «la rana en el fondo del pozo»?",
+     "De quien ha visto poco y cree saber mucho",
+     "De quien vive en el campo",
+     "De quien nada muy bien",
+     "De quien tiene muchos amigos"
+    ],
+    "en": [
+     "Who is “the frog at the bottom of the well” said about?",
+     "Someone who has seen little but thinks they know a lot",
+     "Someone who lives in the country",
+     "Someone who swims very well",
+     "Someone with many friends"
+    ],
+    "c": 0
+   }
+  ],
+  "5": [
+   {
+    "es": [
+     "¿Por qué le faltaba una oveja?",
+     "Se escapó al bosque",
+     "Un lobo entró por un agujero del corral",
+     "La vendió su vecino",
+     "Se perdió en la nieve"
+    ],
+    "en": [
+     "Why was a sheep missing?",
+     "It ran away into the woods",
+     "A wolf got in through a hole in the pen",
+     "His neighbor sold it",
+     "It got lost in the snow"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué respondió la primera vez que le dijeron que reparara el corral?",
+     "Que lo haría de inmediato",
+     "Que ya no servía de nada porque la oveja se había perdido",
+     "Que no tenía herramientas",
+     "Que el lobo no volvería"
+    ],
+    "en": [
+     "What did he answer the first time he was told to fix the pen?",
+     "That he'd do it right away",
+     "That it was pointless since the sheep was already gone",
+     "That he had no tools",
+     "That the wolf wouldn't come back"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué enseña este chengyu?",
+     "Que hay que tener muchas ovejas",
+     "Que si corregimos un error enseguida, todavía estamos a tiempo",
+     "Que los lobos son peligrosos",
+     "Que los vecinos siempre se equivocan"
+    ],
+    "en": [
+     "What does this chengyu teach?",
+     "That you should keep many sheep",
+     "That if we fix a mistake right away, it's not too late",
+     "That wolves are dangerous",
+     "That neighbors are always wrong"
+    ],
+    "c": 1
+   }
+  ],
+  "6": [
+   {
+    "es": [
+     "¿Qué se le cayó al agua al hombre de Chu?",
+     "Su sombrero",
+     "Una espada muy valiosa",
+     "Su dinero",
+     "Un libro"
+    ],
+    "en": [
+     "What did the man from Chu drop into the water?",
+     "His hat",
+     "A very valuable sword",
+     "His money",
+     "A book"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué hizo en lugar de lanzarse a buscarla?",
+     "Pidió ayuda a un pescador",
+     "Hizo una marca en el costado del barco",
+     "Se puso a llorar",
+     "Compró otra espada"
+    ],
+    "en": [
+     "What did he do instead of diving for it?",
+     "He asked a fisherman for help",
+     "He made a mark on the side of the boat",
+     "He started crying",
+     "He bought another sword"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Por qué no encontró la espada?",
+     "Porque el agua estaba sucia",
+     "Porque el barco se movió y la espada no",
+     "Porque alguien se la robó",
+     "Porque buscó de noche"
+    ],
+    "en": [
+     "Why didn't he find the sword?",
+     "The water was dirty",
+     "The boat moved but the sword didn't",
+     "Someone stole it",
+     "He searched at night"
+    ],
+    "c": 1
+   }
+  ]
+ },
+ "leyendas-populares": {
+  "1": [
+   {
+    "es": [
+     "¿Quién ayudó al Pastor a conocer a la Tejedora?",
+     "Un viejo buey que hablaba",
+     "La Reina Madre del Oeste",
+     "Una urraca",
+     "Su hermano mayor"
+    ],
+    "en": [
+     "Who helped the Cowherd meet the Weaver?",
+     "An old ox that could talk",
+     "The Queen Mother of the West",
+     "A magpie",
+     "His older brother"
+    ],
+    "c": 0
+   },
+   {
+    "es": [
+     "¿Qué separó al Pastor de la Tejedora?",
+     "Una gran montaña",
+     "La Vía Láctea que trazó la Reina Madre",
+     "El mar del Este",
+     "Una guerra"
+    ],
+    "en": [
+     "What separated the Cowherd from the Weaver?",
+     "A great mountain",
+     "The Milky Way drawn by the Queen Mother",
+     "The Eastern Sea",
+     "A war"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Cómo se encuentran cada año?",
+     "En un barco",
+     "Sobre un puente de urracas",
+     "Volando en una nube",
+     "En sueños"
+    ],
+    "en": [
+     "How do they meet each year?",
+     "On a boat",
+     "On a bridge of magpies",
+     "Flying on a cloud",
+     "In dreams"
+    ],
+    "c": 1
+   }
+  ],
+  "2": [
+   {
+    "es": [
+     "¿Cómo se conocieron Bai Suzhen y Xu Xian?",
+     "En la escuela",
+     "Él le prestó su paraguas bajo la lluvia",
+     "En un mercado",
+     "En el templo de Jinshan"
+    ],
+    "en": [
+     "How did Bai Suzhen and Xu Xian meet?",
+     "At school",
+     "He lent her his umbrella in the rain",
+     "At a market",
+     "At Jinshan Temple"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué pasó cuando Bai Suzhen bebió el vino especial?",
+     "Se quedó dormida",
+     "Volvió a ser una serpiente blanca",
+     "Se volvió invisible",
+     "Se fue volando"
+    ],
+    "en": [
+     "What happened when Bai Suzhen drank the special wine?",
+     "She fell asleep",
+     "She turned back into a white snake",
+     "She became invisible",
+     "She flew away"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Dónde encerró Fahai a Bai Suzhen?",
+     "En el Lago del Oeste",
+     "Bajo la pagoda Leifeng",
+     "En una cueva",
+     "En la luna"
+    ],
+    "en": [
+     "Where did Fahai imprison Bai Suzhen?",
+     "In West Lake",
+     "Under Leifeng Pagoda",
+     "In a cave",
+     "On the moon"
+    ],
+    "c": 1
+   }
+  ],
+  "3": [
+   {
+    "es": [
+     "¿Por qué Zhu Yingtai se vistió de hombre?",
+     "Para ser soldado",
+     "Porque las niñas no podían ir a la escuela",
+     "Para escapar de su casa",
+     "Para un juego"
+    ],
+    "en": [
+     "Why did Zhu Yingtai dress as a man?",
+     "To become a soldier",
+     "Because girls couldn't go to school",
+     "To run away from home",
+     "For a game"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Por qué Liang Shanbo no pudo casarse con ella?",
+     "Porque no la quería",
+     "Porque llegó tarde: ya estaba prometida a Ma Wencai",
+     "Porque se fue a otro país",
+     "Porque su madre no lo dejó"
+    ],
+    "en": [
+     "Why couldn't Liang Shanbo marry her?",
+     "He didn't love her",
+     "He was too late: she was already promised to Ma Wencai",
+     "He moved to another country",
+     "His mother didn't allow it"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué salió de la tumba al final?",
+     "Dos pájaros",
+     "Dos hermosas mariposas",
+     "Un arcoíris",
+     "Una flor"
+    ],
+    "en": [
+     "What came out of the grave at the end?",
+     "Two birds",
+     "Two beautiful butterflies",
+     "A rainbow",
+     "A flower"
+    ],
+    "c": 1
+   }
+  ],
+  "4": [
+   {
+    "es": [
+     "¿Por qué Mulan fue a la guerra?",
+     "Porque quería ser famosa",
+     "Para que su padre, viejo y enfermo, no tuviera que ir",
+     "Porque el emperador la eligió",
+     "Porque le gustaban los caballos"
+    ],
+    "en": [
+     "Why did Mulan go to war?",
+     "Because she wanted to be famous",
+     "So her old, sick father wouldn't have to go",
+     "Because the emperor chose her",
+     "Because she loved horses"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Cuántos años combatió?",
+     "Tres",
+     "Doce",
+     "Veinte",
+     "Uno"
+    ],
+    "en": [
+     "How many years did she fight?",
+     "Three",
+     "Twelve",
+     "Twenty",
+     "One"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué le pidió Mulan al emperador?",
+     "Un alto cargo",
+     "Mucho dinero",
+     "Un caballo veloz para volver a casa",
+     "Un palacio"
+    ],
+    "en": [
+     "What did Mulan ask the emperor for?",
+     "A high position",
+     "Lots of money",
+     "A fast horse to ride home",
+     "A palace"
+    ],
+    "c": 2
+   }
+  ]
+ },
+ "viaje-al-oeste": {
+  "1": [
+   {
+    "es": [
+     "¿De dónde nació el mono?",
+     "De un huevo",
+     "De una piedra enorme",
+     "De una flor",
+     "Del mar"
+    ],
+    "en": [
+     "Where was the monkey born from?",
+     "An egg",
+     "A huge stone",
+     "A flower",
+     "The sea"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué encontró detrás de la cascada?",
+     "Un tesoro",
+     "Una gran cueva como un hogar",
+     "Un dragón",
+     "Otra montaña"
+    ],
+    "en": [
+     "What did he find behind the waterfall?",
+     "A treasure",
+     "A big cave like a home",
+     "A dragon",
+     "Another mountain"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Para qué buscó a un maestro?",
+     "Para aprender a nadar",
+     "Para encontrar la manera de no morir nunca",
+     "Para ser rey",
+     "Para escribir libros"
+    ],
+    "en": [
+     "Why did he look for a master?",
+     "To learn to swim",
+     "To find a way to never die",
+     "To become king",
+     "To write books"
+    ],
+    "c": 1
+   }
+  ],
+  "2": [
+   {
+    "es": [
+     "¿Qué arma se llevó del palacio del Rey Dragón?",
+     "Una espada",
+     "Una barra de hierro mágica que cambia de tamaño",
+     "Un arco",
+     "Un abanico"
+    ],
+    "en": [
+     "What weapon did he take from the Dragon King's palace?",
+     "A sword",
+     "A magic iron staff that changes size",
+     "A bow",
+     "A fan"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Por qué se enfureció en el cielo?",
+     "Porque no le dieron comida",
+     "Porque su cargo, cuidar caballos, era el más bajo",
+     "Porque perdió una carrera",
+     "Porque no lo invitaron a una fiesta"
+    ],
+    "en": [
+     "Why did he get furious in heaven?",
+     "They didn't give him food",
+     "His job, looking after horses, was the lowest of all",
+     "He lost a race",
+     "He wasn't invited to a party"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué eran en realidad las cinco columnas?",
+     "Los cinco dedos de Buda",
+     "Cinco montañas",
+     "Cinco árboles",
+     "Cinco guardias"
+    ],
+    "en": [
+     "What were the five pillars really?",
+     "Buddha's five fingers",
+     "Five mountains",
+     "Five trees",
+     "Five guards"
+    ],
+    "c": 0
+   }
+  ],
+  "3": [
+   {
+    "es": [
+     "¿Cuánto tiempo pasó Wukong bajo la montaña?",
+     "Cinco años",
+     "Cincuenta años",
+     "Quinientos años",
+     "Cinco mil años"
+    ],
+    "en": [
+     "How long was Wukong trapped under the mountain?",
+     "Five years",
+     "Fifty years",
+     "Five hundred years",
+     "Five thousand years"
+    ],
+    "c": 2
+   },
+   {
+    "es": [
+     "¿Para qué viajaba el monje Tang al Oeste?",
+     "Para buscar las escrituras budistas",
+     "Para visitar a su familia",
+     "Para vender seda",
+     "Para luchar contra demonios"
+    ],
+    "en": [
+     "Why was the monk Tang traveling west?",
+     "To fetch the Buddhist scriptures",
+     "To visit his family",
+     "To sell silk",
+     "To fight demons"
+    ],
+    "c": 0
+   },
+   {
+    "es": [
+     "¿Qué pasaba cuando el monje recitaba el conjuro?",
+     "Wukong se hacía invisible",
+     "El gorro se apretaba y a Wukong le dolía la cabeza",
+     "Llovía",
+     "Aparecía Guanyin"
+    ],
+    "en": [
+     "What happened when the monk recited the spell?",
+     "Wukong became invisible",
+     "The cap tightened and Wukong's head hurt",
+     "It rained",
+     "Guanyin appeared"
+    ],
+    "c": 1
+   }
+  ],
+  "4": [
+   {
+    "es": [
+     "¿Por qué el demonio quería al monje Tang?",
+     "Quería ser su alumna",
+     "Quien comiera su carne no envejecería ni moriría",
+     "Quería sus escrituras",
+     "Quería su caballo"
+    ],
+    "en": [
+     "Why did the demon want the monk Tang?",
+     "She wanted to be his student",
+     "Whoever ate his flesh would never grow old or die",
+     "She wanted his scriptures",
+     "She wanted his horse"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Cuántas veces se transformó el demonio?",
+     "Una",
+     "Dos",
+     "Tres",
+     "Cinco"
+    ],
+    "en": [
+     "How many times did the demon transform?",
+     "Once",
+     "Twice",
+     "Three times",
+     "Five times"
+    ],
+    "c": 2
+   },
+   {
+    "es": [
+     "¿Por qué el monje echó a Wukong?",
+     "Porque era flojo",
+     "Porque creyó que Wukong mataba a gente inocente",
+     "Porque se comió la comida",
+     "Porque perdió el camino"
+    ],
+    "en": [
+     "Why did the monk send Wukong away?",
+     "Because he was lazy",
+     "Because he thought Wukong was killing innocent people",
+     "Because he ate the food",
+     "Because he got them lost"
+    ],
+    "c": 1
+   }
+  ],
+  "5": [
+   {
+    "es": [
+     "¿Qué podía apagar el fuego de la Montaña Llameante?",
+     "La lluvia",
+     "El abanico de la Princesa del Abanico de Hierro",
+     "La barra de Wukong",
+     "El agua del mar"
+    ],
+    "en": [
+     "What could put out the fire of the Flaming Mountain?",
+     "Rain",
+     "The Iron Fan Princess's fan",
+     "Wukong's staff",
+     "Sea water"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Cómo consiguió Wukong que la princesa le diera un abanico?",
+     "Le pagó mucho dinero",
+     "Se metió en su té convertido en insecto",
+     "Le cantó una canción",
+     "Se lo pidió el Rey Demonio Toro"
+    ],
+    "en": [
+     "How did Wukong get the princess to give him a fan?",
+     "He paid her a lot of money",
+     "He turned into an insect and got into her tea",
+     "He sang her a song",
+     "The Bull Demon King asked her"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué pasó la primera vez que agitó el abanico?",
+     "El fuego se apagó",
+     "El fuego creció: era un abanico falso",
+     "Empezó a nevar",
+     "Se fue volando"
+    ],
+    "en": [
+     "What happened the first time he waved the fan?",
+     "The fire went out",
+     "The fire grew: it was a fake fan",
+     "It started to snow",
+     "He flew away"
+    ],
+    "c": 1
+   }
+  ],
+  "6": [
+   {
+    "es": [
+     "¿Cuántos años caminaron hasta el Oeste?",
+     "Cuatro",
+     "Catorce",
+     "Cuarenta",
+     "Ochenta y uno"
+    ],
+    "en": [
+     "How many years did they walk to the West?",
+     "Four",
+     "Fourteen",
+     "Forty",
+     "Eighty-one"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué le pasó al gorro de Wukong al final?",
+     "Se lo quitó el monje",
+     "Desapareció solo",
+     "Se hizo más apretado",
+     "Se lo regaló a Zhu Bajie"
+    ],
+    "en": [
+     "What happened to Wukong's cap at the end?",
+     "The monk took it off",
+     "It disappeared by itself",
+     "It got tighter",
+     "He gave it to Zhu Bajie"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Quién escribió «Viaje al Oeste»?",
+     "Li Bai",
+     "Wu Cheng'en",
+     "Confucio",
+     "Du Fu"
+    ],
+    "en": [
+     "Who wrote “Journey to the West”?",
+     "Li Bai",
+     "Wu Cheng'en",
+     "Confucius",
+     "Du Fu"
+    ],
+    "c": 1
+   }
+  ]
+ },
+ "proverbios-zengguang": {
+  "1": [
+   {
+    "es": [
+     "«Un instante de tiempo vale una pulgada de oro…» ¿Qué quiere decir?",
+     "Que el oro es lo más valioso",
+     "Que el tiempo vale más que el oro y no se puede comprar",
+     "Que hay que trabajar para ganar oro",
+     "Que el tiempo pasa despacio"
+    ],
+    "en": [
+     "“An inch of time is worth an inch of gold…” What does it mean?",
+     "That gold is the most valuable thing",
+     "That time is worth more than gold and can't be bought",
+     "That you must work to earn gold",
+     "That time passes slowly"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "Según los proverbios, ¿qué le pasa a quien no se esfuerza de joven?",
+     "Será rico de viejo",
+     "De viejo se lamentará en vano",
+     "Tendrá muchos amigos",
+     "Vivirá más años"
+    ],
+    "en": [
+     "According to the proverbs, what happens to someone who doesn't work hard when young?",
+     "They'll be rich when old",
+     "They'll regret it in vain when old",
+     "They'll have many friends",
+     "They'll live longer"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "«Cuando caminan tres personas juntas…» ¿Qué enseña Confucio?",
+     "Que no hay que caminar solo",
+     "Que de cualquier persona se puede aprender algo",
+     "Que tres es un buen número",
+     "Que los maestros caminan mucho"
+    ],
+    "en": [
+     "“When three people walk together…” What does Confucius teach?",
+     "That you shouldn't walk alone",
+     "That you can learn something from anyone",
+     "That three is a good number",
+     "That teachers walk a lot"
+    ],
+    "c": 1
+   }
+  ],
+  "2": [
+   {
+    "es": [
+     "«De una persona se conoce la cara, pero no…»",
+     "el nombre",
+     "el corazón",
+     "la casa",
+     "la edad"
+    ],
+    "en": [
+     "“You can know a person's face, but not their…”",
+     "name",
+     "heart",
+     "house",
+     "age"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Cómo se conoce el corazón de las personas?",
+     "Con el tiempo",
+     "Mirándolas a los ojos",
+     "Preguntándoles",
+     "Por su ropa"
+    ],
+    "en": [
+     "How do you come to know people's hearts?",
+     "With time",
+     "By looking them in the eyes",
+     "By asking them",
+     "By their clothes"
+    ],
+    "c": 0
+   },
+   {
+    "es": [
+     "Según el último proverbio, ¿quién es tu maestro?",
+     "Quien solo te halaga",
+     "Quien te señala tus defectos",
+     "Quien te cuenta chismes",
+     "Quien tiene más dinero"
+    ],
+    "en": [
+     "According to the last proverb, who is your teacher?",
+     "Whoever only flatters you",
+     "Whoever points out your faults",
+     "Whoever tells you gossip",
+     "Whoever has more money"
+    ],
+    "c": 1
+   }
+  ],
+  "3": [
+   {
+    "es": [
+     "«Un pariente lejano vale menos que…»",
+     "un amigo rico",
+     "un vecino cercano",
+     "un maestro",
+     "un hermano"
+    ],
+    "en": [
+     "“A distant relative is worth less than…”",
+     "a rich friend",
+     "a close neighbor",
+     "a teacher",
+     "a brother"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "Según los proverbios, ¿qué noticias viajan mil leguas?",
+     "Las buenas",
+     "Las malas",
+     "Las del emperador",
+     "Las de la familia"
+    ],
+    "en": [
+     "According to the proverbs, what news travels a thousand leagues?",
+     "Good news",
+     "Bad news",
+     "The emperor's news",
+     "Family news"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Cuándo entiendes lo que te dieron tus padres?",
+     "Al estudiar",
+     "Al criar a tus propios hijos",
+     "Al viajar",
+     "Al hacerte rico"
+    ],
+    "en": [
+     "When do you understand what your parents gave you?",
+     "When you study",
+     "When you raise your own children",
+     "When you travel",
+     "When you get rich"
+    ],
+    "c": 1
+   }
+  ],
+  "4": [
+   {
+    "es": [
+     "«Una vez dicha una palabra, ni un carro de cuatro caballos la alcanza» significa…",
+     "que hay que hablar rápido",
+     "que lo prometido es deuda",
+     "que los caballos son lentos",
+     "que no hay que hablar"
+    ],
+    "en": [
+     "“Once a word is spoken, not even a four-horse carriage can catch it” means…",
+     "that you should talk fast",
+     "that a promise must be kept",
+     "that horses are slow",
+     "that you shouldn't talk"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "«Quien siembra frijol cosecha frijol» quiere decir…",
+     "que el frijol es fácil de sembrar",
+     "que cosechas lo que siembras",
+     "que hay que comer frijol",
+     "que el campo es duro"
+    ],
+    "en": [
+     "“Plant beans and you'll harvest beans” means…",
+     "that beans are easy to grow",
+     "that you reap what you sow",
+     "that you should eat beans",
+     "that farming is hard"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué vale más que construir una pagoda de siete pisos?",
+     "Estudiar mucho",
+     "Salvar una vida",
+     "Ser rico",
+     "Viajar lejos"
+    ],
+    "en": [
+     "What is worth more than building a seven-story pagoda?",
+     "Studying hard",
+     "Saving a life",
+     "Being rich",
+     "Traveling far"
+    ],
+    "c": 1
+   }
+  ]
+ },
+ "poemas-tang": {
+  "1": [
+   {
+    "es": [
+     "En el poema de Li Bai, ¿qué parece escarcha sobre el suelo?",
+     "La nieve",
+     "La luz de la luna",
+     "La sal",
+     "Las flores"
+    ],
+    "en": [
+     "In Li Bai's poem, what looks like frost on the ground?",
+     "Snow",
+     "Moonlight",
+     "Salt",
+     "Flowers"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "En la «Canción del hijo que se va», ¿qué hace la madre?",
+     "Cocina",
+     "Le cose la ropa con puntadas apretadas",
+     "Llora en la puerta",
+     "Escribe una carta"
+    ],
+    "en": [
+     "In “Song of the Departing Son”, what does the mother do?",
+     "She cooks",
+     "She sews his clothes with tight stitches",
+     "She cries at the door",
+     "She writes a letter"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "Cuando He Zhizhang vuelve a su pueblo, ¿qué le preguntan los niños?",
+     "Cómo se llama",
+     "De dónde viene",
+     "Si tiene dulces",
+     "Cuántos años tiene"
+    ],
+    "en": [
+     "When He Zhizhang returns to his village, what do the children ask him?",
+     "His name",
+     "Where he comes from",
+     "If he has sweets",
+     "How old he is"
+    ],
+    "c": 1
+   }
+  ],
+  "2": [
+   {
+    "es": [
+     "«Si quieres ver hasta mil leguas…»",
+     "cierra los ojos",
+     "sube un piso más",
+     "camina mucho",
+     "espera a la noche"
+    ],
+    "en": [
+     "“If you want to see a thousand leagues…”",
+     "close your eyes",
+     "climb one more floor",
+     "walk a lot",
+     "wait for nightfall"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "En «Nieve en el río», ¿qué hace el viejo?",
+     "Duerme",
+     "Pesca solo en el río helado",
+     "Canta",
+     "Corta leña"
+    ],
+    "en": [
+     "In “River Snow”, what is the old man doing?",
+     "Sleeping",
+     "Fishing alone on the frozen river",
+     "Singing",
+     "Chopping wood"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Qué llega a medianoche hasta el barco del viajero en el poema de Zhang Ji?",
+     "Una carta",
+     "La campana del templo de Hanshan",
+     "Un pescador",
+     "La lluvia"
+    ],
+    "en": [
+     "In Zhang Ji's poem, what reaches the traveler's boat at midnight?",
+     "A letter",
+     "The bell of Hanshan Temple",
+     "A fisherman",
+     "The rain"
+    ],
+    "c": 1
+   }
+  ],
+  "3": [
+   {
+    "es": [
+     "En «Amanecer de primavera», ¿qué se pregunta el poeta?",
+     "Qué hora es",
+     "Cuántas flores cayeron con la lluvia de anoche",
+     "Dónde están los pájaros",
+     "Cuándo llega el verano"
+    ],
+    "en": [
+     "In “Spring Dawn”, what does the poet wonder?",
+     "What time it is",
+     "How many flowers fell in last night's rain",
+     "Where the birds are",
+     "When summer will come"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "En el poema de Bai Juyi, ¿qué le pasa a la hierba con el fuego?",
+     "Desaparece para siempre",
+     "Con el viento de primavera vuelve a nacer",
+     "Se vuelve roja",
+     "Se convierte en flores"
+    ],
+    "en": [
+     "In Bai Juyi's poem, what happens to the grass after the fire?",
+     "It disappears forever",
+     "With the spring wind it grows again",
+     "It turns red",
+     "It turns into flowers"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "«El sol poniente es infinitamente hermoso; lástima que…»",
+     "llueva",
+     "ya se acerque el anochecer",
+     "esté solo",
+     "haga frío"
+    ],
+    "en": [
+     "“The setting sun is infinitely beautiful; it's a pity that…”",
+     "it's raining",
+     "dusk is drawing near",
+     "I'm alone",
+     "it's cold"
+    ],
+    "c": 1
+   }
+  ],
+  "4": [
+   {
+    "es": [
+     "¿A quién despide Li Bai en la torre de la Grulla Amarilla?",
+     "A Wang Wei",
+     "A Meng Haoran",
+     "A Du Fu",
+     "A su hermano"
+    ],
+    "en": [
+     "Who does Li Bai see off at Yellow Crane Tower?",
+     "Wang Wei",
+     "Meng Haoran",
+     "Du Fu",
+     "His brother"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Por qué Wang Wei le pide a su amigo otra copa?",
+     "Porque es su cumpleaños",
+     "Porque al oeste del paso de Yang ya no tendrá viejos amigos",
+     "Porque hace frío",
+     "Porque ganó un premio"
+    ],
+    "en": [
+     "Why does Wang Wei urge his friend to have another cup?",
+     "Because it's his birthday",
+     "Because west of Yang Pass he'll have no old friends",
+     "Because it's cold",
+     "Because he won a prize"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "En «Buscando al ermitaño», ¿por qué no lo encuentra?",
+     "Porque se mudó",
+     "Porque las nubes son tan densas que no se sabe dónde está",
+     "Porque está dormido",
+     "Porque es de noche"
+    ],
+    "en": [
+     "In “Looking for the Hermit”, why can't he find him?",
+     "He moved away",
+     "The clouds are so thick no one knows where he is",
+     "He's asleep",
+     "It's night"
+    ],
+    "c": 1
+   }
+  ],
+  "5": [
+   {
+    "es": [
+     "En el poema de Wang Han, ¿qué se pregunta el soldado?",
+     "Cuándo terminará la guerra",
+     "Cuántos han vuelto de la guerra desde siempre",
+     "Dónde está su caballo",
+     "Quién ganará"
+    ],
+    "en": [
+     "In Wang Han's poem, what does the soldier ask?",
+     "When the war will end",
+     "How many have ever come back from war",
+     "Where his horse is",
+     "Who will win"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "En «Mirada de primavera», ¿cuánto vale una carta de casa?",
+     "Nada",
+     "Diez mil monedas de oro",
+     "Un caballo",
+     "Una copa de vino"
+    ],
+    "en": [
+     "In “Spring View”, how much is a letter from home worth?",
+     "Nothing",
+     "Ten thousand pieces of gold",
+     "A horse",
+     "A cup of wine"
+    ],
+    "c": 1
+   },
+   {
+    "es": [
+     "¿Quién escribió «Mirada de primavera» y «Subiendo a lo alto»?",
+     "Li Bai",
+     "Du Fu",
+     "Wang Wei",
+     "Bai Juyi"
+    ],
+    "en": [
+     "Who wrote “Spring View” and “Climbing High”?",
+     "Li Bai",
+     "Du Fu",
+     "Wang Wei",
+     "Bai Juyi"
+    ],
+    "c": 1
+   }
+  ]
+ }
+}

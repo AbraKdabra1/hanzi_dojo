@@ -1,0 +1,202 @@
+clave: viaje-al-oeste
+titulo: 西游记
+titulo_es: Viaje al Oeste
+nivel: 5
+tipo: adaptado
+descripcion: Las aventuras de Sun Wukong, el Rey Mono, desde que nace de una piedra hasta que acompaña al monje Tang a la India en busca de las escrituras sagradas. La novela más querida de China, contada en seis capítulos.
+fuente: Basado en la novela «Viaje al Oeste» de Wu Cheng'en (siglo XVI, dinastía Ming), una de las Cuatro Grandes Novelas clásicas (dominio público). Versión en chino graduado escrita para Meizi Hanzi.
+
+## 美猴王出世
+titulo_es: Nace el Rey Mono
+origen: Capítulo 1 de la novela.
+palabras: 猴子 = mono; 瀑布 = cascada; 大王 = rey (de un grupo); 本领 = habilidad, poderes; 筋斗云 = nube voladora (salto mortal)
+
+在东海边，有一座美丽的山，叫{花果山}。山顶上有一块巨大的石头。这块石头每天晒太阳，看月亮，过了很多很多年。
+> Junto al mar del Este había una montaña preciosa llamada Montaña de las Flores y Frutos. En su cima había una piedra enorme que, día tras día, tomaba el sol y miraba la luna, durante muchísimos años.
+
+有一天，石头突然破开了，从里面跳出来一只石猴。
+> Un día, la piedra se partió de repente y de ella saltó un mono de piedra.
+
+石猴很快就和山里的猴子们成了好朋友。它们每天一起爬树、摘果子、在河里洗澡，过得非常开心。
+> El mono de piedra pronto se hizo amigo de los monos de la montaña. Todos los días trepaban a los árboles, recogían fruta y se bañaban en el río; vivían felicísimos.
+
+有一天，猴子们来到一条瀑布前面。一只老猴子说："谁敢跳进瀑布，看看后面有什么，我们就让他当大王！"
+> Un día, los monos llegaron frente a una cascada. Un mono viejo dijo: «¡Quien se atreva a saltar a la cascada y ver qué hay detrás, será nuestro rey!».
+
+石猴什么也没说，闭上眼睛，一下子就跳了进去。
+> El mono de piedra no dijo nada: cerró los ojos y saltó de un brinco.
+
+原来，瀑布后面是一个很大的山洞，里面有石床、石桌、石碗，像一个舒服的家。洞口上写着"{水帘洞}"三个大字。
+> Detrás de la cascada había una gran cueva con camas, mesas y tazones de piedra, como un hogar cómodo. Sobre la entrada estaban escritas tres grandes palabras: «Cueva de la Cortina de Agua».
+
+石猴跳出来，把大家都带进了洞里。猴子们高兴极了，都叫他"{美猴王}"。
+> El mono de piedra salió de un salto y llevó a todos a la cueva. Los monos, felices, lo llamaron «el Hermoso Rey Mono».
+
+几百年过去了，美猴王开始担心：猴子们都会老，都会死。有没有办法永远不死呢？
+> Pasaron cientos de años y el Rey Mono empezó a preocuparse: todos los monos envejecen y mueren. ¿Habría alguna manera de no morir nunca?
+
+为了找到这个办法，他坐着自己做的小船，走了好多年，到了很远很远的地方，终于找到了一位很有本领的老师。
+> Para encontrarla, se fue en una barca que él mismo hizo, viajó muchos años hasta tierras lejanísimas y al fin encontró a un maestro muy poderoso.
+
+老师给他起了一个名字，叫{孙悟空}，还教会了他七十二种变化和"筋斗云"——一个筋斗就能飞出十万八千里。
+> El maestro le dio un nombre, Sun Wukong, y le enseñó las setenta y dos transformaciones y la «nube voladora»: con un solo salto podía recorrer ciento ocho mil leguas.
+
+## 大闹天宫
+titulo_es: Alboroto en el Palacio Celestial
+origen: Capítulos 3 a 7 de la novela.
+palabras: 武器 = arma; 龙宫 = palacio del Rey Dragón; 官 = funcionario, cargo; 宫殿 = palacio; 手指 = dedo
+
+孙悟空学好了本领，回到了花果山。他觉得自己需要一件好武器，就去了东海的龙宫。
+> Sun Wukong, ya con sus poderes, volvió a la Montaña de las Flores y Frutos. Sintió que necesitaba una buena arma y fue al palacio del Rey Dragón del mar del Este.
+
+在龙宫里，他拿走了一根神奇的铁棒，叫{金箍棒}。这根棒想大就大，想小就小，小的时候可以放在耳朵里。
+> En el palacio se llevó una barra de hierro mágica llamada Jingu Bang. Podía hacerse grande o pequeña a voluntad; cuando era pequeña, la guardaba en la oreja.
+
+{东海龙王}很生气，就去天上告诉了{玉皇大帝}。
+> El Rey Dragón del mar del Este se enojó mucho y fue al cielo a quejarse con el Emperador de Jade.
+
+玉皇大帝想："这只猴子本领这么大，不如让他到天上来，给他一个小官，他就不会闹了。"
+> El Emperador de Jade pensó: «Este mono es muy poderoso. Mejor lo traigo al cielo y le doy un cargo menor; así dejará de causar problemas».
+
+孙悟空来到天上，玉皇大帝让他管天上的马。他高高兴兴地养了很多天马。可是后来他才知道，这是一个最小最小的官！
+> Sun Wukong subió al cielo y el Emperador de Jade lo puso a cuidar los caballos celestiales. Él los cuidaba muy contento. ¡Pero luego supo que aquel era el cargo más bajo de todos!
+
+孙悟空非常生气："我有这么大的本领，就让我养马？"他一棒打出了天门，回到花果山，自己叫自己"齐天大圣"。
+> Sun Wukong se enfureció: «¿Con todos mis poderes, me ponen a cuidar caballos?». De un golpe salió por la puerta del cielo, volvió a su montaña y se proclamó «Gran Sabio Igual al Cielo».
+
+玉皇大帝派了很多天兵天将去抓他，可是谁也打不过他。
+> El Emperador de Jade envió a muchos soldados y generales celestiales a capturarlo, pero ninguno pudo vencerlo.
+
+后来，他又偷吃了王母娘娘的仙桃，还吃了{太上老君}的仙丹，天上被他闹得乱七八糟。
+> Después se comió a escondidas los melocotones de la inmortalidad de la Reina Madre y las píldoras mágicas de Laozi; el cielo quedó patas arriba.
+
+最后，玉皇大帝只好请来了{如来佛祖}。如来佛祖对孙悟空说："你要是能跳出我的手心，天上的宫殿就给你住。"
+> Al final, el Emperador de Jade tuvo que llamar a Buda. Buda le dijo a Sun Wukong: «Si logras salir de la palma de mi mano, el palacio del cielo será tuyo».
+
+孙悟空想："这太容易了！"他一个筋斗飞出去，飞到了天的尽头，看到五根大柱子。他在柱子上写了"齐天大圣到此一游"，又飞了回来。
+> Sun Wukong pensó: «¡Facilísimo!». De un salto voló hasta el fin del cielo y vio cinco enormes columnas. En una escribió «Aquí estuvo el Gran Sabio Igual al Cielo» y volvió volando.
+
+如来佛祖笑着说："你看看，这是什么？"原来，那五根柱子就是如来佛祖的五个手指！孙悟空根本没有飞出他的手心。
+> Buda sonrió y dijo: «Mira, ¿qué es esto?». ¡Las cinco columnas eran los cinco dedos de Buda! Sun Wukong nunca había salido de la palma de su mano.
+
+孙悟空还想跑，如来佛祖把手[shǒu]一翻，变成了一座大山，把他压在了山下。这座山叫{五行山}。
+> Sun Wukong quiso escapar, pero Buda volteó la mano, la convirtió en una gran montaña y lo dejó aplastado debajo. Esa montaña se llama Montaña de los Cinco Elementos.
+
+## 唐僧救悟空
+titulo_es: El monje Tang libera a Wukong
+origen: Capítulos 13 a 22 de la novela.
+palabras: 和尚 = monje budista; 佛经 = escrituras budistas; 徒弟 = discípulo; 师父 = maestro; 保护 = proteger
+
+孙悟空在五行山下一压就是五百年。他不能动，只能看着天上的云飞来飞去。
+> Sun Wukong pasó quinientos años aplastado bajo la montaña. No podía moverse; solo podía ver pasar las nubes.
+
+五百年以后，{大唐}有一位和尚，叫{唐僧}。他要去很远的西天取佛经，让更多的人明白佛的道理。
+> Quinientos años después, en el gran imperio Tang vivía un monje llamado Tang Seng. Quería viajar al lejano Oeste a buscar las escrituras budistas, para que más gente comprendiera las enseñanzas de Buda.
+
+{观音菩萨}告诉唐僧："路上妖怪很多，你需要徒弟保护你。五行山下有一只猴子，他可以当你的大徒弟。"
+> La diosa Guanyin le dijo al monje: «En el camino hay muchos demonios; necesitas discípulos que te protejan. Bajo la Montaña de los Cinco Elementos hay un mono que puede ser tu primer discípulo».
+
+唐僧来到五行山，拿下了山顶上的一张纸。大山一下子开了，孙悟空跳了出来。
+> El monje llegó a la montaña y retiró un papel que había en la cima. La montaña se abrió de golpe y Sun Wukong salió de un salto.
+
+孙悟空对唐僧说："师父，从今天起，我保护您去西天！"
+> Sun Wukong le dijo al monje: «¡Maestro, desde hoy te protegeré hasta el Oeste!».
+
+可是孙悟空的脾气太大了，常常乱打人。观音菩萨给了唐僧一顶帽子，让孙悟空戴上。只要孙悟空不听话，唐僧一念咒语，帽子就会越来越紧，孙悟空的头就疼得受不了。
+> Pero Sun Wukong tenía muy mal genio y a menudo golpeaba a la gente sin razón. Guanyin le dio al monje un gorro para que Wukong se lo pusiera. Cada vez que Wukong desobedecía, el monje recitaba un conjuro, el gorro se apretaba más y más, y a Wukong le dolía tanto la cabeza que no lo soportaba.
+
+在路上，他们又遇到了{猪八戒}和{沙僧}，他们也成了唐僧的徒弟。
+> En el camino encontraron también a Zhu Bajie y a Sha Seng, que se hicieron discípulos del monje.
+
+猪八戒喜欢吃，喜欢睡觉，有点儿懒，可是很好玩。沙僧非常老实，每天帮大家拿东西。还有一匹白马，其实是龙王的儿子变的。
+> A Zhu Bajie le encantaba comer y dormir; era un poco flojo, pero muy divertido. Sha Seng era muy honrado y cada día cargaba las cosas de todos. Y había un caballo blanco que en realidad era el hijo de un Rey Dragón transformado.
+
+师徒四人，就这样开始了去西天的路。
+> Así, el maestro y sus discípulos emprendieron el camino hacia el Oeste.
+
+## 三打白骨精
+titulo_es: Tres golpes al Demonio de Huesos Blancos
+origen: Capítulo 27 de la novela.
+palabras: 妖怪 = demonio, monstruo; 骗 = engañar; 念 = recitar; 咒语 = conjuro; 赶走 = echar, expulsar
+
+有一天，师徒四人走到一座大山里。唐僧饿了，孙悟空就去远处找吃的。
+> Un día, el maestro y sus discípulos llegaron a una gran montaña. El monje tenía hambre, así que Sun Wukong fue lejos a buscar comida.
+
+山里住着一个妖怪，叫{白骨精}。她听说吃了唐僧的肉，就可以永远不老、永远不死。
+> En la montaña vivía un demonio llamado Baigujing, el Demonio de Huesos Blancos. Había oído que quien comiera la carne del monje Tang nunca envejecería ni moriría.
+
+白骨精变成了一个漂亮的姑娘，提着一篮饭菜，走到唐僧面前："师父，您饿了吧？请吃点儿饭吧。"
+> Baigujing se transformó en una bella muchacha y, con una canasta de comida, se acercó al monje: «Maestro, debe tener hambre. Coma un poco, por favor».
+
+这时候，孙悟空回来了。他用他的火眼金睛一看，就知道她是妖怪，举起金箍棒就打。白骨精留下一个假身体，自己跑了。
+> En ese momento volvió Sun Wukong. Con sus ojos de fuego que todo lo ven, supo al instante que era un demonio y alzó su barra para golpearla. Baigujing dejó atrás un cuerpo falso y huyó.
+
+唐僧很生气："悟空，你怎么能乱打人！"
+> El monje se enojó mucho: «¡Wukong, cómo puedes golpear así a la gente!».
+
+没[méi]过多久，白骨精又变成了一位老奶奶，来找她的"女儿"。孙悟空又认出了她，一棒打了下去。白骨精又跑了。
+> Poco después, Baigujing volvió convertida en una anciana que buscaba a su «hija». Sun Wukong la reconoció otra vez y le dio un golpe. Baigujing volvió a escapar.
+
+唐僧更生气了，念起了咒语。孙悟空疼得在地上滚来滚去。
+> El monje, aún más enojado, recitó el conjuro. A Sun Wukong le dolía tanto que se revolcaba por el suelo.
+
+第三次，白骨精变成了一位老爷爷。这一次，孙悟空先请山神在天上看着，然后一棒打死了白骨精。地上只剩下一堆白骨。
+> La tercera vez, Baigujing se convirtió en un anciano. Esta vez, Sun Wukong primero pidió a los dioses de la montaña que vigilaran desde el cielo, y luego mató a Baigujing de un golpe. En el suelo solo quedó un montón de huesos blancos.
+
+可是唐僧还是不相信孙悟空，他觉得孙悟空骗了他，就把孙悟空赶走了。孙悟空流着[zhe]眼泪，回到了花果山。
+> Pero el monje seguía sin creerle: pensó que Wukong lo había engañado y lo echó. Sun Wukong, con lágrimas en los ojos, volvió a su montaña.
+
+后来，唐僧被别的妖怪抓走了，猪八戒只好去花果山请孙悟空回来。孙悟空一听师父有危险，马上就回来了，打败了妖怪，救出了唐僧。
+> Más tarde, otro demonio capturó al monje, y Zhu Bajie tuvo que ir a la montaña a pedirle a Wukong que volviera. En cuanto supo que su maestro estaba en peligro, Wukong regresó, venció al demonio y lo rescató.
+
+唐僧这才明白，自己错怪了孙悟空。
+> Solo entonces el monje entendió que había culpado injustamente a Sun Wukong.
+
+## 火焰山
+titulo_es: La Montaña Llameante
+origen: Capítulos 59 a 61 de la novela.
+palabras: 火焰 = llamas; 扇子 = abanico; 公主 = princesa; 肚子 = barriga; 灭 = apagar
+
+有一年秋天，师徒四人越走越热。原来，前面有一座山，叫{火焰山}。山上的火八百里都不灭，谁也过不去。
+> Un otoño, el maestro y sus discípulos sentían cada vez más calor. Más adelante estaba la Montaña Llameante: su fuego ardía a lo largo de ochocientas leguas sin apagarse, y nadie podía cruzarla.
+
+人们说，只有{铁扇公主}的扇子能把火扇[shān]灭。
+> La gente decía que solo el abanico de la Princesa del Abanico de Hierro podía apagar ese fuego.
+
+孙悟空去借扇子。可是铁扇公主是{牛魔王}的妻子，也是{红孩儿}的妈妈。以前孙悟空打败过红孩儿，所以铁扇公主不但不借，还拿起扇子一扇[shān]，把孙悟空扇[shān]到了五万里以外！
+> Sun Wukong fue a pedirlo prestado. Pero la princesa era la esposa del Rey Demonio Toro y la madre de Niño Rojo, a quien Wukong había derrotado. Así que no solo se negó, sino que con un solo aleteo de su abanico ¡mandó a Wukong a cincuenta mil leguas de distancia!
+
+孙悟空又回来了。这一次，他变成了一只小虫子，飞进了铁扇公主的茶里。铁扇公主一喝茶，就把小虫子喝进了肚子里。
+> Sun Wukong regresó. Esta vez se convirtió en un insecto diminuto y se metió en el té de la princesa. Ella bebió el té y se tragó al insecto.
+
+孙悟空在她的肚子里打来打去，铁扇公主疼得受不了，只好把扇子给了他。
+> Wukong empezó a dar golpes dentro de su barriga; a la princesa le dolía tanto que tuvo que darle el abanico.
+
+可是，孙悟空拿着扇子一扇[shān]，火不但没有灭，反而更大了！原来，那是一把假扇子。
+> Pero cuando Wukong lo agitó, el fuego no solo no se apagó, ¡sino que creció! Era un abanico falso.
+
+后来，孙悟空变成了牛魔王的样子，从铁扇公主那里骗到了真扇子。
+> Después, Wukong se transformó en el Rey Demonio Toro y engañó a la princesa para conseguir el abanico verdadero.
+
+最后，在天兵天将的帮助下，孙悟空打败了牛魔王。他拿着真扇子扇[shān]了四十九下，火焰山的火终于全灭了，天上还下起了雨。
+> Al final, con la ayuda de los soldados celestiales, Wukong venció al Rey Demonio Toro. Agitó el abanico verdadero cuarenta y nueve veces: el fuego de la montaña por fin se apagó del todo, y hasta empezó a llover.
+
+师徒四人又继续往西走了。
+> Y el maestro y sus discípulos siguieron su camino hacia el Oeste.
+
+## 取得真经
+titulo_es: Las escrituras verdaderas
+origen: Capítulos 98 a 100 de la novela.
+palabras: 困难 = dificultad; 一共 = en total; 佛 = Buda; 四大名著 = las Cuatro Grandes Novelas clásicas
+
+师徒四人走了十四年，经过了很多很多困难——一共九九八十一难[nàn]，终于到了西天。
+> El maestro y sus discípulos caminaron catorce años y superaron muchísimas dificultades —ochenta y una pruebas en total— hasta llegar por fin al Oeste.
+
+如来佛祖把佛经给了他们。他们带着佛经，回到了大唐。
+> Buda les entregó las escrituras y ellos las llevaron de vuelta al imperio Tang.
+
+因为他们一路上做了很多好事，最后都成了佛。孙悟空头上的帽子，也自己不见了。
+> Como habían hecho tantas buenas obras en el camino, al final todos alcanzaron la iluminación. Y el gorro de la cabeza de Sun Wukong desapareció solo.
+
+《西游记》是明朝的{吴承恩}写的，是中国的四大名著之一。四百多年来，孙悟空一直是中国孩子最喜欢的英雄。
+> «Viaje al Oeste» lo escribió Wu Cheng'en en la dinastía Ming, y es una de las Cuatro Grandes Novelas clásicas de China. Desde hace más de cuatrocientos años, Sun Wukong es el héroe favorito de los niños chinos.

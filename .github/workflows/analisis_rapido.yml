@@ -1,0 +1,58 @@
+# ---------------------------------------------------------------------------
+# Análisis rápido: solo `flutter analyze` (unos 3 minutos), para enterarse
+# pronto de errores de compilación mientras el CI completo sigue corriendo.
+# El resultado se publica en la rama "ci-analisis" (analyze.txt y resumen.txt).
+# ---------------------------------------------------------------------------
+name: Análisis rápido
+
+on:
+  push:
+    branches-ignore: [ci-registros, ci-analisis, ci-ios, ci-web, main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: analisis-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.44.5
+          cache: true
+
+      - name: Dependencias
+        run: flutter pub get
+
+      - name: Analizar
+        id: analyze
+        continue-on-error: true
+        run: |
+          flutter analyze --no-fatal-infos 2>&1 | tee analyze.txt
+          exit ${PIPESTATUS[0]}
+
+      - name: Publicar en ci-analisis
+        if: always()
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p /tmp/an && cp analyze.txt /tmp/an/ 2>/dev/null || true
+          cd /tmp/an
+          {
+            echo "commit: $GITHUB_SHA"
+            echo "rama: $GITHUB_REF_NAME"
+            echo "analyze: ${{ steps.analyze.outcome }}"
+          } > resumen.txt
+          git init -q && git checkout -q -b an
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A && git commit -qm "Análisis de $GITHUB_REF_NAME @ ${GITHUB_SHA::7}"
+          git push -qf "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" an:refs/heads/ci-analisis

@@ -1,3 +1,12 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// trazo_guia_painter.dart — Animación del trazo correcto (modo novato)
+//
+// Cuando te equivocas en modo novato, una línea azul recorre el trazo que
+// tocaba, de inicio a fin, con una flecha que indica por dónde empezar.
+// [progreso] va de 0.0 a 1.0 y lo mueve un AnimationController.
+// Los puntos ya vienen en píxeles del lienzo (GeometriaLienzo.trazoALienzo).
+// ─────────────────────────────────────────────────────────────────────────────
+
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 

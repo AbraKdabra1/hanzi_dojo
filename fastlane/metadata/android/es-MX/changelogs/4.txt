@@ -1,0 +1,1 @@
+Beta 2: «Enviar mi opinión» (un resumen de cómo usas la app que ves antes de compartir), botón «¿Ese trazo estaba bien?» para avisar cuando la app marca mal un trazo, y aviso opcional de versión nueva.

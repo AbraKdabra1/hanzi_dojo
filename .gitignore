@@ -43,3 +43,26 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Salidas de flutter analyze/test que genera el script de migración
+registros_locales/
+
+# Scripts de ayuda que solo sirven en la PC de desarrollo (p. ej. preparar el emulador)
+# y las tareas de VS Code que los lanzan.
+herramientas_locales/
+.vscode/tasks.json
+
+# La base de contenido (assets/db/contenido.db) SÍ se sube al repo, para que
+# la app compile sin tener Python. Se regenera con herramientas_datos/construir_db.py.
+assets/db/*.tmp
+
+# Llave de firma de lanzamiento: NUNCA al repo (ver docs/publicar.md)
+android/key.properties
+*.jks
+*.keystore
+llave_base64.txt
+
+# Versión web: los genera "dart run sqflite_common_ffi_web:setup" (web.yml)
+/web/sqlite3.wasm
+/web/sqflite_sw.js
+/node_modules/
