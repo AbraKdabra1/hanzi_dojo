@@ -103,7 +103,7 @@ class VersionNueva {
 }
 
 /// El final del nombre del APK para estas arquitecturas (ver lanzamiento.yml:
-/// Meizi_Hanzi_<versión>_arm64.apk, _arm32, _x86_64, _universal).
+/// `Meizi_Hanzi_2.1.0_arm64.apk`, `_arm32`, `_x86_64`, `_universal`).
 String sufijoApk(List<String> abis) {
   for (final abi in abis) {
     switch (abi) {

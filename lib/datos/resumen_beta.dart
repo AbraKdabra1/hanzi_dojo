@@ -156,10 +156,7 @@ extension ResumenBetaRepositorio on Repositorio {
     try {
       final lista = jsonDecode(texto);
       if (lista is! List) return [];
-      return [
-        for (final j in lista)
-          if (TrazoReportado.desdeJson(j) case final t?) t,
-      ];
+      return [for (final j in lista) ?TrazoReportado.desdeJson(j)];
     } on FormatException {
       return [];
     }
