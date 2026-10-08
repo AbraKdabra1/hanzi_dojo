@@ -19,9 +19,23 @@ Nadie más tiene acceso a esa información, ni siquiera quien hizo la app.
 
 ## Internet
 
-La app **no tiene permiso de internet**. No usa cuentas, anuncios, analítica
-ni servicios de terceros. Las grabaciones de pronunciación y todo el contenido
+La app **funciona sin internet** y no usa cuentas, anuncios, analítica ni
+servicios de terceros. Las grabaciones de pronunciación y todo el contenido
 vienen dentro de la app.
+
+Tiene permiso de internet **solo para el aviso de versión nueva**, y solo si
+tú lo aceptas (se pregunta una vez; se cambia en Ajustes → Versiones nuevas).
+Si lo aceptas, una vez al día pide a GitHub la lista pública de versiones de
+la app, la misma página que cualquiera puede abrir, para saber si hay una
+más nueva. Esa consulta no lleva nada tuyo: ni tu progreso, ni tus ajustes,
+ni un identificador. Como cualquier conexión, GitHub ve la dirección IP del
+teléfono. Las versiones de tienda (Google Play, F-Droid) no hacen esta
+consulta: ahí la tienda se encarga de actualizar.
+
+«Enviar mi opinión» arma en el teléfono un resumen de cómo usas la app
+(días de uso, repasos, secciones, trazos que reportaste como mal marcados,
+errores de la app). Lo ves completo y solo sale si tú lo compartes, con la app
+que tú elijas.
 
 Cuando tocas «Reportar un problema», la app abre tu navegador con un
 formulario de GitHub ya lleno; tú decides si lo envías y ves exactamente qué
@@ -34,8 +48,9 @@ app no envía nada: si donas o no, y cuánto, solo lo sabe PayPal.
 
 | Permiso | Para qué |
 |---|---|
-| Notificaciones | Solo si activas el recordatorio diario. |
+| Notificaciones | Solo si activas el recordatorio diario o el carácter del día. |
 | Ejecutar al iniciar el teléfono | Volver a programar el recordatorio después de reiniciar. |
+| Internet | Solo el aviso de versión nueva, si lo aceptas (ver arriba). |
 
 Para exportar tu progreso, abrir un libro o guardar una imagen, la app usa el
 selector de archivos del sistema: solo accede al archivo que tú elijas.

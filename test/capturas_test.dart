@@ -7,6 +7,7 @@
 // Solo corre si se pide (para que `flutter test` siga siendo rápido):
 //   CAPTURAS=1 flutter test test/capturas_test.dart
 
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -18,6 +19,8 @@ import 'package:hanzi_dojo/datos/base_datos.dart';
 import 'package:hanzi_dojo/datos/datos_app.dart';
 import 'package:hanzi_dojo/datos/repositorio.dart';
 import 'package:hanzi_dojo/datos/repositorio_habito.dart';
+import 'package:hanzi_dojo/datos/resumen_beta.dart';
+import 'package:hanzi_dojo/helpers/actualizaciones.dart';
 import 'package:hanzi_dojo/painters/rama_ciruelo.dart';
 import 'package:hanzi_dojo/screens/pantalla_ajustes.dart';
 import 'package:hanzi_dojo/screens/pantalla_bateria.dart';
@@ -37,6 +40,7 @@ import 'package:hanzi_dojo/screens/pantalla_modo.dart';
 import 'package:hanzi_dojo/screens/pantalla_pinyin.dart';
 import 'package:hanzi_dojo/screens/pantalla_practica.dart';
 import 'package:hanzi_dojo/screens/pantalla_radicales.dart';
+import 'package:hanzi_dojo/screens/pantalla_resumen_beta.dart';
 import 'package:hanzi_dojo/screens/pantalla_seleccion.dart';
 import 'package:hanzi_dojo/screens/pantalla_tonos.dart';
 import 'package:hanzi_dojo/screens/pantalla_vocabulario.dart';
@@ -177,6 +181,43 @@ void main() {
     });
     // Para las demás capturas, ya visto (si no, el inicio lo abriría encima).
     await tester.runAsync(repo.marcarTutorialVisto);
+
+    // Aviso de versión nueva: el teléfono dice que tiene la beta 2 y "GitHub"
+    // responde que ya salió la 3 (sin internet de verdad).
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(const MethodChannel('hanzi_dojo/archivos'),
+        (llamada) async {
+      if (llamada.method == 'info') {
+        return {
+          'version': '2.1.0-beta.2',
+          'compilacion': '4',
+          'modelo': 'HUAWEI Pura 70',
+          'android': '12 (API 31)',
+          'abis': 'arm64-v8a,armeabi-v7a',
+        };
+      }
+      return null;
+    });
+    Actualizaciones.consultar = (_) async => jsonEncode([
+          {
+            'tag_name': 'v2.1.0-beta.3',
+            'prerelease': true,
+            'draft': false,
+            'html_url': 'https://github.com/AbraKdabra1/hanzi_dojo/releases/tag/v2.1.0-beta.3',
+            'assets': <Object>[],
+          },
+        ]);
+    await tester.runAsync(() async {
+      await repo.guardarAvisarVersiones(true);
+      await repo.guardarResultadoTutorial('escrito');
+      await repo.reportarTrazo(TrazoReportado(
+        caracter: '人',
+        indice: 1,
+        alReves: false,
+        modoNovato: true,
+        momento: DateTime(2026, 10, 9, 20),
+        puntos: const [Offset(520, 560), Offset(640, 380), Offset(830, 140)],
+      ));
+    });
     await capturar(tester, '01_inicio', const PantallaInicio());
     await capturar(tester, '02_modo', const PantallaModo(),
         accion: (t) => t.tap(find.text('Soy novato'), warnIfMissed: false));
@@ -198,6 +239,12 @@ void main() {
     });
     await capturar(tester, '08_estadisticas', const PantallaEstadisticas());
     await capturar(tester, '09_ajustes', const PantallaAjustes());
+    await capturar(tester, '09b_ajustes_versiones', const PantallaAjustes(), accion: (t) async {
+      await t.scrollUntilVisible(find.text('Enviar mi opinión'), 300, scrollable: find.byType(Scrollable).first);
+    });
+    await capturar(tester, '09c_resumen_beta', const PantallaResumenBeta(), accion: (t) async {
+      await t.enterText(find.byType(TextField), 'El tutorial se entiende muy bien. No sabía dónde estaban los tonos.');
+    });
     await capturar(tester, '10_bateria', const PantallaBateria());
     await capturar(tester, '11_practica', const PantallaPractica());
     await capturar(tester, '12_tonos', const PantallaTonos(nivel: 1),

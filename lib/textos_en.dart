@@ -1151,4 +1151,113 @@ const textosEn = <String, String>{
       'Recommend it to someone learning Chinese, tell us what to improve (Settings → Report a problem) or fix a translation on GitHub.',
   'Ahora no':
       'Not now',
+  // Beta 2: resumen de la beta, trazos reportados y aviso de versión nueva.
+  'sí':
+      'yes',
+  'no':
+      'no',
+  'Resumen de la beta':
+      'Beta summary',
+  'Idioma: {0}':
+      'Language: {0}',
+  'Tutorial: {0}':
+      'Tutorial: {0}',
+  'terminado, escribió 人':
+      'finished, wrote 人',
+  'terminado':
+      'finished',
+  'omitido':
+      'skipped',
+  'Escritura':
+      'Writing',
+  'Días con actividad: {0}':
+      'Days with activity: {0}',
+  'Repasos: {0} · caracteres distintos: {1}':
+      'Reviews: {0} · different characters: {1}',
+  'Sin errores: {0} · en modo novato: {1}':
+      'Without mistakes: {0} · in beginner mode: {1}',
+  'Tiempo escribiendo: {0} min':
+      'Time writing: {0} min',
+  'tonos':
+      'tones',
+  'tonos en palabras':
+      'tones in words',
+  'escucha':
+      'listening',
+  'Práctica: {0}':
+      'Practice: {0}',
+  'Lectura: {0} capítulos · libros propios: {1}':
+      'Reading: {0} chapters · own books: {1}',
+  'Racha: {0} días (máxima {1}) · meta diaria: {2}':
+      'Streak: {0} days (best {1}) · daily goal: {2}',
+  'Recordatorio: {0} · carácter del día: {1} · logros: {2}':
+      'Reminder: {0} · character of the day: {1} · achievements: {2}',
+  'Trazos que la app marcó mal ({0})':
+      'Strokes the app marked wrong ({0})',
+  'al revés':
+      'backwards',
+  'novato':
+      'beginner',
+  'experto':
+      'expert',
+  'Errores de la app: {0}':
+      'App errors: {0}',
+  'Resumen de la beta · Meizi Hanzi':
+      'Beta summary · Meizi Hanzi',
+  'Resumen copiado. Pégalo en un mensaje a quien te invitó.':
+      'Summary copied. Paste it in a message to whoever invited you.',
+  'Enviar mi opinión':
+      'Send my feedback',
+  'Este resumen se arma en tu teléfono con lo que has hecho en la app. Nada se envía solo: léelo y, si estás de acuerdo, compártelo con quien te invitó.':
+      'This summary is put together on your phone from what you have done in the app. Nothing is sent on its own: read it and, if you agree, share it with whoever invited you.',
+  'Tu comentario (opcional)':
+      'Your comment (optional)',
+  '¿Qué te confundió? ¿Qué te gustó? ¿Qué le falta?':
+      'What confused you? What did you like? What is missing?',
+  'Copiar':
+      'Copy',
+  'Lo que se comparte':
+      'What gets shared',
+  'Hay una versión nueva: {0}':
+      'A new version is available: {0}',
+  'Ya tienes la versión más reciente.':
+      'You already have the latest version.',
+  'No se pudo revisar. ¿Tienes internet?':
+      'Couldn\'t check. Are you online?',
+  'No se pudo saber qué versión tienes.':
+      'Couldn\'t tell which version you have.',
+  'Descargar':
+      'Download',
+  'Versiones nuevas':
+      'New versions',
+  'Tienes la versión {0}.':
+      'You have version {0}.',
+  'Avisarme cuando haya una nueva':
+      'Tell me when there is a new one',
+  'Revisa GitHub una vez al día. Solo consulta el número de versión: no envía nada sobre ti.':
+      'Checks GitHub once a day. It only looks up the version number: nothing about you is sent.',
+  'Buscar ahora':
+      'Check now',
+  'Un resumen de cómo usas la app, para mejorarla':
+      'A summary of how you use the app, to improve it',
+  '¡Gracias! Lo anotamos para revisarlo. Va en tu resumen (Ajustes → Enviar mi opinión).':
+      'Thanks! We noted it to review. It goes in your summary (Settings → Send my feedback).',
+  '¿Ese trazo estaba bien? Avísanos':
+      'Was that stroke right? Tell us',
+  '¿Alguno estaba bien?':
+      'Was one of them right?',
+  '¿Te aviso cuando haya una versión nueva?':
+      'Should I tell you when there is a new version?',
+  'Una vez al día, la app puede revisar en GitHub si salió una versión nueva y avisarte aquí. Solo consulta el número de versión: no envía nada sobre ti ni sobre tu progreso. Puedes cambiarlo en Ajustes.':
+      'Once a day, the app can check GitHub for a new version and tell you here. It only looks up the version number: nothing about you or your progress is sent. You can change this in Settings.',
+  'No, gracias':
+      'No, thanks',
+  'Sí, avísame':
+      'Yes, tell me',
+  'Cuando termine de bajar, ábrelo e instálalo: se instala encima, sin perder tu progreso.':
+      'When it finishes downloading, open it and install it: it installs over the current one, without losing your progress.',
+  'No encontré un navegador para descargarla.':
+      'I couldn\'t find a browser to download it.',
+  'Novedades':
+      'What\'s new',
 };

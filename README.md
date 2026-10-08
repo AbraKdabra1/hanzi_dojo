@@ -9,7 +9,8 @@ trazo, en Android, iPhone/iPad y el navegador. Revisa cada trazo mientras escrib
 espaciada (SM-2) y permite estudiar **por nivel HSK** o **por radical**.
 
 Es **software libre** (GPL-3.0): gratis, sin anuncios, sin cuentas y sin
-rastreo. La app no pide permiso de internet.
+rastreo. Funciona sin internet; solo se conecta, si tú lo aceptas, para
+avisarte de versiones nuevas.
 
 - Identificador de la app: `com.abrakdabra.hanzidojo`
 - Versión: 2.1.0 (beta pública: [`docs/beta.md`](docs/beta.md))
@@ -196,8 +197,8 @@ Las versiones firmadas están en la pestaña **Releases** del repositorio
 (`Meizi_Hanzi_X.Y.Z_arm64.apk` para casi todos los teléfonos; `universal` si no
 sabes cuál). Cómo se publican (llave de firma, F-Droid, AppGallery):
 [`docs/publicar.md`](docs/publicar.md). Novedades: [`CHANGELOG.md`](CHANGELOG.md).
-Privacidad: [`docs/privacidad.md`](docs/privacidad.md) — la app no tiene
-permiso de internet.
+Privacidad: [`docs/privacidad.md`](docs/privacidad.md) — no recopila datos; el
+único uso de internet es el aviso de versión nueva, y solo si lo aceptas.
 
 - **iPhone y iPad**, sin computadora: la versión web,
   https://abrakdabra1.github.io/hanzi_dojo/ → Safari → Compartir →

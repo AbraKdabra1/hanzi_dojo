@@ -100,11 +100,14 @@ jobs:
           "$APKSIGNER" verify --print-certs "Meizi_Hanzi_${VERSION}_universal.apk" \
             | grep -E 'SHA-256' | head -1 | sed -E 's/.*SHA-256 digest: //' > huella.txt
           cat SHA256SUMS.txt huella.txt
-          # Permisos del APK final (la app no debe pedir internet).
+          # Permisos del APK final: avisa si aparece alguno que no esperamos
+          # (internet es solo para el aviso de versión nueva, docs/privacidad.md).
           AAPT2=$(ls "$ANDROID_HOME"/build-tools/*/aapt2 | sort -V | tail -1)
           "$AAPT2" dump permissions "Meizi_Hanzi_${VERSION}_universal.apk" | tee permisos.txt
-          if grep -q 'android.permission.INTERNET' permisos.txt; then
-            echo "::warning::El APK de lanzamiento pide permiso de internet"
+          ESPERADOS='INTERNET|POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+          OTROS=$(grep -oE "name='[^']+'" permisos.txt | sed -E "s/name='(.*)'/\1/" | grep -vE "$ESPERADOS" || true)
+          if [ -n "$OTROS" ]; then
+            echo "::warning::El APK pide permisos que no esperábamos: $OTROS"
           fi
           rm permisos.txt
 

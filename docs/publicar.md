@@ -116,7 +116,11 @@ una prueba cerrada con un grupo de personas durante unas semanas antes de
 publicar (revisa las reglas vigentes en la Play Console, cambian seguido). Play solo permite
 enlaces de donativos dentro de la app a organizaciones sin fines de lucro, así
 que esa versión se compila sin el botón de «Apoyar el proyecto» (el enlace queda
-solo en la ficha de la tienda):
+solo en la ficha de la tienda) y sin el aviso de versión nueva de GitHub (las
+actualizaciones las da Play). Al configurar la firma en la Play Console, elige
+**usar tu propia llave** (la de la sección 1): así el APK de GitHub y el de
+Play son intercambiables y nadie tiene que desinstalar para cambiar de uno a
+otro.
 
 ```bash
 flutter build appbundle --release --dart-define=TIENDA=play

@@ -25,9 +25,11 @@ import 'package:flutter/material.dart';
 import '../datos/datos_app.dart';
 import '../datos/repositorio_habito.dart';
 import '../datos/repositorio_practica.dart';
+import '../helpers/actualizaciones.dart';
 import '../helpers/habito.dart';
 import '../tema.dart';
 import '../widgets/apoyo.dart';
+import '../widgets/aviso_version.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/logro_dialogo.dart';
 import 'pantalla_ajustes.dart';
@@ -71,6 +73,11 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
 
   /// El tutorial se revisa una sola vez por apertura de la app.
   bool _tutorialRevisado = false;
+
+  /// La versión nueva también (helpers/actualizaciones.dart); si hay una,
+  /// se avisa arriba.
+  bool _versionRevisada = false;
+  VersionNueva? _versionNueva;
 
   @override
   void initState() {
@@ -116,9 +123,11 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
   Future<void> _cargarResumen() async {
     final repo = DatosApp.de(context);
     // La primera vez: el tutorial (se puede omitir).
+    var tutorialAhora = false;
     if (!_tutorialRevisado) {
       _tutorialRevisado = true;
       if (!await repo.tutorialVisto() && mounted) {
+        tutorialAhora = true;
         await Navigator.push(
           context,
           MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => const PantallaBienvenida()),
@@ -167,6 +176,34 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
       // Una sola vez en la vida de la app (ver widgets/apoyo.dart).
       if (mounted) await Apoyo.sugerirTrasLogro(context, repo);
     }
+    // Al final, para no encimarse con lo demás. Recién visto el tutorial no
+    // se pregunta nada más: eso queda para la siguiente vez.
+    if (!_versionRevisada && mounted) {
+      _versionRevisada = true;
+      await _revisarVersion(preguntar: !tutorialAhora);
+    }
+  }
+
+  Future<void> _revisarVersion({required bool preguntar}) async {
+    if (!Actualizaciones.disponible) return;
+    final repo = DatosApp.de(context);
+    var avisar = await repo.avisarVersiones();
+    if (avisar == null) {
+      if (!preguntar || !mounted) return;
+      avisar = await preguntarAvisoVersiones(context);
+      if (avisar == null) return; // se cerró sin elegir: se pregunta otro día
+      await repo.guardarAvisarVersiones(avisar);
+    }
+    if (!avisar) return;
+    final resultado = await Actualizaciones.revisar(repo);
+    final nueva = resultado.nueva;
+    if (nueva == null || nueva.version == await repo.versionDescartada() || !mounted) return;
+    setState(() => _versionNueva = nueva);
+  }
+
+  Future<void> _descartarVersion(VersionNueva nueva) async {
+    setState(() => _versionNueva = null);
+    await DatosApp.de(context).descartarVersion(nueva.version);
   }
 
   Future<void> _ir(Widget pantalla) async {
@@ -206,6 +243,11 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
                   ),
                 ],
               ),
+              if (_versionNueva case final nueva?)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: TarjetaVersionNueva(nueva: nueva, onDescartar: () => _descartarVersion(nueva)),
+                ),
               const Spacer(),
               const Text('梅字', style: TextStyle(fontSize: 54, fontWeight: FontWeight.w400, letterSpacing: 10)),
               const SizedBox(height: 4),

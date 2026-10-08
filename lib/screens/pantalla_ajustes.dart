@@ -10,8 +10,10 @@
 // · Tus datos: exportar e importar el progreso (respaldo.dart) y deshacer la
 //   última importación.
 // · Apoyar el proyecto (donativo voluntario, widgets/apoyo.dart).
-// · Reportar un problema (pantalla_reporte.dart) e Informe de errores
-//   (pantalla_errores.dart).
+// · Versiones nuevas: el aviso de versión nueva (helpers/actualizaciones.dart),
+//   solo en las copias instaladas desde GitHub.
+// · Enviar mi opinión (pantalla_resumen_beta.dart), Reportar un problema
+//   (pantalla_reporte.dart) e Informe de errores (pantalla_errores.dart).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -22,10 +24,12 @@ import '../datos/registro_errores.dart';
 import '../datos/repositorio_habito.dart';
 import '../datos/repositorio_practica.dart';
 import '../datos/respaldo.dart';
+import '../helpers/actualizaciones.dart';
 import '../helpers/archivos.dart';
 import '../helpers/habito.dart';
 import '../helpers/sensaciones.dart';
 import '../widgets/apoyo.dart';
+import '../widgets/aviso_version.dart';
 import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
@@ -36,6 +40,7 @@ import 'pantalla_bienvenida.dart';
 import 'pantalla_creditos.dart';
 import 'pantalla_errores.dart';
 import 'pantalla_reporte.dart';
+import 'pantalla_resumen_beta.dart';
 import '../idioma.dart';
 
 class PantallaAjustes extends StatefulWidget {
@@ -67,6 +72,12 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
   /// true mientras se exporta o importa (evita tocar dos veces).
   bool _ocupado = false;
 
+  /// Aviso de versión nueva (null = aún no se ha preguntado) y la versión
+  /// instalada.
+  bool? _avisarVersiones;
+  String _version = '';
+  bool _buscandoVersion = false;
+
   @override
   void initState() {
     super.initState();
@@ -86,6 +97,8 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
     final recordatorio = await repo.recordatorio();
     final caracterDia = await repo.caracterDia();
     final previo = await Respaldo.hayRespaldoPrevio(repo.base);
+    final avisarVersiones = Actualizaciones.disponible ? await repo.avisarVersiones() : null;
+    final version = Actualizaciones.disponible ? (await Archivos.info()).version : '';
     if (mounted) {
       setState(() {
         _limite = n;
@@ -99,8 +112,38 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
         _recordatorio = recordatorio;
         _caracterDia = caracterDia;
         _hayPrevio = previo;
+        _avisarVersiones = avisarVersiones;
+        _version = version;
       });
     }
+  }
+
+  Future<void> _cambiarAvisoVersiones(bool avisar) async {
+    setState(() => _avisarVersiones = avisar);
+    await DatosApp.de(context).guardarAvisarVersiones(avisar);
+  }
+
+  /// «Buscar ahora»: revisa en el momento (aunque el aviso esté apagado).
+  Future<void> _buscarVersion() async {
+    final repo = DatosApp.de(context);
+    final aviso = ScaffoldMessenger.of(context);
+    setState(() => _buscandoVersion = true);
+    final resultado = await Actualizaciones.revisar(repo, forzar: true);
+    if (!mounted) return;
+    setState(() => _buscandoVersion = false);
+    final nueva = resultado.nueva;
+    aviso.showSnackBar(SnackBar(
+      duration: Duration(seconds: nueva == null ? 4 : 10),
+      content: Text(switch (resultado.estado) {
+        EstadoRevision.nueva => tr('Hay una versión nueva: {0}', [nueva?.version ?? '']),
+        EstadoRevision.alDia => tr('Ya tienes la versión más reciente.'),
+        EstadoRevision.sinConexion => tr('No se pudo revisar. ¿Tienes internet?'),
+        EstadoRevision.noDisponible => tr('No se pudo saber qué versión tienes.'),
+      }),
+      action: nueva == null
+          ? null
+          : SnackBarAction(label: tr('Descargar'), onPressed: () => descargarVersion(context, nueva)),
+    ));
   }
 
   void _aviso(String texto) {
@@ -644,6 +687,67 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
               TarjetaVidrio(onTap: () => Apoyo.mostrar(context), child: const FilaApoyo()),
               const SizedBox(height: 12),
             ],
+            if (Actualizaciones.disponible) ...[
+              TarjetaVidrio(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(tr('Versiones nuevas'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 4),
+                    Text(
+                      tr('Tienes la versión {0}.', [_version]),
+                      style: TextStyle(fontSize: 13, color: context.colores.suave),
+                    ),
+                    SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(tr('Avisarme cuando haya una nueva'),
+                          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                      subtitle: Text(
+                        tr('Revisa GitHub una vez al día. Solo consulta el número de versión: no envía nada sobre ti.'),
+                        style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.3),
+                      ),
+                      value: _avisarVersiones ?? false,
+                      onChanged: _cambiarAvisoVersiones,
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                        onPressed: _buscandoVersion ? null : _buscarVersion,
+                        icon: const Icon(Icons.system_update_alt_rounded, size: 18),
+                        label: Text(tr('Buscar ahora')),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+            ],
+            TarjetaVidrio(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute<void>(builder: (_) => const PantallaResumenBeta()),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.rate_review_outlined),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(tr('Enviar mi opinión'), style: const TextStyle(fontSize: 15)),
+                        Text(
+                          tr('Un resumen de cómo usas la app, para mejorarla'),
+                          style: TextStyle(fontSize: 12, color: context.colores.tenue),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(Icons.arrow_forward_ios, size: 14, color: context.colores.tenue),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
             TarjetaVidrio(
               onTap: () => Navigator.push(
                 context,

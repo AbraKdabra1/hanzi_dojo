@@ -60,6 +60,7 @@ class LienzoEscritura extends StatefulWidget {
     required this.modoNovato,
     required this.onCompletado,
     this.ajusteCaligrafico = true,
+    this.onTrazoRechazado,
   });
 
   /// El carácter (se usa como clave de la caché de contornos).
@@ -75,6 +76,11 @@ class LienzoEscritura extends StatefulWidget {
 
   /// Se llama al completar todos los trazos, con el número de errores.
   final ValueChanged<int> onCompletado;
+
+  /// Se llama cuando un trazo no pasa: qué trazo tocaba, si fue «al revés»
+  /// y tu trazo en coordenadas de make-me-a-hanzi (para «¿Ese trazo estaba
+  /// bien?», ver datos/resumen_beta.dart).
+  final void Function(int indice, bool alReves, List<Offset> puntos)? onTrazoRechazado;
 
   /// true: cada trazo correcto se acomoda en su forma caligráfica exacta.
   /// false: se queda tal como lo dibujaste.
@@ -266,6 +272,11 @@ class LienzoEscrituraState extends State<LienzoEscritura>
       // experto: es la forma más clara de enseñar por dónde empieza.
       final mostrarGuia = widget.modoNovato || alReves;
       _fallos.add(FalloTrazo(_siguienteTrazo, alReves: alReves));
+      widget.onTrazoRechazado?.call(
+        _siguienteTrazo,
+        alReves,
+        [for (final p in puntos) GeometriaLienzo.deLienzo(p, _tamano)],
+      );
       setState(() {
         _errores++;
         _mostrarPista = true;

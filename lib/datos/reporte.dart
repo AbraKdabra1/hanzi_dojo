@@ -4,7 +4,7 @@
 // El reporte se envía abriendo en el navegador el formulario de "issue" del
 // repositorio ya lleno: GitHub permite rellenar cada campo de un formulario
 // (.github/ISSUE_TEMPLATE/*.yml) con parámetros en la URL usando su `id`.
-// Así no hace falta ningún servidor y la app sigue sin permiso de internet.
+// Así no hace falta ningún servidor y la app no envía nada por su cuenta.
 //
 // El usuario ve exactamente lo que se va a enviar antes de enviarlo. Si no
 // tiene cuenta de GitHub, puede copiar el mismo texto y mandarlo como quiera.

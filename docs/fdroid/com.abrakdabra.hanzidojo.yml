@@ -34,7 +34,8 @@ Builds:
     build:
       - export PUB_CACHE=$(pwd)/.pub-cache
       - export SIN_FIRMA=1
-      - $$flutter$$/bin/flutter build apk --release
+      # TIENDA=fdroid: sin el aviso de versión nueva de GitHub (F-Droid actualiza).
+      - $$flutter$$/bin/flutter build apk --release --dart-define=TIENDA=fdroid
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags

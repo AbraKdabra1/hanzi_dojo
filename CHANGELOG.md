@@ -9,6 +9,11 @@ Primera versión pública.
 
 **Nuevo nombre: Meizi Hanzi · 梅字** (antes Hanzi Dojo). 梅 es el ciruelo de la rama del inicio y 字, el carácter que escribes. Se instala encima de la versión anterior sin perder nada; los respaldos `.hanzidojo` se siguen importando (los nuevos se guardan como `.meizi`).
 
+**Novedades de la beta 2**
+- **Enviar mi opinión** (Ajustes): un resumen de cómo usas la app, con tu comentario, para mandárselo a quien te invitó. Lo ves completo antes de compartirlo; nada sale solo.
+- **«¿Ese trazo estaba bien?»**: si la app marca mal un trazo que hiciste bien, avísalo con un toque. Va en tu resumen y nos ayuda a afinar la revisión de trazos.
+- **Aviso de versión nueva** (opcional): una vez al día revisa en GitHub si hay una versión nueva y te ofrece descargarla; se instala encima sin perder nada. Se pregunta una vez y se cambia en Ajustes → Versiones nuevas.
+
 **Primeros pasos**
 - Tutorial de bienvenida: cinco pantallas cortas (se puede omitir) que terminan escribiendo tu primer carácter, 人. Se vuelve a ver desde Ajustes.
 
@@ -42,7 +47,7 @@ Primera versión pública.
 - Modo oscuro «tinta», 120 Hz solo cuando hace falta y medidor de consumo de batería.
 - Exportar e importar tu progreso; informe de errores y reporte de problemas desde la app.
 - Interfaz en español o en inglés; se adapta a tabletas y a la pantalla en horizontal.
-- Sin anuncios, sin cuentas y sin internet: todo se queda en tu teléfono.
+- Sin anuncios, sin cuentas y funciona sin internet: todo se queda en tu teléfono. Solo se conecta, si tú lo aceptas, para avisarte de versiones nuevas.
 - Si quieres apoyar el proyecto, hay un botón discreto para donar con PayPal (no desbloquea nada).
 
 **iPhone, iPad y navegador**

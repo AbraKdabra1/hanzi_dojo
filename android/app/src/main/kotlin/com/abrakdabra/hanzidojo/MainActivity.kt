@@ -243,6 +243,21 @@ class MainActivity : FlutterActivity() {
                     resultado.success(false) // no hay navegador
                 }
             }
+            "compartirTexto" -> {
+                val texto = llamada.argument<String>("texto") ?: ""
+                val titulo = llamada.argument<String>("titulo") ?: ""
+                try {
+                    val envio = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, texto)
+                        if (titulo.isNotEmpty()) putExtra(Intent.EXTRA_SUBJECT, titulo)
+                    }
+                    startActivity(Intent.createChooser(envio, titulo.ifEmpty { null }))
+                    resultado.success(true)
+                } catch (e: Exception) {
+                    resultado.success(false)
+                }
+            }
             "info" -> try {
                 resultado.success(infoDispositivo())
             } catch (e: Exception) {
@@ -341,6 +356,8 @@ class MainActivity : FlutterActivity() {
             "compilacion" to compilacion.toString(),
             "modelo" to "${Build.MANUFACTURER} ${Build.MODEL}",
             "android" to "${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})",
+            // Para descargar el APK de la arquitectura correcta (aviso de versión nueva).
+            "abis" to Build.SUPPORTED_ABIS.joinToString(","),
         )
     }
 
