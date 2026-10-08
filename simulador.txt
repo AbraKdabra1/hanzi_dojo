@@ -1,0 +1,55 @@
+Simulador: E952A9B0-CC78-435C-BF08-06AD47FE1076
+	Finished
+
+== Runtimes ==
+iOS 18.5 (18.5 - 22F77) - com.apple.CoreSimulator.SimRuntime.iOS-18-5
+iOS 18.6 (18.6 - 22G86) - com.apple.CoreSimulator.SimRuntime.iOS-18-6
+iOS 26.0 (26.0.1 - 23A8464) - com.apple.CoreSimulator.SimRuntime.iOS-26-0
+iOS 26.1 (26.1 - 23B86) - com.apple.CoreSimulator.SimRuntime.iOS-26-1
+iOS 26.2 (26.2 - 23C54) - com.apple.CoreSimulator.SimRuntime.iOS-26-2
+tvOS 18.5 (18.5 - 22L572) - com.apple.CoreSimulator.SimRuntime.tvOS-18-5
+tvOS 26.1 (26.1 - 23J579) - com.apple.CoreSimulator.SimRuntime.tvOS-26-1
+tvOS 26.2 (26.2 - 23K51) - com.apple.CoreSimulator.SimRuntime.tvOS-26-2
+watchOS 11.5 (11.5 - 22T572) - com.apple.CoreSimulator.SimRuntime.watchOS-11-5
+watchOS 26.1 (26.1 - 23S36) - com.apple.CoreSimulator.SimRuntime.watchOS-26-1
+watchOS 26.2 (26.2 - 23S303) - com.apple.CoreSimulator.SimRuntime.watchOS-26-2
+visionOS 2.3 (2.3 - 22N895) - com.apple.CoreSimulator.SimRuntime.xrOS-2-3
+visionOS 2.4 (2.4 - 22O237) - com.apple.CoreSimulator.SimRuntime.xrOS-2-4
+visionOS 2.5 (2.5 - 22O473) - com.apple.CoreSimulator.SimRuntime.xrOS-2-5
+visionOS 26.1 (26.1 - 23N47) - com.apple.CoreSimulator.SimRuntime.xrOS-26-1
+visionOS 26.2 (26.2 - 23N301) - com.apple.CoreSimulator.SimRuntime.xrOS-26-2
+── Intento 1 ──
+00:00 +0: loading /Users/runner/work/hanzi_dojo/hanzi_dojo/integration_test/ios_test.dart
+The following plugins do not support Swift Package Manager for ios:
+  - flutter_tts
+This will become an error in a future version of Flutter. Please contact the plugin maintainers to request Swift Package Manager adoption.
+Running Xcode build...                                          
+Xcode build done.                                           306.2s
+00:00 +0: Meizi Hanzi en el simulador de iPhone
+CAPTURA: /Users/runner/work/hanzi_dojo/hanzi_dojo/build/capturas_ios/00_tutorial.png
+CAPTURA: /Users/runner/work/hanzi_dojo/hanzi_dojo/build/capturas_ios/01_inicio.png
+CAPTURA: /Users/runner/work/hanzi_dojo/hanzi_dojo/build/capturas_ios/02_modo.png
+CAPTURA: /Users/runner/work/hanzi_dojo/hanzi_dojo/build/capturas_ios/03_niveles.png
+PASO leer assets/audio/silabas/ma1.opus…
+PASO leer assets/audio/silabas/ma1.opus: listo
+Asset assets/audio/silabas/ma1.opus: 1604 bytes
+PASO CAF assets/audio/silabas/ma1.opus…
+PASO CAF assets/audio/silabas/ma1.opus: listo
+CAF assets/audio/silabas/ma1.opus: 1584 bytes, cabecera "caff"
+PASO cargar assets/audio/silabas/ma1.opus…
+PASO cargar assets/audio/silabas/ma1.opus: listo
+Grabación assets/audio/silabas/ma1.opus: 0:00:00.570000
+PASO leer assets/audio/palabras/4e00-4e0b.opus…
+PASO leer assets/audio/palabras/4e00-4e0b.opus: listo
+Asset assets/audio/palabras/4e00-4e0b.opus: 2099 bytes
+PASO CAF assets/audio/palabras/4e00-4e0b.opus…
+PASO CAF assets/audio/palabras/4e00-4e0b.opus: listo
+CAF assets/audio/palabras/4e00-4e0b.opus: 2079 bytes, cabecera "caff"
+PASO cargar assets/audio/palabras/4e00-4e0b.opus…
+PASO cargar assets/audio/palabras/4e00-4e0b.opus: listo
+Grabación assets/audio/palabras/4e00-4e0b.opus: 0:00:00.790000
+PASO leer una oración…
+PASO leer una oración: listo
+Oración: 4387 ms, sonaron [(0, 1), (1, 2), (3, 4), (4, 5), (5, 6)]
+00:28 +1: (tearDownAll)
+00:46 +1: All tests passed!
