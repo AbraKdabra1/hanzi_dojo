@@ -20,6 +20,7 @@ import 'package:sqflite/sqflite.dart';
 
 import '../idioma.dart';
 import 'estadisticas.dart';
+import 'practica.dart' show TipoEjercicio;
 import 'registro_errores.dart';
 import 'repositorio.dart';
 import 'repositorio_habito.dart';
@@ -266,16 +267,9 @@ class ResumenBeta {
       ..writeln('· ${tr('Sin errores: {0} · en modo novato: {1}', [pct(d.sinErrores, d.repasos), pct(d.novato, d.repasos)])}')
       ..writeln('· ${tr('Tiempo escribiendo: {0} min', [d.minutos])}');
 
-    final nombres = {
-      'tono': tr('tonos'),
-      'tonos_palabra': tr('tonos en palabras'),
-      'escucha': tr('escucha'),
-      'pinyin': 'pinyin',
-      'palabra': tr('vocabulario'),
-    };
     final practica = d.ejercicios.isEmpty
         ? '—'
-        : [for (final e in d.ejercicios.entries) '${nombres[e.key] ?? e.key} ${e.value}'].join(' · ');
+        : [for (final e in d.ejercicios.entries) '${TipoEjercicio.nombre(e.key)} ${e.value}'].join(' · ');
     b
       ..writeln('🎧 ${tr('Práctica: {0}', [practica])}')
       ..writeln('📖 ${tr('Lectura: {0} capítulos · libros propios: {1}', [d.capitulos, d.misLibros])}')

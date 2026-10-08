@@ -1178,12 +1178,6 @@ const textosEn = <String, String>{
       'Without mistakes: {0} · in beginner mode: {1}',
   'Tiempo escribiendo: {0} min':
       'Time writing: {0} min',
-  'tonos':
-      'tones',
-  'tonos en palabras':
-      'tones in words',
-  'escucha':
-      'listening',
   'Práctica: {0}':
       'Practice: {0}',
   'Lectura: {0} capítulos · libros propios: {1}':
@@ -1220,6 +1214,8 @@ const textosEn = <String, String>{
       'What gets shared',
   'Hay una versión nueva: {0}':
       'A new version is available: {0}',
+  'Versión nueva: {0}':
+      'New version: {0}',
   'Ya tienes la versión más reciente.':
       'You already have the latest version.',
   'No se pudo revisar. ¿Tienes internet?':

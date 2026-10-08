@@ -156,7 +156,7 @@ void main() {
       expect(texto, contains('Días con actividad: 2 (8/10 → 10/10)'));
       expect(texto, contains('Repasos: 4 · caracteres distintos: 3'));
       expect(texto, contains('Sin errores: 75 % · en modo novato: 75 %'));
-      expect(texto, contains('Práctica: escucha 1 · tonos 2'));
+      expect(texto, contains('Práctica: Escucha 1 · Tonos (sílabas) 2'));
       expect(texto, contains('Lectura: 1 capítulos'));
       expect(texto, contains('· 人 #1 (al revés, novato): 300,780 250,500 120,300'));
       expect(texto, contains('Errores de la app: 1'));

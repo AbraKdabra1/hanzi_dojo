@@ -63,7 +63,7 @@ class TarjetaVersionNueva extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  tr('Hay una versión nueva: {0}', [nueva.version]),
+                  tr('Versión nueva: {0}', [nueva.version]),
                   style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                 ),
               ),
