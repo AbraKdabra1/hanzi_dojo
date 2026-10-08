@@ -1,0 +1,8 @@
+commit: 86c58b9850eb1dd90c03a97bc05f380608426668
+rama: v2
+validar_db: success
+analyze: success
+test: success
+capturas: success
+apk: success
+llave_firma: configurada

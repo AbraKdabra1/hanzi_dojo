@@ -1,0 +1,13 @@
+contenido.db  versión d403bd261fa3  (42.9 MB)
+  caracteres: 9574  | por nivel: fuera=6574, 1=300, 2=300, 3=300, 4=300, 5=300, 6=300, 7-9=1200
+  significados en español (HSK): 3000 de 3000
+  radicales: 214  | ejemplos: 4518
+  libros: 7  | capítulos: 35  | párrafos: 376  | preguntas: 105
+  tradicional → simplificado: 3221 caracteres
+  palabras: 10944  | con español: 10944  | con grabación: 6888
+  avisos (1):
+   - 龶: sin lectura (componente sin pronunciación propia)
+contenido.db versión d403bd261fa3: 9574 caracteres, 3000 HSK, 2755 con ejemplos, 3000 con español, 7 libros (376 párrafos, 105 preguntas), 10944 palabras
+  AVISO: 9 radicales no tienen ningún carácter HSK en su familia (normal en radicales raros)
+  AVISO: Libro poemas-tang: «浥» no está en la base (no se podrá consultar)
+✓ La base cumple con todo lo revisado

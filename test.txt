@@ -1,0 +1,225 @@
+00:00 +0: loading /home/runner/work/hanzi_dojo/hanzi_dojo/test/reporte_test.dart
+00:00 +0: /home/runner/work/hanzi_dojo/hanzi_dojo/test/reporte_test.dart: error de la app: título, campos y URL del formulario
+00:00 +1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/reporte_test.dart: error en el contenido: el título dice dónde y qué está mal
+00:00 +2: /home/runner/work/hanzi_dojo/hanzi_dojo/test/reporte_test.dart: sugerencia sin datos del teléfono: solo la descripción
+00:00 +3: /home/runner/work/hanzi_dojo/hanzi_dojo/test/reporte_test.dart: un informe enorme se recorta para que la URL no sea demasiado larga
+00:01 +4: /home/runner/work/hanzi_dojo/hanzi_dojo/test/lectura_test.dart: Libros en la base (setUpAll)
+00:01 +4: /home/runner/work/hanzi_dojo/hanzi_dojo/test/lectura_test.dart: Libros en la base hay libros ordenados por nivel; el de HSK 1 tiene sus capítulos
+00:01 +5: /home/runner/work/hanzi_dojo/hanzi_dojo/test/lectura_test.dart: Libros en la base un libro por nivel: adaptados del 1 al 5, originales en 6 y 7-9
+00:01 +6: /home/runner/work/hanzi_dojo/hanzi_dojo/test/lectura_test.dart: Libros en la base cada párrafo trae una sílaba por carácter y sus nombres propios
+00:01 +7: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: sale la primera vez; quien ya tenía progreso no lo ve
+00:02 +8: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: sale la primera vez; quien ya tenía progreso no lo ve
+00:02 +9: /home/runner/work/hanzi_dojo/hanzi_dojo/test/lectura_test.dart: Libros en la base lo leído viaja en el respaldo
+00:02 +10: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: al actualizar con progreso guardado cuenta como visto
+00:02 +11: /home/runner/work/hanzi_dojo/hanzi_dojo/test/lectura_test.dart: Libros en la base ajustes del lector: por defecto y guardados
+00:02 +12: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: se recorre hasta escribir el primer carácter
+00:02 +13: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: se recorre hasta escribir el primer carácter
+00:02 +14: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: se recorre hasta escribir el primer carácter
+00:02 +15: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: se recorre hasta escribir el primer carácter
+00:03 +16: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: se recorre hasta escribir el primer carácter
+00:03 +17: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: se recorre hasta escribir el primer carácter
+00:04 +18: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: se recorre hasta escribir el primer carácter
+00:04 +19: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: se recorre hasta escribir el primer carácter
+00:04 +20: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: radicales: 214, y 氵 aparece como variante de 水
+00:04 +21: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: «Omitir» lo cierra y queda visto
+00:05 +22: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: «Omitir» lo cierra y queda visto
+00:05 +23: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: «Omitir» lo cierra y queda visto
+00:05 +24: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: «Omitir» lo cierra y queda visto
+00:05 +25: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: «Omitir» lo cierra y queda visto
+00:05 +26: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: «Omitir» lo cierra y queda visto
+00:05 +27: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: «Omitir» lo cierra y queda visto
+00:05 +28: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: (tearDownAll)
+00:06 +28: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: claveSilaba marcas de tono y números
+00:06 +29: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: claveSilaba ü se escribe v, salvo después de j, q, x, y
+00:06 +30: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: claveSilaba erhua: la r final se omite, pero er es sílaba
+00:06 +31: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: claveSilaba vacío
+00:06 +32: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: silabaDisponible exacta, interjección, jv y tono neutro
+00:06 +33: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: nombrePalabra
+00:06 +34: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: planDeLectura sin pinyin: palabras y caracteres grabados
+00:06 +35: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: planDeLectura con pinyin: los caracteres sueltos usan su sílaba en el texto
+00:06 +36: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: planDeLectura la puntuación es una pausa (y no al final)
+00:06 +37: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: planDeLectura sin grabación
+00:06 +38: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: pinyin por palabras se parte en sílabas
+00:06 +39: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: pinyin por palabras se alinea con el texto, con erhua
+00:06 +40: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: pinyin por palabras si no cuadra, null
+00:06 +41: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: cada grabación de las listas existe con el nombre que espera la app
+00:06 +42: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: cada grabación sabe qué parte del texto suena (para resaltarla)
+00:06 +43: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: Recortes (leer de corrido) clave de cada grabación en recortes.txt
+00:06 +44: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: Recortes (leer de corrido) se leen las líneas válidas e ignoran comentarios y basura
+00:06 +45: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: Recortes (leer de corrido) cada grabación tiene su recorte y deja la mayor parte del audio
+00:06 +46: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: Grabaciones en iOS nombre del CAF reempacado (uno por grabación, sin chocar)
+00:06 +47: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: Grabaciones en iOS en la computadora (y en Android) no se reempaca nada
+00:06 +48: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: Grabaciones en iOS reempacar termina, también con dos botones a la vez, y la segunda vez ya está listo
+00:06 +49: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto UTF-8 con y sin BOM, UTF-16 con BOM y GBK
+00:06 +50: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto UTF-8 con y sin BOM, UTF-16 con BOM y GBK
+00:06 +51: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto UTF-8 con y sin BOM, UTF-16 con BOM y GBK
+00:06 +52: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: Ogg → CAF (iPhone) todas las grabaciones se pueden reempacar
+00:06 +53: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto un TXT en GBK con encabezados se parte en capítulos
+00:06 +54: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto un TXT en GBK con encabezados se parte en capítulos
+00:06 +55: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto un TXT en GBK con encabezados se parte en capítulos
+00:06 +56: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto un TXT en GBK con encabezados se parte en capítulos
+00:07 +57: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto sin encabezados: partes de unos 3,000 caracteres; párrafos larguísimos por oraciones
+00:07 +58: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto archivos que no sirven
+00:07 +59: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: EPUB sigue el orden de lectura, salta la portada y limpia el HTML
+00:07 +60: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: EPUB con DRM no se puede leer
+00:07 +61: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Pinyin y nivel lectura principal, partículas y cambios de tono de 一 y 不
+00:07 +62: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Pinyin y nivel lectura principal, partículas y cambios de tono de 一 y 不
+00:07 +63: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Pinyin y nivel lectura principal, partículas y cambios de tono de 一 y 不
+00:07 +64: /home/runner/work/hanzi_dojo/hanzi_dojo/test/caligrafia_test.dart: Sentido del trazo trazo corto (como 丶) al revés: "al revés" (antes pasaba como correcto)
+00:07 +65: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Pinyin y nivel nivel estimado: un texto sencillo es HSK 1
+00:07 +66: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Pinyin y nivel nivel estimado: un texto sencillo es HSK 1
+00:07 +67: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Pinyin y nivel nivel estimado: un texto sencillo es HSK 1
+00:07 +68: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Pinyin y nivel nivel estimado: un texto sencillo es HSK 1
+00:07 +69: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Pinyin y nivel nivel estimado: un texto sencillo es HSK 1
+00:07 +70: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Pinyin y nivel nivel estimado: un texto sencillo es HSK 1
+00:07 +71: /home/runner/work/hanzi_dojo/hanzi_dojo/test/caligrafia_test.dart: Lienzo trazo correcto: se acomoda con el resorte y completa el carácter
+00:07 +72: /home/runner/work/hanzi_dojo/hanzi_dojo/test/caligrafia_test.dart: Lienzo trazo correcto: se acomoda con el resorte y completa el carácter
+00:08 +73: /home/runner/work/hanzi_dojo/hanzi_dojo/test/caligrafia_test.dart: Lienzo sin ajuste caligráfico también completa
+00:08 +74: /home/runner/work/hanzi_dojo/hanzi_dojo/test/caligrafia_test.dart: Lienzo trazo al revés: avisa "Al revés" y no completa
+00:08 +75: /home/runner/work/hanzi_dojo/hanzi_dojo/test/caligrafia_test.dart: Lienzo un trazo rechazado se avisa con tus puntos en 1024 × 1024
+00:08 +76: /home/runner/work/hanzi_dojo/hanzi_dojo/test/caligrafia_test.dart: Lienzo un trazo rechazado se avisa con tus puntos en 1024 × 1024
+00:08 +77: /home/runner/work/hanzi_dojo/hanzi_dojo/test/apoyo_test.dart: el aviso sale una sola vez y con 3 logros o más
+00:08 +78: /home/runner/work/hanzi_dojo/hanzi_dojo/test/apoyo_test.dart: el aviso sale una sola vez y con 3 logros o más
+00:08 +79: /home/runner/work/hanzi_dojo/hanzi_dojo/test/apoyo_test.dart: el aviso sale una sola vez y con 3 logros o más
+00:09 +80: /home/runner/work/hanzi_dojo/hanzi_dojo/test/apoyo_test.dart: el aviso sale una sola vez y con 3 logros o más
+00:09 +81: /home/runner/work/hanzi_dojo/hanzi_dojo/test/apoyo_test.dart: el aviso sale una sola vez y con 3 logros o más
+00:09 +82: /home/runner/work/hanzi_dojo/hanzi_dojo/test/apoyo_test.dart: el aviso sale una sola vez y con 3 logros o más
+00:09 +83: /home/runner/work/hanzi_dojo/hanzi_dojo/test/apoyo_test.dart: el aviso sale una sola vez y con 3 logros o más
+00:09 +84: /home/runner/work/hanzi_dojo/hanzi_dojo/test/apoyo_test.dart: el aviso sale una sola vez y con 3 logros o más
+00:09 +85: /home/runner/work/hanzi_dojo/hanzi_dojo/test/apoyo_test.dart: el aviso sale una sola vez y con 3 logros o más
+00:09 +86: /home/runner/work/hanzi_dojo/hanzi_dojo/test/apoyo_test.dart: el aviso sale una sola vez y con 3 logros o más
+00:09 +87: /home/runner/work/hanzi_dojo/hanzi_dojo/test/apoyo_test.dart: el aviso sale una sola vez y con 3 logros o más
+00:09 +88: /home/runner/work/hanzi_dojo/hanzi_dojo/test/apoyo_test.dart: (tearDownAll)
+00:10 +88: /home/runner/work/hanzi_dojo/hanzi_dojo/test/registro_errores_test.dart: lo que falla antes de iniciar se guarda al iniciar
+00:10 +89: /home/runner/work/hanzi_dojo/hanzi_dojo/test/registro_errores_test.dart: el más reciente primero, y un error repetido se cuenta en vez de duplicarse
+00:10 +90: /home/runner/work/hanzi_dojo/hanzi_dojo/test/registro_errores_test.dart: solo se guardan los últimos 50
+00:10 +91: /home/runner/work/hanzi_dojo/hanzi_dojo/test/registro_errores_test.dart: borrar deja el informe vacío; el texto para copiar lleva el encabezado
+00:10 +92: /home/runner/work/hanzi_dojo/hanzi_dojo/test/registro_errores_test.dart: una línea dañada en el archivo no impide leer las demás
+00:10 +93: /home/runner/work/hanzi_dojo/hanzi_dojo/test/examen_test.dart: simulacro: 30 preguntas, 10 por sección, sin repetir palabras
+00:10 +94: /home/runner/work/hanzi_dojo/hanzi_dojo/test/examen_test.dart: ubicación: 3 de lectura y 2 de escucha por nivel
+00:10 +95: /home/runner/work/hanzi_dojo/hanzi_dojo/test/examen_test.dart: nivel sugerido: el primero que no pasaste
+00:10 +96: /home/runner/work/hanzi_dojo/hanzi_dojo/test/examen_test.dart: calificación de 0 a 100
+00:11 +97: /home/runner/work/hanzi_dojo/hanzi_dojo/test/energia_test.dart: LecturaBateria la corriente se interpreta en µA o mA y sin importar el signo
+00:11 +98: /home/runner/work/hanzi_dojo/hanzi_dojo/test/energia_test.dart: LecturaBateria capacidad a partir de lo que queda y el porcentaje
+00:11 +99: /home/runner/work/hanzi_dojo/hanzi_dojo/test/energia_test.dart: LecturaBateria desde el mapa de Android; cargando no cuenta la corriente
+00:11 +100: /home/runner/work/hanzi_dojo/hanzi_dojo/test/energia_test.dart: la medición acumula y calcula el promedio
+00:11 +101: /home/runner/work/hanzi_dojo/hanzi_dojo/test/energia_test.dart: 120 Hz al tocar, se suelta al quedarse quieta; máxima y ahorro
+00:11 +102: /home/runner/work/hanzi_dojo/hanzi_dojo/test/energia_test.dart: 120 Hz al tocar, se suelta al quedarse quieta; máxima y ahorro
+00:11 +103: /home/runner/work/hanzi_dojo/hanzi_dojo/test/energia_test.dart: 120 Hz al tocar, se suelta al quedarse quieta; máxima y ahorro
+00:11 +104: /home/runner/work/hanzi_dojo/hanzi_dojo/test/energia_test.dart: 120 Hz al tocar, se suelta al quedarse quieta; máxima y ahorro
+00:11 +105: /home/runner/work/hanzi_dojo/hanzi_dojo/test/resumen_beta_test.dart: con la base se guardan los últimos 30 trazos reportados
+00:11 +106: /home/runner/work/hanzi_dojo/hanzi_dojo/test/energia_test.dart: la pantalla muestra el consumo y las opciones de fluidez
+00:11 +107: /home/runner/work/hanzi_dojo/hanzi_dojo/test/energia_test.dart: la pantalla muestra el consumo y las opciones de fluidez
+00:12 +108: /home/runner/work/hanzi_dojo/hanzi_dojo/test/energia_test.dart: la pantalla muestra el consumo y las opciones de fluidez
+00:12 +109: /home/runner/work/hanzi_dojo/hanzi_dojo/test/energia_test.dart: la pantalla muestra el consumo y las opciones de fluidez
+00:12 +110: /home/runner/work/hanzi_dojo/hanzi_dojo/test/resumen_beta_test.dart: con la base la pantalla muestra lo que se va a compartir
+00:12 +111: /home/runner/work/hanzi_dojo/hanzi_dojo/test/resumen_beta_test.dart: con la base la pantalla muestra lo que se va a compartir
+00:12 +112: /home/runner/work/hanzi_dojo/hanzi_dojo/test/resumen_beta_test.dart: con la base la pantalla muestra lo que se va a compartir
+00:12 +113: /home/runner/work/hanzi_dojo/hanzi_dojo/test/resumen_beta_test.dart: con la base la pantalla muestra lo que se va a compartir
+00:12 +114: /home/runner/work/hanzi_dojo/hanzi_dojo/test/resumen_beta_test.dart: con la base la pantalla muestra lo que se va a compartir
+00:12 +115: /home/runner/work/hanzi_dojo/hanzi_dojo/test/resumen_beta_test.dart: con la base la pantalla muestra lo que se va a compartir
+00:12 +116: /home/runner/work/hanzi_dojo/hanzi_dojo/test/resumen_beta_test.dart: con la base la pantalla muestra lo que se va a compartir
+00:12 +117: /home/runner/work/hanzi_dojo/hanzi_dojo/test/resumen_beta_test.dart: con la base la pantalla muestra lo que se va a compartir
+00:12 +118: /home/runner/work/hanzi_dojo/hanzi_dojo/test/resumen_beta_test.dart: con la base la pantalla muestra lo que se va a compartir
+00:13 +119: /home/runner/work/hanzi_dojo/hanzi_dojo/test/resumen_beta_test.dart: con la base la pantalla muestra lo que se va a compartir
+00:13 +120: /home/runner/work/hanzi_dojo/hanzi_dojo/test/resumen_beta_test.dart: con la base la pantalla muestra lo que se va a compartir
+00:13 +121: /home/runner/work/hanzi_dojo/hanzi_dojo/test/resumen_beta_test.dart: con la base la pantalla muestra lo que se va a compartir
+00:13 +122: /home/runner/work/hanzi_dojo/hanzi_dojo/test/resumen_beta_test.dart: con la base la pantalla muestra lo que se va a compartir
+00:13 +123: /home/runner/work/hanzi_dojo/hanzi_dojo/test/resumen_beta_test.dart: con la base la pantalla muestra lo que se va a compartir
+00:13 +124: /home/runner/work/hanzi_dojo/hanzi_dojo/test/resumen_beta_test.dart: con la base la pantalla muestra lo que se va a compartir
+00:13 +125: /home/runner/work/hanzi_dojo/hanzi_dojo/test/habito_test.dart: Con la base real el respaldo lleva logros y días protegidos
+00:13 +126: /home/runner/work/hanzi_dojo/hanzi_dojo/test/habito_test.dart: Con la base real (tearDownAll)
+00:14 +126: /home/runner/work/hanzi_dojo/hanzi_dojo/test/recursos_test.dart: las grabaciones de pronunciación están declaradas
+00:14 +127: /home/runner/work/hanzi_dojo/hanzi_dojo/test/recursos_test.dart: las tres fuentes Noto Sans SC existen y están declaradas
+00:14 +128: /home/runner/work/hanzi_dojo/hanzi_dojo/test/reconocedor_test.dart: remuestrear reparte los puntos a lo largo del trazo
+00:14 +129: /home/runner/work/hanzi_dojo/hanzi_dojo/test/reconocedor_test.dart: normalizar: mismo resultado sin importar posición ni tamaño
+00:14 +130: /home/runner/work/hanzi_dojo/hanzi_dojo/test/reconocedor_test.dart: con los caracteres HSK reales (setUpAll)
+00:15 +130: /home/runner/work/hanzi_dojo/hanzi_dojo/test/estadisticas_test.dart: Racha sin días, cero
+00:15 +131: /home/runner/work/hanzi_dojo/hanzi_dojo/test/estadisticas_test.dart: Racha sin días, cero
+00:15 +132: /home/runner/work/hanzi_dojo/hanzi_dojo/test/reconocedor_test.dart: con los caracteres HSK reales un dibujo movido, escalado y tembloroso se reconoce primero
+00:15 +133: /home/runner/work/hanzi_dojo/hanzi_dojo/test/reconocedor_test.dart: con los caracteres HSK reales un dibujo movido, escalado y tembloroso se reconoce primero
+00:15 +134: /home/runner/work/hanzi_dojo/hanzi_dojo/test/reconocedor_test.dart: con los caracteres HSK reales un dibujo movido, escalado y tembloroso se reconoce primero
+00:15 +135: /home/runner/work/hanzi_dojo/hanzi_dojo/test/reconocedor_test.dart: con los caracteres HSK reales un dibujo movido, escalado y tembloroso se reconoce primero
+00:15 +136: /home/runner/work/hanzi_dojo/hanzi_dojo/test/reconocedor_test.dart: con los caracteres HSK reales un dibujo movido, escalado y tembloroso se reconoce primero
+00:15 +137: /home/runner/work/hanzi_dojo/hanzi_dojo/test/estadisticas_test.dart: Consultas sobre el historial actividad por día, difíciles, trazos y precisión
+00:15 +138: /home/runner/work/hanzi_dojo/hanzi_dojo/test/estadisticas_test.dart: Consultas sobre el historial actividad por día, difíciles, trazos y precisión
+00:15 +139: /home/runner/work/hanzi_dojo/hanzi_dojo/test/estadisticas_test.dart: Consultas sobre el historial actividad por día, difíciles, trazos y precisión
+00:15 +140: /home/runner/work/hanzi_dojo/hanzi_dojo/test/estadisticas_test.dart: Consultas sobre el historial (tearDownAll)
+00:15 +140: /home/runner/work/hanzi_dojo/hanzi_dojo/test/evaluacion_trazo_test.dart: Horizontal contra vertical 土: el vertical en lugar del horizontal no pasa (antes sí)
+00:15 +141: /home/runner/work/hanzi_dojo/hanzi_dojo/test/evaluacion_trazo_test.dart: Horizontal contra vertical 十: el vertical en lugar del horizontal no pasa
+00:15 +142: /home/runner/work/hanzi_dojo/hanzi_dojo/test/evaluacion_trazo_test.dart: Horizontal contra vertical 十: el horizontal en lugar del vertical no pasa
+00:15 +143: /home/runner/work/hanzi_dojo/hanzi_dojo/test/evaluacion_trazo_test.dart: Horizontal contra vertical una cruz que pasa justo por el centro tampoco engaña
+00:15 +144: /home/runner/work/hanzi_dojo/hanzi_dojo/test/evaluacion_trazo_test.dart: Horizontal contra vertical ni en diagonal: 撇 (／) en lugar de 捺 (＼)
+00:15 +145: /home/runner/work/hanzi_dojo/hanzi_dojo/test/evaluacion_trazo_test.dart: Orden de los trazos 三: dibujar el segundo horizontal cuando toca el primero no pasa
+00:15 +146: /home/runner/work/hanzi_dojo/hanzi_dojo/test/evaluacion_trazo_test.dart: Orden de los trazos 三: el tercero tampoco
+00:15 +147: /home/runner/work/hanzi_dojo/hanzi_dojo/test/evaluacion_trazo_test.dart: Trazos bien hechos 十 y 三, en orden: correctos aunque estén algo movidos y temblorosos
+00:15 +148: /home/runner/work/hanzi_dojo/hanzi_dojo/test/evaluacion_trazo_test.dart: Trazos bien hechos 口: el trazo que dobla (𠃍) también pasa
+00:15 +149: /home/runner/work/hanzi_dojo/hanzi_dojo/test/evaluacion_trazo_test.dart: Trazos bien hechos al revés sigue diciendo "al revés"
+00:15 +150: /home/runner/work/hanzi_dojo/hanzi_dojo/test/evaluacion_trazo_test.dart: Trazos bien hechos un trazo demasiado corto no pasa
+00:16 +151: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Pinyin escrito con acentos a partir de números
+00:16 +152: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Pinyin escrito se lee con números, acentos, espacios o sin número (neutro)
+00:16 +153: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Pinyin escrito veredicto: correcto, solo tonos o incorrecto, sílaba por sílaba
+00:16 +154: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Pinyin escrito vista previa con acentos mientras escribes
+00:16 +155: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Preguntas Palabra: claves, tonos y pinyin por carácter (con erhua)
+00:16 +156: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Preguntas sílabas para tonos: solo con grabación, tono 1-4 y sin repetir
+00:16 +157: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Preguntas ronda de tonos pareja
+00:16 +158: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Preguntas escucha: sin homófonos ni significados repetidos, del mismo largo
+00:16 +159: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Preguntas palabra nueva: primero la de caracteres que ya estudiaste
+00:16 +160: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Preguntas tonos que confundes
+00:16 +161: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Con la base real (setUpAll)
+00:16 +161: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Con la base real el vocabulario HSK está completo y con español en 1-6
+00:16 +162: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Con la base real filtros: con audio, de dos caracteres y sin erhua
+00:16 +163: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Con la base real filtros: con audio, de dos caracteres y sin erhua
+00:16 +164: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Con la base real filtros: con audio, de dos caracteres y sin erhua
+00:16 +165: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Con la base real filtros: con audio, de dos caracteres y sin erhua
+00:16 +166: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Con la base real filtros: con audio, de dos caracteres y sin erhua
+00:16 +167: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Con la base real caracteres para el entrenador de tonos
+00:16 +168: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Con la base real repaso de palabras: sesión, SM-2 y límite diario
+00:16 +169: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Con la base real las nuevas empiezan por palabras con caracteres que ya estudiaste
+00:16 +170: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Con la base real ejercicios: resumen, tonos confundidos y racha
+00:16 +171: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Con la base real el respaldo lleva el vocabulario y los ejercicios
+00:17 +172: /home/runner/work/hanzi_dojo/hanzi_dojo/test/practica_test.dart: Con la base real (tearDownAll)
+00:17 +172: /home/runner/work/hanzi_dojo/hanzi_dojo/test/actualizaciones_test.dart: Version se lee con o sin "v" y sin el número de compilación
+00:17 +173: /home/runner/work/hanzi_dojo/hanzi_dojo/test/actualizaciones_test.dart: Version orden semántico
+00:17 +174: /home/runner/work/hanzi_dojo/hanzi_dojo/test/actualizaciones_test.dart: el APK de cada procesador
+00:17 +175: /home/runner/work/hanzi_dojo/hanzi_dojo/test/actualizaciones_test.dart: elegirVersionNueva una beta ve la beta más nueva (no los borradores) y su APK
+00:17 +176: /home/runner/work/hanzi_dojo/hanzi_dojo/test/actualizaciones_test.dart: elegirVersionNueva con la más reciente instalada no hay nada
+00:17 +177: /home/runner/work/hanzi_dojo/hanzi_dojo/test/actualizaciones_test.dart: elegirVersionNueva una versión estable no ve betas
+00:17 +178: /home/runner/work/hanzi_dojo/hanzi_dojo/test/actualizaciones_test.dart: elegirVersionNueva sin APK de su procesador: el universal; en iPhone, la página
+00:17 +179: /home/runner/work/hanzi_dojo/hanzi_dojo/test/actualizaciones_test.dart: elegirVersionNueva datos raros no truenan
+00:17 +180: /home/runner/work/hanzi_dojo/hanzi_dojo/test/actualizaciones_test.dart: revisar (setUpAll)
+00:17 +180: /home/runner/work/hanzi_dojo/hanzi_dojo/test/actualizaciones_test.dart: revisar la pregunta empieza sin contestar y se guarda
+00:17 +181: /home/runner/work/hanzi_dojo/hanzi_dojo/test/actualizaciones_test.dart: revisar consulta una vez al día; «Buscar ahora» siempre
+00:17 +182: /home/runner/work/hanzi_dojo/hanzi_dojo/test/actualizaciones_test.dart: revisar ya instalada la que se había ofrecido, queda al día
+00:17 +183: /home/runner/work/hanzi_dojo/hanzi_dojo/test/actualizaciones_test.dart: revisar sin internet o con una respuesta rara
+00:17 +184: /home/runner/work/hanzi_dojo/hanzi_dojo/test/actualizaciones_test.dart: revisar sin saber la versión instalada no se consulta
+00:17 +185: /home/runner/work/hanzi_dojo/hanzi_dojo/test/datos_usuario_test.dart: (setUpAll)
+00:17 +185: /home/runner/work/hanzi_dojo/hanzi_dojo/test/actualizaciones_test.dart: revisar «Ahora no» se recuerda
+00:17 +186: /home/runner/work/hanzi_dojo/hanzi_dojo/test/datos_usuario_test.dart: Historial cada calificación agrega una fila con los detalles
+00:18 +187: /home/runner/work/hanzi_dojo/hanzi_dojo/test/datos_usuario_test.dart: Historial una tarjeta olvidada en pantalla cuenta 10 minutos como máximo
+00:18 +188: /home/runner/work/hanzi_dojo/hanzi_dojo/test/datos_usuario_test.dart: Historial los fallos se leen igual que se escriben
+00:18 +189: /home/runner/work/hanzi_dojo/hanzi_dojo/test/datos_usuario_test.dart: migración: quien tenía la versión 1 conserva su avance y gana el historial
+00:18 +190: /home/runner/work/hanzi_dojo/hanzi_dojo/test/datos_usuario_test.dart: Respaldo exportar e importar en otro teléfono deja exactamente lo mismo
+00:18 +191: /home/runner/work/hanzi_dojo/hanzi_dojo/test/datos_usuario_test.dart: Respaldo exportar e importar en otro teléfono deja exactamente lo mismo
+00:18 +192: /home/runner/work/hanzi_dojo/hanzi_dojo/test/datos_usuario_test.dart: Respaldo exportar e importar en otro teléfono deja exactamente lo mismo
+00:18 +193: /home/runner/work/hanzi_dojo/hanzi_dojo/test/datos_usuario_test.dart: Respaldo exportar e importar en otro teléfono deja exactamente lo mismo
+00:18 +194: /home/runner/work/hanzi_dojo/hanzi_dojo/test/datos_usuario_test.dart: Respaldo exportar e importar en otro teléfono deja exactamente lo mismo
+00:18 +195: /home/runner/work/hanzi_dojo/hanzi_dojo/test/datos_usuario_test.dart: Respaldo exportar e importar en otro teléfono deja exactamente lo mismo
+00:18 +196: /home/runner/work/hanzi_dojo/hanzi_dojo/test/datos_usuario_test.dart: Respaldo exportar e importar en otro teléfono deja exactamente lo mismo
+00:18 +197: /home/runner/work/hanzi_dojo/hanzi_dojo/test/datos_usuario_test.dart: Respaldo importar reemplaza y se puede deshacer
+00:18 +198: /home/runner/work/hanzi_dojo/hanzi_dojo/test/datos_usuario_test.dart: Respaldo archivos que no sirven se rechazan sin tocar el progreso
+00:18 +199: /home/runner/work/hanzi_dojo/hanzi_dojo/test/datos_usuario_test.dart: Respaldo nombre sugerido con la fecha
+00:19 +200: /home/runner/work/hanzi_dojo/hanzi_dojo/test/datos_usuario_test.dart: (tearDownAll)
+00:19 +200: /home/runner/work/hanzi_dojo/hanzi_dojo/test/capturas_test.dart: (setUpAll)
+00:19 +200: /home/runner/work/hanzi_dojo/hanzi_dojo/test/capturas_test.dart: capturas de las pantallas principales
+00:19 +200 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/capturas_test.dart: (tearDownAll)
+00:20 +200 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/rama_ciruelo_test.dart: la brisa sube suave, suelta pocos pétalos y al calmarse todo queda quieto
+00:20 +201 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/rama_ciruelo_test.dart: la rama se dibuja en reposo, con viento y en versión tenue
+00:20 +202 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/rama_ciruelo_test.dart: la escala de la rama no pasa del 55 % del alto
+00:20 +203 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/rama_ciruelo_test.dart: el fondo animado se arma y al quitarlo no deja relojes encendidos
+00:20 +204 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/rama_ciruelo_test.dart: el fondo animado se arma y al quitarlo no deja relojes encendidos
+00:20 +205 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/rama_ciruelo_test.dart: el fondo animado se arma y al quitarlo no deja relojes encendidos
+00:20 +206 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/rama_ciruelo_test.dart: el fondo animado se arma y al quitarlo no deja relojes encendidos
+00:20 +207 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/rama_ciruelo_test.dart: el fondo animado se arma y al quitarlo no deja relojes encendidos
+00:20 +208 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/rama_ciruelo_test.dart: el fondo tenue se arma sin errores
+00:20 +209 ~1: All tests passed!

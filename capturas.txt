@@ -1,0 +1,5 @@
+00:00 +0: loading /home/runner/work/hanzi_dojo/hanzi_dojo/test/capturas_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: capturas de las pantallas principales
+00:58 +1: (tearDownAll)
+00:59 +1: All tests passed!
