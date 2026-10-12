@@ -1618,4 +1618,43 @@ const textosEn = <String, String>{
       'Again',
   'Sigue la silueta. Si te equivocas, te muestra el trazo.':
       'Follow the outline. If you make a mistake, it shows you the stroke.',
+  // Chino desde cero: la pregunta de la primera vez y los candados
+  'Desde cero: {0} · lecciones: {1} de {2}':
+      'From scratch: {0} · lessons: {1} of {2}',
+  'lo eligió':
+      'chosen',
+  'Primero, «Chino desde cero»':
+      'First, “Chinese from zero”',
+  'Te falta 1 lección (unos {0} minutos). Al terminarla se abren Estudiar, Leer y Practicar.':
+      '1 lesson to go (about {0} minutes). Finish it to unlock Study, Read and Practice.',
+  'Te faltan {0} de {1} lecciones (unos {2} minutos). Al terminarlas se abren Estudiar, Leer y Practicar.':
+      '{0} of {1} lessons to go (about {2} minutes). Finish them to unlock Study, Read and Practice.',
+  'Seguir con las lecciones':
+      'Continue the lessons',
+  'Ya sé lo básico: desbloquear todo':
+      'I know the basics: unlock everything',
+  'Listo: todo desbloqueado. Las lecciones quedan al final de Ajustes.':
+      'Done: everything is unlocked. The lessons stay at the end of Settings.',
+  'Se abre al terminar «Chino desde cero»':
+      'Unlocks when you finish “Chinese from zero”',
+  '¿Nunca has estudiado chino?':
+      'Never studied Chinese before?',
+  'Empieza desde cero: {0} lecciones cortas (unos {1} minutos en total) te explican lo básico antes de escribir.':
+      'Start from scratch: {0} short lessons (about {1} minutes in all) explain the basics before you write.',
+  'Estudiar, Leer y Practicar se abren al terminarlas. ¿Ya sabes algo de chino? Omítelo: las lecciones quedan al final de Ajustes.':
+      'Study, Read and Practice unlock when you finish them. Already know some Chinese? Skip it: the lessons stay at the end of Settings.',
+  'Empezar desde cero':
+      'Start from scratch',
+  '🎉 ¡Terminaste «Chino desde cero»!':
+      '🎉 You finished “Chinese from zero”!',
+  'Ya se abrieron Estudiar, Leer y Practicar. Empieza por Estudiar, en modo novato y nivel 1. Las lecciones quedan al final de Ajustes, por si quieres repasarlas.':
+      'Study, Read and Practice are now unlocked. Start with Study, in beginner mode and level 1. The lessons stay at the end of Settings in case you want to review them.',
+  'Después':
+      'Later',
+  'Al terminarlas se abren Estudiar, Leer y Practicar.':
+      'Finish them to unlock Study, Read and Practice.',
+  'Repasa las seis lecciones cuando quieras':
+      'Review the six lessons whenever you like',
+  'Qué es un hanzi, el pinyin y los tonos, para quien empieza':
+      'What a hanzi is, pinyin and tones, for beginners',
 };

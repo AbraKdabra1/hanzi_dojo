@@ -86,6 +86,18 @@ void main() {
       await tester.tap(_texto('Omitir', 'Skip'));
       await _esperar(tester, 2);
     }
+    // Luego, «¿Nunca has estudiado chino?» (en una instalación nueva siempre
+    // sale): también se omite.
+    final pregunta = _texto('Empezar desde cero', 'Start from scratch');
+    for (var i = 0; i < 10 && pregunta.evaluate().isEmpty; i++) {
+      await _esperar(tester, 1);
+    }
+    if (pregunta.evaluate().isNotEmpty) {
+      await _esperar(tester, 1);
+      await captura('00b_desde_cero');
+      await tester.tap(_texto('Omitir', 'Skip'));
+      await _esperar(tester, 2);
+    }
     expect(_texto('Estudiar', 'Study'), findsOneWidget);
     await _esperar(tester, 3);
     await captura('01_inicio');

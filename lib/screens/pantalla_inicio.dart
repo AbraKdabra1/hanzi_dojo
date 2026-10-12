@@ -10,6 +10,10 @@
 // - Botón "Leer" → libros graduados por nivel HSK (pantalla_biblioteca.dart).
 // - Botón "Practicar" → ejercicios con audio (pantalla_practica.dart).
 // - Estadísticas y Ajustes.
+// - La primera vez, tras el tutorial: «¿Nunca has estudiado chino?». Si
+//   eliges empezar desde cero, «🌱 Chino desde cero» va arriba y Estudiar,
+//   Leer y Practicar tienen candado hasta terminar las seis lecciones (o
+//   desbloquearlas ya); ver pantalla_desde_cero.dart y datos/desde_cero.dart.
 // - Abajo, una frase que cambia cada 4 segundos con un giro suave (solo
 //   mientras la pantalla se ve: con otra pantalla encima o la app en segundo
 //   plano el reloj se detiene, para no gastar batería).
@@ -81,8 +85,11 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
   bool _versionRevisada = false;
   VersionNueva? _versionNueva;
 
-  /// «Chino desde cero»: cuántas lecciones llevas (null = no se ofrece).
-  int? _desdeCero;
+  /// «Chino desde cero»: qué elegiste (null = cargando) y qué terminaste.
+  RutaDesdeCero? _ruta;
+  Set<int> _lecciones = const {};
+
+  bool get _bloqueado => _ruta?.bloquea ?? false;
 
   @override
   void initState() {
@@ -127,17 +134,32 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
 
   Future<void> _cargarResumen() async {
     final repo = DatosApp.de(context);
-    // La primera vez: el tutorial (se puede omitir).
-    var tutorialAhora = false;
+    // La primera vez: el tutorial (se puede omitir) y luego la pregunta de
+    // «Chino desde cero» (también se puede omitir). A quien venía de una
+    // versión sin ella y aún no estudia mucho se le pregunta una vez.
+    var primeraVez = false;
     if (!_tutorialRevisado) {
       _tutorialRevisado = true;
       if (!await repo.tutorialVisto() && mounted) {
-        tutorialAhora = true;
+        primeraVez = true;
         await Navigator.push(
           context,
           MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => const PantallaBienvenida()),
         );
         if (!mounted) return;
+      }
+      if (await repo.rutaDesdeCero() == RutaDesdeCero.sinElegir && mounted) {
+        primeraVez = true;
+        final empezar = await Navigator.push<bool>(
+          context,
+          MaterialPageRoute<bool>(fullscreenDialog: true, builder: (_) => const PantallaComenzarDesdeCero()),
+        );
+        if (!mounted) return;
+        if (empezar != null) await repo.elegirDesdeCero(empezar);
+        if (empezar == true && mounted) {
+          await Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const PantallaDesdeCero()));
+          if (!mounted) return;
+        }
       }
     }
     final cubiertos = await repo.aplicarProtector();
@@ -150,7 +172,10 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
     final protegidos = await repo.diasProtegidos();
     final logros = await repo.revisarLogros();
     final celebrarMeta = hoy >= metaDiaria && !await repo.metaCelebradaHoy();
-    final desdeCero = await repo.ofrecerDesdeCero() ? (await repo.leccionesTerminadas()).length : null;
+    // Por si terminaste la última lección por otro camino (un respaldo).
+    final desbloqueado = await repo.desbloquearSiTerminaste();
+    final ruta = await repo.rutaDesdeCero();
+    final lecciones = await repo.leccionesTerminadas();
     if (celebrarMeta) await repo.marcarMetaCelebrada();
     Habito.actualizarWidget();
     if (!mounted) return;
@@ -162,10 +187,19 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
       _hoy = hoy;
       _metaDiaria = metaDiaria;
       _racha = racha.actual;
-      _desdeCero = desdeCero;
+      _ruta = ruta;
+      _lecciones = lecciones;
       _protegida = racha.actual > 0 &&
           protegidos.any((d) => d.year == ayer.year && d.month == ayer.month && d.day == ayer.day);
     });
+    if (desbloqueado) {
+      final estudiar = await festejarDesbloqueo(context);
+      if (!mounted) return;
+      if (estudiar) {
+        _ir(const PantallaModo()); // al volver se carga (y avisa) lo demás
+        return;
+      }
+    }
     final aviso = ScaffoldMessenger.of(context);
     if (cubiertos.isNotEmpty) {
       aviso.showSnackBar(SnackBar(
@@ -183,11 +217,12 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
       // Una sola vez en la vida de la app (ver widgets/apoyo.dart).
       if (mounted) await Apoyo.sugerirTrasLogro(context, repo);
     }
-    // Al final, para no encimarse con lo demás. Recién visto el tutorial no
-    // se pregunta nada más: eso queda para la siguiente vez.
+    // Al final, para no encimarse con lo demás. Recién visto el tutorial (o
+    // la pregunta de «Chino desde cero») no se pregunta nada más: eso queda
+    // para la siguiente vez.
     if (!_versionRevisada && mounted) {
       _versionRevisada = true;
-      await _revisarVersion(preguntar: !tutorialAhora);
+      await _revisarVersion(preguntar: !primeraVez);
     }
   }
 
@@ -216,6 +251,82 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
   Future<void> _ir(Widget pantalla) async {
     await Navigator.push(context, MaterialPageRoute<void>(builder: (_) => pantalla));
     _cargarResumen(); // al volver, actualizar el resumen del día
+  }
+
+  /// Estudiar, Leer o Practicar: con candado mientras cursas «Chino desde
+  /// cero» se explica por qué y se ofrece seguir (o desbloquear ya).
+  void _abrir(Widget pantalla) {
+    if (_bloqueado) {
+      _mostrarCandado();
+    } else {
+      _ir(pantalla);
+    }
+  }
+
+  Future<void> _mostrarCandado() async {
+    final c = context.colores;
+    final total = DesdeCeroRepositorio.totalLecciones;
+    final faltan = total - _lecciones.length;
+    final eleccion = await showModalBottomSheet<String>(
+      context: context,
+      showDragHandle: true,
+      builder: (contexto) => SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Icon(Icons.lock_outline_rounded, size: 34, color: c.tinta),
+              const SizedBox(height: 10),
+              Text(
+                tr('Primero, «Chino desde cero»'),
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                faltan == 1
+                    ? tr('Te falta 1 lección (unos {0} minutos). Al terminarla se abren Estudiar, Leer y Practicar.',
+                        [minutosDesdeCero(_lecciones)])
+                    : tr('Te faltan {0} de {1} lecciones (unos {2} minutos). Al terminarlas se abren Estudiar, Leer y Practicar.',
+                        [faltan, total, minutosDesdeCero(_lecciones)]),
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 15, color: c.suave, height: 1.4),
+              ),
+              const SizedBox(height: 18),
+              FilledButton(
+                style: FilledButton.styleFrom(
+                  backgroundColor: c.boton,
+                  foregroundColor: c.textoBoton,
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                onPressed: () => Navigator.pop(contexto, 'seguir'),
+                child: Text(tr('Seguir con las lecciones')),
+              ),
+              const SizedBox(height: 4),
+              TextButton(
+                onPressed: () => Navigator.pop(contexto, 'desbloquear'),
+                child: Text(tr('Ya sé lo básico: desbloquear todo'), style: TextStyle(color: c.suave)),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (!mounted) return;
+    switch (eleccion) {
+      case 'seguir':
+        await _ir(const PantallaDesdeCero());
+      case 'desbloquear':
+        await DatosApp.de(context).elegirDesdeCero(false);
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(tr('Listo: todo desbloqueado. Las lecciones quedan al final de Ajustes.')),
+        ));
+        await _cargarResumen();
+    }
   }
 
   @override
@@ -271,23 +382,26 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
               ),
               const SizedBox(height: 28),
 
-              // Botón principal → PantallaModo
-              Material(
-                color: c.boton,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  side: BorderSide(color: c.bordeTarjeta, width: 1.5),
+              // Mientras cursas «Chino desde cero», es lo principal.
+              if (_ruta?.enInicio ?? false) ...[
+                _BotonPrincipal(
+                  texto: tr('Chino desde cero · {0}/{1}', [_lecciones.length, DesdeCeroRepositorio.totalLecciones]),
+                  emoji: '🌱',
+                  onTap: () => _ir(const PantallaDesdeCero()),
                 ),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(30),
-                  onTap: () => _ir(const PantallaModo()),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 15),
-                    child: Text(tr('Estudiar'),
-                        style: TextStyle(fontSize: 18, color: c.textoBoton, fontWeight: FontWeight.w700)),
-                  ),
-                ),
-              ),
+                const SizedBox(height: 12),
+              ],
+
+              // Estudiar → PantallaModo (con candado mientras tanto).
+              _bloqueado
+                  ? _BotonSecundario(
+                      icono: Icons.lock_outline_rounded,
+                      texto: tr('Estudiar'),
+                      bloqueado: true,
+                      grande: true,
+                      onTap: _mostrarCandado,
+                    )
+                  : _BotonPrincipal(texto: tr('Estudiar'), onTap: () => _ir(const PantallaModo())),
               const SizedBox(height: 12),
 
               // Botones secundarios → «Leer» (libros graduados) y «Practicar»
@@ -296,35 +410,22 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   _BotonSecundario(
-                    icono: Icons.menu_book_rounded,
+                    icono: _bloqueado ? Icons.lock_outline_rounded : Icons.menu_book_rounded,
                     texto: tr('Leer'),
-                    onTap: () => _ir(const PantallaBiblioteca()),
+                    bloqueado: _bloqueado,
+                    onTap: () => _abrir(const PantallaBiblioteca()),
                   ),
                   const SizedBox(width: 12),
                   _BotonSecundario(
-                    icono: Icons.headphones_rounded,
+                    icono: _bloqueado ? Icons.lock_outline_rounded : Icons.headphones_rounded,
                     texto: tr('Practicar'),
-                    onTap: () => _ir(const PantallaPractica()),
+                    bloqueado: _bloqueado,
+                    onTap: () => _abrir(const PantallaPractica()),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
 
-              // Para quien empieza de cero (mientras le falten lecciones).
-              if (_desdeCero case final hechas?) ...[
-                TextButton.icon(
-                  style: TextButton.styleFrom(
-                    backgroundColor: c.translucido,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  ),
-                  icon: const Text('🌱', style: TextStyle(fontSize: 17)),
-                  label: Text(
-                      tr('Chino desde cero · {0}/{1}', [hechas, DesdeCeroRepositorio.totalLecciones]),
-                      style: TextStyle(color: c.suave, fontSize: 15, fontWeight: FontWeight.w500)),
-                  onPressed: () => _ir(const PantallaDesdeCero()),
-                ),
-                const SizedBox(height: 8),
-              ],
               // Botón estadísticas (con fondo de papel translúcido: si un pétalo
               // pasa por detrás, el texto se sigue leyendo bien).
               TextButton.icon(
@@ -382,35 +483,93 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
   }
 }
 
-/// Botón con borde de tinta ("Leer", "Practicar").
-class _BotonSecundario extends StatelessWidget {
-  const _BotonSecundario({required this.icono, required this.texto, required this.onTap});
+/// Botón relleno de tinta ("Estudiar", o «Chino desde cero» mientras lo
+/// cursas).
+class _BotonPrincipal extends StatelessWidget {
+  const _BotonPrincipal({required this.texto, required this.onTap, this.emoji});
 
-  final IconData icono;
   final String texto;
+  final String? emoji;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final c = context.colores;
     return Material(
-      color: c.tarjeta,
+      color: c.boton,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
-        side: BorderSide(color: c.tinta, width: 1.5),
+        side: BorderSide(color: c.bordeTarjeta, width: 1.5),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(30),
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+          padding: EdgeInsets.symmetric(horizontal: emoji == null ? 44 : 28, vertical: 15),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icono, size: 20, color: c.tinta),
-              const SizedBox(width: 8),
-              Text(texto, style: TextStyle(fontSize: 17, color: c.tinta, fontWeight: FontWeight.w700)),
+              if (emoji case final e?) ...[
+                Text(e, style: const TextStyle(fontSize: 18)),
+                const SizedBox(width: 8),
+              ],
+              Flexible(
+                child: Text(texto, style: TextStyle(fontSize: 18, color: c.textoBoton, fontWeight: FontWeight.w700)),
+              ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Botón con borde de tinta ("Leer", "Practicar"). Con candado se ve
+/// apagado y al tocarlo explica por qué ([bloqueado]); [grande] es para
+/// "Estudiar" con candado (mismo tamaño que el botón principal).
+class _BotonSecundario extends StatelessWidget {
+  const _BotonSecundario({
+    required this.icono,
+    required this.texto,
+    required this.onTap,
+    this.bloqueado = false,
+    this.grande = false,
+  });
+
+  final IconData icono;
+  final String texto;
+  final VoidCallback onTap;
+  final bool bloqueado;
+  final bool grande;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colores;
+    final color = bloqueado ? c.suave : c.tinta;
+    return Semantics(
+      hint: bloqueado ? tr('Se abre al terminar «Chino desde cero»') : null,
+      child: Opacity(
+        opacity: bloqueado ? 0.6 : 1,
+        child: Material(
+          color: c.tarjeta,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+            side: BorderSide(color: color, width: 1.5),
+          ),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(30),
+            onTap: onTap,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: grande ? 36 : 22, vertical: grande ? 14 : 12),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(icono, size: 20, color: color),
+                  const SizedBox(width: 8),
+                  Text(texto, style: TextStyle(fontSize: grande ? 18 : 17, color: color, fontWeight: FontWeight.w700)),
+                ],
+              ),
+            ),
           ),
         ),
       ),

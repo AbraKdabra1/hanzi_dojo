@@ -10,7 +10,7 @@ Primera versión pública.
 **Nuevo nombre: Meizi Hanzi · 梅字** (antes Hanzi Dojo). 梅 es el ciruelo de la rama del inicio y 字, el carácter que escribes. Se instala encima de la versión anterior sin perder nada; los respaldos `.hanzidojo` se siguen importando (los nuevos se guardan como `.meizi`).
 
 **Novedades de la beta 3**
-- **Chino desde cero**: seis lecciones cortas para quien nunca ha estudiado chino: qué es un hanzi, de dónde vienen (dibujos, ideas juntas, sonido y significado, radicales), los trazos y su orden, el pinyin y los sonidos que engañan, los tonos y tus primeras palabras. En cada paso se hace algo: oír, descubrir, adivinar o escribir. Está en el inicio y en Ajustes.
+- **Chino desde cero**: seis lecciones cortas para quien nunca ha estudiado chino: qué es un hanzi, de dónde vienen (dibujos, ideas juntas, sonido y significado, radicales), los trazos y su orden, el pinyin y los sonidos que engañan, los tonos y tus primeras palabras. En cada paso se hace algo: oír, descubrir, adivinar o escribir. Al terminar el tutorial, la app pregunta si quieres empezar desde cero (se puede omitir): si sí, las lecciones van en el inicio y Estudiar, Leer y Practicar se abren al terminarlas (o cuando decidas desbloquearlas). Después quedan al final de Ajustes.
 - **Leer suena más natural**: si tu teléfono tiene voz en chino, los párrafos se leen de corrido con ella (como antes de la beta 2), resaltando lo que dice, con pausa y velocidad. Se puede cambiar en Ajustes › Práctica con audio.
 - **Grabaciones más fluidas** (teléfonos sin voz china, como los Huawei sin Google): un carácter suelto suena con la misma voz que las palabras y las uniones son suaves, sin chasquidos ni palabras pegadas.
 - **Corregido**: el sonido de 问 (wèn), que casi no bajaba.
