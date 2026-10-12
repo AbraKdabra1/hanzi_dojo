@@ -117,7 +117,10 @@ void main() {
     expect(desdeCero, lessThan(tester.getTopLeft(find.text('Estudiar')).dy));
     expect(find.text('2 de 6 lecciones'), findsOneWidget);
     expect(find.byType(LinearProgressIndicator), findsOneWidget);
-    expect(find.text('Se abre al terminar «Chino desde cero»'), findsNWidgets(3));
+    // Con candado: dicen para qué sirven, no lo pendiente.
+    expect(find.byIcon(Icons.lock_outline_rounded), findsNWidgets(3));
+    expect(find.text('Escribe caracteres, trazo a trazo'), findsOneWidget);
+    expect(find.textContaining('nuevos'), findsNothing);
     await cerrar(tester);
   });
 }

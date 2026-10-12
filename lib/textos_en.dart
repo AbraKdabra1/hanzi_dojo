@@ -1680,4 +1680,6 @@ const textosEn = <String, String>{
       '{0} of {1} lessons',
   'Hoy llevas {0} de {1}. Racha de {2} días.':
       'Today: {0} of {1}. {2}-day streak.',
+  'Escribe caracteres, trazo a trazo':
+      'Write characters, stroke by stroke',
 };

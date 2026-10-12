@@ -373,7 +373,8 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
   @override
   Widget build(BuildContext context) {
     final c = context.colores;
-    final bloqueo = tr('Se abre al terminar «Chino desde cero»');
+    // Con candado, cada renglón dice para qué sirve (aún no hay nada
+    // pendiente); al tocarlo se explica cuánto falta.
     final filas = <Widget>[
       // Mientras cursas «Chino desde cero», va primero: es lo que toca.
       if (_ruta?.enInicio ?? false)
@@ -387,21 +388,21 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
       _FilaInicio(
         emoji: '✍️',
         titulo: tr('Estudiar'),
-        subtitulo: _bloqueado ? bloqueo : _textoEstudiar,
+        subtitulo: _bloqueado ? tr('Escribe caracteres, trazo a trazo') : _textoEstudiar,
         bloqueado: _bloqueado,
         onTap: () => _abrir(const PantallaModo()),
       ),
       _FilaInicio(
         emoji: '🎧',
         titulo: tr('Practicar'),
-        subtitulo: _bloqueado ? bloqueo : _textoPracticar,
+        subtitulo: _bloqueado ? tr('Tonos, escucha, vocabulario y pinyin') : _textoPracticar,
         bloqueado: _bloqueado,
         onTap: () => _abrir(const PantallaPractica()),
       ),
       _FilaInicio(
         emoji: '📖',
         titulo: tr('Leer'),
-        subtitulo: _bloqueado ? bloqueo : _textoLeer,
+        subtitulo: _bloqueado ? tr('Cuentos y leyendas por nivel, con audio') : _textoLeer,
         bloqueado: _bloqueado,
         onTap: () => _abrir(const PantallaBiblioteca()),
       ),
