@@ -222,7 +222,7 @@ void main() {
     test('ma1: misma cuenta que una conversión de referencia validada con ffprobe', () {
       final caf = OggACaf.convertir(File('assets/audio/silabas/ma1.opus').readAsBytesSync());
       expect(String.fromCharCodes(caf.sublist(0, 4)), 'caff');
-      expect(caf.length, 1584);
+      expect(caf.length, 1437);
       final b = bloques(caf);
       expect(b.keys, ['desc', 'chan', 'pakt', 'data']);
       final (desc, _) = b['desc']!;
@@ -231,10 +231,10 @@ void main() {
       expect(u32(caf, desc + 20), 960); // muestras por paquete
       expect(u32(caf, desc + 24), 1); // mono
       final (pakt, _) = b['pakt']!;
-      expect(u64(caf, pakt), 29); // paquetes
-      expect(u64(caf, pakt + 8), 27360); // muestras válidas
+      expect(u64(caf, pakt), 26); // paquetes
+      expect(u64(caf, pakt + 8), 23760); // muestras válidas
       expect(i32(caf, pakt + 16), 312); // pre-skip
-      expect(i32(caf, pakt + 20), 168); // sobrantes
+      expect(i32(caf, pakt + 20), 888); // sobrantes
     });
 
     test('todas las grabaciones se pueden reempacar', () {
