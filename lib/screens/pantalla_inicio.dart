@@ -23,6 +23,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../datos/datos_app.dart';
+import '../datos/desde_cero.dart';
 import '../datos/repositorio_habito.dart';
 import '../datos/repositorio_practica.dart';
 import '../helpers/actualizaciones.dart';
@@ -35,6 +36,7 @@ import '../widgets/logro_dialogo.dart';
 import 'pantalla_ajustes.dart';
 import 'pantalla_bienvenida.dart';
 import 'pantalla_biblioteca.dart';
+import 'pantalla_desde_cero.dart';
 import 'pantalla_estadisticas.dart';
 import 'pantalla_logros.dart';
 import 'pantalla_modo.dart';
@@ -78,6 +80,9 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
   /// se avisa arriba.
   bool _versionRevisada = false;
   VersionNueva? _versionNueva;
+
+  /// «Chino desde cero»: cuántas lecciones llevas (null = no se ofrece).
+  int? _desdeCero;
 
   @override
   void initState() {
@@ -145,6 +150,7 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
     final protegidos = await repo.diasProtegidos();
     final logros = await repo.revisarLogros();
     final celebrarMeta = hoy >= metaDiaria && !await repo.metaCelebradaHoy();
+    final desdeCero = await repo.ofrecerDesdeCero() ? (await repo.leccionesTerminadas()).length : null;
     if (celebrarMeta) await repo.marcarMetaCelebrada();
     Habito.actualizarWidget();
     if (!mounted) return;
@@ -156,6 +162,7 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
       _hoy = hoy;
       _metaDiaria = metaDiaria;
       _racha = racha.actual;
+      _desdeCero = desdeCero;
       _protegida = racha.actual > 0 &&
           protegidos.any((d) => d.year == ayer.year && d.month == ayer.month && d.day == ayer.day);
     });
@@ -315,6 +322,21 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
                     style: TextStyle(color: c.suave, fontSize: 15, fontWeight: FontWeight.w500)),
                 onPressed: () => _ir(const PantallaEstadisticas()),
               ),
+              // Para quien empieza de cero (mientras le falten lecciones).
+              if (_desdeCero case final hechas?) ...[
+                const SizedBox(height: 8),
+                TextButton.icon(
+                  style: TextButton.styleFrom(
+                    backgroundColor: c.translucido,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  ),
+                  icon: const Text('🌱', style: TextStyle(fontSize: 17)),
+                  label: Text(
+                      tr('Chino desde cero · {0}/{1}', [hechas, DesdeCeroRepositorio.totalLecciones]),
+                      style: TextStyle(color: c.suave, fontSize: 15, fontWeight: FontWeight.w500)),
+                  onPressed: () => _ir(const PantallaDesdeCero()),
+                ),
+              ],
               const Spacer(),
 
               // Frase que gira cada 4 s

@@ -38,6 +38,7 @@ import '../tema.dart';
 import 'pantalla_bateria.dart';
 import 'pantalla_bienvenida.dart';
 import 'pantalla_creditos.dart';
+import 'pantalla_desde_cero.dart';
 import 'pantalla_errores.dart';
 import 'pantalla_reporte.dart';
 import 'pantalla_resumen_beta.dart';
@@ -815,6 +816,21 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                   Icon(Icons.school_outlined),
                   SizedBox(width: 12),
                   Expanded(child: Text(tr('Ver el tutorial'), style: TextStyle(fontSize: 15))),
+                  Icon(Icons.arrow_forward_ios, size: 14, color: context.colores.tenue),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            TarjetaVidrio(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute<void>(builder: (_) => const PantallaDesdeCero()),
+              ),
+              child: Row(
+                children: [
+                  const Text('🌱', style: TextStyle(fontSize: 20)),
+                  const SizedBox(width: 12),
+                  Expanded(child: Text(tr('Chino desde cero'), style: const TextStyle(fontSize: 15))),
                   Icon(Icons.arrow_forward_ios, size: 14, color: context.colores.tenue),
                 ],
               ),
