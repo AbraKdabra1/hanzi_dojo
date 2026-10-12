@@ -316,6 +316,12 @@ extension PracticaRepositorio on Repositorio {
   Future<bool> vozLenta() async => await base.leerAjuste('voz_lenta') == '1';
 
   Future<void> guardarVozLenta(bool lenta) => base.guardarAjuste('voz_lenta', lenta ? '1' : '0');
+
+  /// Leer en voz alta con la voz del teléfono cuando tenga chino (por
+  /// defecto sí; ver Voz.leerConVozDelTelefono).
+  Future<bool> vozTelefonoAlLeer() async => await base.leerAjuste('voz_telefono_lectura') != '0';
+
+  Future<void> guardarVozTelefonoAlLeer(bool si) => base.guardarAjuste('voz_telefono_lectura', si ? '1' : '0');
 }
 
 /// Avance del vocabulario en un nivel.

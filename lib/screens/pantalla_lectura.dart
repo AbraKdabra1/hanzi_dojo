@@ -116,8 +116,9 @@ class _PantallaLecturaState extends State<PantallaLectura> {
     await _leerDesde(_primerParrafoVisible());
   }
 
-  /// Lee con las grabaciones, párrafo por párrafo desde [desde] (solo ese si
-  /// [soloUno]), resaltando la palabra que suena.
+  /// Lee en voz alta párrafo por párrafo desde [desde] (solo ese si
+  /// [soloUno]), resaltando lo que suena: con la voz del teléfono si tiene
+  /// chino (Ajustes › Leer con la voz del teléfono) o con las grabaciones.
   Future<void> _leerDesde(int desde, {bool soloUno = false}) async {
     final parrafos = _parrafos;
     if (parrafos == null || desde >= parrafos.length) return;

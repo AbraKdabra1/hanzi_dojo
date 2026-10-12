@@ -133,31 +133,35 @@ void main() {
     expect(rangos, [(0, 1), (1, 2), (2, 5)]);
   });
 
-  group('Recortes (leer de corrido)', () {
-    test('clave de cada grabación en recortes.txt', () {
-      expect(Clip.silaba('ma1').claveRecorte, 's/ma1');
-      expect(Clip.palabra('56fe-4e66-9986').claveRecorte, 'p/56fe-4e66-9986');
-      expect(const Clip.pausa(250).claveRecorte, isNull);
-    });
-
+  group('Una sola voz (lecturas.txt)', () {
     test('se leen las líneas válidas e ignoran comentarios y basura', () {
-      final r = Audio.leerRecortes('# comentario\ns/ma1 31 545\np/4e00 20 800\nmal\ns/x1 9 3\n');
-      expect(r, {'s/ma1': (31, 545), 'p/4e00': (20, 800)});
+      final l = Audio.leerLecturas('# comentario\n问 wen4\n去 qu4\nmal\n图书 tu2\n');
+      expect(l, {'问': 'wen4', '去': 'qu4'});
     });
 
-    test('cada grabación tiene su recorte y deja la mayor parte del audio', () {
-      final r = Audio.leerRecortes(File('assets/audio/recortes.txt').readAsStringSync());
-      final palabras = File('assets/audio/palabras.txt').readAsLinesSync().where((l) => l.isNotEmpty);
-      final silabas = File('assets/audio/silabas.txt').readAsLinesSync().where((l) => l.isNotEmpty);
-      for (final p in palabras) {
-        final recorte = r['p/${Audio.nombrePalabra(p)}'];
-        expect(recorte, isNotNull, reason: p);
-        expect(recorte!.$2 - recorte.$1, greaterThan(150), reason: p);
-      }
-      for (final s in silabas) {
-        final recorte = r['s/$s'];
-        expect(recorte, isNotNull, reason: s);
-        expect(recorte!.$2 - recorte.$1, greaterThan(150), reason: s);
+    test('un carácter suelto suena con su grabación si se lee como ella', () {
+      final plan = Audio.planDeLectura('我问你',
+          pinyin: const ['wǒ', 'wèn', 'nǐ'],
+          palabras: const {'问', '我'},
+          silabas: const {'wo3', 'wen4', 'ni3'},
+          lecturas: const {'问': 'wen4', '我': 'wo3'});
+      expect(plan.clips.map((c) => '$c').toList(), ['6211.opus', '95ee.opus', 'ni3.opus']);
+    });
+
+    test('con otra lectura en el texto, la sílaba', () {
+      // 问 grabado como wèn; si el texto dijera wén, la sílaba.
+      final plan = Audio.planDeLectura('问',
+          pinyin: const ['wén'], palabras: const {'问'}, silabas: const {'wen2'}, lecturas: const {'问': 'wen4'});
+      expect(plan.clips.map((c) => '$c').toList(), ['wen2.opus']);
+    });
+
+    test('cada línea es un carácter grabado con una sola lectura', () {
+      final l = Audio.leerLecturas(File('assets/audio/lecturas.txt').readAsStringSync());
+      expect(l.length, greaterThan(1000));
+      expect(l['问'], 'wen4'); // el reporte del sonido de 问
+      expect(l.containsKey('好'), isFalse); // hǎo / hào: con la sílaba
+      for (final c in l.keys) {
+        expect(File('assets/audio/palabras/${Audio.nombrePalabra(c)}.opus').existsSync(), isTrue, reason: c);
       }
     });
   });

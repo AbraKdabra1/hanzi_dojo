@@ -12,8 +12,12 @@
 //   · planDeLectura(...) → la lista de grabaciones para leer un texto: las
 //     palabras grabadas más largas que quepan y, para lo demás, la sílaba de
 //     cada carácter según su pinyin en ESE texto (长 de 长大 = zhǎng).
-//   · leerRecortes(...) → dónde empieza y termina la voz en cada grabación,
-//     para encadenarlas sin el silencio que traen a los lados.
+//   · leerLecturas(...) → los caracteres que tienen grabación propia y con
+//     qué sílaba (assets/audio/lecturas.txt): un carácter suelto suena con
+//     ella, de la misma voz que las palabras, si en el texto se lee así.
+//
+// Las grabaciones ya vienen recortadas, con un margen corto y fundidos
+// suaves (preparar_audio.py): encadenadas suenan de corrido, sin chasquidos.
 // La reproducción está en widgets/boton_voz.dart.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -40,15 +44,6 @@ class Clip {
   final int fin;
 
   bool get esPausa => pausaMs > 0;
-
-  /// Su línea en assets/audio/recortes.txt ('s/ma1', 'p/56fe-4e66'), o null.
-  String? get claveRecorte {
-    final m = _rutaGrabacion.firstMatch(ruta);
-    if (m == null) return null;
-    return '${m.group(1) == 'silabas' ? 's' : 'p'}/${m.group(2)}';
-  }
-
-  static final _rutaGrabacion = RegExp(r'^assets/audio/(silabas|palabras)/(.+)\.opus$');
 
   @override
   String toString() => esPausa ? 'pausa($pausaMs)' : ruta.split('/').last;
@@ -147,17 +142,16 @@ class Audio {
     return null;
   }
 
-  /// assets/audio/recortes.txt → clave → (inicio, fin) en ms de la parte con
-  /// voz de cada grabación (ver herramientas_datos/medir_recortes.py).
-  static Map<String, (int, int)> leerRecortes(String texto) {
-    final recortes = <String, (int, int)>{};
+  /// assets/audio/lecturas.txt → carácter → sílaba de su grabación propia
+  /// ('问' → 'wen4'; ver herramientas_datos/listar_lecturas.py).
+  static Map<String, String> leerLecturas(String texto) {
+    final lecturas = <String, String>{};
     for (final linea in texto.split('\n')) {
       final partes = linea.trim().split(' ');
-      if (partes.length != 3 || partes[0].startsWith('#')) continue;
-      final inicio = int.tryParse(partes[1]), fin = int.tryParse(partes[2]);
-      if (inicio != null && fin != null && fin > inicio) recortes[partes[0]] = (inicio, fin);
+      if (partes.length != 2 || partes[0].startsWith('#') || partes[0].runes.length != 1) continue;
+      lecturas[partes[0]] = partes[1];
     }
-    return recortes;
+    return lecturas;
   }
 
   /// '图书馆' → '56fe-4e66-9986' (igual que en preparar_audio.py).
@@ -174,11 +168,14 @@ class Audio {
   ///
   /// [pinyin], si se da, trae una sílaba por carácter de [texto] (por runa) y
   /// sirve para elegir la lectura correcta de los caracteres sueltos.
+  /// [lecturas] (Audio.leerLecturas): un carácter suelto suena con su propia
+  /// grabación (misma voz que las palabras) si en el texto se lee así.
   static PlanLectura planDeLectura(
     String texto, {
     List<String>? pinyin,
     required Set<String> palabras,
     required Set<String> silabas,
+    Map<String, String> lecturas = const {},
     int largoMaximo = 4,
   }) {
     final runas = texto.runes.toList();
@@ -230,12 +227,17 @@ class Audio {
         continue;
       }
 
-      // Carácter suelto: su sílaba según el pinyin del texto; si no hay
-      // pinyin, la grabación del carácter (si la hay).
+      // Carácter suelto: su propia grabación si en este texto se lee como
+      // ella (misma voz que las palabras); si no, su sílaba según el pinyin
+      // del texto; sin pinyin, la grabación del carácter (si la hay).
       caracteres++;
-      final silaba = conPinyin ? silabaDisponible(pinyin[i], silabas) : null;
       final c = String.fromCharCode(r);
-      if (silaba != null) {
+      final propia = conPinyin && palabras.contains(c) && lecturas[c] == claveSilaba(pinyin[i]);
+      final silaba = conPinyin && !propia ? silabaDisponible(pinyin[i], silabas) : null;
+      if (propia) {
+        clips.add(Clip.palabra(nombrePalabra(c), inicio: i, fin: i + 1));
+        cubiertos++;
+      } else if (silaba != null) {
         clips.add(Clip.silaba(silaba, inicio: i, fin: i + 1));
         cubiertos++;
       } else if (palabras.contains(c)) {

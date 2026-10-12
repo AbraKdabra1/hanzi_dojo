@@ -1256,4 +1256,11 @@ const textosEn = <String, String>{
       'I couldn\'t find a browser to download it.',
   'Novedades':
       'What\'s new',
+  // Beta 3: voz del teléfono al leer
+  'Leer con la voz del teléfono':
+      'Read with the phone\'s voice',
+  'En Leer, los párrafos suenan de corrido con la voz en chino de tu teléfono (más natural). Apágalo para oír las grabaciones de hablantes nativos.':
+      'In Read, paragraphs play smoothly with your phone\'s Chinese voice (more natural). Turn it off to hear the native speaker recordings.',
+  'Tu teléfono no tiene voz en chino, así que Leer usa las grabaciones de hablantes nativos. Si instalas una (Ajustes del teléfono › Texto a voz), se usará aquí.':
+      'Your phone has no Chinese voice, so Read uses the native speaker recordings. If you install one (phone Settings › Text-to-speech), it will be used here.',
 };
