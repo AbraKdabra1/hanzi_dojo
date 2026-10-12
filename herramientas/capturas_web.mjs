@@ -163,6 +163,10 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
     await pagina.waitForTimeout(1500);
     await captura('00_tutorial');
     await tocar('Omitir');
+    // Que se vea el inicio y que «visto» quede guardado antes de recargar
+    // (WebKit a veces recargaba antes de que IndexedDB terminara de escribir).
+    await pagina.getByText('Estudiar', { exact: true }).first().waitFor({ timeout: 60000 });
+    await pagina.waitForTimeout(2000);
     await abrir('primera vez', 240000);
     await captura('01_inicio');
     await esperarGuardado();

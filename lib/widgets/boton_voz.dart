@@ -86,6 +86,14 @@ class Voz {
   static Completer<void>? _finFrase;
   static DateTime _inicioFrase = DateTime(2000);
 
+  /// El motor avisó que empezó a hablar la frase actual.
+  static bool _arrancoFrase = false;
+
+  /// La voz del teléfono no avisa cuándo empieza ni cuándo termina (pasa en
+  /// algunos motores y en el simulador de iPhone): sin esos avisos no se
+  /// puede leer de corrido, así que Leer usa las grabaciones en esta sesión.
+  static bool _lecturaSinAvisos = false;
+
   /// Velocidad normal de la voz del teléfono con este motor (Android y iOS
   /// cuentan distinto; 0.42 se oye un poco más lento que lo normal).
   static const _tasaTts = 0.42;
@@ -141,6 +149,7 @@ class Voz {
         });
         _tts.setCompletionHandler(_terminoFrase);
         _tts.setCancelHandler(_terminoFrase);
+        _tts.setStartHandler(() => _arrancoFrase = true);
         final disponible = await _tts.isLanguageAvailable('zh-CN');
         if (disponible != true) return false;
         if (Grabaciones.enIos) {
@@ -224,7 +233,7 @@ class Voz {
     final turno = ++_turno;
     await _detenerSonido();
     try {
-      if (leerConVozDelTelefono && await _hayVozChina() && turno == _turno) {
+      if (leerConVozDelTelefono && !_lecturaSinAvisos && await _hayVozChina() && turno == _turno) {
         final leido = await _leerConTelefono(texto, turno, rapidez ?? velocidad, alSonar);
         if (leido != null) return leido;
         // No arrancó: con las grabaciones.
@@ -284,9 +293,21 @@ class Voz {
         if (resto.trim().isEmpty) return true;
         final fin = _finFrase = Completer<void>();
         _inicioFrase = DateTime.now();
+        _arrancoFrase = false;
         final r = await _tts.speak(resto);
         if (r != 1 && r != true) {
           _ttsFallo = true;
+          return primera ? null : false;
+        }
+        // Si en unos segundos no avisa ni que empezó, este motor no sirve para
+        // leer de corrido (no se sabría cuándo seguir): con las grabaciones.
+        final avisoATiempo = await Future.any([
+          fin.future.then((_) => true),
+          Future<bool>.delayed(const Duration(seconds: 3), () => false),
+        ]);
+        if (!avisoATiempo && !_arrancoFrase && !sono && turno == _turno && !_telefonoPausado) {
+          _lecturaSinAvisos = true;
+          await _tts.stop();
           return primera ? null : false;
         }
         // Termina (o lo detienen); por si el motor no avisa, un tope generoso.
