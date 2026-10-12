@@ -6,7 +6,7 @@
 //   1. La app arranca y copia la base de contenido.
 //   2. Una sílaba y una palabra se reempacan a CAF y el reproductor de iOS
 //      las puede cargar (el iPhone no lee Opus en Ogg); una oración suena de
-//      corrido, palabra por palabra (lista de reproducción con recortes).
+//      corrido, palabra por palabra (lista de reproducción).
 //   3. Capturas del inicio, la elección de modo, los niveles y el estudio.
 //
 // Cada captura se guarda en la carpeta temporal de la app (en el simulador es
@@ -121,7 +121,7 @@ void main() {
       expect(duracion!.inMilliseconds, greaterThan(150), reason: ruta);
     }
 
-    // Una oración de corrido (lista de reproducción con recortes y pausas),
+    // Una oración de corrido (lista de reproducción con pausas),
     // como al leer un cuento: suena cada palabra y termina.
     final sonaron = <(int, int)>[];
     final reloj = Stopwatch()..start();

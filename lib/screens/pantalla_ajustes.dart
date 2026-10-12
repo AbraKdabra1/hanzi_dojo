@@ -38,6 +38,7 @@ import '../tema.dart';
 import 'pantalla_bateria.dart';
 import 'pantalla_bienvenida.dart';
 import 'pantalla_creditos.dart';
+import 'pantalla_desde_cero.dart';
 import 'pantalla_errores.dart';
 import 'pantalla_reporte.dart';
 import 'pantalla_resumen_beta.dart';
@@ -58,6 +59,10 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
   bool? _vibracion;
   bool? _sonidoPincel;
   bool? _vozLenta;
+
+  /// Leer en voz alta con la voz del teléfono, y si el teléfono la tiene.
+  bool? _vozTelefono;
+  bool _hayVozChina = false;
   int? _metaDiaria;
 
   /// Hora del recordatorio (null = apagado).
@@ -90,6 +95,8 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
     final ajuste = await repo.ajusteCaligrafico();
     final limitePalabras = await repo.limitePalabrasPorDia();
     final vozLenta = await repo.vozLenta();
+    final vozTelefono = await repo.vozTelefonoAlLeer();
+    final hayVozChina = await Voz.hayVozChina();
     final idioma = await repo.idioma();
     final vibracion = await repo.vibracion();
     final sonidoPincel = await repo.sonidoPincel();
@@ -105,6 +112,8 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
         _ajuste = ajuste;
         _limitePalabras = limitePalabras;
         _vozLenta = vozLenta;
+        _vozTelefono = vozTelefono;
+        _hayVozChina = hayVozChina;
         _idioma = idioma;
         _vibracion = vibracion;
         _sonidoPincel = sonidoPincel;
@@ -529,6 +538,25 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                             DatosApp.de(context).guardarVozLenta(v);
                           },
                   ),
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(tr('Leer con la voz del teléfono'),
+                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                    subtitle: Text(
+                      _hayVozChina
+                          ? tr('En Leer, los párrafos suenan de corrido con la voz en chino de tu teléfono (más natural). Apágalo para oír las grabaciones de hablantes nativos.')
+                          : tr('Tu teléfono no tiene voz en chino, así que Leer usa las grabaciones de hablantes nativos. Si instalas una (Ajustes del teléfono › Texto a voz), se usará aquí.'),
+                      style: TextStyle(fontSize: 13, color: context.colores.suave, height: 1.3),
+                    ),
+                    value: _hayVozChina && (_vozTelefono ?? true),
+                    onChanged: !_hayVozChina || _vozTelefono == null
+                        ? null
+                        : (v) {
+                            setState(() => _vozTelefono = v);
+                            Voz.leerConVozDelTelefono = v;
+                            DatosApp.de(context).guardarVozTelefonoAlLeer(v);
+                          },
+                  ),
                   Text(tr('Palabras nuevas por día'),
                       style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: context.colores.tinta)),
                   if (_limitePalabras != null)
@@ -788,6 +816,21 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                   Icon(Icons.school_outlined),
                   SizedBox(width: 12),
                   Expanded(child: Text(tr('Ver el tutorial'), style: TextStyle(fontSize: 15))),
+                  Icon(Icons.arrow_forward_ios, size: 14, color: context.colores.tenue),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            TarjetaVidrio(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute<void>(builder: (_) => const PantallaDesdeCero()),
+              ),
+              child: Row(
+                children: [
+                  const Text('🌱', style: TextStyle(fontSize: 20)),
+                  const SizedBox(width: 12),
+                  Expanded(child: Text(tr('Chino desde cero'), style: const TextStyle(fontSize: 15))),
                   Icon(Icons.arrow_forward_ios, size: 14, color: context.colores.tenue),
                 ],
               ),

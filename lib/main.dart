@@ -121,6 +121,7 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
       Sensaciones.vibracion = await repo.vibracion();
       Sensaciones.sonidoPincel = await repo.sonidoPincel();
       Voz.velocidad = await repo.vozLenta() ? 0.75 : 1.0;
+      Voz.leerConVozDelTelefono = await repo.vozTelefonoAlLeer();
       // iOS: que las pronunciaciones suenen aunque esté en silencio.
       Grabaciones.prepararIos().catchError((Object e, StackTrace pila) => RegistroErrores.registrar('Audio iOS', e, pila));
       // El recordatorio lo programa el sistema; se vuelve a poner por si la app se

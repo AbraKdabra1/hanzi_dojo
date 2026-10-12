@@ -51,6 +51,7 @@ app no envía nada: si donas o no, y cuánto, solo lo sabe PayPal.
 | Notificaciones | Solo si activas el recordatorio diario o el carácter del día. |
 | Ejecutar al iniciar el teléfono | Volver a programar el recordatorio después de reiniciar. |
 | Internet | Solo el aviso de versión nueva, si lo aceptas (ver arriba). |
+| Ver el estado de la red | Lo incluye el reproductor de audio de Android que usa la app; la app no lo usa (todo su audio viene dentro de ella). |
 
 Para exportar tu progreso, abrir un libro o guardar una imagen, la app usa el
 selector de archivos del sistema: solo accede al archivo que tú elijas.

@@ -1256,4 +1256,366 @@ const textosEn = <String, String>{
       'I couldn\'t find a browser to download it.',
   'Novedades':
       'What\'s new',
+  // Beta 3: voz del teléfono al leer
+  'Leer con la voz del teléfono':
+      'Read with the phone\'s voice',
+  'En Leer, los párrafos suenan de corrido con la voz en chino de tu teléfono (más natural). Apágalo para oír las grabaciones de hablantes nativos.':
+      'In Read, paragraphs play smoothly with your phone\'s Chinese voice (more natural). Turn it off to hear the native speaker recordings.',
+  'Tu teléfono no tiene voz en chino, así que Leer usa las grabaciones de hablantes nativos. Si instalas una (Ajustes del teléfono › Texto a voz), se usará aquí.':
+      'Your phone has no Chinese voice, so Read uses the native speaker recordings. If you install one (phone Settings › Text-to-speech), it will be used here.',
+  // Beta 3: Chino desde cero
+  'Chino desde cero · {0}/{1}':
+      'Chinese from zero · {0}/{1}',
+  '¿Qué es un hanzi?':
+      'What is a hanzi?',
+  'Por qué el chino no tiene alfabeto y cuántos caracteres hace falta saber.':
+      'Why Chinese has no alphabet and how many characters you need to know.',
+  'El chino no tiene alfabeto':
+      'Chinese has no alphabet',
+  'En español juntas letras para formar palabras. En chino cada signo es un hanzi (汉字, «carácter chino»): una sílaba que casi siempre tiene significado propio. Toca cada uno para oírlo.':
+      'In English you put letters together to make words. In Chinese each sign is a hanzi (汉字, "Chinese character"): one syllable that almost always has its own meaning. Tap each one to hear it.',
+  'persona':
+      'person',
+  'montaña':
+      'mountain',
+  'sol, día':
+      'sun, day',
+  'grande':
+      'big',
+  'Las palabras se arman con caracteres':
+      'Words are built from characters',
+  'Muchas palabras juntan dos caracteres, y a veces se adivina por qué. Toca el signo de interrogación.':
+      'Many words join two characters, and sometimes you can guess why. Tap the question mark.',
+  'fuego':
+      'fire',
+  'volcán':
+      'volcano',
+  'electricidad':
+      'electricity',
+  'cerebro':
+      'brain',
+  'computadora':
+      'computer',
+  '¿Cuántos hay que aprender?':
+      'How many do you need to learn?',
+  'Existen decenas de miles, pero no hace falta saberlos todos: unos pocos se repiten muchísimo.':
+      'There are tens of thousands, but you don\'t need them all: a few show up all the time.',
+  'Los mil más usados cubren cerca del 90 % de lo que lees en un texto común.':
+      'The thousand most used cover about 90% of what you read in an everyday text.',
+  'Los del examen oficial HSK, del nivel 1 al 9. La app te los enseña de los más fáciles a los más difíciles.':
+      'The ones in the official HSK exam, levels 1 to 9. The app teaches them from easiest to hardest.',
+  'Ahora tú':
+      'Your turn',
+  'Muchos caracteres sencillos empezaron como dibujos.':
+      'Many simple characters started as drawings.',
+  '¿Qué crees que significa 木?':
+      'What do you think 木 means?',
+  'Árbol':
+      'Tree',
+  'Agua':
+      'Water',
+  'Fuego':
+      'Fire',
+  '木 (mù) es un árbol: el tronco, las ramas arriba y las raíces abajo.':
+      '木 (mù) is a tree: the trunk, the branches on top and the roots below.',
+  'De dónde vienen':
+      'Where they come from',
+  'Dibujos, ideas juntas y partes que dan el sonido: así se forman los caracteres.':
+      'Drawings, combined ideas and parts that give the sound: how characters are made.',
+  'Dibujos que se volvieron letras':
+      'Drawings that became writing',
+  'Los caracteres más antiguos eran dibujos de lo que nombran. Con los siglos se hicieron más simples y rectos, pero todavía se reconocen.':
+      'The oldest characters were drawings of what they name. Over the centuries they became simpler and straighter, but you can still recognize them.',
+  'sol':
+      'sun',
+  'un círculo con un punto':
+      'a circle with a dot',
+  'luna':
+      'moon',
+  'una luna creciente':
+      'a crescent moon',
+  'tres picos':
+      'three peaks',
+  'boca':
+      'mouth',
+  'una boca abierta':
+      'an open mouth',
+  'alguien caminando':
+      'someone walking',
+  'árbol':
+      'tree',
+  'ramas y raíces':
+      'branches and roots',
+  'Dos ideas juntas, una idea nueva':
+      'Two ideas together, a new idea',
+  'Otros juntan dos caracteres para formar una idea. Toca el signo de interrogación.':
+      'Others join two characters to make an idea. Tap the question mark.',
+  'descansar':
+      'to rest',
+  'brillante':
+      'bright',
+  'mujer':
+      'woman',
+  'hijo':
+      'child',
+  'bueno':
+      'good',
+  'Una parte da el significado y otra el sonido':
+      'One part gives the meaning, another the sound',
+  'La mayoría de los caracteres (unos 3 de cada 4) se forman así: una parte dice de qué trata y otra cómo suena. 马 (mǎ) significa caballo, pero aquí solo presta su sonido.':
+      'Most characters (about 3 out of 4) are made like this: one part tells what it is about and another how it sounds. 马 (mǎ) means horse, but here it only lends its sound.',
+  'suena «ma»':
+      'sounds "ma"',
+  'mamá':
+      'mom',
+  '¿…? (pregunta)':
+      '…? (question)',
+  'Los radicales':
+      'Radicals',
+  'La parte que da el significado se llama radical, y es una gran pista: 氵 (tres gotas) es agua; 口, boca; 木, árbol. En la app puedes estudiar por radical.':
+      'The part that gives the meaning is called a radical, and it is a great clue: 氵 (three drops) is water; 口, mouth; 木, tree. In the app you can study by radical.',
+  'río':
+      'river',
+  'mar':
+      'sea',
+  'lavar':
+      'to wash',
+  'comer':
+      'to eat',
+  'beber':
+      'to drink',
+  'bosque':
+      'forest',
+  '¿Qué tienen en común 河, 海 y 洗?':
+      'What do 河, 海 and 洗 have in common?',
+  'El agua (氵)':
+      'Water (氵)',
+  'La boca (口)':
+      'The mouth (口)',
+  'Los árboles (木)':
+      'Trees (木)',
+  'Los tres llevan 氵, el radical del agua: río, mar y lavar.':
+      'All three have 氵, the water radical: river, sea and wash.',
+  'Los trazos':
+      'Strokes',
+  'Los trazos básicos, las reglas del orden y tus primeros caracteres en el lienzo.':
+      'The basic strokes, the order rules and your first characters on the canvas.',
+  'Todo carácter se escribe con trazos':
+      'Every character is written with strokes',
+  'Un trazo es lo que dibujas sin levantar el dedo. Hay pocos tipos; estos son los más comunes:':
+      'A stroke is what you draw without lifting your finger. There are only a few kinds; these are the most common:',
+  'Horizontal':
+      'Horizontal',
+  'De izquierda a derecha →':
+      'Left to right →',
+  'Vertical':
+      'Vertical',
+  'De arriba hacia abajo ↓ (el segundo trazo)':
+      'Top to bottom ↓ (the second stroke)',
+  'Diagonales':
+      'Diagonals',
+  'Una baja a la izquierda ↙ y otra a la derecha ↘':
+      'One falls to the left ↙ and the other to the right ↘',
+  'Punto':
+      'Dot',
+  'Corto, hacia abajo y a la derecha (el de arriba)':
+      'Short, down and to the right (the one on top)',
+  'Quiebre':
+      'Turn',
+  'Cambia de dirección sin levantar el dedo (arriba y a la derecha)':
+      'Changes direction without lifting your finger (top and right side)',
+  'Gancho':
+      'Hook',
+  'Termina con un pequeño gancho (el del centro)':
+      'Ends with a small hook (the middle one)',
+  'El orden sí importa':
+      'Order matters',
+  'Los trazos tienen un orden fijo: así la escritura sale más rápida y bonita, y la app sabe qué trazo esperas. Las reglas principales:':
+      'Strokes have a fixed order: it makes writing faster and nicer, and the app knows which stroke to expect. The main rules:',
+  'Arriba antes que abajo':
+      'Top before bottom',
+  'Los tres horizontales, de arriba hacia abajo':
+      'The three horizontals, from top to bottom',
+  'Izquierda antes que derecha':
+      'Left before right',
+  'Los tres trazos, de izquierda a derecha':
+      'The three strokes, from left to right',
+  'Horizontal antes que vertical':
+      'Horizontal before vertical',
+  'Cuando se cruzan':
+      'When they cross',
+  'De afuera hacia adentro':
+      'Outside before inside',
+  'El marco primero; la base que lo cierra, al final':
+      'The frame first; the bottom that closes it, last',
+  'El centro antes que los lados':
+      'Center before the sides',
+  'Cuando el centro destaca':
+      'When the center stands out',
+  'Míralo':
+      'Watch it',
+  'Así se escribe 十: primero el horizontal, luego el vertical. Toca para repetirlo.':
+      'This is how 十 is written: first the horizontal, then the vertical. Tap to replay.',
+  'Escribe 十':
+      'Write 十',
+  'Con el dedo: el horizontal de izquierda a derecha y luego el vertical de arriba hacia abajo.':
+      'With your finger: the horizontal from left to right, then the vertical from top to bottom.',
+  'Escribe 口':
+      'Write 口',
+  'Tres trazos: el lado izquierdo; arriba y a la derecha en uno solo (el quiebre); y la base, que cierra.':
+      'Three strokes: the left side; the top and right side in one go (the turn); and the bottom, which closes it.',
+  'El pinyin':
+      'Pinyin',
+  'Cómo se escribe la pronunciación con nuestras letras, y los sonidos que engañan.':
+      'How pronunciation is written with our letters, and the sounds that trick you.',
+  'El chino escrito con nuestras letras':
+      'Chinese written with our letters',
+  'Los caracteres no dicen cómo suenan. Para eso existe el pinyin: la pronunciación escrita con letras latinas. No reemplaza a los caracteres; es una ayuda para leer y para escribir en el teléfono.':
+      'Characters don\'t tell you how they sound. That\'s what pinyin is for: pronunciation written with Latin letters. It doesn\'t replace characters; it helps you read and type on your phone.',
+  'hola':
+      'hello',
+  'Muchos sonidos ya los conoces':
+      'You already know many sounds',
+  'm, f, n, l, s, w, y y las vocales a, i, o, u suenan casi como en español. Toca para oír:':
+      'm, f, n, l, s, w, y and the vowels a, i, o, u sound much like in Spanish ("a" as in father, "i" as in machine). Tap to hear:',
+  'Como en «mamá».':
+      'As in "mama".',
+  'Como en «niño».':
+      'As in "knee".',
+  'Como en «luna».':
+      'Like "loo".',
+  'Como «uo»: la w es una u rápida.':
+      'Like "woh": the w is a quick u.',
+  'Los que engañan (1)':
+      'Tricky ones (1)',
+  'Se escriben con letras conocidas, pero suenan distinto:':
+      'They use familiar letters, but sound different:',
+  'Como la «j» de «jamón», pero suave.':
+      'Like English "h", a little throatier.',
+  'Una «s» con la lengua abajo, sonriendo: casi «si».':
+      'Between "s" and "sh", with your tongue down and a smile: almost "see".',
+  'Una «ch» con un soplo de aire.':
+      'Like "ch" in "cheese", with a puff of air.',
+  'Una «ch» suave, sin soplo.':
+      'Like "j" in "jeep", soft, with no puff of air.',
+  'Como «ds», sin soplo.':
+      'Like "ds" in "kids".',
+  'Como «ts», con un soplo de aire.':
+      'Like "ts" in "cats", with a puff of air.',
+  'Los que engañan (2)':
+      'Tricky ones (2)',
+  'Y estos, que no existen en español:':
+      'And these, which don\'t exist in Spanish:',
+  'Una «ch» con la punta de la lengua hacia atrás.':
+      'Like "j" in "jump", with the tip of the tongue curled back.',
+  'Igual que zh, pero con un soplo de aire.':
+      'Same as zh, but with a puff of air.',
+  'Como la «sh» del inglés, con la lengua hacia atrás.':
+      'Like "sh", with the tongue curled back.',
+  'Como la «r» del inglés: nunca vibra.':
+      'Like the "r" in "run" (never rolled).',
+  'Di «i» con los labios redondos, como para decir «u».':
+      'Say "ee" with your lips rounded as for "oo".',
+  'Una «e» con la boca relajada, sin sonreír.':
+      'Like the "u" in "duh", with a relaxed mouth.',
+  '¿Cuál oíste?':
+      'Which one did you hear?',
+  'Escucha y elige. Puedes repetirlo las veces que quieras.':
+      'Listen and choose. You can replay it as many times as you like.',
+  'Los tonos':
+      'Tones',
+  'La melodía de cada sílaba: cuatro tonos (y uno ligero) que cambian el significado.':
+      'The melody of each syllable: four tones (and a light one) that change the meaning.',
+  'El tono cambia el significado':
+      'The tone changes the meaning',
+  'En chino cada sílaba tiene una melodía, el tono. La misma sílaba con otro tono es otra palabra. Escucha:':
+      'In Chinese every syllable has a melody, its tone. The same syllable with another tone is another word. Listen:',
+  'cáñamo':
+      'hemp',
+  'caballo':
+      'horse',
+  'regañar':
+      'to scold',
+  'Cuatro tonos (y uno ligero)':
+      'Four tones (and a light one)',
+  'La marca sobre la vocal dibuja la melodía. Toca cada uno:':
+      'The mark over the vowel draws the melody. Tap each one:',
+  '¿Qué tono oíste?':
+      'Which tone did you hear?',
+  'Al principio cuesta: es lo más difícil para quien habla español, y mejora rápido con práctica. En Practicar → Tonos hay un entrenador completo.':
+      'It\'s hard at first (it\'s the trickiest part for most learners) and it improves quickly with practice. Practice → Tones has a full trainer.',
+  'Un truco para después':
+      'A tip for later',
+  'Cuando van dos terceros tonos seguidos, el primero se dice como segundo: 你好 se escribe nǐ hǎo, pero suena «ní hǎo». No hace falta memorizarlo: escucha e imita.':
+      'When two third tones come together, the first one is said as a second tone: 你好 is written nǐ hǎo but sounds "ní hǎo". No need to memorize it: listen and imitate.',
+  'Tus primeras palabras':
+      'Your first words',
+  'Saludar, agradecer y escribir tres caracteres que vas a ver todo el tiempo.':
+      'Greeting, thanking and writing three characters you\'ll see all the time.',
+  'Saludar y agradecer':
+      'Greeting and thanking',
+  'Toca cada palabra para oírla.':
+      'Tap each word to hear it.',
+  'gracias':
+      'thank you',
+  'adiós':
+      'goodbye',
+  'yo':
+      'I, me',
+  'tú':
+      'you',
+  'Escribe 大':
+      'Write 大',
+  '«Grande»: una persona con los brazos abiertos. Tres trazos: el horizontal y luego las dos diagonales.':
+      '"Big": a person with open arms. Three strokes: the horizontal, then the two diagonals.',
+  'Escribe 小':
+      'Write 小',
+  '«Pequeño»: primero el gancho del centro, luego el lado izquierdo y el derecho.':
+      '"Small": first the hook in the middle, then the left side and the right side.',
+  'Escribe 不':
+      'Write 不',
+  '«No»: el horizontal de arriba, la diagonal a la izquierda, el vertical y el punto.':
+      '"No": the top horizontal, the left diagonal, the vertical and the dot.',
+  '¡Ya tienes las bases!':
+      'You have the basics!',
+  'Sigue en Estudiar, en modo novato y nivel 1: la app te enseña cada carácter con su silueta y te avisa cuándo repasarlo. En Practicar entrenas los tonos y en Leer hay cuentos cortos con audio.':
+      'Continue in Study, beginner mode and level 1: the app teaches each character with its outline and tells you when to review it. In Practice you train tones, and in Read there are short stories with audio.',
+  'Chino desde cero':
+      'Chinese from zero',
+  '¡Terminaste las seis! Ya sabes qué es un hanzi, cómo se escribe y cómo suena. Ahora sigue en Estudiar, en modo novato y nivel 1.':
+      'You finished all six! You know what a hanzi is, how it is written and how it sounds. Now continue in Study, beginner mode and level 1.',
+  '¿Nunca has estudiado chino? Empieza aquí: seis lecciones cortas, de unos minutos cada una, para entender lo básico antes de escribir.':
+      'Never studied Chinese? Start here: six short lessons, a few minutes each, to understand the basics before you write.',
+  'Ir a Estudiar':
+      'Go to Study',
+  'Paso {0} de {1}':
+      'Step {0} of {1}',
+  'Atrás':
+      'Back',
+  'toca':
+      'tap',
+  '¡Exacto!':
+      'Exactly!',
+  'Casi.':
+      'Not quite.',
+  'Escuchar':
+      'Listen',
+  'Otra':
+      'Another',
+  'Toca «Escuchar» y elige.':
+      'Tap "Listen" and choose.',
+  'Alto y parejo, como sosteniendo una nota.':
+      'High and level, like holding a note.',
+  'Sube, como cuando preguntas «¿sí?».':
+      'Rises, like asking "yes?".',
+  'Baja hasta el fondo; a veces sube un poco al final.':
+      'Dips low; sometimes it rises a little at the end.',
+  'Baja de golpe, como una orden: «¡no!».':
+      'Falls sharply, like a command: "no!".',
+  'Tono neutro: sin marca, corto y suave, como el ma de 吗 (al final de una pregunta).':
+      'Neutral tone: no mark, short and light, like the ma in 吗 (at the end of a question).',
+  'Otra vez':
+      'Again',
+  'Sigue la silueta. Si te equivocas, te muestra el trazo.':
+      'Follow the outline. If you make a mistake, it shows you the stroke.',
 };

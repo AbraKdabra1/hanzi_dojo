@@ -46,12 +46,16 @@ El mismo enlace en Chrome, Edge o Safari. Se puede escribir con el mouse.
 ## Qué probar (unos 10 minutos al día)
 
 - [ ] **El tutorial** del principio: ¿se entiende qué hace la app?
+- [ ] Si nunca has estudiado chino: **Chino desde cero** (en el inicio). ¿Se
+      entiende qué es el pinyin y qué son los tonos? ¿Algo sobra o falta?
 - [ ] **Estudiar** 5 caracteres nuevos en modo novato. ¿Te marcó bien cada
       trazo? Si un trazo que hiciste bien salió mal (o al revés), dinos qué
       carácter y qué trazo.
 - [ ] **Al día siguiente**, los repasos que te pida.
 - [ ] **Practicar**: un ejercicio de tonos y uno de escucha.
 - [ ] **Leer**: un capítulo con 🎧 y cambia la velocidad en la barra de abajo.
+      ¿Suena fluido? Prueba también con Ajustes › Práctica con audio › «Leer
+      con la voz del teléfono» apagado y dinos cuál te gusta más.
 - [ ] **Ajustes → Carácter del día** (app de Android).
 - [ ] **Ajustes → Tus datos → Exportar progreso**: que se guarde el archivo.
 - [ ] Si la app marca mal un trazo que hiciste bien, toca **«¿Ese trazo

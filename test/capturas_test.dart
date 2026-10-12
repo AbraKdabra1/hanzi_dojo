@@ -17,6 +17,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hanzi_dojo/datos/base_datos.dart';
 import 'package:hanzi_dojo/datos/datos_app.dart';
+import 'package:hanzi_dojo/datos/desde_cero.dart';
 import 'package:hanzi_dojo/datos/repositorio.dart';
 import 'package:hanzi_dojo/datos/repositorio_habito.dart';
 import 'package:hanzi_dojo/datos/resumen_beta.dart';
@@ -28,6 +29,7 @@ import 'package:hanzi_dojo/screens/pantalla_biblioteca.dart';
 import 'package:hanzi_dojo/screens/pantalla_bienvenida.dart';
 import 'package:hanzi_dojo/screens/pantalla_compartir.dart';
 import 'package:hanzi_dojo/screens/pantalla_creditos.dart';
+import 'package:hanzi_dojo/screens/pantalla_desde_cero.dart';
 import 'package:hanzi_dojo/screens/pantalla_estadisticas.dart';
 import 'package:hanzi_dojo/screens/pantalla_buscar_dibujo.dart';
 import 'package:hanzi_dojo/screens/pantalla_escucha.dart';
@@ -265,6 +267,26 @@ void main() {
       await t.scrollUntilVisible(find.text('Apoyar el proyecto'), 300, scrollable: find.byType(Scrollable).first);
       await t.tap(find.text('Apoyar el proyecto'), warnIfMissed: false);
     });
+
+    // Chino desde cero: la lista y algunos pasos.
+    Future<void> avanzar(WidgetTester t, int pasos) async {
+      for (var i = 0; i < pasos; i++) {
+        await t.tap(find.text('Siguiente'));
+        await t.pump(const Duration(milliseconds: 400));
+        await t.pump(const Duration(milliseconds: 400));
+      }
+    }
+
+    await tester.runAsync(() => repo.terminarLeccion(0));
+    await capturar(tester, '24_desde_cero', const PantallaDesdeCero());
+    await capturar(tester, '24b_leccion_origen', const PantallaLeccion(indice: 1), accion: (t) async {
+      await avanzar(t, 1);
+      await t.tap(find.text('?').first);
+    });
+    await capturar(tester, '24c_leccion_trazos', const PantallaLeccion(indice: 2));
+    await capturar(tester, '24d_leccion_pinyin', const PantallaLeccion(indice: 3), accion: (t) => avanzar(t, 3));
+    await capturar(tester, '24e_leccion_tonos', const PantallaLeccion(indice: 4), accion: (t) => avanzar(t, 1));
+    await capturar(tester, '24f_leccion_escribir', const PantallaLeccion(indice: 5), accion: (t) => avanzar(t, 1));
 
     // La interfaz en inglés (Ajustes › Idioma).
     Idioma.actual.value = Lengua.ingles;

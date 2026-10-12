@@ -11,11 +11,19 @@ Fuente: proyecto audio-cmn, https://github.com/hugolpz/audio-cmn
 Licencia: CC BY-SA (ver assets/licencias/audio_cmn_CC-BY-SA.txt).
 
 Qué hace con cada grabación:
-  1. Recorta el silencio de antes y de después (con un margen, para no comerse
-     consonantes suaves como s, sh, x, f). El umbral se calcula por archivo a
-     partir de su ruido de fondo.
-  2. Iguala el volumen (todas suenan parecido de fuerte).
-  3. La guarda en Opus a 20 kbps (formato para voz: ~2-3 KB por palabra).
+  1. Recorta el silencio de antes y de después, con un margen corto (para no
+     comerse consonantes suaves como s, sh, x, f, ni la cola del tono). El
+     umbral se calcula por archivo a partir de su ruido de fondo.
+  2. Suaviza la entrada y la salida (fundido de unos milisegundos): al leer
+     de corrido, las grabaciones se encadenan sin chasquidos y con una pausa
+     mínima natural (~0.1 s) entre palabra y palabra. Así la app ya no
+     recorta nada al tocarlas (antes lo hacía con recortes.txt y las uniones
+     quedaban pegadas y con chasquidos).
+  3. Iguala el volumen (todas suenan parecido de fuerte).
+  4. La guarda en Opus a 20 kbps (formato para voz: ~2-3 KB por palabra).
+  5. Escribe assets/audio/lecturas.txt: los caracteres con una sola lectura
+     que tienen grabación propia y cuál es (ver listar_lecturas.py). Así un
+     carácter suelto suena con la misma voz que las palabras.
 
 Uso:
   git clone --filter=blob:none --sparse https://github.com/hugolpz/audio-cmn /tmp/audio-cmn
@@ -28,7 +36,7 @@ Genera (se borra y se rehace todo):
         图书馆 → 56fe-4e66-9986.opus (nombres ASCII: más seguros en Android)
   assets/audio/palabras.txt   lista de palabras grabadas, una por línea
   assets/audio/silabas.txt    lista de sílabas grabadas, una por línea
-  assets/audio/recortes.txt   dónde empieza y termina la voz (medir_recortes.py)
+  assets/audio/lecturas.txt   carácter → sílaba de su grabación (listar_lecturas.py)
 """
 
 from __future__ import annotations
@@ -48,8 +56,10 @@ DESTINO = RAIZ / "assets" / "audio"
 
 TASA_ANALISIS = 16000          # Hz, solo para medir dónde hay voz
 CUADRO = 160                   # 10 ms a 16 kHz
-MARGEN_ANTES = 0.06            # s de margen antes de la voz
-MARGEN_DESPUES = 0.12          # s después (las colas de los tonos se apagan lento)
+MARGEN_ANTES = 0.025           # s de margen antes de la voz
+MARGEN_DESPUES = 0.08          # s después (las colas de los tonos se apagan lento)
+FUNDIDO_ENTRADA = 0.012        # s: sin chasquido al empezar
+FUNDIDO_SALIDA = 0.05          # s: la cola se apaga suave
 RMS_OBJETIVO = -20.0           # dBFS de la parte con voz
 PICO_MAXIMO = -1.0             # dBFS
 KBPS = 20
@@ -103,7 +113,9 @@ def convertir(tarea: tuple[str, str]) -> tuple[str, int]:
     inicio, fin, ganancia = medir(origen)
     subprocess.run(
         ["ffmpeg", "-v", "error", "-y", "-ss", f"{inicio:.3f}", "-to", f"{fin:.3f}", "-i", str(origen),
-         "-af", f"volume={ganancia:.2f}dB", "-ac", "1",
+         "-af", (f"volume={ganancia:.2f}dB,afade=t=in:d={FUNDIDO_ENTRADA},"
+                 f"afade=t=out:st={max(0.0, fin - inicio - FUNDIDO_SALIDA):.3f}:d={FUNDIDO_SALIDA}"),
+         "-ac", "1",
          "-c:a", "libopus", "-b:a", f"{KBPS}k", "-vbr", "on", "-application", "voip",
          "-map_metadata", "-1", "-fflags", "+bitexact", "-flags:a", "+bitexact",
          str(destino)],
@@ -153,9 +165,10 @@ def main() -> None:
     n_sil = len(tareas) - len(palabras)
     print(f"Listo: {n_sil} sílabas + {len(palabras)} palabras, {total / 2**20:.1f} MB en {DESTINO}")
 
-    # Dónde está la voz en cada una, para encadenarlas sin huecos al leer.
-    import medir_recortes
-    medir_recortes.main()
+    # Qué caracteres pueden sonar con su propia grabación (misma voz que las
+    # palabras) en vez de con la sílaba.
+    import listar_lecturas
+    listar_lecturas.main()
 
 
 if __name__ == "__main__":

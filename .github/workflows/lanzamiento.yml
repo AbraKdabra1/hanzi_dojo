@@ -104,7 +104,7 @@ jobs:
           # (internet es solo para el aviso de versión nueva, docs/privacidad.md).
           AAPT2=$(ls "$ANDROID_HOME"/build-tools/*/aapt2 | sort -V | tail -1)
           "$AAPT2" dump permissions "Meizi_Hanzi_${VERSION}_universal.apk" | tee permisos.txt
-          ESPERADOS='INTERNET|POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+          ESPERADOS='INTERNET|ACCESS_NETWORK_STATE|POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
           OTROS=$(grep -oE "name='[^']+'" permisos.txt | sed -E "s/name='(.*)'/\1/" | grep -vE "$ESPERADOS" || true)
           if [ -n "$OTROS" ]; then
             echo "::warning::El APK pide permisos que no esperábamos: $OTROS"
