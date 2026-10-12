@@ -405,9 +405,12 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
               const SizedBox(height: 12),
 
               // Botones secundarios → «Leer» (libros graduados) y «Practicar»
-              // (tonos, escucha, vocabulario y pinyin con audio).
-              Row(
-                mainAxisSize: MainAxisSize.min,
+              // (tonos, escucha, vocabulario y pinyin con audio). En pantallas
+              // angostas o con letra grande pasan a dos renglones.
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 12,
+                runSpacing: 10,
                 children: [
                   _BotonSecundario(
                     icono: _bloqueado ? Icons.lock_outline_rounded : Icons.menu_book_rounded,
@@ -415,7 +418,6 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
                     bloqueado: _bloqueado,
                     onTap: () => _abrir(const PantallaBiblioteca()),
                   ),
-                  const SizedBox(width: 12),
                   _BotonSecundario(
                     icono: _bloqueado ? Icons.lock_outline_rounded : Icons.headphones_rounded,
                     texto: tr('Practicar'),
