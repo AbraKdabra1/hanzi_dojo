@@ -1,19 +1,21 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // pantalla_inicio.dart — Pantalla principal
 //
-// - Resumen del día: anillo con lo que llevas de tu meta diaria, repasos
-//   pendientes (caracteres y palabras), nuevos de hoy y tu racha (🔥; 🛡️ si
-//   el protector la salvó).
+// - Resumen del día: anillo con lo que llevas de tu meta diaria y tu racha
+//   (🔥; 🛡️ si el protector la salvó).
 // - Al volver de estudiar: aplica el protector de racha si hace falta, avisa
 //   si cumpliste la meta y muestra los logros nuevos (fase 6).
-// - Botón "Estudiar" → elegir modo (novato/experto) y qué estudiar.
-// - Botón "Leer" → libros graduados por nivel HSK (pantalla_biblioteca.dart).
-// - Botón "Practicar" → ejercicios con audio (pantalla_practica.dart).
+// - Una lista de cristal (widgets/tarjeta_vidrio.dart, PanelCristal), cada
+//   renglón con lo que te toca:
+//     ✍️ Estudiar  → repasos pendientes y nuevos de hoy (pantalla_modo.dart)
+//     🎧 Practicar → palabras por repasar; tonos, escucha… (pantalla_practica.dart)
+//     📖 Leer      → por dónde ibas (pantalla_biblioteca.dart)
 // - Estadísticas y Ajustes.
 // - La primera vez, tras el tutorial: «¿Nunca has estudiado chino?». Si
-//   eliges empezar desde cero, «🌱 Chino desde cero» va arriba y Estudiar,
-//   Leer y Practicar tienen candado hasta terminar las seis lecciones (o
-//   desbloquearlas ya); ver pantalla_desde_cero.dart y datos/desde_cero.dart.
+//   eliges empezar desde cero, «🌱 Chino desde cero» va primero en la lista y
+//   Estudiar, Practicar y Leer tienen candado hasta terminar las seis
+//   lecciones (o desbloquearlas ya); ver pantalla_desde_cero.dart y
+//   datos/desde_cero.dart.
 // - Abajo, una frase que cambia cada 4 segundos con un giro suave (solo
 //   mientras la pantalla se ve: con otra pantalla encima o la app en segundo
 //   plano el reloj se detiene, para no gastar batería).
@@ -28,6 +30,7 @@ import 'package:flutter/material.dart';
 
 import '../datos/datos_app.dart';
 import '../datos/desde_cero.dart';
+import '../datos/modelos.dart';
 import '../datos/repositorio_habito.dart';
 import '../datos/repositorio_practica.dart';
 import '../helpers/actualizaciones.dart';
@@ -37,6 +40,7 @@ import '../widgets/apoyo.dart';
 import '../widgets/aviso_version.dart';
 import '../widgets/fondo_tinta.dart';
 import '../widgets/logro_dialogo.dart';
+import '../widgets/tarjeta_vidrio.dart';
 import 'pantalla_ajustes.dart';
 import 'pantalla_bienvenida.dart';
 import 'pantalla_biblioteca.dart';
@@ -64,9 +68,17 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
   int _indiceFrase = 0;
   Timer? _temporizador;
 
-  int? _pendientes;
-  int? _nuevosHoy;
-  int? _meta;
+  /// Repasos de escritura pendientes (null = cargando), nuevos de hoy y el
+  /// límite diario de nuevos.
+  int? _repasos;
+  int _nuevosHoy = 0;
+  int _meta = 0;
+
+  /// Palabras de vocabulario por repasar (Practicar).
+  int _palabras = 0;
+
+  /// Por dónde ibas leyendo (null = aún nada).
+  (Libro, int)? _lectura;
   int _racha = 0;
   int _hoy = 0;
   int _metaDiaria = HabitoRepositorio.metaPorDefecto;
@@ -163,7 +175,9 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
       }
     }
     final cubiertos = await repo.aplicarProtector();
-    final pendientes = await repo.repasosPendientes() + await repo.palabrasPendientes();
+    final repasos = await repo.repasosPendientes();
+    final palabras = await repo.palabrasPendientes();
+    final lectura = await repo.ultimaLectura();
     final nuevos = await repo.nuevosHoy();
     final meta = await repo.limiteNuevosPorDia();
     final hoy = await repo.actividadHoy();
@@ -181,7 +195,9 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
     if (!mounted) return;
     final ayer = DateTime.now().subtract(const Duration(days: 1));
     setState(() {
-      _pendientes = pendientes;
+      _repasos = repasos;
+      _palabras = palabras;
+      _lectura = lectura;
       _nuevosHoy = nuevos;
       _meta = meta;
       _hoy = hoy;
@@ -329,9 +345,67 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
     }
   }
 
+  /// «12 repasos · 5 nuevos» (o «Todo al día»).
+  String get _textoEstudiar {
+    final repasos = _repasos ?? 0;
+    final nuevos = math.max(0, _meta - _nuevosHoy);
+    final partes = [
+      if (repasos > 0) repasos == 1 ? tr('1 repaso') : tr('{0} repasos', [repasos]),
+      if (nuevos > 0) nuevos == 1 ? tr('1 nuevo') : tr('{0} nuevos', [nuevos]),
+    ];
+    return partes.isEmpty ? tr('Todo al día por hoy') : partes.join(' · ');
+  }
+
+  String get _textoPracticar => switch (_palabras) {
+        0 => tr('Tonos, escucha, vocabulario y pinyin'),
+        1 => tr('1 palabra por repasar · tonos, escucha…'),
+        final n => tr('{0} palabras por repasar · tonos, escucha…', [n]),
+      };
+
+  String get _textoLeer {
+    final lectura = _lectura;
+    if (lectura == null) return tr('Cuentos y leyendas por nivel, con audio');
+    final (libro, capitulo) = lectura;
+    if (libro.capitulosLeidos >= libro.capitulos) return tr('Terminaste {0}: elige otro', [libro.titulo]);
+    return tr('Sigue: {0} · capítulo {1}', [libro.titulo, math.min(capitulo + 1, libro.capitulos)]);
+  }
+
   @override
   Widget build(BuildContext context) {
     final c = context.colores;
+    final bloqueo = tr('Se abre al terminar «Chino desde cero»');
+    final filas = <Widget>[
+      // Mientras cursas «Chino desde cero», va primero: es lo que toca.
+      if (_ruta?.enInicio ?? false)
+        _FilaInicio(
+          emoji: '🌱',
+          titulo: tr('Chino desde cero'),
+          subtitulo: tr('{0} de {1} lecciones', [_lecciones.length, DesdeCeroRepositorio.totalLecciones]),
+          avance: _lecciones.length / DesdeCeroRepositorio.totalLecciones,
+          onTap: () => _ir(const PantallaDesdeCero()),
+        ),
+      _FilaInicio(
+        emoji: '✍️',
+        titulo: tr('Estudiar'),
+        subtitulo: _bloqueado ? bloqueo : _textoEstudiar,
+        bloqueado: _bloqueado,
+        onTap: () => _abrir(const PantallaModo()),
+      ),
+      _FilaInicio(
+        emoji: '🎧',
+        titulo: tr('Practicar'),
+        subtitulo: _bloqueado ? bloqueo : _textoPracticar,
+        bloqueado: _bloqueado,
+        onTap: () => _abrir(const PantallaPractica()),
+      ),
+      _FilaInicio(
+        emoji: '📖',
+        titulo: tr('Leer'),
+        subtitulo: _bloqueado ? bloqueo : _textoLeer,
+        bloqueado: _bloqueado,
+        onTap: () => _abrir(const PantallaBiblioteca()),
+      ),
+    ];
     return FondoTintaChina(
       ramaAnimada: true,
       child: Scaffold(
@@ -367,68 +441,43 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
                   child: TarjetaVersionNueva(nueva: nueva, onDescartar: () => _descartarVersion(nueva)),
                 ),
               const Spacer(),
-              const Text('梅字', style: TextStyle(fontSize: 54, fontWeight: FontWeight.w400, letterSpacing: 10)),
-              const SizedBox(height: 4),
+              const Text('梅字', style: TextStyle(fontSize: 48, fontWeight: FontWeight.w400, letterSpacing: 10)),
+              const SizedBox(height: 2),
               Text('Meizi Hanzi', style: TextStyle(fontSize: 14, color: c.tenue, letterSpacing: 2)),
-              const SizedBox(height: 28),
-              _ResumenDelDia(
-                pendientes: _pendientes,
-                nuevosHoy: _nuevosHoy,
-                meta: _meta,
-                racha: _racha,
-                protegida: _protegida,
-                hoy: _hoy,
-                metaDiaria: _metaDiaria,
-              ),
-              const SizedBox(height: 28),
+              const SizedBox(height: 22),
 
-              // Mientras cursas «Chino desde cero», es lo principal.
-              if (_ruta?.enInicio ?? false) ...[
-                _BotonPrincipal(
-                  texto: tr('Chino desde cero · {0}/{1}', [_lecciones.length, DesdeCeroRepositorio.totalLecciones]),
-                  emoji: '🌱',
-                  onTap: () => _ir(const PantallaDesdeCero()),
+              // El día y la lista, del mismo ancho (cristal: ver PanelCristal).
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 460),
+                  child: Column(
+                    children: [
+                      _ResumenDelDia(
+                        cargado: _repasos != null,
+                        racha: _racha,
+                        protegida: _protegida,
+                        hoy: _hoy,
+                        metaDiaria: _metaDiaria,
+                      ),
+                      const SizedBox(height: 14),
+                      PanelCristal(
+                        child: Column(
+                          children: [
+                            for (var i = 0; i < filas.length; i++) ...[
+                              if (i > 0) Divider(height: 1, thickness: 1, indent: 74, color: c.separador),
+                              filas[i],
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 12),
-              ],
-
-              // Estudiar → PantallaModo (con candado mientras tanto).
-              _bloqueado
-                  ? _BotonSecundario(
-                      icono: Icons.lock_outline_rounded,
-                      texto: tr('Estudiar'),
-                      bloqueado: true,
-                      grande: true,
-                      onTap: _mostrarCandado,
-                    )
-                  : _BotonPrincipal(texto: tr('Estudiar'), onTap: () => _ir(const PantallaModo())),
-              const SizedBox(height: 12),
-
-              // Botones secundarios → «Leer» (libros graduados) y «Practicar»
-              // (tonos, escucha, vocabulario y pinyin con audio). En pantallas
-              // angostas o con letra grande pasan a dos renglones.
-              Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 12,
-                runSpacing: 10,
-                children: [
-                  _BotonSecundario(
-                    icono: _bloqueado ? Icons.lock_outline_rounded : Icons.menu_book_rounded,
-                    texto: tr('Leer'),
-                    bloqueado: _bloqueado,
-                    onTap: () => _abrir(const PantallaBiblioteca()),
-                  ),
-                  _BotonSecundario(
-                    icono: _bloqueado ? Icons.lock_outline_rounded : Icons.headphones_rounded,
-                    texto: tr('Practicar'),
-                    bloqueado: _bloqueado,
-                    onTap: () => _abrir(const PantallaPractica()),
-                  ),
-                ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
 
-              // Botón estadísticas (con fondo de papel translúcido: si un pétalo
+              // Estadísticas (con fondo de papel translúcido: si un pétalo
               // pasa por detrás, el texto se sigue leyendo bien).
               TextButton.icon(
                 style: TextButton.styleFrom(
@@ -472,7 +521,7 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
             ],
                   ),
                 ),
@@ -485,38 +534,85 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
   }
 }
 
-/// Botón relleno de tinta ("Estudiar", o «Chino desde cero» mientras lo
-/// cursas).
-class _BotonPrincipal extends StatelessWidget {
-  const _BotonPrincipal({required this.texto, required this.onTap, this.emoji});
+/// Un renglón de la lista del inicio: emoji, qué es, lo que te toca y ›.
+/// Con candado se ve apagado y al tocarlo explica por qué; [avance] dibuja
+/// una barrita (las lecciones de «Chino desde cero»).
+class _FilaInicio extends StatelessWidget {
+  const _FilaInicio({
+    required this.emoji,
+    required this.titulo,
+    required this.subtitulo,
+    required this.onTap,
+    this.bloqueado = false,
+    this.avance,
+  });
 
-  final String texto;
-  final String? emoji;
+  final String emoji;
+  final String titulo;
+  final String subtitulo;
   final VoidCallback onTap;
+  final bool bloqueado;
+  final double? avance;
 
   @override
   Widget build(BuildContext context) {
     final c = context.colores;
-    return Material(
-      color: c.boton,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30),
-        side: BorderSide(color: c.bordeTarjeta, width: 1.5),
-      ),
+    final apagado = bloqueado ? 0.55 : 1.0;
+    return Semantics(
+      button: true,
+      hint: bloqueado ? tr('Se abre al terminar «Chino desde cero»') : null,
       child: InkWell(
-        borderRadius: BorderRadius.circular(30),
         onTap: onTap,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: emoji == null ? 44 : 28, vertical: 15),
+          padding: const EdgeInsets.fromLTRB(16, 13, 14, 13),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
             children: [
-              if (emoji case final e?) ...[
-                Text(e, style: const TextStyle(fontSize: 18)),
-                const SizedBox(width: 8),
-              ],
-              Flexible(
-                child: Text(texto, style: TextStyle(fontSize: 18, color: c.textoBoton, fontWeight: FontWeight.w700)),
+              // El emoji en una burbuja de cristal más clara.
+              Opacity(
+                opacity: apagado,
+                child: Container(
+                  width: 44,
+                  height: 44,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: c.oscuro ? const Color(0x1AFFFFFF) : const Color(0x99FFFFFF),
+                    border: Border.all(color: c.oscuro ? const Color(0x1FFFFFFF) : const Color(0xFFFFFFFF)),
+                  ),
+                  child: Text(emoji, style: const TextStyle(fontSize: 22)),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Opacity(
+                  opacity: bloqueado ? 0.7 : 1,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(titulo, style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: c.tinta)),
+                      const SizedBox(height: 2),
+                      Text(subtitulo, style: TextStyle(fontSize: 13, color: c.suave, height: 1.3)),
+                      if (avance case final a?) ...[
+                        const SizedBox(height: 7),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(3),
+                          child: LinearProgressIndicator(
+                            value: a,
+                            minHeight: 4,
+                            backgroundColor: c.separador,
+                            color: c.tinta,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Icon(
+                bloqueado ? Icons.lock_outline_rounded : Icons.chevron_right_rounded,
+                size: bloqueado ? 20 : 24,
+                color: c.tenue,
               ),
             ],
           ),
@@ -526,75 +622,17 @@ class _BotonPrincipal extends StatelessWidget {
   }
 }
 
-/// Botón con borde de tinta ("Leer", "Practicar"). Con candado se ve
-/// apagado y al tocarlo explica por qué ([bloqueado]); [grande] es para
-/// "Estudiar" con candado (mismo tamaño que el botón principal).
-class _BotonSecundario extends StatelessWidget {
-  const _BotonSecundario({
-    required this.icono,
-    required this.texto,
-    required this.onTap,
-    this.bloqueado = false,
-    this.grande = false,
-  });
-
-  final IconData icono;
-  final String texto;
-  final VoidCallback onTap;
-  final bool bloqueado;
-  final bool grande;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.colores;
-    final color = bloqueado ? c.suave : c.tinta;
-    return Semantics(
-      hint: bloqueado ? tr('Se abre al terminar «Chino desde cero»') : null,
-      child: Opacity(
-        opacity: bloqueado ? 0.6 : 1,
-        child: Material(
-          color: c.tarjeta,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-            side: BorderSide(color: color, width: 1.5),
-          ),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(30),
-            onTap: onTap,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: grande ? 36 : 22, vertical: grande ? 14 : 12),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(icono, size: 20, color: color),
-                  const SizedBox(width: 8),
-                  Text(texto, style: TextStyle(fontSize: grande ? 18 : 17, color: color, fontWeight: FontWeight.w700)),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Anillo con lo que llevas hoy de tu meta y, al lado, repasos pendientes,
-/// nuevos de hoy y racha.
+/// Lo que llevas hoy de tu meta (anillo) y tu racha, en cristal.
 class _ResumenDelDia extends StatelessWidget {
   const _ResumenDelDia({
-    required this.pendientes,
-    required this.nuevosHoy,
-    required this.meta,
+    required this.cargado,
     this.racha = 0,
     this.protegida = false,
     this.hoy = 0,
     this.metaDiaria = 20,
   });
 
-  final int? pendientes;
-  final int? nuevosHoy;
-  final int? meta;
+  final bool cargado;
 
   /// Días seguidos estudiando (0 = no se muestra).
   final int racha;
@@ -606,72 +644,51 @@ class _ResumenDelDia extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (pendientes == null) return const SizedBox(height: 56);
+    if (!cargado) return const SizedBox(height: 66);
     final c = context.colores;
-    final estilo = TextStyle(fontSize: 13, color: c.suave);
     final cumplida = hoy >= metaDiaria;
     final verde = c.oscuro ? const Color(0xFF81C784) : const Color(0xFF2E7D32);
     return Semantics(
-      label: tr('Hoy llevas {0} de {1}. {2} repasos pendientes. Racha de {3} días.', [hoy, metaDiaria, pendientes, racha]),
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(10, 8, 16, 8),
-        decoration: BoxDecoration(
-          color: c.translucido,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: c.bordeTarjeta),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              width: 46,
-              height: 46,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  CircularProgressIndicator(
-                    value: metaDiaria == 0 ? 1 : (hoy / metaDiaria).clamp(0.0, 1.0).toDouble(),
-                    strokeWidth: 4,
-                    strokeCap: StrokeCap.round,
-                    backgroundColor: c.separador,
-                    color: cumplida ? verde : c.tinta,
-                  ),
-                  Center(
-                    child: cumplida
-                        ? Icon(Icons.check_rounded, size: 22, color: verde)
-                        : Text('$hoy', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: c.tinta)),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(cumplida ? tr('Meta de hoy cumplida') : tr('Hoy: {0} de {1}', [hoy, metaDiaria]),
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: c.tinta)),
-                const SizedBox(height: 2),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
+      label: tr('Hoy llevas {0} de {1}. Racha de {2} días.', [hoy, metaDiaria, racha]),
+      child: PanelCristal(
+        radio: 20,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 10, 18, 10),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 46,
+                height: 46,
+                child: Stack(
+                  fit: StackFit.expand,
                   children: [
-                    Icon(Icons.replay_rounded, size: 14, color: c.icono),
-                    const SizedBox(width: 3),
-                    Text('$pendientes', style: estilo),
-                    const SizedBox(width: 10),
-                    Icon(Icons.fiber_new_outlined, size: 16, color: c.icono),
-                    const SizedBox(width: 3),
-                    Text('$nuevosHoy/$meta', style: estilo),
-                    if (racha > 0) ...[
-                      const SizedBox(width: 10),
-                      Text('🔥 $racha${protegida ? ' 🛡️' : ''}',
-                          style: estilo.copyWith(fontWeight: FontWeight.w700)),
-                    ],
+                    CircularProgressIndicator(
+                      value: metaDiaria == 0 ? 1 : (hoy / metaDiaria).clamp(0.0, 1.0).toDouble(),
+                      strokeWidth: 4,
+                      strokeCap: StrokeCap.round,
+                      backgroundColor: c.separador,
+                      color: cumplida ? verde : c.tinta,
+                    ),
+                    Center(
+                      child: cumplida
+                          ? Icon(Icons.check_rounded, size: 22, color: verde)
+                          : Text('$hoy', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: c.tinta)),
+                    ),
                   ],
                 ),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  cumplida ? tr('Meta de hoy cumplida') : tr('Hoy: {0} de {1}', [hoy, metaDiaria]),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: c.tinta),
+                ),
+              ),
+              if (racha > 0)
+                Text('🔥 $racha${protegida ? ' 🛡️' : ''}',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: c.tinta)),
+            ],
+          ),
         ),
       ),
     );
