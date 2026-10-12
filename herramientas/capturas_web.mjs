@@ -163,6 +163,11 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
     await pagina.waitForTimeout(1500);
     await captura('00_tutorial');
     await tocar('Omitir');
+    // Luego, la pregunta de «Chino desde cero»: se captura y también se omite.
+    await pagina.getByText('Empezar desde cero', { exact: true }).first().waitFor({ timeout: 30000 });
+    await pagina.waitForTimeout(1500);
+    await captura('00b_desde_cero');
+    await tocar('Omitir');
     // Que se vea el inicio y que «visto» quede guardado antes de recargar
     // (WebKit a veces recargaba antes de que IndexedDB terminara de escribir).
     await pagina.getByText('Estudiar', { exact: true }).first().waitFor({ timeout: 60000 });

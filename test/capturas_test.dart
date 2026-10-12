@@ -181,8 +181,14 @@ void main() {
         await t.pump(const Duration(milliseconds: 500));
       }
     });
-    // Para las demás capturas, ya visto (si no, el inicio lo abriría encima).
-    await tester.runAsync(repo.marcarTutorialVisto);
+    // Luego, la pregunta de «Chino desde cero».
+    await capturar(tester, '00c_desde_cero_pregunta', const PantallaComenzarDesdeCero());
+    // Para las demás capturas, ya visto y omitido (si no, el inicio lo
+    // abriría encima).
+    await tester.runAsync(() async {
+      await repo.marcarTutorialVisto();
+      await repo.elegirDesdeCero(false);
+    });
 
     // Aviso de versión nueva: el teléfono dice que tiene la beta 2 y "GitHub"
     // responde que ya salió la 3 (sin internet de verdad).
@@ -277,8 +283,18 @@ void main() {
       }
     }
 
-    await tester.runAsync(() => repo.terminarLeccion(0));
+    // Eligió empezar desde cero y lleva una: el inicio con candados.
+    await tester.runAsync(() async {
+      await repo.elegirDesdeCero(true);
+      await repo.terminarLeccion(0);
+    });
     await capturar(tester, '24_desde_cero', const PantallaDesdeCero());
+    await capturar(tester, '24g_inicio_candados', const PantallaInicio());
+    await capturar(tester, '24h_candado', const PantallaInicio(), accion: (t) async {
+      await t.tap(find.text('Practicar'), warnIfMissed: false);
+      await t.pump(const Duration(milliseconds: 400));
+      await t.pump(const Duration(milliseconds: 400));
+    });
     await capturar(tester, '24b_leccion_origen', const PantallaLeccion(indice: 1), accion: (t) async {
       await avanzar(t, 1);
       await t.tap(find.text('?').first);
@@ -287,6 +303,19 @@ void main() {
     await capturar(tester, '24d_leccion_pinyin', const PantallaLeccion(indice: 3), accion: (t) => avanzar(t, 3));
     await capturar(tester, '24e_leccion_tonos', const PantallaLeccion(indice: 4), accion: (t) => avanzar(t, 1));
     await capturar(tester, '24f_leccion_escribir', const PantallaLeccion(indice: 5), accion: (t) => avanzar(t, 1));
+    // Terminó las seis: el festejo y la entrada al final de Ajustes.
+    await tester.runAsync(() async {
+      for (var i = 0; i < DesdeCeroRepositorio.totalLecciones; i++) {
+        await repo.terminarLeccion(i);
+      }
+      await repo.desbloquearSiTerminaste();
+    });
+    await capturar(tester, '24i_desbloqueado', const _ConFestejo());
+    await capturar(tester, '24j_ajustes_final', const PantallaAjustes(), accion: (t) async {
+      await t.scrollUntilVisible(find.text('Créditos y licencias'), 400, scrollable: find.byType(Scrollable).first);
+      await t.drag(find.byType(Scrollable).first, const Offset(0, -600), warnIfMissed: false);
+      await t.pump(const Duration(milliseconds: 400));
+    });
 
     // La interfaz en inglés (Ajustes › Idioma).
     Idioma.actual.value = Lengua.ingles;
@@ -296,4 +325,24 @@ void main() {
     await capturar(tester, '23_ajustes_en', const PantallaAjustes());
     Idioma.actual.value = Lengua.espanol;
   }, skip: !_pedidas);
+}
+
+/// La lista de lecciones con el festejo de haberlas terminado encima (en la
+/// app sale una sola vez; aquí, en cada vuelta de la captura).
+class _ConFestejo extends StatefulWidget {
+  const _ConFestejo();
+
+  @override
+  State<_ConFestejo> createState() => _ConFestejoState();
+}
+
+class _ConFestejoState extends State<_ConFestejo> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => festejarDesbloqueo(context));
+  }
+
+  @override
+  Widget build(BuildContext context) => const PantallaDesdeCero();
 }

@@ -19,6 +19,7 @@ import 'dart:ui' show Offset;
 import 'package:sqflite/sqflite.dart';
 
 import '../idioma.dart';
+import 'desde_cero.dart';
 import 'estadisticas.dart';
 import 'practica.dart' show TipoEjercicio;
 import 'registro_errores.dart';
@@ -115,6 +116,8 @@ class DatosResumen {
     required this.caracterDia,
     required this.tutorial,
     required this.trazos,
+    this.desdeCero,
+    this.lecciones = 0,
   });
 
   /// Días con actividad (fecha local, sin repetir, del primero al último).
@@ -144,6 +147,11 @@ class DatosResumen {
   /// 'escrito' | 'terminado' | 'omitido', o null si no se sabe (beta.1).
   final String? tutorial;
   final List<TrazoReportado> trazos;
+
+  /// «Chino desde cero»: 'si' (lo eligió y lo cursa), 'hecho', 'no'
+  /// (omitido) o null (sin elegir), y cuántas lecciones terminó.
+  final String? desdeCero;
+  final int lecciones;
 }
 
 extension ResumenBetaRepositorio on Repositorio {
@@ -219,6 +227,8 @@ extension ResumenBetaRepositorio on Repositorio {
       caracterDia: await caracterDia() != null,
       tutorial: await resultadoTutorial(),
       trazos: await trazosReportados(),
+      desdeCero: await rutaDesdeCeroGuardada(),
+      lecciones: (await leccionesTerminadas()).length,
     );
   }
 }
@@ -249,7 +259,13 @@ class ResumenBeta {
             'terminado' => tr('terminado'),
             'omitido' => tr('omitido'),
             _ => '—',
-          }])}');
+          }])}')
+      ..writeln('🌱 ${tr('Desde cero: {0} · lecciones: {1} de {2}', [switch (d.desdeCero) {
+            'si' => tr('lo eligió'),
+            'hecho' => tr('terminado'),
+            'no' => tr('omitido'),
+            _ => '—',
+          }, d.lecciones, DesdeCeroRepositorio.totalLecciones])}');
 
     final comentarioLimpio = comentario.trim();
     if (comentarioLimpio.isNotEmpty) {

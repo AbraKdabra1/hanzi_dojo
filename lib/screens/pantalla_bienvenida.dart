@@ -217,7 +217,7 @@ class _PantallaBienvenidaState extends State<PantallaBienvenida> {
                       backgroundColor: c.boton,
                       foregroundColor: c.textoBoton,
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      textStyle: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                      textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 17, fontWeight: FontWeight.w600),
                     ),
                     onPressed: _siguiente,
                     child: Text(_ultima ? tr('Empezar') : tr('Siguiente')),

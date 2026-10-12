@@ -10,6 +10,7 @@ import 'package:flutter/material.dart' show MaterialApp, TextField;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hanzi_dojo/datos/base_datos.dart';
 import 'package:hanzi_dojo/datos/datos_app.dart';
+import 'package:hanzi_dojo/datos/desde_cero.dart';
 import 'package:hanzi_dojo/datos/registro_errores.dart';
 import 'package:hanzi_dojo/datos/repositorio.dart';
 import 'package:hanzi_dojo/datos/resumen_beta.dart';
@@ -129,6 +130,9 @@ void main() {
       await base.db.insert('lectura', {'libro': 'cuentos', 'capitulo': 1, 'momento': _seg(d2)});
       await repo.guardarResultadoTutorial('escrito');
       await repo.reportarTrazo(_trazo('人', alReves: true));
+      await repo.elegirDesdeCero(true);
+      await repo.terminarLeccion(0);
+      await repo.terminarLeccion(1);
 
       final d = await repo.datosResumen();
       expect(d.dias, [DateTime(2026, 10, 8), DateTime(2026, 10, 10)]);
@@ -152,6 +156,7 @@ void main() {
       );
       expect(texto, contains('Meizi Hanzi 2.1.0-beta.2 (4) · Prueba'));
       expect(texto, contains('Tutorial: terminado, escribió 人'));
+      expect(texto, contains('🌱 Desde cero: lo eligió · lecciones: 2 de 6'));
       expect(texto, contains('💬 El tutorial me gustó'));
       expect(texto, contains('Días con actividad: 2 (8/10 → 10/10)'));
       expect(texto, contains('Repasos: 4 · caracteres distintos: 3'));
@@ -170,6 +175,7 @@ void main() {
       expect(texto, contains('Sin errores: — · en modo novato: —'));
       expect(texto, contains('Práctica: —'));
       expect(texto, isNot(contains('Trazos que la app marcó mal')));
+      expect(texto, contains('Desde cero: — · lecciones: 0 de 6'));
     });
 
     testWidgets('la pantalla muestra lo que se va a compartir', (tester) async {

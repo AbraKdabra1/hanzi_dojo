@@ -9,8 +9,11 @@
 // Las piezas interactivas están en widgets/piezas_desde_cero.dart; qué
 // lecciones terminaste, en datos/desde_cero.dart.
 //
-// Se abre desde el inicio (mientras falte alguna y no lleves muchos repasos)
-// y desde Ajustes. Todo se puede saltar: nada obliga a terminarlas.
+// La primera vez, al terminar el tutorial, PantallaComenzarDesdeCero pregunta
+// «¿Nunca has estudiado chino?». Si eliges empezar desde cero, las lecciones
+// van en el inicio y Estudiar, Leer y Practicar tienen candado hasta que las
+// termines (festejarDesbloqueo); si lo omites, quedan al final de Ajustes.
+// Qué elegiste y qué terminaste: datos/desde_cero.dart.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
@@ -362,6 +365,161 @@ class _Pastilla extends StatelessWidget {
       );
 }
 
+/// Minutos de las lecciones que te faltan (todas si [hechas] está vacío).
+int minutosDesdeCero([Set<int> hechas = const {}]) {
+  final lecciones = leccionesDesdeCero();
+  var total = 0;
+  for (var i = 0; i < lecciones.length; i++) {
+    if (!hechas.contains(i)) total += lecciones[i].minutos;
+  }
+  return total;
+}
+
+/// La pregunta de la primera vez, al terminar el tutorial: «¿Nunca has
+/// estudiado chino?». Devuelve true (empezar desde cero), false (omitir) o
+/// null si se cerró sin elegir (se vuelve a preguntar la próxima vez).
+class PantallaComenzarDesdeCero extends StatelessWidget {
+  const PantallaComenzarDesdeCero({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colores;
+    final lecciones = leccionesDesdeCero();
+    return FondoTintaChina(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, restricciones) => SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 26),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(minHeight: restricciones.maxHeight),
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 460),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(height: 16),
+                              const Text('🌱', style: TextStyle(fontSize: 56)),
+                              const SizedBox(height: 10),
+                              Text(
+                                tr('¿Nunca has estudiado chino?'),
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, height: 1.25),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                tr('Empieza desde cero: {0} lecciones cortas (unos {1} minutos en total) te explican lo básico antes de escribir.',
+                                    [lecciones.length, minutosDesdeCero()]),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 15.5, color: c.suave, height: 1.45),
+                              ),
+                              const SizedBox(height: 18),
+                              TarjetaVidrio(
+                                relleno: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                                child: Column(
+                                  children: [
+                                    for (final l in lecciones)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 3),
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 30,
+                                              child: Text(l.emoji, textAlign: TextAlign.center, style: const TextStyle(fontSize: 18)),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Expanded(child: Text(l.titulo, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600))),
+                                          ],
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 14),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Icon(Icons.lock_outline_rounded, size: 17, color: c.suave),
+                                  const SizedBox(width: 6),
+                                  Expanded(
+                                    child: Text(
+                                      tr('Estudiar, Leer y Practicar se abren al terminarlas. ¿Ya sabes algo de chino? Omítelo: las lecciones quedan al final de Ajustes.'),
+                                      style: TextStyle(fontSize: 13.5, color: c.suave, height: 1.4),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 4, 24, 12),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: c.boton,
+                          foregroundColor: c.textoBoton,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 17, fontWeight: FontWeight.w600),
+                        ),
+                        onPressed: () => Navigator.of(context).pop(true),
+                        child: Text(tr('Empezar desde cero')),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextButton(
+                        style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 14)),
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: Text(tr('Omitir'), style: TextStyle(fontSize: 16, color: c.suave)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// «¡Terminaste Chino desde cero!»: ya se abrió todo. true = ir a Estudiar.
+Future<bool> festejarDesbloqueo(BuildContext context) async {
+  final c = context.colores;
+  final ir = await showDialog<bool>(
+    context: context,
+    builder: (contexto) => AlertDialog(
+      title: Text(tr('🎉 ¡Terminaste «Chino desde cero»!')),
+      content: Text(
+        tr('Ya se abrieron Estudiar, Leer y Practicar. Empieza por Estudiar, en modo novato y nivel 1. Las lecciones quedan al final de Ajustes, por si quieres repasarlas.'),
+        style: TextStyle(fontSize: 15, color: c.suave, height: 1.4),
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(contexto, false), child: Text(tr('Después'))),
+        FilledButton(onPressed: () => Navigator.pop(contexto, true), child: Text(tr('Ir a Estudiar'))),
+      ],
+    ),
+  );
+  return ir ?? false;
+}
+
 /// La lista de lecciones, con las que ya terminaste.
 class PantallaDesdeCero extends StatefulWidget {
   const PantallaDesdeCero({super.key});
@@ -372,6 +530,7 @@ class PantallaDesdeCero extends StatefulWidget {
 
 class _PantallaDesdeCeroState extends State<PantallaDesdeCero> {
   Set<int>? _hechas;
+  RutaDesdeCero? _ruta;
 
   @override
   void initState() {
@@ -380,8 +539,20 @@ class _PantallaDesdeCeroState extends State<PantallaDesdeCero> {
   }
 
   Future<void> _cargar() async {
-    final hechas = await DatosApp.de(context).leccionesTerminadas();
-    if (mounted) setState(() => _hechas = hechas);
+    final repo = DatosApp.de(context);
+    final hechas = await repo.leccionesTerminadas();
+    // ¿Acabas de terminar la última? Se abre todo (y se festeja aquí mismo).
+    final desbloqueado = await repo.desbloquearSiTerminaste();
+    final ruta = await repo.rutaDesdeCero();
+    if (!mounted) return;
+    setState(() {
+      _hechas = hechas;
+      _ruta = ruta;
+    });
+    if (!desbloqueado) return;
+    final estudiar = await festejarDesbloqueo(context);
+    if (!mounted || !estudiar) return;
+    Navigator.pushReplacement(context, MaterialPageRoute<void>(builder: (_) => const PantallaModo()));
   }
 
   Future<void> _abrir(int i) async {
@@ -406,11 +577,32 @@ class _PantallaDesdeCeroState extends State<PantallaDesdeCero> {
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
                 children: [
                   TarjetaVidrio(
-                    child: Text(
-                      todas
-                          ? tr('¡Terminaste las seis! Ya sabes qué es un hanzi, cómo se escribe y cómo suena. Ahora sigue en Estudiar, en modo novato y nivel 1.')
-                          : tr('¿Nunca has estudiado chino? Empieza aquí: seis lecciones cortas, de unos minutos cada una, para entender lo básico antes de escribir.'),
-                      style: TextStyle(fontSize: 14, color: c.suave, height: 1.4),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          todas
+                              ? tr('¡Terminaste las seis! Ya sabes qué es un hanzi, cómo se escribe y cómo suena. Ahora sigue en Estudiar, en modo novato y nivel 1.')
+                              : tr('¿Nunca has estudiado chino? Empieza aquí: seis lecciones cortas, de unos minutos cada una, para entender lo básico antes de escribir.'),
+                          style: TextStyle(fontSize: 14, color: c.suave, height: 1.4),
+                        ),
+                        if (_ruta?.bloquea ?? false) ...[
+                          const SizedBox(height: 8),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(Icons.lock_outline_rounded, size: 17, color: c.tinta),
+                              const SizedBox(width: 6),
+                              Expanded(
+                                child: Text(
+                                  tr('Al terminarlas se abren Estudiar, Leer y Practicar.'),
+                                  style: TextStyle(fontSize: 14, color: c.tinta, fontWeight: FontWeight.w600, height: 1.35),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ],
                     ),
                   ),
                   if (todas) ...[
@@ -576,7 +768,7 @@ class _PantallaLeccionState extends State<PantallaLeccion> {
                           backgroundColor: c.boton,
                           foregroundColor: c.textoBoton,
                           padding: const EdgeInsets.symmetric(vertical: 15),
-                          textStyle: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                          textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 17, fontWeight: FontWeight.w600),
                         ),
                         onPressed: () => _ir(_paso + 1, total),
                         child: Text(ultimo ? tr('Terminar') : tr('Siguiente')),

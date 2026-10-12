@@ -14,12 +14,15 @@
 //   solo en las copias instaladas desde GitHub.
 // · Enviar mi opinión (pantalla_resumen_beta.dart), Reportar un problema
 //   (pantalla_reporte.dart) e Informe de errores (pantalla_errores.dart).
+// · Al final, «Chino desde cero» (pantalla_desde_cero.dart), salvo mientras
+//   lo cursas: entonces está en el inicio.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 import '../datos/datos_app.dart';
+import '../datos/desde_cero.dart';
 import '../datos/registro_errores.dart';
 import '../datos/repositorio_habito.dart';
 import '../datos/repositorio_practica.dart';
@@ -83,6 +86,10 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
   String _version = '';
   bool _buscandoVersion = false;
 
+  /// «Chino desde cero»: mientras lo cursas está en el inicio; si no, al
+  /// final de esta lista (null = cargando).
+  RutaDesdeCero? _rutaDesdeCero;
+
   @override
   void initState() {
     super.initState();
@@ -106,6 +113,7 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
     final previo = await Respaldo.hayRespaldoPrevio(repo.base);
     final avisarVersiones = Actualizaciones.disponible ? await repo.avisarVersiones() : null;
     final version = Actualizaciones.disponible ? (await Archivos.info()).version : '';
+    final rutaDesdeCero = await repo.rutaDesdeCero();
     if (mounted) {
       setState(() {
         _limite = n;
@@ -123,6 +131,7 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
         _hayPrevio = previo;
         _avisarVersiones = avisarVersiones;
         _version = version;
+        _rutaDesdeCero = rutaDesdeCero;
       });
     }
   }
@@ -824,21 +833,6 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
             TarjetaVidrio(
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute<void>(builder: (_) => const PantallaDesdeCero()),
-              ),
-              child: Row(
-                children: [
-                  const Text('🌱', style: TextStyle(fontSize: 20)),
-                  const SizedBox(width: 12),
-                  Expanded(child: Text(tr('Chino desde cero'), style: const TextStyle(fontSize: 15))),
-                  Icon(Icons.arrow_forward_ios, size: 14, color: context.colores.tenue),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-            TarjetaVidrio(
-              onTap: () => Navigator.push(
-                context,
                 MaterialPageRoute<void>(builder: (_) => const PantallaCreditos()),
               ),
               child: Row(
@@ -850,6 +844,39 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                 ],
               ),
             ),
+            // Al final de la lista: para repasar las lecciones, o para quien
+            // omitió la pregunta del principio. Mientras las cursas, están
+            // en el inicio.
+            if (_rutaDesdeCero case final ruta? when !ruta.enInicio) ...[
+              const SizedBox(height: 12),
+              TarjetaVidrio(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(builder: (_) => const PantallaDesdeCero()),
+                ),
+                child: Row(
+                  children: [
+                    const Text('🌱', style: TextStyle(fontSize: 20)),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(tr('Chino desde cero'), style: const TextStyle(fontSize: 15)),
+                          Text(
+                            ruta == RutaDesdeCero.terminada
+                                ? tr('Repasa las seis lecciones cuando quieras')
+                                : tr('Qué es un hanzi, el pinyin y los tonos, para quien empieza'),
+                            style: TextStyle(fontSize: 12, color: context.colores.tenue),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(Icons.arrow_forward_ios, size: 14, color: context.colores.tenue),
+                  ],
+                ),
+              ),
+            ],
           ],
         ),
       ),
