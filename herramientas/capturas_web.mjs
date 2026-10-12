@@ -134,7 +134,7 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
   // El renglón «Estudiar» del inicio se lee entero («Estudiar 15 nuevos»):
   // botón cuyo nombre empieza con Estudiar (o el texto suelto, por si acaso).
   const botonEstudiar = () =>
-    pagina.getByRole('button', { name: /^\s*Estudiar/ }).or(pagina.getByText('Estudiar', { exact: true })).first();
+    pagina.getByRole('button', { name: /(^|\n)\s*Estudiar/ }).or(pagina.getByText('Estudiar', { exact: true })).first();
 
   const abrir = async (paso, limite) => {
     const inicio = Date.now();

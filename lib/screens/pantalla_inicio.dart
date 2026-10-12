@@ -568,19 +568,22 @@ class _FilaInicio extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 13, 14, 13),
           child: Row(
             children: [
-              // El emoji en una burbuja de cristal más clara.
-              Opacity(
-                opacity: apagado,
-                child: Container(
-                  width: 44,
-                  height: 44,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: c.oscuro ? const Color(0x1AFFFFFF) : const Color(0x99FFFFFF),
-                    border: Border.all(color: c.oscuro ? const Color(0x1FFFFFFF) : const Color(0xFFFFFFFF)),
+              // El emoji en una burbuja de cristal más clara (el lector de
+              // pantalla no lo dice: basta con el título).
+              ExcludeSemantics(
+                child: Opacity(
+                  opacity: apagado,
+                  child: Container(
+                    width: 44,
+                    height: 44,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: c.oscuro ? const Color(0x1AFFFFFF) : const Color(0x99FFFFFF),
+                      border: Border.all(color: c.oscuro ? const Color(0x1FFFFFFF) : const Color(0xFFFFFFFF)),
+                    ),
+                    child: Text(emoji, style: const TextStyle(fontSize: 22)),
                   ),
-                  child: Text(emoji, style: const TextStyle(fontSize: 22)),
                 ),
               ),
               const SizedBox(width: 14),
