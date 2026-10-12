@@ -300,7 +300,7 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
                   backgroundColor: c.boton,
                   foregroundColor: c.textoBoton,
                   padding: const EdgeInsets.symmetric(vertical: 15),
-                  textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
                 onPressed: () => Navigator.pop(contexto, 'seguir'),
                 child: Text(tr('Seguir con las lecciones')),
