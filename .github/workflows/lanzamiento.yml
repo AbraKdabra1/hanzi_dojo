@@ -147,6 +147,15 @@ jobs:
           path: salida/
           retention-days: 30
 
+      # Solo el de arm64 (casi todos los teléfonos), aparte: para probar una
+      # versión desde el teléfono antes de publicarla (~60 MB en vez de ~300).
+      - name: Guardar APK arm64 aparte
+        uses: actions/upload-artifact@v4
+        with:
+          name: meizi-hanzi-${{ steps.version.outputs.version }}-arm64
+          path: salida/*_arm64.apk
+          retention-days: 30
+
       - name: Publicar la versión en GitHub
         if: github.ref_type == 'tag'
         env:
