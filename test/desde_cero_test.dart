@@ -90,9 +90,9 @@ void main() {
     }
   });
 
-  Future<void> mostrar(WidgetTester tester, Widget pantalla) async {
+  Future<void> mostrar(WidgetTester tester, Widget pantalla, {double alto = 640}) async {
     // Un teléfono chico (360 × 640 dp): nada debe salirse.
-    tester.view.physicalSize = const Size(1080, 1920);
+    tester.view.physicalSize = Size(1080, alto * 3);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, (llamada) async => null);
@@ -142,12 +142,13 @@ void main() {
         await repo.terminarLeccion(i);
       }
     });
-    await mostrar(tester, const PantallaDesdeCero());
+    // Alta, para que quepan las seis (la lista solo arma lo que se ve).
+    await mostrar(tester, const PantallaDesdeCero(), alto: 1600);
     expect(find.byIcon(Icons.check_circle), findsNWidgets(DesdeCeroRepositorio.totalLecciones - 1));
     expect(find.text('Ir a Estudiar'), findsNothing);
 
     await tester.runAsync(() => repo.terminarLeccion(DesdeCeroRepositorio.totalLecciones - 1));
-    await mostrar(tester, const PantallaDesdeCero(key: ValueKey(2)));
+    await mostrar(tester, const PantallaDesdeCero(key: ValueKey(2)), alto: 1600);
     expect(find.text('Ir a Estudiar'), findsOneWidget);
   });
 
