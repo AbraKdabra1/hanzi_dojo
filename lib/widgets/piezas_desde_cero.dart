@@ -450,8 +450,13 @@ class DibujoTonos extends StatelessWidget {
                             color: PinyinHelper.colorDeTono(t + 1, oscuro: c.oscuro))),
                   ),
                   Expanded(
-                    child: Text('${tr('{0}.º tono', [t + 1])}: ${textos[t]}',
-                        style: TextStyle(fontSize: 13.5, color: c.tinta, height: 1.3)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(tr('{0}.º tono', [t + 1]), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+                        Text(textos[t], style: TextStyle(fontSize: 13, color: c.suave, height: 1.3)),
+                      ],
+                    ),
                   ),
                   Icon(Icons.volume_up_outlined, size: 18, color: c.tenue),
                 ],

@@ -310,6 +310,21 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
               ),
               const SizedBox(height: 16),
 
+              // Para quien empieza de cero (mientras le falten lecciones).
+              if (_desdeCero case final hechas?) ...[
+                TextButton.icon(
+                  style: TextButton.styleFrom(
+                    backgroundColor: c.translucido,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  ),
+                  icon: const Text('🌱', style: TextStyle(fontSize: 17)),
+                  label: Text(
+                      tr('Chino desde cero · {0}/{1}', [hechas, DesdeCeroRepositorio.totalLecciones]),
+                      style: TextStyle(color: c.suave, fontSize: 15, fontWeight: FontWeight.w500)),
+                  onPressed: () => _ir(const PantallaDesdeCero()),
+                ),
+                const SizedBox(height: 8),
+              ],
               // Botón estadísticas (con fondo de papel translúcido: si un pétalo
               // pasa por detrás, el texto se sigue leyendo bien).
               TextButton.icon(
@@ -322,21 +337,6 @@ class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObse
                     style: TextStyle(color: c.suave, fontSize: 15, fontWeight: FontWeight.w500)),
                 onPressed: () => _ir(const PantallaEstadisticas()),
               ),
-              // Para quien empieza de cero (mientras le falten lecciones).
-              if (_desdeCero case final hechas?) ...[
-                const SizedBox(height: 8),
-                TextButton.icon(
-                  style: TextButton.styleFrom(
-                    backgroundColor: c.translucido,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  ),
-                  icon: const Text('🌱', style: TextStyle(fontSize: 17)),
-                  label: Text(
-                      tr('Chino desde cero · {0}/{1}', [hechas, DesdeCeroRepositorio.totalLecciones]),
-                      style: TextStyle(color: c.suave, fontSize: 15, fontWeight: FontWeight.w500)),
-                  onPressed: () => _ir(const PantallaDesdeCero()),
-                ),
-              ],
               const Spacer(),
 
               // Frase que gira cada 4 s
