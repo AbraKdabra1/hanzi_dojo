@@ -1657,4 +1657,29 @@ const textosEn = <String, String>{
       'Review the six lessons whenever you like',
   'Qué es un hanzi, el pinyin y los tonos, para quien empieza':
       'What a hanzi is, pinyin and tones, for beginners',
+  // Inicio en lista (cristal)
+  '1 nuevo':
+      '1 new',
+  '{0} nuevos':
+      '{0} new',
+  'Todo al día por hoy':
+      'All caught up for today',
+  'Tonos, escucha, vocabulario y pinyin':
+      'Tones, listening, vocabulary and pinyin',
+  '1 palabra por repasar · tonos, escucha…':
+      '1 word to review · tones, listening…',
+  '{0} palabras por repasar · tonos, escucha…':
+      '{0} words to review · tones, listening…',
+  'Cuentos y leyendas por nivel, con audio':
+      'Stories and legends by level, with audio',
+  'Terminaste {0}: elige otro':
+      'You finished {0}: pick another',
+  'Sigue: {0} · capítulo {1}':
+      'Continue: {0} · chapter {1}',
+  '{0} de {1} lecciones':
+      '{0} of {1} lessons',
+  'Hoy llevas {0} de {1}. Racha de {2} días.':
+      'Today: {0} of {1}. {2}-day streak.',
+  'Escribe caracteres, trazo a trazo':
+      'Write characters, stroke by stroke',
 };

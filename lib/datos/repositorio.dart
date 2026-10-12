@@ -414,6 +414,17 @@ class Repositorio {
     return filas.isEmpty ? null : Libro.desdeFila(filas.first);
   }
 
+  /// El último capítulo que terminaste y de qué libro (para «Sigue: …» en el
+  /// inicio). null si aún no has leído nada (o ya no está ese libro).
+  Future<(Libro, int)?> ultimaLectura() async {
+    final filas = await _db.rawQuery('SELECT libro, capitulo FROM lectura ORDER BY momento DESC LIMIT 1');
+    if (filas.isEmpty) return null;
+    final clave = filas.first['libro'] as String;
+    final libros = clave.startsWith('propio-') ? await misLibros() : await this.libros();
+    final libro = libros.where((l) => l.clave == clave).firstOrNull;
+    return libro == null ? null : (libro, filas.first['capitulo'] as int);
+  }
+
   /// Capítulos de un libro, en orden, marcando los que ya terminaste.
   Future<List<CapituloLibro>> capitulos(Libro libro) async {
     if (libro.propio) {

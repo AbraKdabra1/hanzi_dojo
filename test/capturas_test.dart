@@ -22,6 +22,7 @@ import 'package:hanzi_dojo/datos/repositorio.dart';
 import 'package:hanzi_dojo/datos/repositorio_habito.dart';
 import 'package:hanzi_dojo/datos/resumen_beta.dart';
 import 'package:hanzi_dojo/helpers/actualizaciones.dart';
+import 'package:hanzi_dojo/helpers/energia.dart';
 import 'package:hanzi_dojo/painters/rama_ciruelo.dart';
 import 'package:hanzi_dojo/screens/pantalla_ajustes.dart';
 import 'package:hanzi_dojo/screens/pantalla_bateria.dart';
@@ -226,7 +227,17 @@ void main() {
         puntos: const [Offset(520, 560), Offset(640, 380), Offset(830, 140)],
       ));
     });
+    // Ya leyó el primer capítulo: el inicio dice por dónde sigue.
+    await tester.runAsync(() => base.db.insert('lectura', {
+          'libro': libro.clave,
+          'capitulo': 1,
+          'momento': DateTime.now().millisecondsSinceEpoch ~/ 1000 - 86400,
+        }));
     await capturar(tester, '01_inicio', const PantallaInicio());
+    // Con el ahorro de batería: el cristal sin desenfoque.
+    Energia.ahorro.value = true;
+    await capturar(tester, '01b_inicio_ahorro', const PantallaInicio());
+    Energia.ahorro.value = false;
     await capturar(tester, '02_modo', const PantallaModo(),
         accion: (t) => t.tap(find.text('Soy novato'), warnIfMissed: false));
     await capturar(tester, '03_niveles', const PantallaSeleccion(modoNovato: true));

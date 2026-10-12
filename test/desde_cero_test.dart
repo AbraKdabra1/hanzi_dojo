@@ -215,7 +215,7 @@ void main() {
 
     Navigator.of(tester.element(find.byType(PantallaDesdeCero))).pop();
     await esperarInicio(tester);
-    expect(find.text('Chino desde cero · 0/6'), findsOneWidget);
+    expect(find.text('0 de 6 lecciones'), findsOneWidget);
     expect(find.byIcon(Icons.lock_outline_rounded), findsNWidgets(3)); // Estudiar, Leer, Practicar
 
     // Con candado no se abre: explica por qué.
@@ -227,7 +227,7 @@ void main() {
     await tester.tap(find.text('Ya sé lo básico: desbloquear todo'));
     await esperarInicio(tester);
     expect(find.byIcon(Icons.lock_outline_rounded), findsNothing);
-    expect(find.text('Chino desde cero · 0/6'), findsNothing);
+    expect(find.text('0 de 6 lecciones'), findsNothing);
     expect(await tester.runAsync(repo.rutaDesdeCero), RutaDesdeCero.omitida);
     await cerrar(tester);
   });
