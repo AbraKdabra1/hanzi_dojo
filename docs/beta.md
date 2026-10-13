@@ -9,16 +9,27 @@ No necesitas saber chino: si nunca lo has estudiado, tu opinión vale doble.
 
 ## Instalar
 
+La forma fácil, para cualquier teléfono: abre
+
+**https://abrakdabra1.github.io/hanzi_dojo/descargar/**
+
+La página reconoce si tienes Android o iPhone y te da lo que sirve en cada
+uno, con los pasos. Es el enlace para invitar a otras personas.
+
 ### Android (recomendado)
 
-1. Abre la página de versiones:
-   https://github.com/AbraKdabra1/hanzi_dojo/releases
-   (la más reciente, marcada como *Pre-release*).
-2. En **Assets**, descarga `Meizi_Hanzi_…_arm64.apk`. Si no sabes cuál,
-   el `…_universal.apk` funciona en todos los teléfonos.
-3. Ábrelo. Si el teléfono lo pide, permite **instalar apps de origen
-   desconocido** para tu navegador o tu administrador de archivos.
+1. En la página de descarga, toca **Descargar para Android** (baja la
+   versión más reciente; si el navegador pregunta, *Descargar de todas
+   formas*).
+2. Ábrelo y toca **Instalar**. Si el teléfono lo pide, permite **instalar
+   apps de origen desconocido** para tu navegador (solo la primera vez).
+3. Si aparece un aviso de Play Protect, elige **Instalar de todas formas**:
+   sale porque la app no viene de la Play Store.
 4. Las siguientes betas se instalan encima, sin perder tu progreso.
+
+A mano: en https://github.com/AbraKdabra1/hanzi_dojo/releases, la más
+reciente (*Pre-release*) → **Assets** → `Meizi_Hanzi_…_arm64.apk` (el
+`…_universal.apk` funciona en todos los teléfonos, incluso los antiguos).
 
 **Versiones nuevas.** Desde la beta 2, la app te pregunta si quieres que te
 avise cuando salga una nueva (lo cambias en Ajustes → Versiones nuevas). Si

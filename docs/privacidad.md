@@ -76,6 +76,11 @@ IP de quien la abre, y el motor de Flutter descarga de Google Fonts su
 tipografía base y las letras poco comunes que la app no trae. Tu progreso
 nunca sale del navegador.
 
+La página de descarga (https://abrakdabra1.github.io/hanzi_dojo/descargar/)
+también la sirve GitHub Pages. Al abrirla pregunta a GitHub cuál es la versión
+más reciente, para que el botón baje esa; no cuenta visitas ni descargas y no
+usa cookies.
+
 ## Contacto
 
 Dudas o sugerencias: <https://github.com/AbraKdabra1/hanzi_dojo/issues>

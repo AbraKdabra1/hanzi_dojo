@@ -194,6 +194,10 @@ flutter test              # pruebas automáticas
 
 ### Descargar la app
 
+**La forma fácil:** https://abrakdabra1.github.io/hanzi_dojo/descargar/ — una
+página que reconoce Android o iPhone y da la versión más reciente con sus
+pasos (es el enlace para compartir).
+
 Las versiones firmadas están en la pestaña **Releases** del repositorio
 (`Meizi_Hanzi_X.Y.Z_arm64.apk` para casi todos los teléfonos; `universal` si no
 sabes cuál). Cómo se publican (llave de firma, F-Droid, AppGallery):

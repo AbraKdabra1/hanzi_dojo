@@ -70,6 +70,12 @@ a ningún lado: se queda en el navegador. Ver [privacidad.md](privacidad.md).
 - `web/`: `index.html` (pantalla de carga e íconos de iPhone),
   `manifest.json`, `flutter_bootstrap.js` y `sw_hanzi.js` (sin internet).
   Los íconos salen de `herramientas_datos/generar_icono.py`.
+- `web/descargar/`: la página de descarga
+  (https://abrakdabra1.github.io/hanzi_dojo/descargar/), el enlace para
+  invitar a la gente. HTML suelto, sin Flutter: detecta Android o iPhone,
+  pregunta a GitHub por la versión más reciente y su botón baja ese APK (en
+  iPhone ofrece primero la versión web). `vista.png` es la vista previa al
+  compartir el enlace; la rama sale de `herramientas/rama_descarga.py`.
 - Si el navegador no toca Opus en Ogg (Safari en versiones de iOS
   anteriores), las grabaciones se reempacan a CAF en el momento
   (`lib/helpers/ogg_a_caf.dart`), igual que en la app de iOS.
