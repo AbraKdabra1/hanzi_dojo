@@ -9,6 +9,8 @@
 //   3. Que el audio se pueda tocar (Ogg en Chrome; en Safari, CAF).
 //   4. Segunda vez: abre desde lo guardado (IndexedDB), sin descargar.
 //   5. Sin internet: abre igual (sw_hanzi.js; solo en Chrome, ver abajo).
+//   6. La página de descarga (descargar/): su botón lleva a un APK de la
+//      versión más reciente (o, en iPhone, ofrece la versión web primero).
 //
 // Uso: node herramientas/capturas_web.mjs <dirección> <carpeta de salida>
 // ─────────────────────────────────────────────────────────────────────────────
@@ -223,8 +225,25 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
     await contexto.setOffline(false);
   });
 
-  anotar(`pasos completos: ${pasos} de 5`);
-  resumen.push(`${nombre} · pasos completos: ${pasos} de 5`);
+  await paso('descarga', async () => {
+    await nuevaPagina();
+    await pagina.goto(new URL('descargar/', direccion).href, { waitUntil: 'load' });
+    // Pregunta a GitHub cuál es la versión más reciente: el botón cambia a
+    // su APK. (Si GitHub no respondiera, el botón lleva a la lista.)
+    const apk = pagina.locator('#apk');
+    await pagina.waitForFunction(() => document.getElementById('version')?.textContent, null, { timeout: 30000 });
+    const destino = await apk.getAttribute('href');
+    const version = await pagina.locator('#version').textContent();
+    anotar(`descarga: ${version} → ${destino}`);
+    if (!/_arm64\.apk$/.test(destino)) throw new Error(`el botón no lleva a un APK: ${destino}`);
+    const plataforma = await pagina.evaluate(() => document.body.dataset.plataforma);
+    anotar(`descarga: plataforma ${plataforma}`);
+    await pagina.waitForTimeout(1000);
+    await captura('07_descarga');
+  });
+
+  anotar(`pasos completos: ${pasos} de 6`);
+  resumen.push(`${nombre} · pasos completos: ${pasos} de 6`);
   writeFileSync(`${salida}/registro_${nombre}.txt`, registro.join('\n') + '\n');
   await navegador.close();
 }
