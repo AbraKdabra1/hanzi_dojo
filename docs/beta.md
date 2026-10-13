@@ -27,6 +27,12 @@ uno, con los pasos. Es el enlace para invitar a otras personas.
    sale porque la app no viene de la Play Store.
 4. Las siguientes betas se instalan encima, sin perder tu progreso.
 
+**¿El teléfono no deja instalarla?** En la página de descarga, «¿Dice que la
+instalación está bloqueada?» trae los pasos por marca (en Samsung, apagar el
+**Bloqueador automático**; en Huawei, el **Modo puro**). Y si aun así no se
+puede (teléfono del trabajo, control parental), la misma app funciona **sin
+instalar**: se abre en Chrome y se agrega a la pantalla principal.
+
 A mano: en https://github.com/AbraKdabra1/hanzi_dojo/releases, la más
 reciente (*Pre-release*) → **Assets** → `Meizi_Hanzi_…_arm64.apk` (el
 `…_universal.apk` funciona en todos los teléfonos, incluso los antiguos).
