@@ -8,6 +8,9 @@
     · Android: el APK más reciente (arm64; el universal para teléfonos viejos).
       Cuál es lo pregunta a GitHub al abrir la página; si no responde, el
       botón lleva a la lista de versiones.
+    · Si Android no deja instalarla (orígenes desconocidos, el «Bloqueador
+      automático» de Samsung, el «Modo puro» de Huawei…): pasos por marca y
+      un plan B, la versión web agregada a la pantalla principal.
     · iPhone y computadora: la versión web (../), que se agrega al inicio.
   La rama se generó con herramientas/rama_descarga.py (mismos colores que
   painters/rama_ciruelo.dart). Se publica con la versión web en GitHub Pages
@@ -122,8 +125,22 @@
   footer { text-align: center; font-size: 13px; color: var(--tenue); line-height: 1.7; margin-top: 8px; }
   footer a { color: var(--suave); }
 
+  /* «¿Dice instalación bloqueada?»: pasos por marca, plegados. */
+  .ayuda { margin: 16px 0 0; border-top: 1px solid var(--separador); padding-top: 12px; }
+  .ayuda summary { cursor: pointer; font-size: 15px; font-weight: 600; list-style: none; display: flex; align-items: center; gap: 8px; }
+  .ayuda summary::-webkit-details-marker { display: none; }
+  .ayuda summary::after { content: '›'; margin-left: auto; font-size: 22px; color: var(--tenue); transition: transform .2s; }
+  .ayuda[open] summary::after { transform: rotate(90deg); }
+  .ayuda ul { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 10px; }
+  .ayuda li { font-size: 14.5px; line-height: 1.45; color: var(--suave); }
+  .ayuda li b { color: var(--tinta); }
+  .marca { display: block; font-weight: 700; color: var(--tinta); }
+
   /* Lo que va primero según el teléfono (en la compu, el QR). */
-  .qr { order: 0; } #android { order: 1; } #web { order: 2; } footer { order: 4; }
+  .qr { order: 0; } #android { order: 1; } #plan-b { order: 2; } #web { order: 2; } footer { order: 4; }
+  #plan-b { display: none; }
+  body[data-plataforma="android"] #plan-b { display: block; }
+  body[data-plataforma="android"] #web { display: none; }
   body[data-plataforma="ios"] #android { order: 3; }
   body[data-plataforma="ios"] #web .boton { background: var(--boton); color: var(--texto-boton); border: 0; }
   body[data-plataforma="compu"] .qr { display: block; }
@@ -175,8 +192,33 @@
       <li><span data-h="paso3">Si te pide permiso para instalar apps desde el navegador, actívalo y vuelve (solo la primera vez).</span></li>
       <li><span data-h="paso4">Si aparece un aviso de Play Protect, elige <b>Instalar de todas formas</b>: sale porque la app no viene de la Play Store.</span></li>
     </ol>
+    <details class="ayuda">
+      <summary><span data-t="bloqueada">¿Dice que la instalación está bloqueada?</span></summary>
+      <ul>
+        <li><span class="marca">Samsung</span><span data-h="samsung">En <b>Ajustes</b>, busca <b>Bloqueador automático</b> y apágalo. Instala la app y, si quieres, vuelve a encenderlo.</span></li>
+        <li><span class="marca">Xiaomi · Redmi · POCO</span><span data-h="xiaomi">En el aviso, toca <b>Ajustes</b>, activa <b>Permitir de esta fuente</b> y regresa. Si hace un análisis de seguridad, espera a que termine y toca <b>Instalar</b>.</span></li>
+        <li><span class="marca">Huawei · Honor</span><span data-h="huawei">Si menciona el <b>Modo puro</b>, búscalo en <b>Ajustes</b> y desactívalo mientras instalas.</span></li>
+        <li><span class="marca">Motorola · Google Pixel · otros</span><span data-h="otros">En el aviso, toca <b>Configuración</b>, activa <b>Permitir de esta fuente</b> y regresa.</span></li>
+        <li><span class="marca" data-t="trabajo">Teléfono del trabajo o con control parental</span><span data-h="trabajo2">Quien lo administra puede tener bloqueado instalar apps. Usa la versión sin instalar (abajo).</span></li>
+      </ul>
+    </details>
     <p class="nota"><span data-t="nuevas">Las versiones nuevas te las avisa la misma app.</span><br>
       <a id="universal" href="https://github.com/AbraKdabra1/hanzi_dojo/releases" data-t="universal">¿No se instala? Prueba la versión para teléfonos antiguos</a></p>
+  </section>
+
+  <section class="cristal" id="plan-b">
+    <h2><span class="burbuja" aria-hidden="true">🌿</span><span data-t="planb">¿Tu teléfono no te deja instalarla?</span></h2>
+    <p class="texto" style="margin:0 0 14px" data-t="planb2">Úsala sin instalar: es la misma app en el navegador, sin pedir permisos, y funciona sin internet.</p>
+    <a class="boton secundario" href="../">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+      <span data-t="sininstalar">Abrir sin instalar</span>
+    </a>
+    <ol class="pasos">
+      <li><span data-h="b1">Ábrela con <b>Chrome</b> (si se abre dentro de WhatsApp, toca ⋮ → <b>Abrir en Chrome</b>).</span></li>
+      <li><span data-h="b2">En Chrome, toca ⋮ → <b>Agregar a la pantalla principal</b> (o <b>Instalar app</b>).</span></li>
+      <li><span data-h="b3">Ábrela siempre desde su ícono: queda como una app más.</span></li>
+    </ol>
+    <p class="nota" data-t="b4">Frente a la app instalada solo le faltan detalles, como el carácter del día en la pantalla de bloqueo.</p>
   </section>
 
   <section class="cristal" id="web">
@@ -223,6 +265,20 @@
     paso3: 'If it asks for permission to install apps from your browser, allow it and go back (only the first time).',
     paso4: 'If a Play Protect warning appears, choose <b>Install anyway</b>: it shows up because the app is not from the Play Store.',
     nuevas: 'The app itself tells you when there is a new version.',
+    bloqueada: 'Does it say the installation is blocked?',
+    samsung: 'In <b>Settings</b>, search for <b>Auto Blocker</b> and turn it off. Install the app and, if you like, turn it back on.',
+    xiaomi: 'In the warning, tap <b>Settings</b>, turn on <b>Allow from this source</b> and go back. If it runs a security scan, wait for it to finish and tap <b>Install</b>.',
+    huawei: 'If it mentions <b>Pure Mode</b>, search for it in <b>Settings</b> and turn it off while you install.',
+    otros: 'In the warning, tap <b>Settings</b>, turn on <b>Allow from this source</b> and go back.',
+    trabajo: 'Work phone or parental controls',
+    trabajo2: 'Whoever manages it may have blocked app installs. Use the no-install version (below).',
+    planb: 'Your phone won\u2019t let you install it?',
+    planb2: 'Use it without installing: it\u2019s the same app in the browser, it asks for no permissions and it works offline.',
+    sininstalar: 'Open without installing',
+    b1: 'Open it in <b>Chrome</b> (if it opens inside WhatsApp, tap ⋮ → <b>Open in Chrome</b>).',
+    b2: 'In Chrome, tap ⋮ → <b>Add to Home screen</b> (or <b>Install app</b>).',
+    b3: 'Always open it from its icon: it works like any other app.',
+    b4: 'Compared with the installed app it only misses small things, like the character of the day on the lock screen.',
     universal: 'Won’t install? Try the version for older phones',
     web: 'iPhone and computer', abrir: 'Open in the browser',
     ios: 'Open it in <b>Safari</b>, tap <b>Share</b> and then <b>Add to Home Screen</b>: it becomes an app and works offline.',
