@@ -1,0 +1,63 @@
+22:44:05 [consola debug] Injecting <script> tag. Using callback.
+22:44:06 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+22:44:07 [consola log] Arranque: carpeta de datos
+22:44:08 [consola log] Arranque: registro de errores
+22:44:08 [consola log] Arranque: base de datos
+22:44:16 [consola log] Arranque: ajustes
+22:44:17 [consola log] Arranque: dibujos del fondo
+22:44:17 [consola log] Arranque: listo
+22:44:18 [fuera del sitio] GET https://fonts.gstatic.com/s/notosanssymbols2/v24/I_uyMoGduATTei9eI8daxVHDyfisHr71-vrgfE71.woff2
+22:44:19 tutorial a los 13.6 s
+22:44:19 [consola warning] Could not find a set of Noto fonts to display all missing characters. Please add a font asset for the missing characters. See: https://docs.flutter.dev/cookbook/design/fonts
+22:44:21 captura 00_tutorial
+22:44:23 [fuera del sitio] GET https://fonts.gstatic.com/s/notocoloremoji/v32/Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabsE4tq3luCC7p-aXxcn.2.woff2
+22:44:23 [fuera del sitio] GET https://fonts.gstatic.com/s/notocoloremoji/v32/Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabsE4tq3luCC7p-aXxcn.9.woff2
+22:44:23 [fuera del sitio] GET https://fonts.gstatic.com/s/notocoloremoji/v32/Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabsE4tq3luCC7p-aXxcn.4.woff2
+22:44:25 captura 00b_desde_cero
+22:44:30 [consola debug] Injecting <script> tag. Using callback.
+22:44:31 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+22:44:31 [consola log] Arranque: carpeta de datos
+22:44:33 [consola log] Arranque: registro de errores
+22:44:33 [consola log] Arranque: base de datos
+22:44:33 [consola log] Arranque: ajustes
+22:44:34 [consola log] Arranque: dibujos del fondo
+22:44:34 [consola log] Arranque: listo
+22:44:35 primera vez: "Estudiar" a los 5.1 s
+22:44:35 [fuera del sitio] GET https://fonts.gstatic.com/s/notosanssymbols2/v24/I_uyMoGduATTei9eI8daxVHDyfisHr71-vrgfE71.woff2
+22:44:36 [consola warning] Could not find a set of Noto fonts to display all missing characters. Please add a font asset for the missing characters. See: https://docs.flutter.dev/cookbook/design/fonts
+22:44:40 captura 01_inicio
+22:44:40 guardado en IndexedDB: {"bloques":10546,"ms":204}
+22:44:43 captura 02_modo
+22:44:45 captura 03_niveles
+22:44:48 captura 04_hsk
+22:44:48 audio: Ogg Opus "probably", CAF Opus "", ma1 200 1457 bytes
+22:44:48 [consola debug] Injecting <script> tag. Using callback.
+22:44:49 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+22:44:50 [consola log] Arranque: carpeta de datos
+22:44:52 [consola log] Arranque: registro de errores
+22:44:52 [consola log] Arranque: base de datos
+22:44:52 [consola log] Arranque: ajustes
+22:44:53 [consola log] Arranque: dibujos del fondo
+22:44:53 [consola log] Arranque: listo
+22:44:54 segunda vez: "Estudiar" a los 5.7 s
+22:44:54 [fuera del sitio] GET https://fonts.gstatic.com/s/notosanssymbols2/v24/I_uyMoGduATTei9eI8daxVHDyfisHr71-vrgfE71.woff2
+22:44:55 [consola warning] Could not find a set of Noto fonts to display all missing characters. Please add a font asset for the missing characters. See: https://docs.flutter.dev/cookbook/design/fonts
+22:44:58 captura 05_segunda_vez
+22:45:02 [consola debug] Injecting <script> tag. Using callback.
+22:45:03 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+22:45:03 [consola log] Arranque: carpeta de datos
+22:45:05 [consola log] Arranque: registro de errores
+22:45:05 [consola log] Arranque: base de datos
+22:45:06 [consola log] Arranque: ajustes
+22:45:07 [consola log] Arranque: dibujos del fondo
+22:45:07 [consola log] Arranque: listo
+22:45:08 sin internet: "Estudiar" a los 5.8 s
+22:45:08 [fuera del sitio] GET https://fonts.gstatic.com/s/notosanssymbols2/v24/I_uyMoGduATTei9eI8daxVHDyfisHr71-vrgfE71.woff2
+22:45:08 [consola warning] Could not find a set of Noto fonts to display all missing characters. Please add a font asset for the missing characters. See: https://docs.flutter.dev/cookbook/design/fonts
+22:45:12 captura 06_sin_internet
+22:45:12 [fuera del sitio] GET https://api.github.com/repos/AbraKdabra1/hanzi_dojo/releases?per_page=10
+22:45:12 descarga: Versión 2.1.0-beta.4 · 62 MB → https://github.com/AbraKdabra1/hanzi_dojo/releases/download/v2.1.0-beta.4/Meizi_Hanzi_2.1.0-beta.4_arm64.apk
+22:45:12 descarga: plataforma android
+22:45:14 captura 07_descarga
+22:45:14 privacidad: Aviso de privacidad de Meizi Hanzi
+22:45:14 pasos completos: 6 de 6
