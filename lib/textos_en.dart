@@ -1682,4 +1682,24 @@ const textosEn = <String, String>{
       'Today: {0} of {1}. {2}-day streak.',
   'Escribe caracteres, trazo a trazo':
       'Write characters, stroke by stroke',
+  'Frases esenciales':
+      'Essential phrases',
+  'frases esenciales':
+      'essential phrases',
+  'Saludos':
+      'Greetings',
+  'Cortesía':
+      'Courtesy',
+  'Presentarse':
+      'Introducing yourself',
+  'Para comunicarte':
+      'Getting by',
+  'Compras':
+      'Shopping',
+  'Comida':
+      'Food',
+  'Direcciones y transporte':
+      'Directions and transportation',
+  'Emergencias':
+      'Emergencies',
 };

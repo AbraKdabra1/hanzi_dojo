@@ -42,6 +42,9 @@ class TipoEjercicio {
   /// elegida, en el orden de la base).
   static const comprension = 'comprension';
 
+  /// Frases esenciales (resultado = q de SM-2; elemento = id de la frase).
+  static const frase = 'frase';
+
   static String nombre(String tipo) => switch (tipo) {
         tono => tr('Tonos (sílabas)'),
         tonosPalabra => tr('Tonos (palabras)'),
@@ -49,6 +52,7 @@ class TipoEjercicio {
         pinyin => tr('Pinyin'),
         palabra => tr('Vocabulario'),
         comprension => tr('Comprensión'),
+        frase => tr('Frases esenciales'),
         _ => tipo,
       };
 }
