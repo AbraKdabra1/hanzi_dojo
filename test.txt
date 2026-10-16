@@ -1,0 +1,287 @@
+Resolving dependencies...
+Downloading packages...
+  archive 4.3.0 (4.5.2 available)
+  clock 1.1.2 (1.1.3 available)
+  code_assets 1.0.0 (2.1.0 available)
+  cupertino_icons 1.0.9 (2.0.0 available)
+  dev_build 1.1.8+3 (1.1.15 available)
+  glob 2.1.3 (2.2.0 available)
+  hooks 1.0.2 (2.2.0 available)
+  intl 0.20.2 (0.20.3 available)
+  matcher 0.12.19 (0.12.20 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.0 (1.19.0 available)
+  native_toolchain_c 0.17.6 (0.19.5 available)
+  objective_c 9.3.0 (9.6.2 available)
+  platform 3.1.6 (3.2.0 available)
+  process_run 1.3.3+1 (1.4.1 available)
+  pub_semver 2.2.0 (2.2.1 available)
+  sqflite 2.4.2 (2.4.4+2 available)
+  sqflite_android 2.4.2+3 (2.4.4+1 available)
+  sqflite_common 2.5.6 (2.5.14 available)
+  sqflite_common_ffi 2.4.0+3 (2.4.4 available)
+  sqflite_common_ffi_web 1.1.1 (1.2.0 available)
+  sqflite_darwin 2.4.2 (2.4.4+1 available)
+  sqflite_platform_interface 2.4.0 (2.4.2 available)
+  sqlite3 3.5.2 (3.7.1 available)
+  stack_trace 1.12.1 (1.12.2 available)
+  synchronized 3.4.0 (3.5.0 available)
+  test_api 0.7.11 (0.7.15 available)
+  vector_math 2.2.0 (2.4.3 available)
+  vm_service 15.0.2 (15.4.0 available)
+  yaml 3.1.3 (3.1.4 available)
+Got dependencies!
+30 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /home/runner/work/hanzi_dojo/hanzi_dojo/test/reporte_test.dart
+00:00 +0: /home/runner/work/hanzi_dojo/hanzi_dojo/test/reporte_test.dart: error de la app: título, campos y URL del formulario
+00:00 +1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/reporte_test.dart: error en el contenido: el título dice dónde y qué está mal
+00:00 +2: /home/runner/work/hanzi_dojo/hanzi_dojo/test/reporte_test.dart: sugerencia sin datos del teléfono: solo la descripción
+00:00 +3: /home/runner/work/hanzi_dojo/hanzi_dojo/test/reporte_test.dart: un informe enorme se recorta para que la URL no sea demasiado larga
+00:01 +4: /home/runner/work/hanzi_dojo/hanzi_dojo/test/lectura_test.dart: Libros en la base (setUpAll)
+00:01 +4: /home/runner/work/hanzi_dojo/hanzi_dojo/test/lectura_test.dart: Libros en la base hay libros ordenados por nivel; el de HSK 1 tiene sus capítulos
+00:02 +5: /home/runner/work/hanzi_dojo/hanzi_dojo/test/lectura_test.dart: Libros en la base un libro por nivel: adaptados del 1 al 5, originales en 6 y 7-9
+00:02 +6: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: sale la primera vez; quien ya tenía progreso no lo ve
+00:02 +7: /home/runner/work/hanzi_dojo/hanzi_dojo/test/lectura_test.dart: Libros en la base cada párrafo trae una sílaba por carácter y sus nombres propios
+00:02 +8: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: al actualizar con progreso guardado cuenta como visto
+00:03 +9: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: al actualizar con progreso guardado cuenta como visto
+00:03 +10: /home/runner/work/hanzi_dojo/hanzi_dojo/test/lectura_test.dart: Libros en la base lo leído viaja en el respaldo
+00:04 +11: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: se recorre hasta escribir el primer carácter
+00:04 +12: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: se recorre hasta escribir el primer carácter
+00:04 +13: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: se recorre hasta escribir el primer carácter
+00:04 +14: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: se recorre hasta escribir el primer carácter
+00:04 +15: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: se recorre hasta escribir el primer carácter
+00:05 +16: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: se recorre hasta escribir el primer carácter
+00:05 +17: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: se recorre hasta escribir el primer carácter
+00:05 +18: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: «Omitir» lo cierra y queda visto
+00:06 +19: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: «Omitir» lo cierra y queda visto
+00:06 +20: /home/runner/work/hanzi_dojo/hanzi_dojo/test/bienvenida_test.dart: «Omitir» lo cierra y queda visto
+00:06 +21: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: radicales: 214, y 氵 aparece como variante de 水
+00:07 +22: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: búsqueda por carácter, pinyin sin tono e inglés/español
+00:07 +23: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: estudiar: el primer nuevo de HSK 1 es de los más frecuentes y se guarda el progreso
+00:07 +24: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: estudiar: el primer nuevo de HSK 1 es de los más frecuentes y se guarda el progreso
+00:07 +25: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: estudiar: el primer nuevo de HSK 1 es de los más frecuentes y se guarda el progreso
+00:07 +26: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: estudiar: el primer nuevo de HSK 1 es de los más frecuentes y se guarda el progreso
+00:07 +27: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: estudiar: el primer nuevo de HSK 1 es de los más frecuentes y se guarda el progreso
+00:07 +28: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: estudiar: el primer nuevo de HSK 1 es de los más frecuentes y se guarda el progreso
+00:07 +29: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: estudiar: el primer nuevo de HSK 1 es de los más frecuentes y se guarda el progreso
+00:07 +30: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: estudiar: el primer nuevo de HSK 1 es de los más frecuentes y se guarda el progreso
+00:07 +31: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: estudiar: el primer nuevo de HSK 1 es de los más frecuentes y se guarda el progreso
+00:07 +32: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: estudiar: el primer nuevo de HSK 1 es de los más frecuentes y se guarda el progreso
+00:07 +33: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: estudiar: el primer nuevo de HSK 1 es de los más frecuentes y se guarda el progreso
+00:07 +34: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: estudiar: el primer nuevo de HSK 1 es de los más frecuentes y se guarda el progreso
+00:07 +35: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: estudiar: el primer nuevo de HSK 1 es de los más frecuentes y se guarda el progreso
+00:07 +36: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: estudiar: el primer nuevo de HSK 1 es de los más frecuentes y se guarda el progreso
+00:07 +37: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: cada grabación de las listas existe con el nombre que espera la app
+00:07 +38: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: abrir otra vez sin cerrar (conexión reutilizada) no falla
+00:07 +39: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: abrir otra vez sin cerrar (conexión reutilizada) no falla
+00:07 +40: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: abrir otra vez sin cerrar (conexión reutilizada) no falla
+00:07 +41: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: abrir otra vez sin cerrar (conexión reutilizada) no falla
+00:07 +42: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: abrir otra vez sin cerrar (conexión reutilizada) no falla
+00:07 +43: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: abrir otra vez sin cerrar (conexión reutilizada) no falla
+00:07 +44: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: abrir otra vez sin cerrar (conexión reutilizada) no falla
+00:07 +45: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: abrir otra vez sin cerrar (conexión reutilizada) no falla
+00:08 +46: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: abrir otra vez sin cerrar (conexión reutilizada) no falla
+00:08 +47: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: abrir otra vez sin cerrar (conexión reutilizada) no falla
+00:08 +48: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: abrir otra vez sin cerrar (conexión reutilizada) no falla
+00:08 +49: /home/runner/work/hanzi_dojo/hanzi_dojo/test/audio_test.dart: Ogg → CAF (iPhone) todas las grabaciones se pueden reempacar
+00:08 +50: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: un repaso de 1 día vence desde el inicio del día siguiente
+00:08 +51: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: un repaso de 1 día vence desde el inicio del día siguiente
+00:08 +52: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: un repaso de 1 día vence desde el inicio del día siguiente
+00:08 +53: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: un repaso de 1 día vence desde el inicio del día siguiente
+00:08 +54: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: calificar con una tarjeta "vieja" parte del progreso guardado
+00:08 +55: /home/runner/work/hanzi_dojo/hanzi_dojo/test/base_datos_test.dart: actualizar el contenido NO borra el progreso
+00:09 +56: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto UTF-8 con y sin BOM, UTF-16 con BOM y GBK
+00:10 +57: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto un TXT en GBK con encabezados se parte en capítulos
+00:10 +58: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto un TXT en GBK con encabezados se parte en capítulos
+00:10 +59: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto un TXT en GBK con encabezados se parte en capítulos
+00:10 +60: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto un TXT en GBK con encabezados se parte en capítulos
+00:10 +61: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto un TXT en GBK con encabezados se parte en capítulos
+00:10 +62: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto un TXT en GBK con encabezados se parte en capítulos
+00:10 +63: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto un TXT en GBK con encabezados se parte en capítulos
+00:10 +64: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto un TXT en GBK con encabezados se parte en capítulos
+00:10 +65: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto un TXT en GBK con encabezados se parte en capítulos
+00:10 +66: /home/runner/work/hanzi_dojo/hanzi_dojo/test/caligrafia_test.dart: Lienzo trazo correcto: se acomoda con el resorte y completa el carácter
+00:10 +67: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto sin encabezados: partes de unos 3,000 caracteres; párrafos larguísimos por oraciones
+00:10 +68: /home/runner/work/hanzi_dojo/hanzi_dojo/test/caligrafia_test.dart: Lienzo sin ajuste caligráfico también completa
+00:10 +69: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto archivos que no sirven
+00:10 +70: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto archivos que no sirven
+00:10 +71: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto archivos que no sirven
+00:10 +72: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto archivos que no sirven
+00:10 +73: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: Texto archivos que no sirven
+00:10 +74: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: EPUB sigue el orden de lectura, salta la portada y limpia el HTML
+00:11 +75: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: EPUB con DRM no se puede leer
+00:11 +76: /home/runner/work/hanzi_dojo/hanzi_dojo/test/mis_libros_test.dart: EPUB con DRM no se puede leer
+00:11 +77: /home/runner/work/hanzi_dojo/hanzi_dojo/test/apoyo_test.dart: el aviso sale una sola vez y con 3 logros o más
+00:12 +78: /home/runner/work/hanzi_dojo/hanzi_dojo/test/apoyo_test.dart: el aviso sale una sola vez y con 3 logros o más
+00:12 +79: /home/runner/work/hanzi_dojo/hanzi_dojo/test/apoyo_test.dart: el aviso sale una sola vez y con 3 logros o más
+00:12 +80: /home/runner/work/hanzi_dojo/hanzi_dojo/test/apoyo_test.dart: el aviso sale una sola vez y con 3 logros o más
+00:13 +81: /home/runner/work/hanzi_dojo/hanzi_dojo/test/apoyo_test.dart: (tearDownAll)
+00:13 +81: /home/runner/work/hanzi_dojo/hanzi_dojo/test/trazos_test.dart: DTW un trazo idéntico cuesta 0
+00:13 +82: /home/runner/work/hanzi_dojo/hanzi_dojo/test/trazos_test.dart: DTW la velocidad no importa (más o menos puntos, mismo recorrido)
+00:13 +83: /home/runner/work/hanzi_dojo/hanzi_dojo/test/trazos_test.dart: DTW un trazo al revés cuesta mucho más que uno ligeramente movido
+00:13 +84: /home/runner/work/hanzi_dojo/hanzi_dojo/test/trazos_test.dart: DTW menos de 2 puntos = infinito (no se puede comparar)
+00:13 +85: /home/runner/work/hanzi_dojo/hanzi_dojo/test/trazos_test.dart: Geometría del lienzo el borde superior (y=900) cae en el margen de arriba
+00:13 +86: /home/runner/work/hanzi_dojo/hanzi_dojo/test/trazos_test.dart: Geometría del lienzo el borde inferior (y=−124) cae en el margen de abajo
+00:13 +87: /home/runner/work/hanzi_dojo/hanzi_dojo/test/trazos_test.dart: Pinyin tono desde número y desde acentos
+00:13 +88: /home/runner/work/hanzi_dojo/hanzi_dojo/test/trazos_test.dart: Pinyin colores por tono
+00:14 +89: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: (setUpAll)
+00:14 +89: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: las lecciones terminadas se guardan sin repetirse
+00:14 +90: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: las lecciones terminadas se guardan sin repetirse
+00:14 +91: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: las lecciones terminadas se guardan sin repetirse
+00:14 +92: /home/runner/work/hanzi_dojo/hanzi_dojo/test/registro_errores_test.dart: solo se guardan los últimos 50
+00:14 +93: /home/runner/work/hanzi_dojo/hanzi_dojo/test/registro_errores_test.dart: solo se guardan los últimos 50
+00:15 +94: /home/runner/work/hanzi_dojo/hanzi_dojo/test/registro_errores_test.dart: solo se guardan los últimos 50
+00:15 +95: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: a quien ya estudia (venía de una versión anterior) no se le pregunta
+00:15 +96: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: a quien ya estudia (venía de una versión anterior) no se le pregunta
+00:15 +97: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: a quien ya estudia (venía de una versión anterior) no se le pregunta
+00:15 +98: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: seis lecciones, todas con varios pasos
+00:16 +99: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 1 se recorre completa y queda terminada
+00:16 +100: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 1 se recorre completa y queda terminada
+00:16 +101: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 1 se recorre completa y queda terminada
+00:16 +102: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 1 se recorre completa y queda terminada
+00:16 +103: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 1 se recorre completa y queda terminada
+00:17 +104: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 1 se recorre completa y queda terminada
+00:17 +105: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 1 se recorre completa y queda terminada
+00:17 +106: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 1 se recorre completa y queda terminada
+00:17 +107: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 1 se recorre completa y queda terminada
+00:17 +108: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 1 se recorre completa y queda terminada
+00:17 +109: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 1 se recorre completa y queda terminada
+00:17 +110: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 2 se recorre completa y queda terminada
+00:18 +111: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 2 se recorre completa y queda terminada
+00:18 +112: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 2 se recorre completa y queda terminada
+00:18 +113: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 2 se recorre completa y queda terminada
+00:18 +114: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 2 se recorre completa y queda terminada
+00:18 +115: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 2 se recorre completa y queda terminada
+00:19 +116: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 2 se recorre completa y queda terminada
+00:19 +117: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 2 se recorre completa y queda terminada
+00:19 +118: /home/runner/work/hanzi_dojo/hanzi_dojo/test/resumen_beta_test.dart: con la base la pantalla muestra lo que se va a compartir
+00:20 +119: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 3 se recorre completa y queda terminada
+00:20 +120: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 4 se recorre completa y queda terminada
+00:21 +121: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 4 se recorre completa y queda terminada
+00:21 +122: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 4 se recorre completa y queda terminada
+00:21 +123: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 4 se recorre completa y queda terminada
+00:21 +124: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 4 se recorre completa y queda terminada
+00:21 +125: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 4 se recorre completa y queda terminada
+00:21 +126: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 4 se recorre completa y queda terminada
+00:21 +127: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 4 se recorre completa y queda terminada
+00:21 +128: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 4 se recorre completa y queda terminada
+00:21 +129: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 4 se recorre completa y queda terminada
+00:21 +130: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 4 se recorre completa y queda terminada
+00:22 +131: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 4 se recorre completa y queda terminada
+00:22 +132: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 4 se recorre completa y queda terminada
+00:22 +133: /home/runner/work/hanzi_dojo/hanzi_dojo/test/habito_test.dart: Con la base real recordatorio: hora guardada o apagado
+00:22 +134: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 5 se recorre completa y queda terminada
+00:22 +135: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 5 se recorre completa y queda terminada
+00:23 +136: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 5 se recorre completa y queda terminada
+00:23 +137: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 5 se recorre completa y queda terminada
+00:23 +138: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 5 se recorre completa y queda terminada
+00:23 +139: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 6 se recorre completa y queda terminada
+00:24 +140: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 6 se recorre completa y queda terminada
+00:24 +141: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 6 se recorre completa y queda terminada
+00:24 +142: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 6 se recorre completa y queda terminada
+00:24 +143: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 6 se recorre completa y queda terminada
+00:24 +144: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 6 se recorre completa y queda terminada
+00:24 +145: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lección 6 se recorre completa y queda terminada
+00:25 +146: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lista marca las terminadas y ofrece Estudiar al acabar
+00:25 +147: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lista marca las terminadas y ofrece Estudiar al acabar
+00:25 +148: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lista marca las terminadas y ofrece Estudiar al acabar
+00:25 +149: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lista marca las terminadas y ofrece Estudiar al acabar
+00:25 +150: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lista marca las terminadas y ofrece Estudiar al acabar
+00:25 +151: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lista marca las terminadas y ofrece Estudiar al acabar
+00:25 +152: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lista marca las terminadas y ofrece Estudiar al acabar
+00:25 +153: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +154: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +155: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +156: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +157: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +158: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +159: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +160: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +161: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +162: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +163: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +164: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +165: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +166: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +167: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +168: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +169: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +170: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +171: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +172: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +173: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:26 +174: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:27 +175: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:27 +176: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:27 +177: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:28 +178: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:28 +179: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:28 +180: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:28 +181: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: tras el tutorial pregunta; desde cero pone candados que se pueden quitar
+00:29 +182: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: omitir la pregunta deja todo abierto y sin lecciones en el inicio
+00:29 +183: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: omitir la pregunta deja todo abierto y sin lecciones en el inicio
+00:29 +184: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: omitir la pregunta deja todo abierto y sin lecciones en el inicio
+00:29 +185: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: omitir la pregunta deja todo abierto y sin lecciones en el inicio
+00:29 +186: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: omitir la pregunta deja todo abierto y sin lecciones en el inicio
+00:30 +187: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: omitir la pregunta deja todo abierto y sin lecciones en el inicio
+00:30 +188: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: omitir la pregunta deja todo abierto y sin lecciones en el inicio
+00:30 +189: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: omitir la pregunta deja todo abierto y sin lecciones en el inicio
+00:30 +190: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: omitir la pregunta deja todo abierto y sin lecciones en el inicio
+00:30 +191: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: omitir la pregunta deja todo abierto y sin lecciones en el inicio
+00:30 +192: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: omitir la pregunta deja todo abierto y sin lecciones en el inicio
+00:30 +193: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: omitir la pregunta deja todo abierto y sin lecciones en el inicio
+00:30 +194: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: omitir la pregunta deja todo abierto y sin lecciones en el inicio
+00:30 +195: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: omitir la pregunta deja todo abierto y sin lecciones en el inicio
+00:30 +196: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: omitir la pregunta deja todo abierto y sin lecciones en el inicio
+00:30 +197: /home/runner/work/hanzi_dojo/hanzi_dojo/test/actualizaciones_test.dart: revisar ya instalada la que se había ofrecido, queda al día
+00:30 +198: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: al terminar las seis, el inicio lo festeja y abre todo
+00:31 +199: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: al terminar las seis, el inicio lo festeja y abre todo
+00:31 +200: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: al terminar las seis, el inicio lo festeja y abre todo
+00:31 +201: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: al terminar las seis, el inicio lo festeja y abre todo
+00:32 +202: /home/runner/work/hanzi_dojo/hanzi_dojo/test/datos_usuario_test.dart: Historial cada calificación agrega una fila con los detalles
+00:32 +203: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lista festeja la última lección y lleva a Estudiar
+00:33 +204: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lista festeja la última lección y lleva a Estudiar
+00:33 +205: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lista festeja la última lección y lleva a Estudiar
+00:33 +206: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: la lista festeja la última lección y lleva a Estudiar
+00:34 +207: /home/runner/work/hanzi_dojo/hanzi_dojo/test/datos_usuario_test.dart: Respaldo exportar e importar en otro teléfono deja exactamente lo mismo
+00:34 +208: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: en Ajustes va al final de la lista, salvo mientras lo cursas
+00:35 +209: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: en Ajustes va al final de la lista, salvo mientras lo cursas
+00:35 +210: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: en Ajustes va al final de la lista, salvo mientras lo cursas
+00:35 +211: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: en Ajustes va al final de la lista, salvo mientras lo cursas
+00:36 +212: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: están todas las frases del archivo, por situación y en orden
+00:36 +213: /home/runner/work/hanzi_dojo/hanzi_dojo/test/desde_cero_test.dart: ¿qué tono oíste? cuenta los aciertos y sigue
+00:37 +214: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: una frase trae la sílaba de cada carácter y sus palabras
+00:37 +215: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: repaso: primero lo que toca, después las nuevas en orden y luego el resto
+00:37 +216: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: avance por situación
+00:38 +217: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: avance por situación
+00:38 +218: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: avance por situación
+00:38 +219: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: avance por situación
+00:38 +220: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: avance por situación
+00:38 +221: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: avance por situación
+00:38 +222: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: avance por situación
+00:38 +223: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: el respaldo lleva el avance de las frases
+00:39 +224: /home/runner/work/hanzi_dojo/hanzi_dojo/test/capturas_test.dart: (setUpAll)
+00:39 +224: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: migración: quien tenía el esquema 6 gana la tabla de frases
+00:40 +224 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: migración: quien tenía el esquema 6 gana la tabla de frases
+00:40 +225 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: Ejercicios escuchar y elegir: cuatro traducciones distintas de la misma situación
+00:40 +226 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: Ejercicios escuchar y elegir: cuatro traducciones distintas de la misma situación
+00:40 +227 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: Ejercicios escuchar y elegir: cuatro traducciones distintas de la misma situación
+00:40 +228 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: Ejercicios escuchar y elegir: cuatro traducciones distintas de la misma situación
+00:40 +229 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/rama_ciruelo_test.dart: el fondo animado se arma y al quitarlo no deja relojes encendidos
+00:41 +230 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: Ejercicios armar la frase: sus piezas más dos que sobran, revueltas
+00:41 +231 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/rama_ciruelo_test.dart: el fondo tenue se arma sin errores
+00:41 +232 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: Ejercicios bien a la primera es Fácil; si no, Difícil
+00:41 +233 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: Pantallas la lista muestra las frases por situación y se puede filtrar
+00:43 +234 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/inicio_test.dart: cada renglón dice lo que toca y lleva a su pantalla
+00:44 +235 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/inicio_test.dart: cada renglón dice lo que toca y lleva a su pantalla
+00:44 +236 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: Pantallas armar la frase: en orden está bien; al revés, no
+00:45 +237 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/frases_test.dart: Pantallas armar la frase: en orden está bien; al revés, no
+00:45 +238 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/inicio_test.dart: desde cero: va primero en la lista, con su avance
+00:45 +239 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/inicio_test.dart: desde cero: va primero en la lista, con su avance
+00:45 +240 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/inicio_test.dart: (tearDownAll)
+00:46 +240 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/idioma_test.dart: cada texto de tr() tiene traducción al inglés con los mismos marcadores
+00:46 +241 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/idioma_test.dart: los textos que se traducen desde una variable también están
+00:46 +242 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/idioma_test.dart: tr() reemplaza los marcadores y en español deja el texto tal cual
+00:46 +243 ~1: /home/runner/work/hanzi_dojo/hanzi_dojo/test/idioma_test.dart: idioma automático: español si el teléfono está en español; si no, inglés
+00:46 +244 ~1: All tests passed!
