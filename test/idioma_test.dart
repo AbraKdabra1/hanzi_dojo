@@ -104,7 +104,8 @@ void main() {
       for (final t in TipoReporte.values) t.etiqueta,
       ...queEstaMalOpciones,
       // Secciones del respaldo (mensaje «El respaldo está dañado (…)»).
-      ...['progreso', 'historial', 'lectura', 'vocabulario', 'ejercicios', 'logros', 'protecciones'],
+      ...['progreso', 'historial', 'lectura', 'vocabulario', 'frases esenciales', 'ejercicios', 'logros',
+        'protecciones'],
     ];
     expect([for (final d in dinamicos) if (!textosEn.containsKey(d)) d], isEmpty);
     Idioma.actual.value = Lengua.ingles;

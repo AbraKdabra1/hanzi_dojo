@@ -17,6 +17,7 @@
 //     "historial": [ {"caracter": "好", "momento": 1790000000, …}, … ],
 //     "lectura":   [ {"libro": "cuentos-para-ninos", "capitulo": 1, "momento": …}, … ],
 //     "progreso_palabras": [ {"palabra": "爸爸", "intervalo": 6, …}, … ],
+//     "progreso_frases": [ {"frase": 50, "intervalo": 6, …}, … ],
 //     "ejercicios": [ {"tipo": "tono", "elemento": "ma3", "resultado": 1, …}, … ],
 //     "logros":    [ {"clave": "racha_7", "momento": …}, … ],
 //     "protecciones": [ {"dia": "2026-10-04", "momento": …}, … ],
@@ -24,7 +25,8 @@
 //   }
 //
 // Todo se guarda por CARÁCTER (no por número de fila), así que un respaldo
-// sirve aunque cambie el contenido de la app. Es un formato abierto:
+// sirve aunque cambie el contenido de la app. Las frases van por su id, que
+// es fijo (el archivo de frases nunca lo cambia ni lo reutiliza). Es un formato abierto:
 // cualquiera puede descomprimirlo (gunzip) y leerlo.
 //
 // Importar REEMPLAZA tu progreso actual. Antes se guarda una copia de lo que
@@ -60,6 +62,7 @@ class DatosRespaldo {
     required this.historial,
     this.lectura = const [],
     this.progresoPalabras = const [],
+    this.progresoFrases = const [],
     this.ejercicios = const [],
     this.logros = const [],
     this.protecciones = const [],
@@ -76,6 +79,9 @@ class DatosRespaldo {
   /// Repaso del vocabulario y respuestas de los ejercicios con audio.
   final List<Map<String, Object>> progresoPalabras;
   final List<Map<String, Object>> ejercicios;
+
+  /// Repaso de las frases esenciales.
+  final List<Map<String, Object>> progresoFrases;
 
   /// Logros desbloqueados y días cubiertos por el protector de racha.
   final List<Map<String, Object>> logros;
@@ -144,6 +150,17 @@ class Respaldo {
     'ultima_vez': _Tipo.entero,
   };
 
+  static const _columnasProgresoFrases = {
+    'frase': _Tipo.entero,
+    'intervalo': _Tipo.entero,
+    'factor': _Tipo.real,
+    'aciertos_seguidos': _Tipo.entero,
+    'veces_visto': _Tipo.entero,
+    'proximo_repaso': _Tipo.entero,
+    'primera_vez': _Tipo.entero,
+    'ultima_vez': _Tipo.entero,
+  };
+
   static const _columnasEjercicios = {
     'tipo': _Tipo.texto,
     'elemento': _Tipo.texto,
@@ -189,6 +206,8 @@ class Respaldo {
         'SELECT ${_columnasLectura.keys.join(', ')} FROM lectura ORDER BY libro, capitulo');
     final progresoPalabras = await db.rawQuery(
         'SELECT ${_columnasProgresoPalabras.keys.join(', ')} FROM progreso_palabras ORDER BY palabra');
+    final progresoFrases = await db.rawQuery(
+        'SELECT ${_columnasProgresoFrases.keys.join(', ')} FROM progreso_frases ORDER BY frase');
     final ejercicios = await db.rawQuery(
         'SELECT ${_columnasEjercicios.keys.join(', ')} FROM ejercicios ORDER BY momento, id');
     final logros = await db.rawQuery('SELECT clave, momento FROM logros ORDER BY momento, clave');
@@ -202,6 +221,7 @@ class Respaldo {
       'historial': historial,
       'lectura': lectura,
       'progreso_palabras': progresoPalabras,
+      'progreso_frases': progresoFrases,
       'ejercicios': ejercicios,
       'logros': logros,
       'protecciones': protecciones,
@@ -258,6 +278,8 @@ class Respaldo {
       lectura: _filas(json['lectura'] ?? const [], _columnasLectura, 'lectura'),
       progresoPalabras:
           _filas(json['progreso_palabras'] ?? const [], _columnasProgresoPalabras, 'vocabulario'),
+      progresoFrases:
+          _filas(json['progreso_frases'] ?? const [], _columnasProgresoFrases, 'frases esenciales'),
       ejercicios: _filas(json['ejercicios'] ?? const [], _columnasEjercicios, 'ejercicios'),
       logros: _filas(json['logros'] ?? const [], _columnasLogros, 'logros'),
       protecciones: _filas(json['protecciones'] ?? const [], _columnasProtecciones, 'protecciones'),
@@ -318,6 +340,7 @@ class Respaldo {
       await txn.delete('historial');
       await txn.delete('lectura');
       await txn.delete('progreso_palabras');
+      await txn.delete('progreso_frases');
       await txn.delete('ejercicios');
       await txn.delete('logros');
       await txn.delete('protecciones');
@@ -336,6 +359,9 @@ class Respaldo {
       }
       for (final fila in datos.progresoPalabras) {
         lote.insert('progreso_palabras', fila, conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (final fila in datos.progresoFrases) {
+        lote.insert('progreso_frases', fila, conflictAlgorithm: ConflictAlgorithm.replace);
       }
       for (final fila in datos.ejercicios) {
         lote.insert('ejercicios', fila);

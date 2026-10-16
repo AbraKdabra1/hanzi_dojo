@@ -9,6 +9,10 @@ Primera versión pública.
 
 **Nuevo nombre: Meizi Hanzi · 梅字** (antes Hanzi Dojo). 梅 es el ciruelo de la rama del inicio y 字, el carácter que escribes. Se instala encima de la versión anterior sin perder nada; los respaldos `.hanzidojo` se siguen importando (los nuevos se guardan como `.meizi`).
 
+**Novedades de la beta 5**
+- **Frases esenciales** (Practicar, primero en la lista): 88 frases que hay que saber decir sí o sí, en ocho situaciones: saludos, cortesía, presentarse, para comunicarte, compras, comida, direcciones y transporte, y emergencias. Cada una con su pinyin, su traducción, cuándo se usa y su pronunciación (mantén presionado el botón para oírla lento).
+- Dos ejercicios con ellas, de una situación o de todas: **Escuchar y elegir** (suena la frase y eliges qué significa) y **Armar la frase** (ves qué quiere decir y tocas las palabras en orden). Con repaso espaciado, como los caracteres y las palabras: primero vuelven las que tocan hoy. Tu avance va en el respaldo.
+
 **Novedades de la beta 4**
 - **Inicio nuevo**: Estudiar, Practicar y Leer en una lista de cristal, como los botones del iPhone. Cada renglón dice lo que te toca: repasos y caracteres nuevos de hoy, palabras por repasar y por dónde ibas leyendo («Sigue: 中国小故事 · capítulo 2»). El resumen del día (meta y racha) también es de cristal. Con el ahorro de batería el cristal se vuelve opaco y no gasta de más.
 - **Chino desde cero** va primero en la lista mientras lo cursas, con su avance; lo demás muestra un candado y para qué sirve.
@@ -36,6 +40,7 @@ Primera versión pública.
 - Vibración suave al trazar y sonido de pincel opcional.
 
 **Practicar con audio**
+- Frases esenciales: 88 frases por situación (saludos, compras, comida, emergencias…), con dos ejercicios y repaso espaciado.
 - Grabaciones de hablantes nativos: 1,707 sílabas y unas 8,500 palabras, sin internet.
 - Entrenador de tonos (sílabas y palabras), escucha, vocabulario con repaso espaciado (~10,900 palabras HSK) y ejercicio de pinyin.
 - Voz lenta y botón 🐢 para oír más despacio.

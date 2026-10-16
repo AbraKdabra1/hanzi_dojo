@@ -22,6 +22,8 @@
 //        (cada respuesta de tonos, escucha y pinyin: base de sus estadísticas)
 //   6  + logros (los que desbloqueaste y cuándo) y protecciones (días que
 //        cubrió el protector de racha)
+//   7  + progreso_frases (repaso espaciado de las frases esenciales; por el
+//        id fijo de cada frase, que no es un número de fila)
 //
 // Se abre una sola conexión a progreso.db y se "adjunta" contenido.db con el
 // alias `c`. Así una misma consulta puede unir ambas:
@@ -68,7 +70,7 @@ class BaseDatos {
 
   static const _archivoContenido = 'contenido.db';
   static const _archivoProgreso = 'progreso.db';
-  static const _versionEsquemaProgreso = 6;
+  static const _versionEsquemaProgreso = 7;
 
   /// Abre (y si hace falta, prepara) las bases de datos.
   ///
@@ -159,6 +161,7 @@ class BaseDatos {
     await _crearMisLibros(db);
     await _crearPractica(db);
     await _crearHabito(db);
+    await _crearFrases(db);
   }
 
   /// Quien ya tenía la app: se agregan las tablas nuevas sin tocar su avance.
@@ -168,6 +171,25 @@ class BaseDatos {
     if (anterior < 4) await _crearMisLibros(db);
     if (anterior < 5) await _crearPractica(db);
     if (anterior < 6) await _crearHabito(db);
+    if (anterior < 7) await _crearFrases(db);
+  }
+
+  /// Frases esenciales: repaso espaciado de cada frase, igual que el de las
+  /// palabras. Se guarda con el id de la frase (c.frases.id), que es fijo.
+  static Future<void> _crearFrases(Database db) async {
+    await db.execute('''
+      CREATE TABLE progreso_frases (
+        frase             INTEGER PRIMARY KEY,          -- c.frases.id
+        intervalo         INTEGER NOT NULL DEFAULT 0,
+        factor            REAL    NOT NULL DEFAULT 2.5,
+        aciertos_seguidos INTEGER NOT NULL DEFAULT 0,
+        veces_visto       INTEGER NOT NULL DEFAULT 0,
+        proximo_repaso    INTEGER NOT NULL DEFAULT 0,   -- segundos Unix
+        primera_vez       INTEGER NOT NULL,
+        ultima_vez        INTEGER NOT NULL
+      )
+    ''');
+    await db.execute('CREATE INDEX idx_progreso_frases_repaso ON progreso_frases (proximo_repaso)');
   }
 
   /// Hábito (fase 6): logros desbloqueados y días cubiertos por el protector

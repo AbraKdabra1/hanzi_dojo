@@ -25,6 +25,11 @@ Qué comprueba:
        carácter chino tiene una sílaba válida, los caracteres se pueden
        consultar en la app y los libros ADAPTADOS cumplen la cobertura
        mínima de su nivel (libros.COBERTURA_MINIMA).
+   10. Vocabulario: ~10,900 palabras con su pinyin alineado.
+   11. Frases esenciales: todas las del archivo están en la base, cada
+       situación tiene al menos 4 (las opciones de los ejercicios), cada
+       carácter se lee con una lectura suya (o en tono neutro; 一 y 不 cambian
+       de tono al hablar), está en la base y su sílaba tiene grabación.
 """
 
 import csv
@@ -33,10 +38,11 @@ import os
 import re
 import sqlite3
 import sys
-from collections import Counter
+from collections import Counter, defaultdict
 
-from construir_db import leer_cedict, silabas_validas
-from pinyin_util import acentos_a_num
+from construir_db import (FRASES, LISTA_SILABAS, SITUACIONES, leer_cedict, leer_tsv_simple,
+                          silabas_validas)
+from pinyin_util import acentos_a_num, normalizar_num
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB = os.path.join(RAIZ, "assets", "db", "contenido.db")
@@ -163,7 +169,8 @@ def main():
     for c, chino in q("SELECT c.caracter, e.chino FROM ejemplos e JOIN caracteres c ON c.id = e.caracter_id"):
         if c not in chino:
             error(f"El ejemplo «{chino}» no contiene {c}")
-    validas = silabas_validas(leer_cedict())
+    cedict = leer_cedict()
+    validas = silabas_validas(cedict)
     han = re.compile("[\u3400-\u9fff]")
     desparejos = [(chino, pinyin) for chino, pinyin in q("SELECT DISTINCT chino, pinyin FROM ejemplos")
                   if contar_silabas(pinyin, validas) != len(han.findall(chino))]
@@ -261,6 +268,67 @@ def main():
         error(f"{len(malas)} palabras con pinyin_num mal alineado, p. ej.: {malas[:5]}")
     total_palabras = sum(por_nivel.values())
 
+    # 11. Frases esenciales ──────────────────────────────────────────────
+    frases = q("SELECT id, situacion, chino, silabas, palabras, espanol, ingles FROM frases")
+    faltan = sorted({int(f["id"]) for f in leer_tsv_simple(FRASES, ["id"])} - {f[0] for f in frases})
+    if faltan:
+        error(f"Frases que no entraron a la base: {faltan[:10]} (mira los avisos de construir_db.py)")
+    por_situacion = Counter(f[1] for f in frases)
+    pocas = [s for s in SITUACIONES if por_situacion[s] < 4]
+    if pocas:
+        error(f"Situaciones con menos de 4 frases: {pocas}")
+    # Lecturas de cada carácter: CC-CEDICT más las oficiales de la base.
+    lecturas = defaultdict(set)
+    for c, entradas in cedict.items():
+        lecturas[c] = {normalizar_num(py) for _orden, py, _acs in entradas}
+    for c, pn, otras in q("SELECT caracter, pinyin_num, otras_lecturas FROM caracteres"):
+        lecturas[c].add(pn)
+        lecturas[c].update(acentos_a_num(x) for x in otras.split())
+    grabadas = set(open(LISTA_SILABAS, encoding="utf-8").read().split())
+
+    def con_grabacion(clave):
+        """Como Audio.silabaDisponible: la sílaba, su variante o, si es neutra, otro tono."""
+        candidatas = [clave, "_" + clave]
+        if re.match(r"[jqxy]u", clave):
+            candidatas.append(clave.replace("u", "v", 1))
+        if clave.endswith("5"):
+            candidatas += [f"{p}{clave[:-1]}{t}" for t in "1234" for p in ("", "_")]
+        return any(x in grabadas for x in candidatas)
+
+    def sin_num(x):
+        return re.sub(r"\d", "", x)
+
+    fuera_de_hsk = set()
+    for fid, situacion, chino, silabas_json, palabras_json, es, en in frases:
+        silabas, palabras = json.loads(silabas_json), json.loads(palabras_json)
+        if situacion not in SITUACIONES:
+            error(f"Frase {fid}: situación desconocida «{situacion}»")
+        if not es.strip() or not en.strip():
+            error(f"Frase {fid}: falta la traducción al español o al inglés")
+        if (len(silabas) != len(chino)
+                or "".join(p["chino"] for p in palabras) != "".join(han.findall(chino))):
+            error(f"Frase {fid}: sílabas o palabras desalineadas con «{chino}»")
+            continue
+        for c, sil in zip(chino, silabas):
+            if not han.match(c):
+                continue
+            if c not in existentes:
+                error(f"Frase {fid}: «{c}» no está en la base (no tiene trazos)")
+            elif c not in en_db:
+                fuera_de_hsk.add(c)
+            if c == "儿" and sil == "r":       # erhua: va con la sílaba de antes
+                continue
+            num = acentos_a_num(sil) if sil else ""
+            propias = lecturas.get(c, set())
+            cambia = num.endswith("5") or c in "一不"
+            if not num or not (num in propias or (cambia and sin_num(num) in {sin_num(x) for x in propias})):
+                error(f"Frase {fid}: «{c}» se lee «{sil}», que no es una lectura suya "
+                      f"({' '.join(sorted(propias))})")
+            elif not con_grabacion(num):
+                error(f"Frase {fid}: no hay grabación para «{sil}» ({c})")
+    if fuera_de_hsk:
+        aviso(f"Frases con caracteres fuera de HSK: {''.join(sorted(fuera_de_hsk))}")
+
     # 8. Versión ──────────────────────────────────────────────────────────
     version_db = q("SELECT valor FROM meta WHERE clave = 'version'")[0][0]
     texto = open(VERSION_DART, encoding="utf-8").read() if os.path.exists(VERSION_DART) else ""
@@ -272,7 +340,7 @@ def main():
     print(f"contenido.db versión {version_db}: {total} caracteres, "
           f"{len(en_db)} HSK, {con_ejemplo} con ejemplos, {3000 - len(sin_es)} con español, "
           f"{len(en_db_libros)} libros ({total_parrafos} párrafos, {total_preguntas} preguntas), "
-          f"{total_palabras} palabras")
+          f"{total_palabras} palabras, {len(frases)} frases esenciales")
     for a in avisos:
         print("  AVISO:", a)
     for e in errores:

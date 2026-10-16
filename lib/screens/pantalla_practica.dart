@@ -1,17 +1,20 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // pantalla_practica.dart — Practicar con audio (fase 5)
 //
-// Cuatro ejercicios que usan las grabaciones de hablantes nativos:
+// Primero, las frases esenciales (pantalla_frases.dart): lo que hay que saber
+// decir sí o sí, sin importar el nivel.
+// Después, cuatro ejercicios que usan las grabaciones de hablantes nativos:
 //   · Tonos        → oír una sílaba (o una palabra) y elegir su tono.
 //   · Escucha      → oír una palabra y elegir su carácter o su significado.
 //   · Vocabulario  → repaso espaciado de las palabras HSK (no solo caracteres).
 //   · Pinyin       → ver una palabra y escribir cómo se lee.
-// Arriba se elige el nivel HSK (se recuerda).
+// Para esos se elige el nivel HSK (se recuerda).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
 
 import '../datos/datos_app.dart';
+import '../datos/repositorio_frases.dart';
 import '../datos/repositorio_practica.dart';
 import '../tema.dart';
 import '../widgets/comunes.dart';
@@ -20,6 +23,7 @@ import '../widgets/fondo_tinta.dart';
 import '../widgets/tarjeta_vidrio.dart';
 import 'pantalla_escucha.dart';
 import 'pantalla_examen.dart';
+import 'pantalla_frases.dart';
 import 'pantalla_pinyin.dart';
 import 'pantalla_tonos.dart';
 import 'pantalla_vocabulario.dart';
@@ -38,6 +42,10 @@ class _PantallaPracticaState extends State<PantallaPractica> {
   AvancePalabras? _avance;
   int? _mejorSimulacro;
 
+  /// Frases esenciales: por repasar hoy, practicadas y total.
+  int _frasesPendientes = 0;
+  (int, int)? _avanceFrases;
+
   @override
   void initState() {
     super.initState();
@@ -50,12 +58,19 @@ class _PantallaPracticaState extends State<PantallaPractica> {
     final pendientes = await repo.palabrasPendientes();
     final avance = await repo.avancePalabras();
     final simulacros = await repo.mejoresSimulacros();
+    final frasesPendientes = await repo.frasesPendientes();
+    final avanceFrases = await repo.avanceFrases();
     if (!mounted) return;
     setState(() {
       _nivel = nivel;
       _pendientes = pendientes;
       _avance = avance.where((a) => a.nivel == nivel).firstOrNull;
       _mejorSimulacro = simulacros[nivel];
+      _frasesPendientes = frasesPendientes;
+      _avanceFrases = (
+        avanceFrases.fold(0, (n, a) => n + a.estudiadas),
+        avanceFrases.fold(0, (n, a) => n + a.total),
+      );
     });
   }
 
@@ -81,6 +96,20 @@ class _PantallaPracticaState extends State<PantallaPractica> {
         body: ListView(
           padding: const EdgeInsets.only(bottom: 32),
           children: [
+            const SizedBox(height: 8),
+            _Ejercicio(
+              emoji: '💬',
+              titulo: tr('Frases esenciales'),
+              texto: _frasesPendientes > 0
+                  ? tr('Lo que hay que saber decir. Hoy tienes {0} por repasar.', [_frasesPendientes])
+                  : tr('Lo que hay que saber decir: saludos, compras, comida, emergencias…'),
+              insignia: _frasesPendientes > 0 ? '$_frasesPendientes' : null,
+              pie: switch (_avanceFrases) {
+                (final practicadas, final total) when total > 0 => BarraAvance(valor: practicadas, total: total),
+                _ => null,
+              },
+              onTap: () => _ir(const PantallaFrases()),
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
               child: Text(tr('Nivel'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: c.tenue)),

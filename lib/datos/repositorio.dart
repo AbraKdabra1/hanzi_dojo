@@ -10,6 +10,8 @@
 //   mis_libros, mis_capitulos, mis_parrafos → libros que agregaste tú
 //   c.palabras, progreso_palabras, ejercicios → práctica con audio
 //                                              (ver repositorio_practica.dart)
+//   c.frases, progreso_frases                → frases esenciales
+//                                              (ver repositorio_frases.dart)
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'dart:convert';

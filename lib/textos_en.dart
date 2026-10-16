@@ -1682,4 +1682,54 @@ const textosEn = <String, String>{
       'Today: {0} of {1}. {2}-day streak.',
   'Escribe caracteres, trazo a trazo':
       'Write characters, stroke by stroke',
+  'Frases esenciales':
+      'Essential phrases',
+  'frases esenciales':
+      'essential phrases',
+  'Saludos':
+      'Greetings',
+  'Cortesía':
+      'Courtesy',
+  'Presentarse':
+      'Introducing yourself',
+  'Para comunicarte':
+      'Getting by',
+  'Compras':
+      'Shopping',
+  'Comida':
+      'Food',
+  'Direcciones y transporte':
+      'Directions and transportation',
+  'Emergencias':
+      'Emergencies',
+  'Todas':
+      'All',
+  'Practicada':
+      'Practiced',
+  'Lo que hay que saber decir':
+      'What you need to be able to say',
+  'Escuchar y elegir':
+      'Listen and choose',
+  'Armar la frase':
+      'Build the phrase',
+  'Oye la frase y elige qué significa.':
+      'Hear the phrase and choose what it means.',
+  'Ordena las palabras para decirla en chino.':
+      'Put the words in order to say it in Chinese.',
+  '{0} de {1} practicadas':
+      '{0} of {1} practiced',
+  'No hay frases para practicar':
+      'There are no phrases to practice',
+  '¿Cómo se dice en chino?':
+      'How do you say it in Chinese?',
+  'Toca las palabras en orden':
+      'Tap the words in order',
+  '¡Así se dice!':
+      'That\'s how you say it!',
+  'Se dice así:':
+      'Here\'s how you say it:',
+  'Lo que hay que saber decir. Hoy tienes {0} por repasar.':
+      'What you need to be able to say. {0} to review today.',
+  'Lo que hay que saber decir: saludos, compras, comida, emergencias…':
+      'What you need to be able to say: greetings, shopping, food, emergencies…',
 };
