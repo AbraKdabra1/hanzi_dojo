@@ -7,8 +7,8 @@
 //   progreso_frases  → repaso espaciado de cada frase (SM-2, por su id fijo)
 //   ejercicios       → cada vez que practicas una frase (tipo 'frase')
 //
-// Son pocas frases (menos de cien), así que se leen todas con su avance y se
-// eligen aquí, sin consultas especiales.
+// Son pocas frases (menos de cien), así que se leen todas con su avance y
+// qué toca practicar se decide en frases.dart (elegirRonda).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:sqflite/sqflite.dart';
@@ -55,29 +55,6 @@ extension FrasesRepositorio on Repositorio {
     final filas =
         await _bd.rawQuery('SELECT $_columnasFrase, $_progresoFrase $_desdeFrases WHERE f.id = ?', [id]);
     return _frasesEnOrden(filas).firstOrNull;
-  }
-
-  /// Siguiente frase del repaso: primero la que lleva más tiempo esperando
-  /// de las que tocan hoy; después, si [permitirNuevas], la primera que nunca
-  /// has practicado. Con [situacion], solo de esa situación.
-  Future<Frase?> siguienteFrase({
-    Situacion? situacion,
-    required bool permitirNuevas,
-    Set<int> excluir = const {},
-    DateTime? ahora,
-  }) async {
-    final t = ahora ?? DateTime.now();
-    final candidatas = [
-      for (final f in await frases(situacion: situacion))
-        if (!excluir.contains(f.id)) f,
-    ];
-    final vencidas = [
-      for (final f in candidatas)
-        if (f.progreso case final p? when !p.proximoRepaso.isAfter(t)) f,
-    ]..sort((a, b) => a.progreso!.proximoRepaso.compareTo(b.progreso!.proximoRepaso));
-    if (vencidas.isNotEmpty) return vencidas.first;
-    if (!permitirNuevas) return null;
-    return candidatas.where((f) => f.progreso == null).firstOrNull;
   }
 
   /// Guarda cómo te fue con una frase (SM-2) y lo anota en ejercicios.

@@ -1,21 +1,31 @@
-// Pruebas de las frases esenciales (repositorio_frases.dart) con la base REAL:
+// Pruebas de las frases esenciales con la base REAL:
 //   · todas las frases del archivo están, en el orden de la app;
 //   · cada frase trae la sílaba de cada carácter y sus palabras;
 //   · el repaso espaciado, el avance por situación y el respaldo;
-//   · quien ya tenía la app (esquema 6) gana la tabla de progreso.
+//   · quien ya tenía la app (esquema 6) gana la tabla de progreso;
+//   · las opciones de «Escuchar y elegir» y las fichas de «Armar la frase»;
+//   · las pantallas: la lista, los dos ejercicios y la tarjeta en Practicar.
 //   flutter test test/frases_test.dart
 
 import 'dart:io';
-import 'dart:typed_data';
+import 'dart:math';
 
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hanzi_dojo/datos/base_datos.dart';
+import 'package:hanzi_dojo/datos/datos_app.dart';
 import 'package:hanzi_dojo/datos/frases.dart';
 import 'package:hanzi_dojo/datos/practica.dart';
 import 'package:hanzi_dojo/datos/repositorio.dart';
 import 'package:hanzi_dojo/datos/repositorio_frases.dart';
 import 'package:hanzi_dojo/datos/respaldo.dart';
 import 'package:hanzi_dojo/datos/srs.dart';
+import 'package:hanzi_dojo/helpers/sensaciones.dart';
+import 'package:hanzi_dojo/screens/pantalla_ejercicio_frases.dart';
+import 'package:hanzi_dojo/screens/pantalla_frases.dart';
+import 'package:hanzi_dojo/screens/pantalla_practica.dart';
+import 'package:hanzi_dojo/widgets/boton_voz.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -39,6 +49,8 @@ void main() {
   setUpAll(() {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
+    Voz.desactivada = true;
+    Sensaciones.desactivadas = true;
   });
 
   setUp(() async {
@@ -94,34 +106,38 @@ void main() {
     expect(Situacion.deClave('no-existe'), isNull);
   });
 
-  test('repaso: primero lo que toca, después las nuevas en orden', () async {
+  test('repaso: primero lo que toca, después las nuevas en orden y luego el resto', () async {
     final hoy = DateTime(2026, 3, 10, 9);
+    final azar = Random(1);
     final saludos = await repo.frases(situacion: Situacion.saludos);
+    expect(elegirRonda(saludos, azar, ahora: hoy, cantidad: 3), saludos.take(3));
 
-    final a = (await repo.siguienteFrase(situacion: Situacion.saludos, permitirNuevas: true, ahora: hoy))!;
-    expect(a.id, saludos[0].id);
+    final a = saludos[0];
     await repo.registrarFrase(a, Calificacion.facil, respuesta: '你好', duracionMs: 4000, ahora: hoy);
+    await repo.registrarFrase(saludos[1], Calificacion.facil, ahora: hoy.add(const Duration(days: 5)));
 
-    // Ya no es nueva y no toca hoy: sigue la segunda.
-    final b = await repo.siguienteFrase(situacion: Situacion.saludos, permitirNuevas: true, ahora: hoy);
-    expect(b!.id, saludos[1].id);
-    expect(await repo.siguienteFrase(permitirNuevas: false, ahora: hoy), isNull);
+    // Hoy no toca ninguna: primero las nuevas y al final las ya vistas.
+    var ronda =
+        elegirRonda(await repo.frases(situacion: Situacion.saludos), azar, ahora: hoy, cantidad: saludos.length);
+    expect(ronda, hasLength(saludos.length));
+    expect(ronda.take(saludos.length - 2), saludos.skip(2));
+    expect(ronda.skip(saludos.length - 2).toSet(), {saludos[0], saludos[1]});
     expect(await repo.frasesPendientes(ahora: hoy), 0);
 
-    // Dos días después ya toca, y va antes que cualquier nueva.
+    // Dos días después ya toca la primera, y va antes que cualquier nueva.
     final despues = hoy.add(const Duration(days: 2));
     expect(await repo.frasesPendientes(ahora: despues), 1);
-    final vencida = await repo.siguienteFrase(permitirNuevas: true, ahora: despues);
-    expect(vencida!.id, a.id);
-    expect(vencida.progreso!.intervaloDias, 1);
-    expect(vencida.progreso!.vecesVisto, 1);
-    expect(await repo.siguienteFrase(permitirNuevas: true, excluir: {a.id}, ahora: despues), b);
+    ronda = elegirRonda(await repo.frases(), azar, ahora: despues, cantidad: 2);
+    expect(ronda, [a, saludos[2]]);
+    expect(ronda.first.progreso!.intervaloDias, 1);
+    expect(ronda.first.progreso!.vecesVisto, 1);
 
     // Cada práctica queda en ejercicios.
-    final ejercicios = await base.db.query('ejercicios', where: 'tipo = ?', whereArgs: [TipoEjercicio.frase]);
-    expect(ejercicios.single['elemento'], '${a.id}');
-    expect(ejercicios.single['resultado'], Calificacion.facil.q);
-    expect(ejercicios.single['respuesta'], '你好');
+    final ejercicios =
+        await base.db.query('ejercicios', where: 'tipo = ?', whereArgs: [TipoEjercicio.frase], orderBy: 'id');
+    expect(ejercicios.map((e) => e['elemento']), ['${a.id}', '${saludos[1].id}']);
+    expect(ejercicios.first['resultado'], Calificacion.facil.q);
+    expect(ejercicios.first['respuesta'], '你好');
   });
 
   test('avance por situación', () async {
@@ -185,5 +201,137 @@ void main() {
       await migrada?.cerrar();
       await otra.delete(recursive: true);
     }
+  });
+
+  group('Ejercicios', () {
+    test('escuchar y elegir: cuatro traducciones distintas de la misma situación', () async {
+      final todas = await repo.frases();
+      final azar = Random(7);
+      for (final f in todas) {
+        final pregunta = PreguntaFrase.armar(f, todas, azar);
+        expect(pregunta.opciones, hasLength(4));
+        expect(pregunta.opciones.where((o) => o == f), hasLength(1));
+        expect(pregunta.opciones[pregunta.correcta], f);
+        expect(pregunta.opciones.map((o) => o.traduccion).toSet(), hasLength(4), reason: f.chino);
+        expect(pregunta.opciones.every((o) => o.situacion == f.situacion), isTrue, reason: f.chino);
+      }
+    });
+
+    test('armar la frase: sus piezas más dos que sobran, revueltas', () async {
+      final todas = await repo.frases();
+      final azar = Random(7);
+      for (final f in todas) {
+        final armar = ArmarFrase.armar(f, todas, azar);
+        final piezas = f.palabras.length > 1 ? f.palabras.length : f.silabas.where((s) => s.isNotEmpty).length;
+        expect(armar.fichas, hasLength(piezas + 2), reason: f.chino);
+        expect(armar.esCorrecta(f.palabras), isTrue);
+      }
+
+      final cuanto = (await repo.frase(50))!; // 这个多少钱？
+      final armar = ArmarFrase.armar(cuanto, todas, azar);
+      final sobran = armar.fichas.where((p) => !cuanto.palabras.contains(p)).map((p) => p.chino);
+      expect(sobran, hasLength(2));
+      expect(sobran.any((s) => ['这个', '多少', '钱'].contains(s)), isFalse);
+      expect(armar.fichas.take(3).map((p) => p.chino).join(), isNot('这个多少钱'));
+      expect(armar.esCorrecta(cuanto.palabras.reversed.toList()), isFalse);
+      expect(armar.esCorrecta(const []), isFalse);
+
+      // Una sola palabra: se arma con sus caracteres.
+      final mesero = (await repo.frase(61))!; // 服务员！
+      final fichas = ArmarFrase.armar(mesero, todas, azar).fichas;
+      expect(fichas, containsAll([(chino: '服', pinyin: 'fú'), (chino: '务', pinyin: 'wù'), (chino: '员', pinyin: 'yuán')]));
+    });
+
+    test('bien a la primera es Fácil; si no, Difícil', () {
+      expect(calificacionFrase(bien: true), Calificacion.facil);
+      expect(calificacionFrase(bien: false), Calificacion.dificil);
+    });
+  });
+
+  group('Pantallas', () {
+    Future<void> esperar(WidgetTester tester) async {
+      for (var i = 0; i < 5; i++) {
+        await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 30)));
+        await tester.pump(const Duration(milliseconds: 200));
+      }
+    }
+
+    Future<void> mostrar(WidgetTester tester, Widget pantalla) async {
+      // Un teléfono chico (360 × 640 dp): nada debe salirse.
+      tester.view.physicalSize = const Size(1080, 1920);
+      tester.view.devicePixelRatio = 3;
+      addTearDown(tester.view.reset);
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, (llamada) async => null);
+      await tester.pumpWidget(DatosApp(repo: repo, child: MaterialApp(home: pantalla)));
+      await esperar(tester);
+    }
+
+    testWidgets('la lista muestra las frases por situación y se puede filtrar', (tester) async {
+      await mostrar(tester, const PantallaFrases());
+      expect(find.text('你好！'), findsOneWidget);
+      expect(find.text('Escuchar y elegir'), findsOneWidget);
+      expect(find.text('Armar la frase'), findsOneWidget);
+      expect(find.text('0 de 11 practicadas'), findsOneWidget);
+
+      final emergencias = find.widgetWithText(ChoiceChip, 'Emergencias');
+      await tester.ensureVisible(emergencias);
+      await tester.tap(emergencias);
+      await esperar(tester);
+      expect(find.text('你好！'), findsNothing);
+      expect(find.text('救命！'), findsOneWidget);
+    });
+
+    testWidgets('escuchar y elegir: al contestar se ve la frase y se guarda el repaso', (tester) async {
+      await mostrar(tester, const PantallaEjercicioFrases(modo: ModoFrases.escuchar, situacion: Situacion.saludos));
+      expect(find.text('1 / 10'), findsOneWidget); // saludos tiene 11: la ronda es de 10
+      await tester.tap(find.text('¡Hola!')); // la primera nueva: 你好！
+      await esperar(tester);
+      expect(find.text('你好！'), findsOneWidget);
+      expect((await tester.runAsync(() => repo.frase(1)))!.progreso, isNotNull);
+      await tester.tap(find.text('Siguiente'));
+      await esperar(tester);
+      expect(find.text('2 / 10'), findsOneWidget);
+    });
+
+    testWidgets('armar la frase: en orden está bien; al revés, no', (tester) async {
+      await mostrar(tester, const PantallaEjercicioFrases(modo: ModoFrases.armar, situacion: Situacion.saludos));
+      expect(find.text('¡Hola!'), findsOneWidget);
+      // Tocar una ficha puesta la regresa.
+      await tester.tap(find.text('你'));
+      await tester.pump();
+      await tester.tap(find.text('你'));
+      await tester.pump();
+      await tester.tap(find.text('好'));
+      await tester.pump();
+      await tester.tap(find.text('你'));
+      await tester.pump();
+      await tester.tap(find.text('Comprobar'));
+      await esperar(tester);
+      expect(find.text('Se dice así:'), findsOneWidget);
+      expect(find.text('你好！'), findsOneWidget);
+
+      await tester.tap(find.text('Siguiente'));
+      await esperar(tester);
+      expect(find.text('¡Hola! (con respeto)'), findsOneWidget); // 您好！
+      await tester.tap(find.text('您'));
+      await tester.pump();
+      await tester.tap(find.text('好'));
+      await tester.pump();
+      await tester.tap(find.text('Comprobar'));
+      await esperar(tester);
+      expect(find.text('¡Así se dice!'), findsOneWidget);
+      final ejercicios = await tester.runAsync(
+          () => base.db.query('ejercicios', columns: ['elemento', 'resultado'], orderBy: 'id'));
+      expect(ejercicios, [
+        {'elemento': '1', 'resultado': Calificacion.dificil.q},
+        {'elemento': '2', 'resultado': Calificacion.facil.q},
+      ]);
+    });
+
+    testWidgets('Practicar empieza con las frases esenciales', (tester) async {
+      await mostrar(tester, const PantallaPractica());
+      expect(find.text('Frases esenciales'), findsOneWidget);
+      expect(find.text('0 / $_enArchivo'), findsOneWidget);
+    });
   });
 }
