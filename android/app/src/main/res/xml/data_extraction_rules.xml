@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Respaldo en la nube de Android 12+ (y transferencia a un teléfono nuevo).
+  Se respalda tu progreso (progreso.db) pero NO la base de contenido: pesa
+  ~40 MB, viene dentro de la app y el límite del respaldo es de 25 MB por app
+  (si se pasa, no se respalda nada). Al restaurar, la app la vuelve a copiar.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="database" path="contenido.db" />
+        <exclude domain="database" path="contenido.db.tmp" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="database" path="contenido.db" />
+        <exclude domain="database" path="contenido.db.tmp" />
+    </device-transfer>
+</data-extraction-rules>

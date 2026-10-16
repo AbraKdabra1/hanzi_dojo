@@ -1,0 +1,105 @@
+# Frases esenciales: lo que hay que saber decir en chino sí o sí (Practicar → Frases esenciales).
+# Escritas para Meizi Hanzi; se publican con la licencia del proyecto (GPL-3.0 o posterior).
+#
+# Columnas (separadas por tabulador):
+#   id         número fijo de la frase. No lo cambies ni lo reutilices: el progreso se guarda con él.
+#   situacion  saludos | cortesia | presentarse | comunicarse | compras | comida | transporte | emergencias
+#   chino      la frase en caracteres simplificados, con su puntuación china (，。？！)
+#   pinyin     por palabras y con los tonos del diccionario, como la lista HSK oficial: 一 = yī y
+#              不 = bù aunque al hablar cambien; el tono neutro va sin acento (xièxie).
+#              Nombres de países, idiomas y personas con mayúscula (Zhōngwén).
+#   espanol    traducción natural, no palabra por palabra
+#   ingles     traducción al inglés (la app en inglés)
+#   nota       opcional: cuándo se usa, a quién, o qué se puede cambiar. Sin nota, la línea
+#              termina en la columna ingles.
+#
+# Para corregir una frase, edita su línea y vuelve a correr construir_db.py y validar_db.py.
+id	situacion	chino	pinyin	espanol	ingles	nota
+1	saludos	你好！	nǐ hǎo!	¡Hola!	Hello!	El saludo de siempre; sirve a cualquier hora.
+2	saludos	您好！	nín hǎo!	¡Hola! (con respeto)	Hello! (polite)	您 es el «usted»: para personas mayores, clientes o alguien que no conoces.
+3	saludos	早上好！	zǎoshang hǎo!	¡Buenos días!	Good morning!
+4	saludos	晚上好！	wǎnshang hǎo!	¡Buenas noches! (al llegar)	Good evening!	Para saludar en la noche. Para despedirte antes de dormir se dice 晚安.
+5	saludos	你好吗？	nǐ hǎo ma?	¿Cómo estás?	How are you?	Suena un poco a libro de texto; entre amigos es más común 最近怎么样？
+6	saludos	我很好，你呢？	wǒ hěn hǎo, nǐ ne?	Estoy bien, ¿y tú?	I'm fine, and you?
+7	saludos	最近怎么样？	zuìjìn zěnmeyàng?	¿Qué tal te ha ido?	How have you been?
+8	saludos	好久不见！	hǎojiǔ bù jiàn!	¡Cuánto tiempo sin verte!	Long time no see!
+9	saludos	再见！	zàijiàn!	¡Adiós!	Goodbye!
+10	saludos	明天见！	míngtiān jiàn!	¡Hasta mañana!	See you tomorrow!	Cambia 明天 por otro momento: 下午见 (hasta la tarde), 周末见 (nos vemos el fin de semana).
+11	saludos	晚安！	wǎn'ān!	¡Buenas noches! (al despedirte)	Good night!
+12	cortesia	谢谢！	xièxie!	¡Gracias!	Thank you!
+13	cortesia	非常感谢！	fēicháng gǎnxiè!	¡Muchísimas gracias!	Thank you very much!
+14	cortesia	不客气。	bù kèqì.	De nada.	You're welcome.
+15	cortesia	对不起。	duìbuqǐ.	Perdón. / Lo siento.	I'm sorry.
+16	cortesia	没关系。	méi guānxi.	No pasa nada.	That's all right.	La respuesta normal a 对不起.
+17	cortesia	不好意思。	bù hǎoyìsi.	Disculpa.	Excuse me. / Sorry.	Más ligero que 对不起: para pedir paso, interrumpir o una molestia pequeña.
+18	cortesia	请等一下。	qǐng děng yīxià.	Espera un momento, por favor.	Please wait a moment.
+19	cortesia	没问题！	méi wèntí!	¡Claro! / ¡Sin problema!	No problem!
+20	cortesia	麻烦你了。	máfan nǐ le.	Perdona la molestia.	Sorry to trouble you.	Al pedir un favor o al agradecerlo.
+21	cortesia	辛苦了！	xīnkǔ le!	¡Gracias por tu trabajo!	Thanks for your hard work!	Para agradecer el esfuerzo de alguien: un mesero, un repartidor, un compañero.
+22	cortesia	请进。	qǐng jìn.	Pasa, por favor.	Come in, please.
+23	cortesia	请坐。	qǐng zuò.	Siéntate, por favor.	Please have a seat.
+24	presentarse	你叫什么名字？	nǐ jiào shénme míngzi?	¿Cómo te llamas?	What's your name?
+25	presentarse	我叫大卫。	wǒ jiào Dàwèi.	Me llamo David.	My name is David.	Cambia 大卫 (David) por tu nombre.
+26	presentarse	很高兴认识你！	hěn gāoxìng rènshi nǐ!	¡Mucho gusto!	Nice to meet you!
+27	presentarse	你是哪国人？	nǐ shì nǎ guó rén?	¿De qué país eres?	Where are you from?
+28	presentarse	我是墨西哥人。	wǒ shì Mòxīgē rén.	Soy mexicano. / Soy mexicana.	I'm Mexican.	Otros países: 西班牙 (España), 阿根廷 (Argentina), 哥伦比亚 (Colombia), 美国 (Estados Unidos).
+29	presentarse	我是学生。	wǒ shì xuéshēng.	Soy estudiante.	I'm a student.
+30	presentarse	你做什么工作？	nǐ zuò shénme gōngzuò?	¿A qué te dedicas?	What do you do for a living?
+31	presentarse	我在学习中文。	wǒ zài xuéxí Zhōngwén.	Estoy aprendiendo chino.	I'm learning Chinese.
+32	presentarse	你住在哪儿？	nǐ zhù zài nǎr?	¿Dónde vives?	Where do you live?
+33	presentarse	你今年多大？	nǐ jīnnián duō dà?	¿Cuántos años tienes?	How old are you?	A un niño se le pregunta 你几岁？
+34	presentarse	我今年二十五岁。	wǒ jīnnián èrshíwǔ suì.	Tengo veinticinco años.	I'm twenty-five.
+35	presentarse	这是我的朋友。	zhè shì wǒ de péngyou.	Este es mi amigo. / Esta es mi amiga.	This is my friend.
+36	comunicarse	我听不懂。	wǒ tīng bu dǒng.	No entiendo (lo que dices).	I don't understand (what you're saying).	Cuando lo que no entiendes es lo que oyes.
+37	comunicarse	我不明白。	wǒ bù míngbai.	No entiendo.	I don't understand.
+38	comunicarse	请再说一遍。	qǐng zài shuō yī biàn.	¿Puedes repetirlo, por favor?	Could you say that again, please?
+39	comunicarse	请说慢一点儿。	qǐng shuō màn yīdiǎnr.	Más despacio, por favor.	Please speak more slowly.
+40	comunicarse	我会说一点儿中文。	wǒ huì shuō yīdiǎnr Zhōngwén.	Hablo un poco de chino.	I speak a little Chinese.
+41	comunicarse	你会说英语吗？	nǐ huì shuō Yīngyǔ ma?	¿Hablas inglés?	Do you speak English?
+42	comunicarse	这个用中文怎么说？	zhège yòng Zhōngwén zěnme shuō?	¿Cómo se dice esto en chino?	How do you say this in Chinese?
+43	comunicarse	这是什么意思？	zhè shì shénme yìsi?	¿Qué significa esto?	What does this mean?
+44	comunicarse	这个字怎么读？	zhège zì zěnme dú?	¿Cómo se lee este carácter?	How do you read this character?
+45	comunicarse	你能写一下吗？	nǐ néng xiě yīxià ma?	¿Me lo puedes escribir?	Could you write it down?
+46	comunicarse	我不知道。	wǒ bù zhīdào.	No sé.	I don't know.
+47	comunicarse	对。	duì.	Sí. / Correcto.	Yes. / Right.	El chino no tiene un «sí» para todo: se dice 对 o se repite el verbo de la pregunta (是, 有, 要…).
+48	comunicarse	可以。	kěyǐ.	Sí, se puede. / Está bien.	Sure. / That's fine.
+49	comunicarse	现在几点？	xiànzài jǐ diǎn?	¿Qué hora es?	What time is it?
+50	compras	这个多少钱？	zhège duōshao qián?	¿Cuánto cuesta esto?	How much is this?
+51	compras	太贵了！	tài guì le!	¡Está muy caro!	That's too expensive!
+52	compras	便宜一点儿吧。	piányi yīdiǎnr ba.	¿Me lo deja más barato?	Could you make it a bit cheaper?	En los mercados se regatea; en tiendas con precio fijo, no.
+53	compras	我要这个。	wǒ yào zhège.	Me llevo este.	I'll take this one.
+54	compras	不要，谢谢。	bù yào, xièxie.	No, gracias.	No, thank you.	Para rechazar algo que te ofrecen.
+55	compras	我只是看看。	wǒ zhǐshì kànkan.	Solo estoy viendo.	I'm just looking.
+56	compras	有没有大一点儿的？	yǒu méiyǒu dà yīdiǎnr de?	¿Tiene uno más grande?	Do you have a bigger one?	Cambia 大 por 小 para pedir uno más chico.
+57	compras	一共多少钱？	yīgòng duōshao qián?	¿Cuánto es en total?	How much is it altogether?
+58	compras	可以用手机付钱吗？	kěyǐ yòng shǒujī fù qián ma?	¿Puedo pagar con el celular?	Can I pay with my phone?	En China casi todo se paga con el celular (WeChat Pay o Alipay).
+59	compras	可以刷卡吗？	kěyǐ shuā kǎ ma?	¿Aceptan tarjeta?	Can I pay by card?
+60	comida	我饿了。	wǒ è le.	Tengo hambre.	I'm hungry.
+61	comida	服务员！	fúwùyuán!	¡Disculpe! (al mesero)	Excuse me! (to a waiter)	En China se llama así al mesero, en voz alta, y no es de mala educación.
+62	comida	请给我看一下菜单。	qǐng gěi wǒ kàn yīxià càidān.	¿Me deja ver el menú, por favor?	Could I see the menu, please?
+63	comida	我要一杯水。	wǒ yào yī bēi shuǐ.	Quiero un vaso de agua.	I'd like a glass of water.
+64	comida	我不吃肉。	wǒ bù chī ròu.	No como carne.	I don't eat meat.
+65	comida	不要太辣。	bù yào tài là.	Que no pique mucho, por favor.	Not too spicy, please.
+66	comida	很好吃！	hěn hǎochī!	¡Está muy rico!	It's delicious!
+67	comida	我吃饱了。	wǒ chībǎo le.	Ya estoy lleno. / Ya estoy llena.	I'm full.
+68	comida	干杯！	gānbēi!	¡Salud!	Cheers!	Literalmente, «seca el vaso».
+69	comida	买单！	mǎidān!	¡La cuenta, por favor!	The bill, please!
+70	transporte	洗手间在哪儿？	xǐshǒujiān zài nǎr?	¿Dónde está el baño?	Where's the restroom?
+71	transporte	请问，地铁站怎么走？	qǐngwèn, dìtiězhàn zěnme zǒu?	Disculpe, ¿cómo llego al metro?	Excuse me, how do I get to the subway?	请问 va antes de preguntarle algo a alguien que no conoces.
+72	transporte	离这儿远吗？	lí zhèr yuǎn ma?	¿Está lejos de aquí?	Is it far from here?
+73	transporte	一直往前走。	yīzhí wǎng qián zǒu.	Sigue derecho.	Go straight ahead.
+74	transporte	往左转。	wǎng zuǒ zhuǎn.	Da vuelta a la izquierda.	Turn left.
+75	transporte	往右转。	wǎng yòu zhuǎn.	Da vuelta a la derecha.	Turn right.
+76	transporte	我想去这儿。	wǒ xiǎng qù zhèr.	Quiero ir aquí.	I want to go here.	Muy útil señalando un mapa o una dirección escrita, por ejemplo con un taxista.
+77	transporte	请在这儿停车。	qǐng zài zhèr tíngchē.	Pare aquí, por favor.	Please stop here.
+78	transporte	我迷路了。	wǒ mílù le.	Me perdí.	I'm lost.
+79	emergencias	救命！	jiùmìng!	¡Auxilio!	Help!
+80	emergencias	请帮帮我！	qǐng bāngbang wǒ!	¡Ayúdeme, por favor!	Please help me!
+81	emergencias	小心！	xiǎoxīn!	¡Cuidado!	Be careful!
+82	emergencias	我不舒服。	wǒ bù shūfu.	Me siento mal.	I don't feel well.
+83	emergencias	我头疼。	wǒ tóuténg.	Me duele la cabeza.	I have a headache.
+84	emergencias	医院在哪儿？	yīyuàn zài nǎr?	¿Dónde hay un hospital?	Where's the hospital?
+85	emergencias	请叫救护车！	qǐng jiào jiùhùchē!	¡Llamen a una ambulancia!	Call an ambulance!	En China la ambulancia es el 120.
+86	emergencias	请报警！	qǐng bàojǐng!	¡Llamen a la policía!	Call the police!	En China la policía es el 110.
+87	emergencias	我的手机丢了。	wǒ de shǒujī diū le.	Perdí mi celular.	I lost my phone.
+88	emergencias	我对花生过敏。	wǒ duì huāshēng guòmǐn.	Soy alérgico al cacahuate.	I'm allergic to peanuts.	Cambia 花生 (cacahuate) por lo que te dé alergia.

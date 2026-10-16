@@ -1,10 +1,55 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// pantalla_inicio.dart — Pantalla principal
+//
+// - Resumen del día: anillo con lo que llevas de tu meta diaria y tu racha
+//   (🔥; 🛡️ si el protector la salvó).
+// - Al volver de estudiar: aplica el protector de racha si hace falta, avisa
+//   si cumpliste la meta y muestra los logros nuevos (fase 6).
+// - Una lista de cristal (widgets/tarjeta_vidrio.dart, PanelCristal), cada
+//   renglón con lo que te toca:
+//     ✍️ Estudiar  → repasos pendientes y nuevos de hoy (pantalla_modo.dart)
+//     🎧 Practicar → palabras por repasar; tonos, escucha… (pantalla_practica.dart)
+//     📖 Leer      → por dónde ibas (pantalla_biblioteca.dart)
+// - Estadísticas y Ajustes.
+// - La primera vez, tras el tutorial: «¿Nunca has estudiado chino?». Si
+//   eliges empezar desde cero, «🌱 Chino desde cero» va primero en la lista y
+//   Estudiar, Practicar y Leer tienen candado hasta terminar las seis
+//   lecciones (o desbloquearlas ya); ver pantalla_desde_cero.dart y
+//   datos/desde_cero.dart.
+// - Abajo, una frase que cambia cada 4 segundos con un giro suave (solo
+//   mientras la pantalla se ve: con otra pantalla encima o la app en segundo
+//   plano el reloj se detiene, para no gastar batería).
+// - Fondo: rama de ciruelo en flor que se mece con el viento y suelta pétalos
+//   (ver fondo_tinta.dart y painters/rama_ciruelo.dart).
+// ─────────────────────────────────────────────────────────────────────────────
+
 import 'dart:async';
 import 'dart:math' as math;
-import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'pantalla_modo.dart';
-import 'pantalla_estadisticas.dart';
+
+import '../datos/datos_app.dart';
+import '../datos/desde_cero.dart';
+import '../datos/modelos.dart';
+import '../datos/repositorio_habito.dart';
+import '../datos/repositorio_practica.dart';
+import '../helpers/actualizaciones.dart';
+import '../helpers/habito.dart';
+import '../tema.dart';
+import '../widgets/apoyo.dart';
+import '../widgets/aviso_version.dart';
 import '../widgets/fondo_tinta.dart';
+import '../widgets/logro_dialogo.dart';
+import '../widgets/tarjeta_vidrio.dart';
+import 'pantalla_ajustes.dart';
+import 'pantalla_bienvenida.dart';
+import 'pantalla_biblioteca.dart';
+import 'pantalla_desde_cero.dart';
+import 'pantalla_estadisticas.dart';
+import 'pantalla_logros.dart';
+import 'pantalla_modo.dart';
+import 'pantalla_practica.dart';
+import '../idioma.dart';
 
 class PantallaInicio extends StatefulWidget {
   const PantallaInicio({super.key});
@@ -13,147 +58,639 @@ class PantallaInicio extends StatefulWidget {
   State<PantallaInicio> createState() => _PantallaInicioState();
 }
 
-class _PantallaInicioState extends State<PantallaInicio> {
-  final List<String> _frases = [
-    "El viaje de mil millas comienza con un solo paso.",
-    "Aprender es un tesoro que seguirá a su dueño a todas partes.",
-    "No temas ir despacio, teme solo a detenerte.",
-    "La paciencia es una planta amarga, pero su fruto es dulce.",
+class _PantallaInicioState extends State<PantallaInicio> with WidgetsBindingObserver {
+  static List<String> get _frases => [
+    tr('El viaje de mil millas comienza con un solo paso.'),
+    tr('Aprender es un tesoro que seguirá a su dueño a todas partes.'),
+    tr('No temas ir despacio, teme solo a detenerte.'),
+    tr('Con suficiente constancia, una barra de hierro se vuelve aguja.'),
   ];
   int _indiceFrase = 0;
-  Timer? _timer;
+  Timer? _temporizador;
+
+  /// Repasos de escritura pendientes (null = cargando), nuevos de hoy y el
+  /// límite diario de nuevos.
+  int? _repasos;
+  int _nuevosHoy = 0;
+  int _meta = 0;
+
+  /// Palabras de vocabulario por repasar (Practicar).
+  int _palabras = 0;
+
+  /// Por dónde ibas leyendo (null = aún nada).
+  (Libro, int)? _lectura;
+  int _racha = 0;
+  int _hoy = 0;
+  int _metaDiaria = HabitoRepositorio.metaPorDefecto;
+
+  /// La racha sigue gracias al protector (se ve un 🛡️).
+  bool _protegida = false;
+
+  bool _visible = true;
+  bool _enPrimerPlano = true;
+
+  /// El tutorial se revisa una sola vez por apertura de la app.
+  bool _tutorialRevisado = false;
+
+  /// La versión nueva también (helpers/actualizaciones.dart); si hay una,
+  /// se avisa arriba.
+  bool _versionRevisada = false;
+  VersionNueva? _versionNueva;
+
+  /// «Chino desde cero»: qué elegiste (null = cargando) y qué terminaste.
+  RutaDesdeCero? _ruta;
+  Set<int> _lecciones = const {};
+
+  bool get _bloqueado => _ruta?.bloquea ?? false;
 
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
-      if (mounted) setState(() => _indiceFrase = (_indiceFrase + 1) % _frases.length);
-    });
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _cargarResumen());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // false mientras otra pantalla está encima.
+    _visible = ModalRoute.of(context)?.isCurrent ?? true;
+    _actualizarFrases();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _enPrimerPlano = state == AppLifecycleState.resumed;
+    _actualizarFrases();
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    _temporizador?.cancel();
     super.dispose();
+  }
+
+  /// El reloj de las frases corre solo mientras la pantalla se ve.
+  void _actualizarFrases() {
+    final correr = _visible && _enPrimerPlano;
+    if (correr && _temporizador == null) {
+      _temporizador = Timer.periodic(const Duration(seconds: 4), (_) {
+        if (mounted) setState(() => _indiceFrase = (_indiceFrase + 1) % _frases.length);
+      });
+    } else if (!correr && _temporizador != null) {
+      _temporizador!.cancel();
+      _temporizador = null;
+    }
+  }
+
+  Future<void> _cargarResumen() async {
+    final repo = DatosApp.de(context);
+    // La primera vez: el tutorial (se puede omitir) y luego la pregunta de
+    // «Chino desde cero» (también se puede omitir). A quien venía de una
+    // versión sin ella y aún no estudia mucho se le pregunta una vez.
+    var primeraVez = false;
+    if (!_tutorialRevisado) {
+      _tutorialRevisado = true;
+      if (!await repo.tutorialVisto() && mounted) {
+        primeraVez = true;
+        await Navigator.push(
+          context,
+          MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => const PantallaBienvenida()),
+        );
+        if (!mounted) return;
+      }
+      if (await repo.rutaDesdeCero() == RutaDesdeCero.sinElegir && mounted) {
+        primeraVez = true;
+        final empezar = await Navigator.push<bool>(
+          context,
+          MaterialPageRoute<bool>(fullscreenDialog: true, builder: (_) => const PantallaComenzarDesdeCero()),
+        );
+        if (!mounted) return;
+        if (empezar != null) await repo.elegirDesdeCero(empezar);
+        if (empezar == true && mounted) {
+          await Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const PantallaDesdeCero()));
+          if (!mounted) return;
+        }
+      }
+    }
+    final cubiertos = await repo.aplicarProtector();
+    final repasos = await repo.repasosPendientes();
+    final palabras = await repo.palabrasPendientes();
+    final lectura = await repo.ultimaLectura();
+    final nuevos = await repo.nuevosHoy();
+    final meta = await repo.limiteNuevosPorDia();
+    final hoy = await repo.actividadHoy();
+    final metaDiaria = await repo.metaDiaria();
+    final racha = await repo.rachaConProtector();
+    final protegidos = await repo.diasProtegidos();
+    final logros = await repo.revisarLogros();
+    final celebrarMeta = hoy >= metaDiaria && !await repo.metaCelebradaHoy();
+    // Por si terminaste la última lección por otro camino (un respaldo).
+    final desbloqueado = await repo.desbloquearSiTerminaste();
+    final ruta = await repo.rutaDesdeCero();
+    final lecciones = await repo.leccionesTerminadas();
+    if (celebrarMeta) await repo.marcarMetaCelebrada();
+    Habito.actualizarWidget();
+    if (!mounted) return;
+    final ayer = DateTime.now().subtract(const Duration(days: 1));
+    setState(() {
+      _repasos = repasos;
+      _palabras = palabras;
+      _lectura = lectura;
+      _nuevosHoy = nuevos;
+      _meta = meta;
+      _hoy = hoy;
+      _metaDiaria = metaDiaria;
+      _racha = racha.actual;
+      _ruta = ruta;
+      _lecciones = lecciones;
+      _protegida = racha.actual > 0 &&
+          protegidos.any((d) => d.year == ayer.year && d.month == ayer.month && d.day == ayer.day);
+    });
+    if (desbloqueado) {
+      final estudiar = await festejarDesbloqueo(context);
+      if (!mounted) return;
+      if (estudiar) {
+        _ir(const PantallaModo()); // al volver se carga (y avisa) lo demás
+        return;
+      }
+    }
+    final aviso = ScaffoldMessenger.of(context);
+    if (cubiertos.isNotEmpty) {
+      aviso.showSnackBar(SnackBar(
+        content: Text(cubiertos.length == 1
+            ? tr('🛡️ Tu protector de racha cubrió el día que no practicaste. Hay uno por semana.')
+            : tr('🛡️ Tus protectores de racha cubrieron {0} días.', [cubiertos.length])),
+        duration: const Duration(seconds: 5),
+      ));
+    }
+    if (celebrarMeta) {
+      aviso.showSnackBar(SnackBar(content: Text(tr('🎯 ¡Meta del día cumplida! {0} de {1}', [hoy, metaDiaria]))));
+    }
+    if (logros.isNotEmpty) {
+      await mostrarLogrosNuevos(context, logros);
+      // Una sola vez en la vida de la app (ver widgets/apoyo.dart).
+      if (mounted) await Apoyo.sugerirTrasLogro(context, repo);
+    }
+    // Al final, para no encimarse con lo demás. Recién visto el tutorial (o
+    // la pregunta de «Chino desde cero») no se pregunta nada más: eso queda
+    // para la siguiente vez.
+    if (!_versionRevisada && mounted) {
+      _versionRevisada = true;
+      await _revisarVersion(preguntar: !primeraVez);
+    }
+  }
+
+  Future<void> _revisarVersion({required bool preguntar}) async {
+    if (!Actualizaciones.disponible) return;
+    final repo = DatosApp.de(context);
+    var avisar = await repo.avisarVersiones();
+    if (avisar == null) {
+      if (!preguntar || !mounted) return;
+      avisar = await preguntarAvisoVersiones(context);
+      if (avisar == null) return; // se cerró sin elegir: se pregunta otro día
+      await repo.guardarAvisarVersiones(avisar);
+    }
+    if (!avisar) return;
+    final resultado = await Actualizaciones.revisar(repo);
+    final nueva = resultado.nueva;
+    if (nueva == null || nueva.version == await repo.versionDescartada() || !mounted) return;
+    setState(() => _versionNueva = nueva);
+  }
+
+  Future<void> _descartarVersion(VersionNueva nueva) async {
+    setState(() => _versionNueva = null);
+    await DatosApp.de(context).descartarVersion(nueva.version);
+  }
+
+  Future<void> _ir(Widget pantalla) async {
+    await Navigator.push(context, MaterialPageRoute<void>(builder: (_) => pantalla));
+    _cargarResumen(); // al volver, actualizar el resumen del día
+  }
+
+  /// Estudiar, Leer o Practicar: con candado mientras cursas «Chino desde
+  /// cero» se explica por qué y se ofrece seguir (o desbloquear ya).
+  void _abrir(Widget pantalla) {
+    if (_bloqueado) {
+      _mostrarCandado();
+    } else {
+      _ir(pantalla);
+    }
+  }
+
+  Future<void> _mostrarCandado() async {
+    final c = context.colores;
+    final total = DesdeCeroRepositorio.totalLecciones;
+    final faltan = total - _lecciones.length;
+    final eleccion = await showModalBottomSheet<String>(
+      context: context,
+      showDragHandle: true,
+      builder: (contexto) => SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Icon(Icons.lock_outline_rounded, size: 34, color: c.tinta),
+              const SizedBox(height: 10),
+              Text(
+                tr('Primero, «Chino desde cero»'),
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                faltan == 1
+                    ? tr('Te falta 1 lección (unos {0} minutos). Al terminarla se abren Estudiar, Leer y Practicar.',
+                        [minutosDesdeCero(_lecciones)])
+                    : tr('Te faltan {0} de {1} lecciones (unos {2} minutos). Al terminarlas se abren Estudiar, Leer y Practicar.',
+                        [faltan, total, minutosDesdeCero(_lecciones)]),
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 15, color: c.suave, height: 1.4),
+              ),
+              const SizedBox(height: 18),
+              FilledButton(
+                style: FilledButton.styleFrom(
+                  backgroundColor: c.boton,
+                  foregroundColor: c.textoBoton,
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                onPressed: () => Navigator.pop(contexto, 'seguir'),
+                child: Text(tr('Seguir con las lecciones')),
+              ),
+              const SizedBox(height: 4),
+              TextButton(
+                onPressed: () => Navigator.pop(contexto, 'desbloquear'),
+                child: Text(tr('Ya sé lo básico: desbloquear todo'), style: TextStyle(color: c.suave)),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (!mounted) return;
+    switch (eleccion) {
+      case 'seguir':
+        await _ir(const PantallaDesdeCero());
+      case 'desbloquear':
+        await DatosApp.de(context).elegirDesdeCero(false);
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(tr('Listo: todo desbloqueado. Las lecciones quedan al final de Ajustes.')),
+        ));
+        await _cargarResumen();
+    }
+  }
+
+  /// «12 repasos · 5 nuevos» (o «Todo al día»).
+  String get _textoEstudiar {
+    final repasos = _repasos ?? 0;
+    final nuevos = math.max(0, _meta - _nuevosHoy);
+    final partes = [
+      if (repasos > 0) repasos == 1 ? tr('1 repaso') : tr('{0} repasos', [repasos]),
+      if (nuevos > 0) nuevos == 1 ? tr('1 nuevo') : tr('{0} nuevos', [nuevos]),
+    ];
+    return partes.isEmpty ? tr('Todo al día por hoy') : partes.join(' · ');
+  }
+
+  String get _textoPracticar => switch (_palabras) {
+        0 => tr('Tonos, escucha, vocabulario y pinyin'),
+        1 => tr('1 palabra por repasar · tonos, escucha…'),
+        final n => tr('{0} palabras por repasar · tonos, escucha…', [n]),
+      };
+
+  String get _textoLeer {
+    final lectura = _lectura;
+    if (lectura == null) return tr('Cuentos y leyendas por nivel, con audio');
+    final (libro, capitulo) = lectura;
+    if (libro.capitulosLeidos >= libro.capitulos) return tr('Terminaste {0}: elige otro', [libro.titulo]);
+    return tr('Sigue: {0} · capítulo {1}', [libro.titulo, math.min(capitulo + 1, libro.capitulos)]);
   }
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colores;
+    // Con candado, cada renglón dice para qué sirve (aún no hay nada
+    // pendiente); al tocarlo se explica cuánto falta.
+    final filas = <Widget>[
+      // Mientras cursas «Chino desde cero», va primero: es lo que toca.
+      if (_ruta?.enInicio ?? false)
+        _FilaInicio(
+          emoji: '🌱',
+          titulo: tr('Chino desde cero'),
+          subtitulo: tr('{0} de {1} lecciones', [_lecciones.length, DesdeCeroRepositorio.totalLecciones]),
+          avance: _lecciones.length / DesdeCeroRepositorio.totalLecciones,
+          onTap: () => _ir(const PantallaDesdeCero()),
+        ),
+      _FilaInicio(
+        emoji: '✍️',
+        titulo: tr('Estudiar'),
+        subtitulo: _bloqueado ? tr('Escribe caracteres, trazo a trazo') : _textoEstudiar,
+        bloqueado: _bloqueado,
+        onTap: () => _abrir(const PantallaModo()),
+      ),
+      _FilaInicio(
+        emoji: '🎧',
+        titulo: tr('Practicar'),
+        subtitulo: _bloqueado ? tr('Tonos, escucha, vocabulario y pinyin') : _textoPracticar,
+        bloqueado: _bloqueado,
+        onTap: () => _abrir(const PantallaPractica()),
+      ),
+      _FilaInicio(
+        emoji: '📖',
+        titulo: tr('Leer'),
+        subtitulo: _bloqueado ? tr('Cuentos y leyendas por nivel, con audio') : _textoLeer,
+        bloqueado: _bloqueado,
+        onTap: () => _abrir(const PantallaBiblioteca()),
+      ),
+    ];
     return FondoTintaChina(
+      ramaAnimada: true,
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        // En horizontal (o con letra muy grande) el contenido no cabe: se
+        // vuelve desplazable; en vertical ocupa la pantalla y los Spacer lo
+        // reparten como siempre.
         body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: LayoutBuilder(
+            builder: (context, restricciones) => SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: restricciones.maxHeight),
+                child: IntrinsicHeight(
+                  child: Column(
             children: [
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.emoji_events_outlined, color: c.icono),
+                    tooltip: tr('Logros'),
+                    onPressed: () => _ir(const PantallaLogros()),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: Icon(Icons.settings_outlined, color: c.icono),
+                    tooltip: tr('Ajustes y créditos'),
+                    onPressed: () => _ir(const PantallaAjustes()),
+                  ),
+                ],
+              ),
+              if (_versionNueva case final nueva?)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: TarjetaVersionNueva(nueva: nueva, onDescartar: () => _descartarVersion(nueva)),
+                ),
               const Spacer(),
+              const Text('梅字', style: TextStyle(fontSize: 48, fontWeight: FontWeight.w400, letterSpacing: 10)),
+              const SizedBox(height: 2),
+              Text('Meizi Hanzi', style: TextStyle(fontSize: 14, color: c.tenue, letterSpacing: 2)),
+              const SizedBox(height: 22),
 
-              // Botón principal → va a PantallaModo
-              ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: InkWell(
-                    onTap: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => const PantallaModo())),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40, vertical: 15),
-                      decoration: BoxDecoration(
-                        color: const Color(0xBF000000),
-                        borderRadius: BorderRadius.circular(30),
-                        border: Border.all(
-                            color: const Color(0x4DFFFFFF), width: 1.5),
+              // El día y la lista, del mismo ancho (cristal: ver PanelCristal).
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 460),
+                  child: Column(
+                    children: [
+                      _ResumenDelDia(
+                        cargado: _repasos != null,
+                        racha: _racha,
+                        protegida: _protegida,
+                        hoy: _hoy,
+                        metaDiaria: _metaDiaria,
                       ),
-                      child: const Text(
-                        'Estudiar',
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            letterSpacing: 0.5,
-                            fontWeight: FontWeight.w600),
+                      const SizedBox(height: 14),
+                      PanelCristal(
+                        child: Column(
+                          children: [
+                            for (var i = 0; i < filas.length; i++) ...[
+                              if (i > 0) Divider(height: 1, thickness: 1, indent: 74, color: c.separador),
+                              filas[i],
+                            ],
+                          ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ),
+              const SizedBox(height: 14),
 
-              const SizedBox(height: 20),
-
-              // Botón estadísticas
-              ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: InkWell(
-                    onTap: () => Navigator.push(context,
-                        MaterialPageRoute(
-                            builder: (_) => PantallaEstadisticas())),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 25, vertical: 12),
-                      decoration: BoxDecoration(
-                        color: const Color(0x80F5F5F5),
-                        borderRadius: BorderRadius.circular(30),
-                        border: Border.all(
-                            color: const Color(0x80E0E0E0), width: 1.5),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.pie_chart_outline,
-                              color: Colors.grey.shade800, size: 20),
-                          const SizedBox(width: 8),
-                          Text("Ver mis estadísticas",
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500)),
-                        ],
-                      ),
-                    ),
-                  ),
+              // Estadísticas (con fondo de papel translúcido: si un pétalo
+              // pasa por detrás, el texto se sigue leyendo bien).
+              TextButton.icon(
+                style: TextButton.styleFrom(
+                  backgroundColor: c.translucido,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
+                icon: Icon(Icons.pie_chart_outline, color: c.suave, size: 20),
+                label: Text(tr('Ver mis estadísticas'),
+                    style: TextStyle(color: c.suave, fontSize: 15, fontWeight: FontWeight.w500)),
+                onPressed: () => _ir(const PantallaEstadisticas()),
               ),
-
               const Spacer(),
 
-              // Frase animada
-              Container(
+              // Frase que gira cada 4 s
+              SizedBox(
                 height: 60,
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 600),
-                  transitionBuilder: (child, animation) {
-                    final rotate = Tween(begin: math.pi / 2, end: 0.0)
-                        .animate(CurvedAnimation(
-                            parent: animation,
-                            curve: Curves.easeOutCubic));
-                    final fade =
-                        Tween(begin: 0.0, end: 1.0).animate(animation);
-                    return AnimatedBuilder(
-                      animation: animation,
-                      child: child,
-                      builder: (context, child) => Transform(
-                        transform: Matrix4.rotationX(rotate.value),
-                        alignment: Alignment.center,
-                        child: Opacity(opacity: fade.value, child: child),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    _frases[_indiceFrase],
-                    key: ValueKey<int>(_indiceFrase),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.grey.shade500,
-                        fontStyle: FontStyle.italic,
-                        fontSize: 14),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 600),
+                    transitionBuilder: (child, animacion) {
+                      final giro = Tween(begin: math.pi / 2, end: 0.0)
+                          .animate(CurvedAnimation(parent: animacion, curve: Curves.easeOutCubic));
+                      return AnimatedBuilder(
+                        animation: animacion,
+                        child: child,
+                        builder: (context, child) => Transform(
+                          transform: Matrix4.rotationX(giro.value),
+                          alignment: Alignment.center,
+                          child: Opacity(opacity: animacion.value, child: child),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      _frases[_indiceFrase],
+                      key: ValueKey<int>(_indiceFrase),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: c.suave, fontStyle: FontStyle.italic, fontSize: 14),
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
+            ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Un renglón de la lista del inicio: emoji, qué es, lo que te toca y ›.
+/// Con candado se ve apagado y al tocarlo explica por qué; [avance] dibuja
+/// una barrita (las lecciones de «Chino desde cero»).
+class _FilaInicio extends StatelessWidget {
+  const _FilaInicio({
+    required this.emoji,
+    required this.titulo,
+    required this.subtitulo,
+    required this.onTap,
+    this.bloqueado = false,
+    this.avance,
+  });
+
+  final String emoji;
+  final String titulo;
+  final String subtitulo;
+  final VoidCallback onTap;
+  final bool bloqueado;
+  final double? avance;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colores;
+    final apagado = bloqueado ? 0.55 : 1.0;
+    return Semantics(
+      button: true,
+      hint: bloqueado ? tr('Se abre al terminar «Chino desde cero»') : null,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 13, 14, 13),
+          child: Row(
+            children: [
+              // El emoji en una burbuja de cristal más clara (el lector de
+              // pantalla no lo dice: basta con el título).
+              ExcludeSemantics(
+                child: Opacity(
+                  opacity: apagado,
+                  child: Container(
+                    width: 44,
+                    height: 44,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: c.oscuro ? const Color(0x1AFFFFFF) : const Color(0x99FFFFFF),
+                      border: Border.all(color: c.oscuro ? const Color(0x1FFFFFFF) : const Color(0xFFFFFFFF)),
+                    ),
+                    child: Text(emoji, style: const TextStyle(fontSize: 22)),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Opacity(
+                  opacity: bloqueado ? 0.7 : 1,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(titulo, style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: c.tinta)),
+                      const SizedBox(height: 2),
+                      Text(subtitulo, style: TextStyle(fontSize: 13, color: c.suave, height: 1.3)),
+                      if (avance case final a?) ...[
+                        const SizedBox(height: 7),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(3),
+                          child: LinearProgressIndicator(
+                            value: a,
+                            minHeight: 4,
+                            backgroundColor: c.separador,
+                            color: c.tinta,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Icon(
+                bloqueado ? Icons.lock_outline_rounded : Icons.chevron_right_rounded,
+                size: bloqueado ? 20 : 24,
+                color: c.tenue,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Lo que llevas hoy de tu meta (anillo) y tu racha, en cristal.
+class _ResumenDelDia extends StatelessWidget {
+  const _ResumenDelDia({
+    required this.cargado,
+    this.racha = 0,
+    this.protegida = false,
+    this.hoy = 0,
+    this.metaDiaria = 20,
+  });
+
+  final bool cargado;
+
+  /// Días seguidos estudiando (0 = no se muestra).
+  final int racha;
+  final bool protegida;
+
+  /// Repasos y ejercicios de hoy, y la meta diaria.
+  final int hoy;
+  final int metaDiaria;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!cargado) return const SizedBox(height: 66);
+    final c = context.colores;
+    final cumplida = hoy >= metaDiaria;
+    final verde = c.oscuro ? const Color(0xFF81C784) : const Color(0xFF2E7D32);
+    return Semantics(
+      label: tr('Hoy llevas {0} de {1}. Racha de {2} días.', [hoy, metaDiaria, racha]),
+      child: PanelCristal(
+        radio: 20,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 10, 18, 10),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 46,
+                height: 46,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CircularProgressIndicator(
+                      value: metaDiaria == 0 ? 1 : (hoy / metaDiaria).clamp(0.0, 1.0).toDouble(),
+                      strokeWidth: 4,
+                      strokeCap: StrokeCap.round,
+                      backgroundColor: c.separador,
+                      color: cumplida ? verde : c.tinta,
+                    ),
+                    Center(
+                      child: cumplida
+                          ? Icon(Icons.check_rounded, size: 22, color: verde)
+                          : Text('$hoy', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: c.tinta)),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  cumplida ? tr('Meta de hoy cumplida') : tr('Hoy: {0} de {1}', [hoy, metaDiaria]),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: c.tinta),
+                ),
+              ),
+              if (racha > 0)
+                Text('🔥 $racha${protegida ? ' 🛡️' : ''}',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: c.tinta)),
             ],
           ),
         ),

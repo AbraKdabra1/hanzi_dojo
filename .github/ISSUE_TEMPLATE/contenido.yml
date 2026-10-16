@@ -1,0 +1,38 @@
+name: Error en el contenido
+description: Un significado, pinyin, ejemplo, orden de trazos o texto de un libro que está mal.
+title: "[Contenido] "
+labels: ["contenido"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Los datos vienen de fuentes abiertas y las traducciones al español se hicieron para la app,
+        así que es normal encontrar errores. ¡Cada reporte la mejora para todos!
+  - type: input
+    id: donde
+    attributes:
+      label: ¿Dónde?
+      description: El carácter, o el libro y capítulo.
+      placeholder: Carácter 好 (hǎo) · HSK 1   —   o   —   Libro «Mitos chinos», capítulo 2
+    validations:
+      required: true
+  - type: input
+    id: que_esta_mal
+    attributes:
+      label: ¿Qué está mal?
+      placeholder: Significado / Pinyin / Ejemplo / Trazos / Texto o traducción de un libro / Otro
+  - type: textarea
+    id: descripcion
+    attributes:
+      label: Explícalo
+      description: Qué dice ahora y por qué está mal.
+    validations:
+      required: true
+  - type: textarea
+    id: propuesta
+    attributes:
+      label: ¿Cómo debería decir? (opcional)
+  - type: input
+    id: dispositivo
+    attributes:
+      label: Versión de la app (opcional)

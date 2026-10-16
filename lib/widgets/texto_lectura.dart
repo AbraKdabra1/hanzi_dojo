@@ -1,0 +1,453 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// texto_lectura.dart — Un párrafo de la sección «Leer» y la ficha de carácter
+//
+// ParrafoLectura dibuja el texto chino carácter por carácter, cada uno con su
+// pinyin encima (como los libros para aprender chino). Se puede tocar
+// cualquier carácter para ver su ficha: pinyin, significado, nivel HSK, oírlo
+// y practicar su escritura.
+//
+// Cortes de línea: los signos de cierre (，。！？”…) se pegan al carácter de
+// antes y los de apertura (“《（) al de después, para que ninguna línea
+// empiece con una coma, como en cualquier texto chino bien compuesto.
+//
+// Los nombres propios van subrayados: así se ve que 孔融 es una persona y no
+// dos palabras que tengas que conocer.
+// ─────────────────────────────────────────────────────────────────────────────
+
+import 'package:flutter/material.dart';
+
+import '../datos/datos_app.dart';
+import '../datos/modelos.dart';
+import '../datos/practica.dart';
+import '../datos/repositorio.dart';
+import '../datos/repositorio_practica.dart';
+import '../datos/reporte.dart' show TipoReporte;
+import '../screens/pantalla_estudio.dart';
+import '../screens/pantalla_reporte.dart';
+import '../tema.dart';
+import 'boton_voz.dart';
+import 'comunes.dart';
+import '../idioma.dart';
+
+/// Signos que nunca deben empezar una línea (se pegan al carácter anterior).
+const _cierre = '，。！？；：、）》」』”’…—·.,!?;:)';
+
+/// Signos que nunca deben terminar una línea (se pegan al siguiente).
+const _apertura = '“‘《「『（(';
+
+bool esHan(String c) {
+  if (c.isEmpty) return false;
+  final r = c.runes.first;
+  return (r >= 0x4E00 && r <= 0x9FFF) || (r >= 0x3400 && r <= 0x4DBF) || (r >= 0x20000 && r <= 0x2FFFF);
+}
+
+/// Agrupa las posiciones de [caracteres] en bloques que no se pueden partir
+/// entre líneas: un carácter con la puntuación que lo acompaña.
+List<List<int>> bloquesSinCorte(List<String> caracteres) {
+  final bloques = <List<int>>[];
+  final pendientes = <int>[]; // signos de apertura esperando su carácter
+  for (int i = 0; i < caracteres.length; i++) {
+    final c = caracteres[i];
+    if (c.trim().isEmpty) continue;
+    if (_cierre.contains(c) && bloques.isNotEmpty && pendientes.isEmpty) {
+      bloques.last.add(i);
+    } else if (_apertura.contains(c)) {
+      pendientes.add(i);
+    } else {
+      bloques.add([...pendientes, i]);
+      pendientes.clear();
+    }
+  }
+  if (pendientes.isNotEmpty) bloques.add([...pendientes]);
+  return bloques;
+}
+
+class ParrafoLectura extends StatelessWidget {
+  const ParrafoLectura({
+    super.key,
+    required this.parrafo,
+    required this.tamano,
+    required this.mostrarPinyin,
+    required this.mostrarTraduccion,
+    required this.onAlternarTraduccion,
+    this.seleccionado,
+    this.sonando,
+    this.leyendo = false,
+    this.onEscuchar,
+    required this.onTocarCaracter,
+  });
+
+  final ParrafoLibro parrafo;
+  final double tamano;
+  final bool mostrarPinyin;
+  final bool mostrarTraduccion;
+  final VoidCallback onAlternarTraduccion;
+
+  /// Posición del carácter resaltado (el de la ficha abierta), si hay.
+  final int? seleccionado;
+
+  /// Lo que suena al leer en voz alta: posiciones [inicio, fin).
+  final (int, int)? sonando;
+
+  /// Este párrafo se está leyendo en voz alta.
+  final bool leyendo;
+
+  /// 🔊 del párrafo. Si se da, lo lee la pantalla (resaltando y a su
+  /// velocidad); si no, el botón de voz de siempre.
+  final VoidCallback? onEscuchar;
+  final ValueChanged<int> onTocarCaracter;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = parrafo;
+    final colores = context.colores;
+    final tamanoPinyin = (tamano * 0.42).clamp(10.0, 15.0);
+    final alturaPinyin = tamanoPinyin * 1.3;
+
+    Widget celda(int i) {
+      final c = p.caracteres[i];
+      final han = esHan(c);
+      final nombre = han && p.esNombre(i);
+      final marcado = i == seleccionado;
+      final suena = sonando != null && i >= sonando!.$1 && i < sonando!.$2;
+      final texto = Text(
+        c,
+        style: TextStyle(
+          fontSize: tamano,
+          height: 1.25,
+          color: colores.tinta,
+          decoration: nombre ? TextDecoration.underline : null,
+          decorationColor: colores.oscuro ? const Color(0x99BCAAA4) : const Color(0x99795548),
+          decorationThickness: 1.5,
+        ),
+      );
+      final columna = Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (mostrarPinyin)
+            SizedBox(
+              height: alturaPinyin,
+              child: Text(
+                p.pinyin[i],
+                style: TextStyle(fontSize: tamanoPinyin, color: colores.tenue, height: 1.2),
+              ),
+            ),
+          texto,
+        ],
+      );
+      if (!han) return columna;
+      return GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => onTocarCaracter(i),
+        // Container simple (no AnimatedContainer): cada AnimatedContainer crea
+        // su propio animador, y un párrafo tiene cientos de caracteres; eso
+        // pesaba al aparecer párrafos durante el scroll.
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 1),
+          decoration: marcado
+              ? BoxDecoration(color: const Color(0x40FFC107), borderRadius: BorderRadius.circular(4))
+              : suena
+                  ? BoxDecoration(color: const Color(0x4029B6F6), borderRadius: BorderRadius.circular(4))
+                  : null,
+          child: columna,
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Wrap(
+          runSpacing: tamano * 0.3,
+          children: [
+            for (final bloque in bloquesSinCorte(p.caracteres))
+              Row(mainAxisSize: MainAxisSize.min, children: [for (final i in bloque) celda(i)]),
+          ],
+        ),
+        AnimatedSize(
+          duration: const Duration(milliseconds: 200),
+          alignment: Alignment.topCenter,
+          child: mostrarTraduccion && p.espanol.isNotEmpty
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 6),
+                  child: Text(
+                    p.espanol,
+                    style: TextStyle(fontSize: 14, color: colores.suave, height: 1.35),
+                  ),
+                )
+              : const SizedBox(width: double.infinity),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            if (onEscuchar == null)
+              BotonVoz(texto: p.chino, pinyin: p.pinyin, tamano: 16)
+            else
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                tooltip: leyendo ? tr('Detener la lectura') : tr('Escuchar este párrafo'),
+                onPressed: onEscuchar,
+                icon: Icon(
+                  leyendo ? Icons.stop_circle_outlined : Icons.volume_up_outlined,
+                  size: 20,
+                  color: leyendo ? const Color(0xFF007AFF) : colores.icono,
+                ),
+              ),
+            if (p.espanol.isNotEmpty)
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                tooltip: mostrarTraduccion ? tr('Ocultar traducción') : tr('Ver traducción'),
+                icon: Icon(
+                  mostrarTraduccion ? Icons.translate : Icons.translate_outlined,
+                  size: 18,
+                  color: mostrarTraduccion ? colores.tinta : colores.tenue,
+                ),
+                onPressed: onAlternarTraduccion,
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+/// Hoja inferior con la ficha de un carácter tocado en un libro.
+class FichaCaracterLectura extends StatelessWidget {
+  const FichaCaracterLectura({
+    super.key,
+    required this.texto,
+    required this.pinyinEnTexto,
+    this.donde,
+    this.contexto,
+    this.posicion,
+  });
+
+  /// El carácter tocado.
+  final String texto;
+
+  /// Cómo se lee en esta oración (puede ser distinto de su lectura principal:
+  /// 长 = zhǎng en 长大).
+  final String pinyinEnTexto;
+
+  /// Libro, capítulo y párrafo donde está (para "Reportar un error"). null en
+  /// los libros propios: su texto no es de la app.
+  final String? donde;
+
+  /// El párrafo (caracteres) y la posición del carácter tocado: con ellos se
+  /// busca la palabra HSK a la que pertenece, para agregarla al repaso.
+  final List<String>? contexto;
+  final int? posicion;
+
+  @override
+  Widget build(BuildContext context) {
+    final repo = DatosApp.de(context);
+    final colores = context.colores;
+    return Container(
+      decoration: BoxDecoration(
+        color: colores.hoja,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      padding: EdgeInsets.fromLTRB(24, 12, 24, MediaQuery.of(context).padding.bottom + 20),
+      child: FutureBuilder<Caracter?>(
+        future: repo.caracterPorTexto(texto),
+        builder: (context, instantanea) {
+          final c = instantanea.data;
+          final cargando = instantanea.connectionState != ConnectionState.done;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(color: colores.tenue, borderRadius: BorderRadius.circular(2)),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Text(texto, style: const TextStyle(fontSize: 64, height: 1.1)),
+                  const SizedBox(width: 18),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(pinyinEnTexto,
+                            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500, letterSpacing: 1)),
+                        if (c != null && c.pinyin != pinyinEnTexto && pinyinEnTexto.isNotEmpty)
+                          Text(tr('aquí; en el diccionario: {0}', [c.pinyin]),
+                              style: TextStyle(fontSize: 12, color: colores.tenue)),
+                        const SizedBox(height: 6),
+                        Row(children: [
+                          if (c != null) EtiquetaNivel(nivel: c.nivelHsk),
+                          if (c != null) const SizedBox(width: 8),
+                          if (c != null)
+                            Text(c.progreso == null ? tr('Nuevo para ti') : tr('Ya lo estudias'),
+                                style: TextStyle(fontSize: 12, color: colores.tenue)),
+                        ]),
+                      ],
+                    ),
+                  ),
+                  BotonVoz(texto: texto, pinyin: [pinyinEnTexto]),
+                ],
+              ),
+              const SizedBox(height: 14),
+              if (cargando)
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: SizedBox(
+                      width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: colores.icono)),
+                )
+              else if (c == null)
+                Text(tr('Este carácter no está en la base de la app.'),
+                    style: TextStyle(fontSize: 14, color: colores.suave))
+              else ...[
+                SizedBox(
+                  width: double.infinity,
+                  child: TextoSignificado(caracter: c, maxLineas: 4, tamano: 16),
+                ),
+                if (contexto != null && posicion != null)
+                  _PalabraEnContexto(caracteres: contexto!, posicion: posicion!),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    icon: const Icon(Icons.edit_outlined, size: 18),
+                    label: Text(tr('Practicar su escritura')),
+                    onPressed: () {
+                      // Se toma el Navigator antes de cerrar la hoja: después
+                      // su contexto ya no sirve para abrir otra pantalla.
+                      final navegador = Navigator.of(context);
+                      navegador.pop();
+                      navegador.push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => PantallaEstudio(
+                            filtro: FiltroEstudio.unico(c.id),
+                            modoNovato: true,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+              if (donde case final lugar?) ...[
+                const SizedBox(height: 4),
+                TextButton.icon(
+                  icon: const Icon(Icons.flag_outlined, size: 18),
+                  label: Text(tr('Reportar un error')),
+                  onPressed: () {
+                    final navegador = Navigator.of(context);
+                    navegador.pop();
+                    navegador.push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => PantallaReporte(
+                          tipo: TipoReporte.contenido,
+                          donde: tr('{0} · carácter {1}', [lugar, texto]),
+                          queEstaMal: tr('Texto o traducción de un libro'),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// La palabra HSK a la que pertenece el carácter tocado (la más larga que
+/// lo contenga en ese párrafo), con un botón para agregarla al repaso de
+/// vocabulario.
+class _PalabraEnContexto extends StatefulWidget {
+  const _PalabraEnContexto({required this.caracteres, required this.posicion});
+
+  final List<String> caracteres;
+  final int posicion;
+
+  @override
+  State<_PalabraEnContexto> createState() => _PalabraEnContextoState();
+}
+
+class _PalabraEnContextoState extends State<_PalabraEnContexto> {
+  Palabra? _palabra;
+  bool _agregada = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _buscar());
+  }
+
+  Future<void> _buscar() async {
+    final cs = widget.caracteres;
+    final i = widget.posicion;
+    final candidatos = <String>[];
+    for (var largo = 4; largo >= 1; largo--) {
+      for (var inicio = i - largo + 1; inicio <= i; inicio++) {
+        if (inicio < 0 || inicio + largo > cs.length) continue;
+        final trozo = cs.sublist(inicio, inicio + largo);
+        if (trozo.every(esHan)) candidatos.add(trozo.join());
+      }
+    }
+    final encontradas = await DatosApp.de(context).palabrasPorTextos(candidatos);
+    if (!mounted || encontradas.isEmpty) return;
+    encontradas.sort((a, b) => b.palabra.length - a.palabra.length);
+    setState(() => _palabra = encontradas.first);
+  }
+
+  Future<void> _agregar() async {
+    final p = _palabra;
+    if (p == null) return;
+    await DatosApp.de(context).agregarPalabraARepaso(p);
+    if (mounted) setState(() => _agregada = true);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final p = _palabra;
+    if (p == null) return const SizedBox.shrink();
+    final colores = context.colores;
+    final yaEsta = _agregada || p.progreso != null;
+    return Padding(
+      padding: const EdgeInsets.only(top: 14),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(14, 10, 8, 10),
+        decoration: BoxDecoration(
+          color: colores.separador,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Row(
+          children: [
+            Text(p.palabra, style: const TextStyle(fontSize: 24)),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(p.pinyin, style: TextStyle(fontSize: 13, color: colores.suave)),
+                  Text(p.significado,
+                      maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13)),
+                ],
+              ),
+            ),
+            yaEsta
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Tooltip(
+                      message: tr('Ya está en tu vocabulario'),
+                      child: Icon(Icons.check_circle, color: colores.icono),
+                    ),
+                  )
+                : TextButton.icon(
+                    onPressed: _agregar,
+                    icon: const Icon(Icons.add_rounded, size: 18),
+                    label: Text(tr('Al repaso')),
+                  ),
+          ],
+        ),
+      ),
+    );
+  }
+}
