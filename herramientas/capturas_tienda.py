@@ -26,15 +26,15 @@ TITULOS = {
         '3_tonos': 'Entrena el oído con los tonos',
         '4_lectura': 'Lee cuentos con pinyin y audio',
         '5_desde_cero': '¿Nunca has estudiado chino? Empieza desde cero',
-        '6_estadisticas': 'Mira cuánto has avanzado',
+        '6_practica': 'Tonos, escucha y simulacros del HSK',
     },
     'en': {
-        '1_inicio': 'What’s due today, at a glance',
+        '1_inicio': "What's due today, at a glance",
         '2_estudio': 'Write with your finger, stroke by stroke',
         '3_tonos': 'Train your ear for tones',
         '4_lectura': 'Read stories with pinyin and audio',
         '5_desde_cero': 'Never studied Chinese? Start from zero',
-        '6_estadisticas': 'See how far you’ve come',
+        '6_practica': 'Tones, listening and HSK mock tests',
     },
 }
 CARPETAS = {'es': 'es-MX', 'en': 'en-US'}
@@ -46,8 +46,8 @@ body {{ font-family: Noto, sans-serif; position: relative;
   background: radial-gradient(50% 35% at 85% 80%, rgba(60,40,20,.07), transparent 70%),
               linear-gradient(#F8F4EE, #F2EDE5); }}
 .tinta1 {{ stop-color: #241D19; }} .tinta2 {{ stop-color: #463C35; }}
-.rama {{ position: absolute; top: -18px; left: -60px; width: 820px; opacity: .95; }}
-h1 {{ position: absolute; left: 90px; right: 90px; top: 250px; margin: 0; text-align: center;
+.rama {{ position: absolute; top: -14px; left: -50px; width: 640px; }}
+h1 {{ position: absolute; left: 80px; right: 80px; top: 330px; margin: 0; text-align: center;
   font-size: 64px; line-height: 1.22; font-weight: 500; color: rgba(0,0,0,.84); }}
 .telefono {{ position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
   width: 680px; height: 1360px; border-radius: 56px 56px 0 0; overflow: hidden;

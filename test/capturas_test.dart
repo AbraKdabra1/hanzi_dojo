@@ -355,7 +355,7 @@ void main() {
           await t.pump(const Duration(milliseconds: 400));
         }
       });
-      await tienda('6_estadisticas', const PantallaEstadisticas());
+      await tienda('6_practica', const PantallaPractica());
     }
     Idioma.actual.value = Lengua.espanol;
   }, skip: !_pedidas);
