@@ -57,8 +57,13 @@ class InfoDispositivo {
 
   String get sistema => RegExp(r'^\d').hasMatch(android) ? 'Android $android' : android;
 
+  /// Tienda para la que se compiló (`--dart-define=TIENDA=play|fdroid|appgallery`;
+  /// vacío = el APK de GitHub).
+  static const tienda = String.fromEnvironment('TIENDA');
+
   @override
-  String toString() => 'Meizi Hanzi $version ($compilacion) · $modelo · $sistema';
+  String toString() =>
+      'Meizi Hanzi $version ($compilacion)${tienda.isEmpty ? '' : ' · $tienda'} · $modelo · $sistema';
 }
 
 class Archivos {

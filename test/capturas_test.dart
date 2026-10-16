@@ -105,10 +105,11 @@ void main() {
   });
 
   /// Muestra [pantalla], deja que cargue sus datos (consultas reales) y guarda
-  /// la captura como build/capturas/[nombre]_{claro,oscuro}.png.
+  /// la captura como build/capturas/[nombre]_{claro,oscuro}.png ([escala] 2 =
+  /// 720 × 1600; 3 = la resolución completa, 1080 × 2400).
   Future<void> capturar(WidgetTester tester, String nombre, Widget pantalla,
-      {Future<void> Function(WidgetTester)? accion}) async {
-    for (final oscuro in [false, true]) {
+      {Future<void> Function(WidgetTester)? accion, double escala = 2, bool soloClaro = false}) async {
+    for (final oscuro in soloClaro ? [false] : [false, true]) {
       await tester.pumpWidget(RepaintBoundary(
         key: _clave,
         child: DatosApp(
@@ -135,7 +136,7 @@ void main() {
       }
       final caja = tester.renderObject<RenderRepaintBoundary>(find.byKey(_clave));
       await tester.runAsync(() async {
-        final imagen = await caja.toImage(pixelRatio: 2);
+        final imagen = await caja.toImage(pixelRatio: escala);
         final png = await imagen.toByteData(format: ui.ImageByteFormat.png);
         final archivo = File('build/capturas/${nombre}_${oscuro ? 'oscuro' : 'claro'}.png');
         archivo.parent.createSync(recursive: true);
@@ -334,6 +335,28 @@ void main() {
     await capturar(tester, '21_estudio_en', PantallaEstudio(filtro: FiltroEstudio.unico(idHao), modoNovato: true));
     await capturar(tester, '22_practica_en', const PantallaPractica());
     await capturar(tester, '23_ajustes_en', const PantallaAjustes());
+
+    // Para las tiendas (AppGallery, F-Droid): sin el aviso de versión nueva,
+    // en tema claro y a resolución completa. herramientas/capturas_tienda.py
+    // les pone marco y título (fastlane/metadata/android/*/images/).
+    await tester.runAsync(() => repo.guardarAvisarVersiones(false));
+    for (final (sufijo, lengua) in [('es', Lengua.espanol), ('en', Lengua.ingles)]) {
+      Idioma.actual.value = lengua;
+      Future<void> tienda(String nombre, Widget pantalla, {Future<void> Function(WidgetTester)? accion}) =>
+          capturar(tester, 'tienda_${sufijo}_$nombre', pantalla, accion: accion, escala: 3, soloClaro: true);
+      await tienda('1_inicio', const PantallaInicio());
+      await tienda('2_estudio', PantallaEstudio(filtro: FiltroEstudio.unico(idHao), modoNovato: true));
+      await tienda('3_tonos', const PantallaTonos(nivel: 1));
+      await tienda('4_lectura', PantallaLectura(libro: libro, capitulos: capitulos, indice: 0));
+      await tienda('5_desde_cero', const PantallaLeccion(indice: 3), accion: (t) async {
+        for (var i = 0; i < 3; i++) {
+          await t.tap(find.text(tr('Siguiente')));
+          await t.pump(const Duration(milliseconds: 400));
+          await t.pump(const Duration(milliseconds: 400));
+        }
+      });
+      await tienda('6_practica', const PantallaPractica());
+    }
     Idioma.actual.value = Lengua.espanol;
   }, skip: !_pedidas);
 }

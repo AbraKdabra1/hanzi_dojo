@@ -58,6 +58,19 @@ jobs:
           touch build/web/.nojekyll
           du -sh build/web build/web/assets/assets/db/* | tee -a build_web.txt
 
+      # El aviso de privacidad como página web (lo piden las tiendas):
+      # https://abrakdabra1.github.io/hanzi_dojo/privacidad/
+      - uses: actions/setup-python@v5
+        if: steps.compilar.outcome == 'success'
+        with:
+          python-version: '3.12'
+
+      - name: Página de privacidad
+        if: steps.compilar.outcome == 'success'
+        run: |
+          pip install --quiet markdown
+          python herramientas/pagina_privacidad.py docs/privacidad.md build/web/privacidad/index.html
+
       - uses: actions/setup-node@v4
         if: steps.compilar.outcome == 'success'
         with:

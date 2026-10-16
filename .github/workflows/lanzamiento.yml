@@ -156,6 +156,26 @@ jobs:
           path: salida/*_arm64.apk
           retention-days: 30
 
+      # Huawei AppGallery (docs/publicar.md): la misma app y la misma llave,
+      # universal, pero sin el aviso de versión nueva de GitHub: la tienda pide
+      # que las actualizaciones lleguen solo por ella (regla 3.9). Va aparte,
+      # no en la página de la versión, para no confundir a quien descarga.
+      - name: APK para AppGallery
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          flutter build apk --release --dart-define=TIENDA=appgallery
+          mkdir -p appgallery
+          cp build/app/outputs/flutter-apk/app-release.apk "appgallery/Meizi_Hanzi_${VERSION}_appgallery.apk"
+          ls -la appgallery
+
+      - name: Guardar APK de AppGallery
+        uses: actions/upload-artifact@v4
+        with:
+          name: meizi-hanzi-${{ steps.version.outputs.version }}-appgallery
+          path: appgallery/
+          retention-days: 90
+
       - name: Publicar la versión en GitHub
         if: github.ref_type == 'tag'
         env:
