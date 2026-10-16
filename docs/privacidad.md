@@ -29,8 +29,8 @@ Si lo aceptas, una vez al día pide a GitHub la lista pública de versiones de
 la app, la misma página que cualquiera puede abrir, para saber si hay una
 más nueva. Esa consulta no lleva nada tuyo: ni tu progreso, ni tus ajustes,
 ni un identificador. Como cualquier conexión, GitHub ve la dirección IP del
-teléfono. Las versiones de tienda (Google Play, F-Droid) no hacen esta
-consulta: ahí la tienda se encarga de actualizar.
+teléfono. Las versiones de tienda (Google Play, F-Droid, Huawei AppGallery)
+no hacen esta consulta: ahí la tienda se encarga de actualizar.
 
 «Enviar mi opinión» arma en el teléfono un resumen de cómo usas la app
 (días de uso, repasos, secciones, trazos que reportaste como mal marcados,

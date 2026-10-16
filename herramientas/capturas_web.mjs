@@ -10,7 +10,8 @@
 //   4. Segunda vez: abre desde lo guardado (IndexedDB), sin descargar.
 //   5. Sin internet: abre igual (sw_hanzi.js; solo en Chrome, ver abajo).
 //   6. La página de descarga (descargar/): su botón lleva a un APK de la
-//      versión más reciente (o, en iPhone, ofrece la versión web primero).
+//      versión más reciente (o, en iPhone, ofrece la versión web primero),
+//      y la de privacidad (privacidad/) existe.
 //
 // Uso: node herramientas/capturas_web.mjs <dirección> <carpeta de salida>
 // ─────────────────────────────────────────────────────────────────────────────
@@ -240,6 +241,11 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
     anotar(`descarga: plataforma ${plataforma}`);
     await pagina.waitForTimeout(1000);
     await captura('07_descarga');
+    // El aviso de privacidad que enlazan las tiendas.
+    await pagina.goto(new URL('privacidad/', direccion).href, { waitUntil: 'load' });
+    const titulo = await pagina.title();
+    anotar(`privacidad: ${titulo}`);
+    if (!/privacidad/i.test(titulo)) throw new Error(`la página de privacidad no está: ${titulo}`);
   });
 
   anotar(`pasos completos: ${pasos} de 6`);

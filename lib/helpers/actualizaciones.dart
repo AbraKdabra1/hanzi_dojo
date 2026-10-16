@@ -9,7 +9,7 @@
 // es la misma página pública que cualquiera puede abrir.
 //
 // Solo en las versiones que se instalan desde GitHub: la web se actualiza
-// sola, y las de tiendas (--dart-define=TIENDA=play o fdroid) las actualiza
+// sola, y las de tiendas (--dart-define=TIENDA=play, fdroid o appgallery) las actualiza
 // la tienda.
 //
 // Las versiones de prueba (2.1.0-beta.2) ven las betas nuevas; las estables

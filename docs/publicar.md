@@ -96,18 +96,44 @@ Pasos (una vez):
 
 ## 4. Huawei AppGallery
 
-1. Regístrate como desarrollador en <https://developer.huawei.com/consumer/es/>
-   (cuenta personal; piden verificar identidad con una identificación oficial).
-2. En **AppGallery Connect** → *Mis apps* → *Nueva app*: Android, categoría
-   *Educación*, idioma predeterminado español.
-3. Sube el APK **universal** firmado de la versión de GitHub (es la misma
-   llave: quien la tenga del APK podrá actualizar desde AppGallery).
-4. Ficha: usa los textos e imágenes de `fastlane/metadata/android/es-MX/`.
-5. Clasificación de contenido: apta para todo público. Sin compras ni
-   anuncios.
-6. Aviso de privacidad: enlaza
-   <https://github.com/AbraKdabra1/hanzi_dojo/blob/main/docs/privacidad.md>.
-7. Envía a revisión (tarda de 1 a 5 días hábiles).
+Para los teléfonos Huawei y Honor sin servicios de Google. Se publica en la
+tienda **global** (todos los países menos China continental: allá piden
+empresa china, registro ICP y certificado de software).
+
+**Lo que hace el autor (una sola vez):**
+
+1. Crea la cuenta de desarrollador en <https://developer.huawei.com/consumer/es/>
+   → *Registrarse* → **desarrollador individual**. Es gratis; pide verificar
+   la identidad (identificación oficial y, según el país, tarjeta bancaria).
+   La revisión tarda de 1 a 3 días hábiles.
+2. En **AppGallery Connect** → *Mis apps* → **Nueva app**: tipo *Android*,
+   nombre *Meizi Hanzi*, categoría **Educación**, idioma predeterminado
+   **español (Latinoamérica)**. El paquete es `com.abrakdabra.hanzidojo`.
+
+**Cada versión:**
+
+1. Descarga el APK de AppGallery: en GitHub → *Actions* → *Lanzamiento* → la
+   corrida de la etiqueta (o una corrida a mano) → artefacto
+   `meizi-hanzi-X.Y.Z-appgallery` (`Meizi_Hanzi_X.Y.Z_appgallery.apk`). Es el
+   APK universal firmado con **la misma llave** que el de GitHub, compilado con
+   `--dart-define=TIENDA=appgallery`: sin el aviso de versión nueva de GitHub
+   (la regla 3.9 de AppGallery pide que las actualizaciones lleguen solo por
+   la tienda). Quien lo instale desde AppGallery puede pasar al de GitHub y al
+   revés sin desinstalar.
+2. *Versión* → **Paquete de software** → sube ese APK.
+3. Ficha (*Información de la app*), en español y en inglés:
+   - Nombre: `title.txt`; descripción breve: `short_description.txt`;
+     descripción: `full_description.txt` (en `fastlane/metadata/android/es-MX/`
+     y `en-US/`).
+   - Ícono: `docs/tiendas/icono_216.png` (216 × 216).
+   - Capturas: `fastlane/metadata/android/<idioma>/images/phoneScreenshots/`
+     (1080 × 1920; salen de `test/capturas_test.dart` y
+     `herramientas/capturas_tienda.py`).
+4. Aviso de privacidad: **https://abrakdabra1.github.io/hanzi_dojo/privacidad/**
+   (se genera de `docs/privacidad.md` en cada publicación de la web).
+5. Clasificación de edad: **3+** (sin violencia, compras ni anuncios). Precio:
+   gratis. Países: todos menos China continental.
+6. *Enviar a revisión* (de 1 a 5 días hábiles).
 
 ## 5. Google Play (opcional)
 
