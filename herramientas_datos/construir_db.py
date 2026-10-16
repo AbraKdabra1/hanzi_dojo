@@ -27,7 +27,8 @@ Qué fuente aporta qué:
                      libros/*.txt + libros_generado.json → sección «Leer»
                      (ver libros.py; el pinyin lo agrega preparar_libros.py)
                      libros/preguntas.json → preguntas de comprensión
-    OpenCC           TSCharacters.txt → tradicional → simplificado (para
+                     frases/frases_esenciales.tsv → Practicar «Frases esenciales»
+    OpenCC          TSCharacters.txt → tradicional → simplificado (para
                                        consultar caracteres de libros propios)
     Python (stdlib)  códec gb18030    → tabla para leer archivos TXT en GBK
 
@@ -68,6 +69,11 @@ PALABRAS_ES = os.path.join(FUENTES, "traducciones", "palabras_es.tsv")
 LISTA_AUDIO_PALABRAS = os.path.join(RAIZ, "assets", "audio", "palabras.txt")
 LISTA_SILABAS = os.path.join(RAIZ, "assets", "audio", "silabas.txt")
 OPENCC_TS = os.path.join(FUENTES, "opencc", "TSCharacters.txt")
+FRASES = os.path.join(FUENTES, "frases", "frases_esenciales.tsv")
+
+# Situaciones de las frases esenciales, en el orden en que se muestran.
+SITUACIONES = ("saludos", "cortesia", "presentarse", "comunicarse",
+               "compras", "comida", "transporte", "emergencias")
 
 # Caracteres del bloque "CJK Radicals Supplement" (formas de radical sin
 # código propio en Unihan): se asignan a mano a su radical Kangxi.
@@ -196,6 +202,15 @@ def partir_pinyin(pinyin_acentos, n_caracteres, validas):
     Parte el pinyin de una palabra en sílabas con número de tono, una por
     carácter: "zhùmíng", 2 → ["zhu4", "ming2"]. Devuelve None si no cuadra.
     """
+    silabas = silabas_de_pinyin(pinyin_acentos, validas)
+    return silabas if silabas is not None and len(silabas) == n_caracteres else None
+
+
+def silabas_de_pinyin(pinyin_acentos, validas):
+    """
+    Sílabas con número de tono de un pinyin con acentos, sin saber cuántas
+    son: "wǎn'ān" → ["wan3", "an1"]. Devuelve None si algo no es pinyin.
+    """
     trozos = [t for t in re.split(r"[\s'’\-·]+", pinyin_acentos.strip().lower()) if t]
     silabas = []
     for trozo in trozos:
@@ -216,7 +231,7 @@ def partir_pinyin(pinyin_acentos, n_caracteres, validas):
         for i, j in mejor[len(planas)]:
             tono = next((x for x in tonos[i:j] if x != 5), 5)
             silabas.append(f"{planas[i:j]}{tono}")
-    return silabas if len(silabas) == n_caracteres else None
+    return silabas
 
 
 def leer_lecturas_en_palabras(validas):
@@ -571,6 +586,23 @@ CREATE TABLE palabras (
     orden          INTEGER NOT NULL          -- posición en la lista oficial
 );
 CREATE INDEX idx_palabras_nivel ON palabras (nivel_hsk, orden);
+
+-- Frases esenciales: lo que hay que saber decir sí o sí (Practicar → Frases
+-- esenciales; fuentes/frases/frases_esenciales.tsv).
+CREATE TABLE frases (
+    id         INTEGER PRIMARY KEY,      -- el del archivo; es fijo (el progreso del usuario lo usa)
+    situacion  TEXT    NOT NULL,         -- saludos, cortesia… (SITUACIONES)
+    orden      INTEGER NOT NULL,         -- posición dentro de su situación: 1, 2, 3…
+    chino      TEXT    NOT NULL,
+    pinyin     TEXT    NOT NULL,         -- por palabras, como se muestra: "zhège duōshao qián?"
+    silabas    TEXT    NOT NULL,         -- JSON: una sílaba por carácter de `chino` ("" si no es chino; "r" = 儿 de erhua)
+    palabras   TEXT    NOT NULL,         -- JSON: [{"chino", "pinyin"}] las palabras de la frase, en orden
+    espanol    TEXT    NOT NULL,
+    ingles     TEXT    NOT NULL,
+    nota       TEXT,                     -- cuándo se usa o qué se puede cambiar; NULL si no hay
+    nivel_hsk  INTEGER NOT NULL          -- el nivel más alto de sus caracteres
+);
+CREATE INDEX idx_frases_situacion ON frases (situacion, orden);
 """
 
 
@@ -786,6 +818,61 @@ def filas_de_palabras(caracteres, validas):
     return salida, problemas
 
 
+def filas_de_frases(nivel_de, validas):
+    """
+    Frases esenciales → filas de la tabla `frases`.
+
+    El pinyin viene escrito por palabras ("zhège duōshao qián?"): cada palabra
+    se parte en sílabas y se reparte entre los caracteres chinos, en orden. Así
+    salen la sílaba de cada carácter (para leer la frase con las grabaciones)
+    y las palabras de la frase (las fichas del ejercicio de ordenar).
+
+    [nivel_de]: carácter → nivel HSK (0 = fuera de HSK).
+    """
+    columnas = ["id", "situacion", "chino", "pinyin", "espanol", "ingles", "nota"]
+    salida, problemas = [], []
+    orden_en = defaultdict(int)
+    for fila in leer_tsv_simple(FRASES, columnas):
+        id_ = fila["id"].strip()
+        situacion = fila["situacion"].strip()
+        chino, pinyin = fila["chino"].strip(), fila["pinyin"].strip()
+        if situacion not in SITUACIONES:
+            problemas.append(f"frase {id_}: situación desconocida «{situacion}»")
+            continue
+
+        han = [i for i, c in enumerate(chino) if "㐀" <= c <= "鿿"]
+        silabas = [""] * len(chino)
+        palabras = []
+        siguiente = 0                     # posición en `han` del próximo carácter sin sílaba
+        cuadra = True
+        for trozo in re.findall(r"[^\s,.?!;:，。？！；：]+", pinyin):
+            sils = silabas_de_pinyin(trozo, validas)
+            if not sils or siguiente + len(sils) > len(han):
+                cuadra = False
+                break
+            posiciones = han[siguiente:siguiente + len(sils)]
+            for i, s in zip(posiciones, sils):
+                silabas[i] = num_a_acentos(s)
+            palabras.append({"chino": "".join(chino[i] for i in posiciones), "pinyin": trozo})
+            siguiente += len(sils)
+        if not cuadra or siguiente != len(han):
+            problemas.append(f"frase {id_}: el pinyin «{pinyin}» no cuadra con «{chino}»")
+            continue
+
+        orden_en[situacion] += 1
+        nota = (fila["nota"] or "").strip()
+        salida.append({
+            "id": int(id_), "situacion": situacion, "orden": orden_en[situacion],
+            "chino": chino, "pinyin": pinyin,
+            "silabas": json.dumps(silabas, ensure_ascii=False),
+            "palabras": json.dumps(palabras, ensure_ascii=False),
+            "espanol": fila["espanol"].strip(), "ingles": fila["ingles"].strip(),
+            "nota": nota or None,
+            "nivel_hsk": max((nivel_de.get(chino[i], 0) for i in han), default=0),
+        })
+    return salida, problemas
+
+
 def construir():
     graficos = leer_graphics()
     mmh = leer_dictionary()
@@ -944,6 +1031,10 @@ def construir():
     filas_palabras, problemas_palabras = filas_de_palabras(filas, validas_palabras)
     problemas += problemas_palabras
     insertar("palabras", filas_palabras)
+    filas_frases, problemas_frases = filas_de_frases(
+        {f["caracter"]: f["nivel_hsk"] for f in filas}, validas_palabras)
+    problemas += problemas_frases
+    insertar("frases", filas_frases)
     insertar("decodificacion", [{"nombre": "gbk", "tabla": tabla_gbk()}])
 
     # Versión = huella del contenido: si cambia cualquier dato, cambia la
@@ -953,7 +1044,7 @@ def construir():
                              ("libros", "id"), ("capitulos", "id"), ("parrafos", "id"),
                              ("preguntas", "id"),
                              ("tradicional", "trad"), ("decodificacion", "nombre"),
-                             ("palabras", "id")):
+                             ("palabras", "id"), ("frases", "id")):
         for fila in con.execute(f"SELECT * FROM {tabla} ORDER BY {orden_sql}"):
             huella.update(repr(fila).encode("utf-8"))
     version = huella.hexdigest()[:12]
@@ -994,6 +1085,7 @@ def construir():
     con_es = sum(1 for f in filas_palabras if f["significado_es"])
     print(f"  palabras: {len(filas_palabras)}  | con español: {con_es}  | con grabación: "
           f"{sum(f['audio'] for f in filas_palabras)}")
+    print(f"  frases esenciales: {len(filas_frases)}")
     if problemas:
         print(f"  avisos ({len(problemas)}):")
         for p in problemas[:30]:
