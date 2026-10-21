@@ -9,6 +9,11 @@ Primera versión pública.
 
 **Nuevo nombre: Meizi Hanzi · 梅字** (antes Hanzi Dojo). 梅 es el ciruelo de la rama del inicio y 字, el carácter que escribes. Se instala encima de la versión anterior sin perder nada; los respaldos `.hanzidojo` se siguen importando (los nuevos se guardan como `.meizi`).
 
+**Novedades de la beta 6**
+- **Audio en iPhone (versión web)**: las grabaciones ya suenan. Safari solo deja empezar un sonido dentro de un toque y la app tardaba un instante en preparar cada grabación, así que Safari la bloqueaba en silencio. Ahora el primer toque en cualquier parte de la app deja listo el reproductor (y la voz del navegador) y todo suena por él. En iPhone y en Safari de Mac las grabaciones van siempre en el formato de Apple (CAF).
+- **Audios completos**: cada vez que suena algo, la app agrega un silencio muy corto antes y después. Algunos teléfonos (varios Huawei, por ejemplo) se comían el inicio o cortaban el final de las grabaciones.
+- Si un sonido no se puede tocar, ahora queda anotado en el **Informe de errores** (y en «Enviar mi opinión»), en vez de quedarse callado sin avisar.
+
 **Novedades de la beta 5**
 - **Frases esenciales** (Practicar, primero en la lista): 88 frases que hay que saber decir sí o sí, en ocho situaciones: saludos, cortesía, presentarse, para comunicarte, compras, comida, direcciones y transporte, y emergencias. Cada una con su pinyin, su traducción, cuándo se usa y su pronunciación (mantén presionado el botón para oírla lento).
 - Dos ejercicios con ellas, de una situación o de todas: **Escuchar y elegir** (suena la frase y eliges qué significa) y **Armar la frase** (ves qué quiere decir y tocas las palabras en orden). Con repaso espaciado, como los caracteres y las palabras: primero vuelven las que tocan hoy. Tu avance va en el respaldo.

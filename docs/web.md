@@ -76,9 +76,14 @@ a ningún lado: se queda en el navegador. Ver [privacidad.md](privacidad.md).
   pregunta a GitHub por la versión más reciente y su botón baja ese APK (en
   iPhone ofrece primero la versión web). `vista.png` es la vista previa al
   compartir el enlace; la rama sale de `herramientas/rama_descarga.py`.
-- Si el navegador no toca Opus en Ogg (Safari en versiones de iOS
-  anteriores), las grabaciones se reempacan a CAF en el momento
-  (`lib/helpers/ogg_a_caf.dart`), igual que en la app de iOS.
+- En iPhone/iPad (cualquier navegador) y en Safari de Mac las grabaciones se
+  reempacan a CAF en el momento (`lib/helpers/ogg_a_caf.dart`), igual que en
+  la app de iOS; los demás navegadores tocan el Opus en Ogg tal cual.
+- Safari solo deja empezar un sonido dentro de un toque. `index.html` crea el
+  reproductor de la app (`window.meiziAudio`) y lo desbloquea, junto con la
+  voz del navegador, en el primer toque; las grabaciones suenan por él
+  (`lib/plataforma/reproductor.dart`). `window.meiziProbarSonido()` toca una
+  sílaba por ese camino (lo usa la prueba web; sirve para diagnosticar).
 - `.github/workflows/web.yml` compila, prueba en Chrome y Safari
   (`herramientas/capturas_web.mjs`, registros y capturas en la rama
   `ci-web`) y, desde `v2`, publica en GitHub Pages. Para eso, una sola vez,

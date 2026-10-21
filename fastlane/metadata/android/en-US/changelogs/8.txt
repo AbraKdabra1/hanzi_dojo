@@ -1,0 +1,1 @@
+Beta 6: recordings now play on iPhone (web version) and are no longer cut at the start or end on phones such as Huawei.

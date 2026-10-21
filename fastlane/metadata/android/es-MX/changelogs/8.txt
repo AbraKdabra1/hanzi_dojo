@@ -1,0 +1,1 @@
+Beta 6: las grabaciones ya suenan en iPhone (versión web) y no se cortan al inicio ni al final en teléfonos como los Huawei.
