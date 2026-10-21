@@ -1,83 +1,52 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// pinyin_helper.dart — Colores por tono
+//
+// La base de datos ya trae el pinyin con acentos ("hǎo") y con número
+// ("hao3"), así que aquí solo se decide el color de cada tono:
+//   1.º (ā) rojo · 2.º (á) naranja · 3.º (ǎ) verde · 4.º (à) azul · neutro gris
+// ─────────────────────────────────────────────────────────────────────────────
+
 import 'package:flutter/material.dart';
 
 class PinyinHelper {
-  static const Map<String, List<String>> _map = {
-    'a': ['ā', 'á', 'ǎ', 'à'],
-    'e': ['ē', 'é', 'ě', 'è'],
-    'i': ['ī', 'í', 'ǐ', 'ì'],
-    'o': ['ō', 'ó', 'ǒ', 'ò'],
-    'u': ['ū', 'ú', 'ǔ', 'ù'],
-    'v': ['ǖ', 'ǘ', 'ǚ', 'ǜ'],
-    'ü': ['ǖ', 'ǘ', 'ǚ', 'ǜ'],
-  };
+  PinyinHelper._();
 
-  static String _aplicarTono(String silaba, int tono) {
-    if (tono < 1 || tono > 4) return silaba;
-    final t = tono - 1;
-    for (final vocal in ['a', 'e', 'o']) {
-      if (silaba.contains(vocal)) {
-        return silaba.replaceFirst(vocal, _map[vocal]![t]);
-      }
-    }
-    for (int i = silaba.length - 1; i >= 0; i--) {
-      final letra = silaba[i];
-      if (_map.containsKey(letra)) {
-        return silaba.replaceRange(i, i + 1, _map[letra]![t]);
-      }
-    }
-    return silaba;
-  }
+  static const Color tono1 = Color(0xFFE53935);
+  static const Color tono2 = Color(0xFFF57C00);
+  static const Color tono3 = Color(0xFF2E7D32);
+  static const Color tono4 = Color(0xFF1565C0);
+  static const Color neutro = Color(0xFF9E9E9E);
 
-  static String formatear(String texto) {
-    if (texto.isEmpty) return texto;
-    return texto
-        .toLowerCase()
-        .split(RegExp(r'\s+'))
-        .map((palabra) {
-          final match = RegExp(r'([a-züv]+)(\d)').firstMatch(palabra);
-          if (match == null) return palabra.replaceAll('v', 'ü');
-          final silaba = _aplicarTono(
-              match.group(1)!.replaceAll('v', 'ü'),
-              int.parse(match.group(2)!));
-          return silaba + palabra.substring(match.end);
-        })
-        .join(' ');
-  }
-
-  static Color colorDeTono(String palabra) {
-    final match = RegExp(r'(\d)').firstMatch(palabra);
-    if (match == null) return const Color(0xFF9E9E9E);
-    return switch (match.group(1)) {
-      '1' => const Color(0xFFE53935),
-      '2' => const Color(0xFFF57C00),
-      '3' => const Color(0xFF2E7D32),
-      '4' => const Color(0xFF1565C0),
-      _   => const Color(0xFF9E9E9E),
+  /// Color de un tono (1-4; cualquier otro valor = neutro).
+  /// [oscuro]: en modo oscuro se aclara un poco (verde y azul profundos no
+  /// se leerían sobre negro).
+  static Color colorDeTono(int tono, {bool oscuro = false}) {
+    final base = switch (tono) {
+      1 => tono1,
+      2 => tono2,
+      3 => tono3,
+      4 => tono4,
+      _ => neutro,
     };
+    return oscuro ? Color.lerp(base, const Color(0xFFFFFFFF), 0.3)! : base;
   }
 
-  static List<(String, Color)> formatearConColores(String texto) {
-    if (texto.isEmpty) return [];
-    final palabras = texto.toLowerCase().split(RegExp(r'\s+'));
-    final resultado = <(String, Color)>[];
+  /// Tono a partir del pinyin con número: "hao3" → 3, "ma5" → 5.
+  static int tonoDeNumero(String pinyinNum) {
+    final m = RegExp(r'([1-5])$').firstMatch(pinyinNum);
+    return m == null ? 5 : int.parse(m.group(1)!);
+  }
 
-    for (int i = 0; i < palabras.length; i++) {
-      final palabra = palabras[i];
-      final match = RegExp(r'([a-züv]+)(\d)').firstMatch(palabra);
-      final color = colorDeTono(palabra);
-
-      if (match == null) {
-        resultado.add((palabra.replaceAll('v', 'ü'), const Color(0xFF9E9E9E)));
-      } else {
-        final silaba = _aplicarTono(
-            match.group(1)!.replaceAll('v', 'ü'),
-            int.parse(match.group(2)!));
-        resultado.add((silaba + palabra.substring(match.end), color));
-      }
-      if (i < palabras.length - 1) {
-        resultado.add((' ', const Color(0xFF9E9E9E)));
+  /// Tono a partir del pinyin con acentos: "hǎo" → 3, "ma" → 5.
+  static int tonoDeAcentos(String silaba) {
+    const tonos = {
+      'āēīōūǖ': 1, 'áéíóúǘḿń': 2, 'ǎěǐǒǔǚň': 3, 'àèìòùǜǹ': 4,
+    };
+    for (final ch in silaba.split('')) {
+      for (final entrada in tonos.entries) {
+        if (entrada.key.contains(ch)) return entrada.value;
       }
     }
-    return resultado;
+    return 5;
   }
 }

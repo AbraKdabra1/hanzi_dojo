@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Textos de Android (selector de widgets). Inglés por defecto; español en values-es. -->
+<resources>
+    <string name="widget_nombre">Character of the day</string>
+    <string name="widget_titulo">Character of the day</string>
+    <string name="widget_descripcion">Character of the day, pending reviews and today\'s progress</string>
+</resources>

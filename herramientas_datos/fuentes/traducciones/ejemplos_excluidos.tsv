@@ -1,0 +1,539 @@
+# Oraciones de Tatoeba que NO se usan como ejemplo (erratas, frases confusas o temas
+# poco adecuados para una app de estudio). seleccionar_ejemplos.py las salta.
+id_oracion	motivo
+52	violencia
+525	tema delicado
+1198	tema delicado (muerte)
+2156	tema político
+3983	caracteres raros
+4471	errata (大咸)
+4734	tema delicado
+4934	dato falso hoy
+4975	tema delicado (muerte)
+4982	tema delicado (muerte)
+5006	tema delicado (muerte)
+5448	oración confusa
+5888	errata (放睛)
+6429	errata (法序)
+6725	errata (热得狠)
+6961	oración confusa
+7146	errata (啊艳)
+7584	contenido inapropiado
+8097	oración confusa
+8409	errata (电灯炮)
+9328	oración confusa
+9487	jerga confusa
+9509	oración confusa
+9559	oración confusa
+9809	insultante
+9980	oración confusa
+10234	errata (原珠笔)
+10480	oración confusa
+10604	consejo de salud dudoso
+11286	gramática dudosa
+11331	carácter tradicional (沖)
+11332	errata (共渡)
+11526	errata (狼借)
+12043	tema delicado (muerte)
+12105	tema delicado (muerte)
+13327	oración confusa
+13529	oración confusa
+13555	contenido inapropiado
+13845	oración confusa
+13935	tema político
+14032	tema delicado (enfermedad)
+14277	violencia
+14506	errata (戒地烟)
+14794	estereotipo
+14810	violencia
+14875	violencia
+15125	oración confusa
+15323	dialecto confuso
+15436	tema delicado (salud)
+15444	tema delicado (alcohol)
+15604	tema político
+15722	lenguaje vulgar
+15868	violencia
+15999	violencia
+16320	oración confusa
+16447	violencia
+16516	broma confusa
+17035	errata (吧杯子)
+17074	oración confusa
+17171	tema delicado (salud)
+17308	oración confusa
+17351	estereotipo
+17407	modismo ofensivo
+17456	oración confusa
+17546	grosero
+17606	errata (着名)
+18276	oración confusa
+18282	tema político
+18314	contenido inapropiado
+18509	oración confusa
+18526	broma con nombre real
+18542	oración confusa
+18558	violencia
+18652	violencia (arma)
+18737	insulto
+19578	contenido inapropiado
+19669	contenido inapropiado
+19671	oración confusa
+19851	tema delicado (muerte)
+20017	oración confusa
+20236	oración confusa
+20453	errata (满多)
+20456	errata (满多)
+20830	errata (着名)
+20832	errata (着名)
+21813	oración confusa
+22117	oración confusa
+22144	oración confusa
+22524	violencia
+22711	tema delicado (peso)
+22967	grosero
+23231	tema delicado (drogas)
+23747	tema delicado (drogas)
+25131	oración confusa
+25136	oración confusa
+25606	violencia (armas)
+25761	tema político
+26184	tema delicado (alcohol)
+26228	violencia
+26695	gramática dudosa
+26913	oración confusa
+27085	violencia
+27240	tema delicado (peso)
+27343	oración confusa
+27392	violencia
+28500	insulto
+28829	violencia
+29251	oración cínica
+29289	tema delicado (muerte)
+29761	tema delicado (salud)
+30609	texto religioso sin traducción
+30937	insulto
+31205	insulto
+31590	tema delicado
+31816	oración confusa
+31886	contenido sexual
+31908	oración confusa
+31915	violencia
+31948	oración confusa
+32369	oración confusa
+32405	errata (顽儿)
+32476	gramática dudosa
+32661	contenido inapropiado
+32907	oración incompleta
+33093	tema delicado (muerte)
+33286	lenguaje vulgar
+33287	oración confusa
+33675	insulto
+33752	tema delicado (muerte)
+33785	oración confusa
+33789	oración confusa
+34132	gramática dudosa
+34188	tema político
+34459	oración confusa
+34486	oración confusa
+34576	lenguaje vulgar
+34700	oración confusa
+34983	oración confusa
+35335	tema delicado
+35415	violencia
+36095	contenido inapropiado
+36262	tema delicado
+37189	violencia
+37381	oración confusa
+37444	oración confusa
+37666	oración confusa
+37726	tema delicado (muerte)
+37973	oración confusa
+38049	violencia
+38156	opinión polémica
+38241	insulto
+38504	estereotipo
+38828	contenido inapropiado
+39329	insulto
+39405	cantonés
+39838	cita oscura
+40018	violencia
+40505	uso incorrecto (卉)
+40712	tema político
+40923	violencia
+41082	texto corrupto
+41593	insulto
+42155	estereotipo
+42315	tema político
+42356	tema político
+42458	uso incorrecto
+42563	gramática dudosa
+43164	tema político
+43322	violencia
+44045	oración confusa
+44174	tema político
+44339	oración confusa
+45463	tema delicado
+45861	oración confusa
+46013	oración confusa
+46118	tema delicado
+46776	lenguaje vulgar
+47231	oración confusa
+47235	insulto
+47394	estereotipo
+47575	tema delicado (salud)
+48305	tema delicado
+48878	marca comercial
+48893	juicio despectivo
+48915	tema delicado (suicidio)
+49069	tema delicado
+49079	contenido inapropiado
+49710	contenido inapropiado
+50022	violencia
+50447	violencia
+50503	fragmento sin sentido
+50523	insulto
+50698	contenido inapropiado
+50813	violencia
+50914	tema político
+51591	oración confusa
+51722	oración confusa
+53024	contenido inapropiado
+53044	oración confusa
+54605	tema delicado
+54659	contenido sexual
+54714	contenido sexual
+54810	tema delicado (salud)
+55021	violencia
+55187	violencia
+55237	tecnicismo
+55252	tecnicismo
+56130	tema delicado (salud)
+56287	tema delicado (salud)
+56377	contenido inapropiado
+56574	tema delicado (alcohol)
+56990	violencia
+57071	oración confusa
+57261	juicio despectivo
+57486	violencia
+57664	contenido inapropiado
+57751	lenguaje vulgar
+57813	violencia
+57892	contenido sexual
+57901	errata (有今天)
+58161	juicio despectivo
+58191	contenido sexual
+58723	tema político
+58817	violencia
+59105	tema delicado (salud)
+59494	tema delicado (salud)
+59582	errata (照牌)
+60440	tema delicado
+61505	tema político
+61597	marca comercial
+61986	oración confusa
+62359	tema religioso
+62682	oración ambigua
+63014	violencia
+63046	tema delicado (salud)
+63121	errata (好象)
+63209	contenido inapropiado
+63211	gramática dudosa
+1907	violencia (arma)
+2060	tema delicado
+3821	tema delicado (alcohol)
+3825	tema delicado
+4307	tema delicado
+4767	tema delicado (salud)
+4897	oración confusa
+4974	tema delicado (muerte)
+5598	tema delicado (muerte)
+7635	dirección concreta
+10772	tema delicado (muerte)
+11133	violencia
+12538	marca comercial
+13040	violencia
+13333	contenido inapropiado
+13502	insulto
+13531	oración confusa
+16554	contenido sexual
+17851	tema delicado (muerte)
+19133	tema delicado
+19852	tema delicado (muerte)
+20649	contenido sexual
+20940	violencia (arma)
+20971	tema delicado (peso)
+21534	estereotipo
+21642	tema delicado (muerte)
+22335	grosero
+25219	tema delicado (salud)
+27185	violencia
+27786	violencia
+31334	tema delicado (salud)
+32420	tema religioso
+32615	tema político
+32959	tema religioso
+33153	tema político
+33356	violencia
+34460	errata (以此)
+35239	errata (有关心)
+35363	tema político
+35755	tema delicado (suicidio)
+36438	tema delicado (muerte)
+37722	tema delicado (muerte)
+38164	oración confusa
+39573	oración confusa
+40264	tema delicado (salud)
+40816	contenido inapropiado
+40892	tema político
+41267	contenido inapropiado
+42728	oración confusa
+42784	tema delicado (drogas)
+43003	insulto
+43122	oración confusa
+44316	tema delicado (salud)
+44721	tema delicado
+45119	oración confusa
+46946	tema delicado (muerte)
+47072	errata (狼毒)
+47846	tema delicado
+48963	fragmento sin sentido
+49481	tema delicado (peso)
+49699	tema delicado (salud)
+50912	tema político
+50923	tema delicado (salud)
+56128	tema delicado (salud)
+56380	contenido inapropiado
+58997	violencia (armas)
+61666	tema delicado (peso)
+61979	tema delicado (muerte)
+62797	tema delicado (salud)
+1587	tema delicado (salud)
+29196	gramática dudosa
+1203	estereotipo
+1977	tema delicado
+2655	violencia (armas)
+3032	tema delicado (salud)
+3475	tema delicado (salud)
+4991	tema delicado (muerte)
+5001	tema delicado (muerte)
+10422	tema delicado (peso)
+10807	oración confusa
+13415	violencia
+18874	carácter tradicional (溼)
+22101	tema delicado (muerte)
+23446	violencia (arma)
+23851	tema delicado (muerte)
+23915	tema político
+27383	tema delicado (alcohol)
+27564	tema delicado (muerte)
+28984	violencia (arma)
+32394	oración confusa
+33876	errata (根炎)
+35216	violencia
+35950	oración confusa
+37338	tema delicado (salud)
+37884	oración confusa
+38763	oración confusa
+39244	tema delicado (muerte)
+39765	cita histórica oscura
+40727	tema político
+43287	tema delicado (muerte)
+43700	contenido inapropiado
+46111	violencia
+48403	insulto
+49524	tema delicado (peso)
+49753	tema delicado
+50913	tema político
+52897	tema delicado
+53045	tema religioso
+59094	tema delicado (drogas)
+59452	tema delicado
+59516	tema delicado (salud)
+61981	tema delicado (muerte)
+61982	tema delicado (muerte)
+1521	insulto
+4007	tema delicado
+7477	tema delicado
+11747	tema delicado (peso)
+11748	tema delicado (peso)
+15822	tema delicado (salud)
+17388	tema delicado (muerte)
+19395	tema delicado (muerte)
+21279	carácter tradicional (溼)
+22593	tema religioso
+23432	violencia
+24442	oración ambigua
+26872	tema delicado (muerte)
+29740	tema delicado (alcohol)
+30962	tema político
+32846	tema delicado (muerte)
+38180	tema delicado (muerte)
+39311	violencia (arma)
+41447	violencia (arma)
+43647	violencia
+44890	contenido inapropiado
+48564	violencia
+52899	tema delicado (peso)
+56590	tema delicado
+61980	tema delicado (muerte)
+61983	tema delicado (muerte)
+5009	tema delicado (muerte)
+6948	violencia (arma)
+10309	tema delicado (suicidio)
+13053	tema delicado (muerte)
+15397	tema delicado (salud)
+32958	tema religioso
+35392	violencia
+35547	tema delicado (alcohol)
+39970	tema delicado
+43041	violencia (armas)
+45004	tema delicado (peso)
+45522	violencia
+45920	tema delicado (muerte)
+46792	violencia
+54185	contenido inapropiado
+55158	tema delicado (salud)
+58793	tema delicado
+59315	contenido inapropiado
+59784	tema delicado (peso)
+61579	tema delicado
+62011	tema delicado (muerte)
+62897	tema delicado (peso)
+1697	tema delicado (peso)
+4309	tema delicado
+4976	tema delicado (muerte)
+6246	tema delicado (peso)
+12829	violencia (armas)
+15133	tema delicado (peso)
+18541	contenido inapropiado
+23255	tema delicado (muerte)
+27642	tema delicado (muerte)
+28593	violencia (armas)
+30636	tema delicado (muerte)
+32962	tema religioso
+37602	violencia
+41155	oración confusa
+41505	violencia
+44127	tema delicado
+47052	tema delicado (alcohol)
+3980	contenido inapropiado
+4990	tema delicado (muerte)
+7241	tema delicado
+11902	tema delicado (peso)
+19528	violencia
+19867	errata (凶勐)
+21017	tema delicado
+26088	violencia (arma)
+26755	tema delicado (peso)
+27591	tema delicado (suicidio)
+28979	violencia
+30893	tema delicado (muerte)
+40700	tema delicado (muerte)
+47132	tema delicado (alcohol)
+49555	tema delicado (peso)
+51158	tema delicado
+5007	tema delicado (muerte)
+15074	tema delicado (peso)
+27889	violencia (armas)
+28842	violencia (arma)
+30190	tema delicado (muerte)
+33951	tema delicado (muerte)
+34683	violencia
+39156	tema delicado (peso)
+53405	tema delicado (peso)
+54022	tema delicado
+57170	tema delicado (alcohol)
+61260	tema delicado (muerte)
+1174	contenido inapropiado
+7980	tema delicado (muerte)
+15129	tema delicado (peso)
+28697	tema delicado (alcohol)
+31672	tema delicado (peso)
+33576	violencia (arma)
+35389	violencia
+37347	tema delicado (muerte)
+41670	tema delicado (muerte)
+55076	tema delicado (peso)
+31407	tema delicado (muerte)
+36154	tema delicado (suicidio)
+38632	violencia (armas)
+43810	tema delicado (peso)
+47131	tema delicado (alcohol)
+50476	tema delicado (muerte)
+5008	tema delicado (muerte)
+7433	tema delicado (peso)
+30635	tema delicado (muerte)
+60516	tema delicado (alcohol)
+62281	violencia (arma)
+10932	violencia (arma)
+11092	tema delicado (muerte)
+18748	tema delicado (alcohol)
+21268	transcripción no estándar (甘迺迪)
+21595	tema delicado (peso)
+11181	violencia (arma)
+20752	tema delicado (muerte)
+20190	violencia (arma)
+42360	tema delicado (muerte)
+3033	violencia
+5213	tema religioso
+6594	tema político
+10526	violencia
+11119	contenido inapropiado
+13011	violencia
+13416	violencia
+14295	tema religioso
+15332	tema delicado
+16666	errata (红勘)
+17260	oración confusa
+17956	oración confusa
+18636	oración confusa
+18822	oración confusa
+19173	lenguaje vulgar
+20686	oración confusa
+22297	carácter tradicional (殭)
+22676	tema político
+25051	contenido inapropiado
+25052	oración confusa
+25065	oración confusa
+30654	violencia
+34090	juicio despectivo
+35327	violencia
+35414	oración confusa
+36268	estereotipo
+36743	tema delicado (muerte)
+39068	carácter tradicional (恆)
+40300	violencia
+40558	violencia
+40977	tema delicado (muerte)
+48886	tema delicado (suicidio)
+49808	oración confusa
+49989	oración confusa
+54715	contenido sexual
+59182	uso incorrecto (迭)
+61464	contenido sexual
+13357	tema político
+22839	tema político
+25116	carácter no estándar (提昇)
+56841	contenido inapropiado
+60396	tema político
+17112	título con término ofensivo
+3015	pinyin ambiguo (财宝藏)
+37182	pinyin ambiguo (得标的)
+36392	comillas mal puestas
+10173	violencia
+18100	el carácter solo aparece en un nombre (贝蒂)
+5278	el carácter solo aparece en un nombre (佐藤)
+54574	el carácter solo aparece en un nombre (萨拉戈萨)
+31409	el carácter solo aparece en un nombre (利兹)
+6724	el carácter solo aparece en un nombre (利兹)
+23521	violencia
+31398	el carácter solo aparece en un nombre (戈登)
+47564	el carácter solo aparece en un nombre (伊藤)
+7537	el carácter solo aparece en un nombre (加藤)
+21388	el carácter solo aparece en un nombre (英戈尔斯)
+27519	el carácter solo aparece en un nombre (史蒂夫)
+57083	el carácter solo aparece en un nombre (兹卡)
+14623	el carácter solo aparece en un nombre (加藤)
+15354	el carácter solo aparece en un nombre (贝蒂)
+34437	contenido sexual

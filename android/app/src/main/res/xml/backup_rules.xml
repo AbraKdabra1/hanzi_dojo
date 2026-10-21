@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Lo mismo que data_extraction_rules.xml, para Android 11 y anteriores. -->
+<full-backup-content>
+    <exclude domain="database" path="contenido.db" />
+    <exclude domain="database" path="contenido.db.tmp" />
+</full-backup-content>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Widget en modo claro: papel y tinta, como la app. -->
+    <color name="widget_papel">#F2F8F4EE</color>
+    <color name="widget_borde">#1F3C2814</color>
+    <color name="widget_tinta">#DE000000</color>
+    <color name="widget_suave">#FF616161</color>
+    <color name="widget_acento">#FFC62828</color>
+</resources>

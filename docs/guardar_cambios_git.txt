@@ -1,0 +1,25 @@
+¿Cómo guardar y traer cambios con Git?
+======================================
+
+Traer lo último de GitHub (hazlo antes de empezar a trabajar):
+
+    git pull
+
+Guardar tus cambios:
+
+    1. git add .
+    2. git commit -m "Describe en una frase qué cambiaste"
+    3. git push
+
+Trabajar en una rama (recomendado para cambios grandes):
+
+    git checkout -b nombre-de-la-rama     crea la rama y te cambia a ella
+    git push -u origin nombre-de-la-rama  la sube a GitHub la primera vez
+    git checkout main                     vuelve a la rama principal
+
+Después, en GitHub se abre un "Pull request" para revisar y unir la rama a main.
+
+Si cambiaste datos (herramientas_datos/fuentes/…), antes del commit corre:
+
+    python herramientas_datos/construir_db.py
+    python herramientas_datos/validar_db.py
