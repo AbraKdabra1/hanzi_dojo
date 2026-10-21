@@ -1,0 +1,64 @@
+03:15:00 [consola debug] Injecting <script> tag. Using callback.
+03:15:01 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+03:15:02 [consola log] Arranque: carpeta de datos
+03:15:02 [consola log] Arranque: registro de errores
+03:15:02 [consola log] Arranque: base de datos
+03:15:11 [consola log] Arranque: ajustes
+03:15:12 [consola log] Arranque: dibujos del fondo
+03:15:12 [consola log] Arranque: listo
+03:15:13 [fuera del sitio] GET https://fonts.gstatic.com/s/notosanssymbols2/v24/I_uyMoGduATTei9eI8daxVHDyfisHr71-vrgfE71.woff2
+03:15:14 tutorial a los 13.4 s
+03:15:14 [consola warning] Could not find a set of Noto fonts to display all missing characters. Please add a font asset for the missing characters. See: https://docs.flutter.dev/cookbook/design/fonts
+03:15:15 captura 00_tutorial
+03:15:17 [fuera del sitio] GET https://fonts.gstatic.com/s/notocoloremoji/v32/Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabsE4tq3luCC7p-aXxcn.2.woff2
+03:15:17 [fuera del sitio] GET https://fonts.gstatic.com/s/notocoloremoji/v32/Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabsE4tq3luCC7p-aXxcn.9.woff2
+03:15:18 [fuera del sitio] GET https://fonts.gstatic.com/s/notocoloremoji/v32/Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabsE4tq3luCC7p-aXxcn.4.woff2
+03:15:20 captura 00b_desde_cero
+03:15:25 [consola debug] Injecting <script> tag. Using callback.
+03:15:25 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+03:15:25 [consola log] Arranque: carpeta de datos
+03:15:27 [consola log] Arranque: registro de errores
+03:15:27 [consola log] Arranque: base de datos
+03:15:28 [consola log] Arranque: ajustes
+03:15:29 [consola log] Arranque: dibujos del fondo
+03:15:29 [consola log] Arranque: listo
+03:15:30 primera vez: "Estudiar" a los 5.0 s
+03:15:30 [fuera del sitio] GET https://fonts.gstatic.com/s/notosanssymbols2/v24/I_uyMoGduATTei9eI8daxVHDyfisHr71-vrgfE71.woff2
+03:15:30 [consola warning] Could not find a set of Noto fonts to display all missing characters. Please add a font asset for the missing characters. See: https://docs.flutter.dev/cookbook/design/fonts
+03:15:34 captura 01_inicio
+03:15:34 guardado en IndexedDB: {"bloques":10546,"ms":1}
+03:15:37 captura 02_modo
+03:15:40 captura 03_niveles
+03:15:43 captura 04_hsk
+03:15:43 audio: Ogg Opus "probably", CAF Opus "", ma1 200 1457 bytes
+03:15:44 sonido: {"resultado":"true","sono":true,"desbloqueado":true,"archivo":"silabas/ma1.opus"}
+03:15:44 [consola debug] Injecting <script> tag. Using callback.
+03:15:44 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+03:15:45 [consola log] Arranque: carpeta de datos
+03:15:47 [consola log] Arranque: registro de errores
+03:15:47 [consola log] Arranque: base de datos
+03:15:47 [consola log] Arranque: ajustes
+03:15:48 [consola log] Arranque: dibujos del fondo
+03:15:48 [consola log] Arranque: listo
+03:15:49 segunda vez: "Estudiar" a los 5.3 s
+03:15:49 [fuera del sitio] GET https://fonts.gstatic.com/s/notosanssymbols2/v24/I_uyMoGduATTei9eI8daxVHDyfisHr71-vrgfE71.woff2
+03:15:50 [consola warning] Could not find a set of Noto fonts to display all missing characters. Please add a font asset for the missing characters. See: https://docs.flutter.dev/cookbook/design/fonts
+03:15:54 captura 05_segunda_vez
+03:15:57 [consola debug] Injecting <script> tag. Using callback.
+03:15:58 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+03:15:58 [consola log] Arranque: carpeta de datos
+03:16:00 [consola log] Arranque: registro de errores
+03:16:00 [consola log] Arranque: base de datos
+03:16:01 [consola log] Arranque: ajustes
+03:16:02 [consola log] Arranque: dibujos del fondo
+03:16:02 [consola log] Arranque: listo
+03:16:03 sin internet: "Estudiar" a los 5.6 s
+03:16:03 [fuera del sitio] GET https://fonts.gstatic.com/s/notosanssymbols2/v24/I_uyMoGduATTei9eI8daxVHDyfisHr71-vrgfE71.woff2
+03:16:03 [consola warning] Could not find a set of Noto fonts to display all missing characters. Please add a font asset for the missing characters. See: https://docs.flutter.dev/cookbook/design/fonts
+03:16:07 captura 06_sin_internet
+03:16:07 [fuera del sitio] GET https://api.github.com/repos/AbraKdabra1/hanzi_dojo/releases?per_page=10
+03:16:07 descarga: Versión 2.1.0-beta.5 · 62 MB → https://github.com/AbraKdabra1/hanzi_dojo/releases/download/v2.1.0-beta.5/Meizi_Hanzi_2.1.0-beta.5_arm64.apk
+03:16:07 descarga: plataforma android
+03:16:09 captura 07_descarga
+03:16:09 privacidad: Aviso de privacidad de Meizi Hanzi
+03:16:09 pasos completos: 7 de 7
