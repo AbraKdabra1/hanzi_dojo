@@ -6,7 +6,9 @@
 // navegador:
 //   1. Primera vez: descarga y guarda la base; espera el botón "Estudiar".
 //   2. Capturas del inicio, la elección de modo y los niveles.
-//   3. Que el audio se pueda tocar (Ogg en Chrome; en Safari, CAF).
+//   3. Que el audio se pueda tocar (Ogg en Chrome; en Safari, CAF), y en
+//      Chrome que un clic de verdad haga sonar una sílaba por el reproductor
+//      que la app desbloquea en el primer toque (plataforma/reproductor.dart).
 //   4. Segunda vez: abre desde lo guardado (IndexedDB), sin descargar.
 //   5. Sin internet: abre igual (sw_hanzi.js; solo en Chrome, ver abajo).
 //   6. La página de descarga (descargar/): su botón lleva a un APK de la
@@ -205,6 +207,39 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
     anotar(`audio: Ogg Opus "${audio.ogg}", CAF Opus "${audio.caf}", ma1 ${audio.ma1}`);
     resumen.push(`${nombre} · audio: ogg="${audio.ogg}" caf="${audio.caf}"`);
   });
+  // Un clic de verdad (no un toque simulado por código) que toca una sílaba
+  // por el mismo camino que los botones de la app. El WebKit de Playwright
+  // en Linux no toca Opus ni CAF: ahí no se prueba.
+  if (tipo === webkit) {
+    anotar('sonido: no se prueba en WebKit de Playwright (no toca Opus ni CAF)');
+    pasos++;
+  } else await paso('sonido', async () => {
+    await pagina.evaluate(() => {
+      window.__sono = false;
+      window.__resultado = '';
+      window.meiziAudio.addEventListener('playing', () => { window.__sono = true; });
+      const boton = document.createElement('button');
+      boton.id = 'probar-sonido';
+      boton.textContent = '🔊';
+      boton.style.cssText = 'position:fixed;top:0;left:0;z-index:99999;width:44px;height:44px';
+      boton.onclick = () => {
+        window.__resultado = 'pendiente';
+        window.meiziProbarSonido().then((r) => { window.__resultado = String(r); }, (e) => { window.__resultado = 'error: ' + e; });
+      };
+      document.body.appendChild(boton);
+    });
+    await pagina.click('#probar-sonido');
+    await pagina.waitForFunction(() => window.__resultado && window.__resultado !== 'pendiente', null, { timeout: 20000 });
+    const r = await pagina.evaluate(() => ({
+      resultado: window.__resultado,
+      sono: window.__sono,
+      desbloqueado: !!window.meiziAudioListo,
+      archivo: (window.meiziAudio.src || '').split('/').slice(-2).join('/'),
+    }));
+    anotar(`sonido: ${JSON.stringify(r)}`);
+    if (r.resultado !== 'true' || !r.sono) throw new Error(`no sonó: ${JSON.stringify(r)}`);
+    await pagina.evaluate(() => document.getElementById('probar-sonido')?.remove());
+  });
   await paso('segunda vez', async () => {
     // Como al cerrar la app y volver a abrirla: otra pestaña.
     await nuevaPagina();
@@ -248,8 +283,8 @@ for (const [nombre, tipo, dispositivo, extra] of navegadores) {
     if (!/privacidad/i.test(titulo)) throw new Error(`la página de privacidad no está: ${titulo}`);
   });
 
-  anotar(`pasos completos: ${pasos} de 6`);
-  resumen.push(`${nombre} · pasos completos: ${pasos} de 6`);
+  anotar(`pasos completos: ${pasos} de 7`);
+  resumen.push(`${nombre} · pasos completos: ${pasos} de 7`);
   writeFileSync(`${salida}/registro_${nombre}.txt`, registro.join('\n') + '\n');
   await navegador.close();
 }

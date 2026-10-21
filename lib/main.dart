@@ -26,6 +26,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:sqflite/sqflite.dart' show getDatabasesPath;
 
+import 'datos/audio.dart';
 import 'datos/base_datos.dart';
 import 'datos/datos_app.dart';
 import 'datos/registro_errores.dart';
@@ -39,6 +40,7 @@ import 'idioma.dart';
 import 'helpers/habito.dart';
 import 'painters/rama_ciruelo.dart';
 import 'plataforma/base_web.dart';
+import 'plataforma/reproductor.dart';
 import 'screens/pantalla_inicio.dart';
 import 'tema.dart';
 import 'widgets/boton_voz.dart';
@@ -124,6 +126,9 @@ class _HanziDojoAppState extends State<HanziDojoApp> with WidgetsBindingObserver
       Voz.leerConVozDelTelefono = await repo.vozTelefonoAlLeer();
       // iOS: que las pronunciaciones suenen aunque esté en silencio.
       Grabaciones.prepararIos().catchError((Object e, StackTrace pila) => RegistroErrores.registrar('Audio iOS', e, pila));
+      // Web: window.meiziProbarSonido() toca una sílaba (prueba automática y
+      // diagnóstico; ver plataforma/reproductor.dart).
+      if (kIsWeb) ReproductorWeb.registrarPrueba(() => Voz.tocar([Clip.silaba('ma1')]));
       // El recordatorio lo programa el sistema; se vuelve a poner por si la app se
       // reinstaló o se importó un respaldo (si ya estaba, no cambia nada).
       final recordatorio = await repo.recordatorio();

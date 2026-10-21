@@ -93,9 +93,20 @@ class Navegador {
   /// Navegador y sistema (para el informe de errores).
   static String get agente => web.window.navigator.userAgent;
 
-  /// ¿Puede tocar Opus dentro de Ogg?
-  static bool get oggOpus => _oggOpus ??= web.HTMLAudioElement().canPlayType('audio/ogg; codecs=opus') != '';
+  /// ¿Puede tocar Opus dentro de Ogg? En iPhone/iPad (cualquier navegador:
+  /// todos son Safari por dentro) y en Safari de Mac se usa siempre CAF:
+  /// algunas versiones dicen que «quizá» leen Ogg y luego no suenan.
+  static bool get oggOpus => _oggOpus ??= !_apple && web.HTMLAudioElement().canPlayType('audio/ogg; codecs=opus') != '';
   static bool? _oggOpus;
+
+  static bool get _apple {
+    final ua = agente;
+    final ios = RegExp('iPhone|iPad|iPod').hasMatch(ua) ||
+        (ua.contains('Macintosh') && web.window.navigator.maxTouchPoints > 1);
+    final safariMac =
+        ua.contains('Macintosh') && ua.contains('Safari') && !RegExp('Chrome|Chromium|Edg|Firefox|OPR').hasMatch(ua);
+    return ios || safariMac;
+  }
 
   /// Descarga [url] (relativa a la página) comprimida con gzip y la
   /// descomprime el propio navegador (rápido, sin pasar por Dart). null si no

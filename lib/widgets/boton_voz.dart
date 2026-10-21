@@ -28,11 +28,21 @@
 // chasquidos. Los caracteres sueltos suenan con su propia grabación cuando se
 // puede (assets/audio/lecturas.txt): así no se salta de una voz a otra.
 //
+// Márgenes (en la app): cada reproducción empieza con un silencio corto y
+// termina con otro. Muchos teléfonos tardan un instante en «despertar» la
+// bocina y se comían el inicio de la grabación, y algunos (varios Huawei) dan
+// por terminado el audio un poco antes de tiempo y cortaban el final.
+//
+// En la web, las grabaciones suenan en el reproductor que index.html
+// desbloquea en el primer toque (plataforma/reproductor.dart): Safari de
+// iPhone no deja empezar un audio fuera de un toque.
+//
 // Batería: el reproductor se detiene (y suelta el decodificador) al terminar.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'dart:async';
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_tts/flutter_tts.dart';
@@ -41,6 +51,7 @@ import 'package:just_audio/just_audio.dart';
 import '../datos/audio.dart';
 import '../datos/registro_errores.dart';
 import '../helpers/grabaciones.dart';
+import '../plataforma/reproductor.dart';
 import '../tema.dart';
 import '../idioma.dart';
 
@@ -110,6 +121,10 @@ class Voz {
 
   /// Para las pausas de la puntuación dentro de una lista de reproducción.
   static const _silencio = 'assets/sonidos/silencio.opus';
+
+  /// Silencio antes y después de cada reproducción en la app (ver arriba).
+  static const margenAntesMs = 150;
+  static const margenDespuesMs = 250;
 
   /// Palabras y sílabas grabadas: (palabras, sílabas).
   static Future<(Set<String>, Set<String>)> listas() => _cargarListas();
@@ -347,12 +362,20 @@ class Voz {
       await _tts.stop();
       return;
     }
+    if (kIsWeb) {
+      ReproductorWeb.pausar();
+      return;
+    }
     await _reproductor?.pause();
   }
 
   static void reanudar() {
     if (_leyendoConTelefono) {
       _telefonoPausado = false;
+      return;
+    }
+    if (kIsWeb) {
+      ReproductorWeb.reanudar();
       return;
     }
     final audio = _reproductor;
@@ -368,6 +391,10 @@ class Voz {
         _telefonoReiniciar = true;
         await _tts.stop();
       }
+      return;
+    }
+    if (kIsWeb) {
+      ReproductorWeb.velocidad(rapidez);
       return;
     }
     await _reproductor?.setSpeed(rapidez);
@@ -398,11 +425,18 @@ class Voz {
       {void Function(int indice)? alCambiar}) async {
     final grabaciones = clips.where((c) => !c.esPausa).length;
     if (grabaciones == 0) return true;
+    if (kIsWeb) return _reproducirWeb(clips, turno, rapidez, alCambiar: alCambiar);
     final audio = _audio;
     StreamSubscription<int?>? avisos;
     try {
       try {
-        final fuentes = await _fuentes(clips);
+        // Con un silencio antes y otro después (ver «Márgenes» arriba): el
+        // índice k de la lista es el clip k - 1.
+        final fuentes = [
+          await _pausa(margenAntesMs),
+          ...await _fuentes(clips),
+          await _pausa(margenDespuesMs),
+        ];
         if (turno != _turno) return false;
         await audio.stop(); // play() no hace nada si el reproductor sigue "tocando"
         await audio.setSpeed(rapidez);
@@ -416,7 +450,8 @@ class Voz {
       if (turno != _turno) return false;
       if (alCambiar != null) {
         avisos = audio.currentIndexStream.distinct().listen((k) {
-          if (k != null && k < clips.length && turno == _turno) alCambiar(k);
+          final clip = k == null ? -1 : k - 1;
+          if (clip >= 0 && clip < clips.length && turno == _turno) alCambiar(clip);
         });
       }
       await _tocarHastaElFinal(audio);
@@ -426,6 +461,22 @@ class Voz {
       // Al terminar se suelta el decodificador (ahorra batería y memoria).
       if (turno == _turno) await audio.stop();
     }
+  }
+
+  /// En la web: [clips] en el reproductor desbloqueado (ver
+  /// plataforma/reproductor.dart). Si el navegador no deja sonar, lanza el
+  /// error (queda en el informe de errores).
+  static Future<bool> _reproducirWeb(List<Clip> clips, int turno, double rapidez,
+      {void Function(int indice)? alCambiar}) async {
+    final pistas = <Pista>[
+      for (final clip in clips)
+        clip.esPausa ? (url: null, pausaMs: clip.pausaMs) : (url: await Grabaciones.urlWeb(clip.ruta), pausaMs: 0),
+    ];
+    if (turno != _turno) return false;
+    final sono = await ReproductorWeb.tocar(pistas, rapidez: rapidez, alCambiar: (k) {
+      if (turno == _turno) alCambiar?.call(k);
+    });
+    return sono && turno == _turno;
   }
 
   /// Plan B de [_reproducir]: cada grabación por separado.
@@ -454,7 +505,10 @@ class Voz {
   static Future<void> _tocarHastaElFinal(AudioPlayer audio) async {
     final fin = audio.processingStateStream
         .firstWhere((s) => s == ProcessingState.completed || s == ProcessingState.idle);
-    unawaited(audio.play().catchError((Object _) {}));
+    unawaited(audio.play().catchError((Object e, StackTrace pila) {
+      // Antes se callaba: así queda en el informe de errores.
+      RegistroErrores.registrar('Voz (reproducir)', e, pila);
+    }));
     await fin;
   }
 
@@ -463,21 +517,20 @@ class Voz {
   static Future<List<AudioSource>> _fuentes(List<Clip> clips) async {
     final fuentes = <AudioSource>[];
     for (final clip in clips) {
-      if (clip.esPausa) {
-        // Cada pausa con su propia fuente: una misma no puede estar dos
-        // veces en la lista.
-        fuentes.add(ClippingAudioSource(
-          child: await Grabaciones.fuente(_silencio),
-          end: Duration(milliseconds: clip.pausaMs.clamp(1, 1000)),
-        ));
-        continue;
-      }
-      fuentes.add(await Grabaciones.fuente(clip.ruta));
+      fuentes.add(clip.esPausa ? await _pausa(clip.pausaMs) : await Grabaciones.fuente(clip.ruta));
     }
     return fuentes;
   }
 
+  /// Un trozo de silencio de [ms] (cada pausa con su propia fuente: una
+  /// misma no puede estar dos veces en la lista).
+  static Future<AudioSource> _pausa(int ms) async => ClippingAudioSource(
+        child: await Grabaciones.fuente(_silencio),
+        end: Duration(milliseconds: ms.clamp(1, 1000)),
+      );
+
   static Future<void> _detenerSonido() async {
+    if (kIsWeb) ReproductorWeb.detener();
     await _reproductor?.stop();
     if (_ttsChino != null) await _tts.stop();
   }

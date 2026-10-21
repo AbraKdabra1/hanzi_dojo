@@ -21,6 +21,7 @@ import 'package:just_audio/just_audio.dart';
 
 import '../plataforma/cache_caf.dart';
 import '../plataforma/navegador.dart';
+import '../plataforma/reproductor.dart';
 import 'ogg_a_caf.dart';
 
 class Grabaciones {
@@ -49,6 +50,11 @@ class Grabaciones {
     final caf = await archivoCaf(ruta);
     return CacheCaf.esArchivo ? AudioSource.file(caf) : AudioSource.uri(Uri.parse(caf));
   }
+
+  /// En la web: la dirección para el reproductor (plataforma/reproductor.dart):
+  /// el CAF en memoria donde hace falta (Safari) o el asset tal cual.
+  static Future<String> urlWeb(String ruta) async =>
+      necesitaCaf ? await archivoCaf(ruta) : ReproductorWeb.urlDeAsset(ruta);
 
   /// El CAF de [ruta]: una ruta de archivo (iOS) o una dirección blob: (web).
   static Future<String> archivoCaf(String ruta) => _enCurso[ruta] ??= _convertir(ruta).whenComplete(() {

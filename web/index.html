@@ -72,6 +72,47 @@
     }
     // Que el navegador no borre el progreso para hacer espacio.
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
+    // Audio en iPhone/iPad (Safari): un sonido solo puede empezar dentro de
+    // un toque, y la app tarda un momento en preparar cada grabación. Así que
+    // aquí se crea EL reproductor de la app y se «desbloquea» (junto con la
+    // voz del navegador) en el primer toque en cualquier parte; después la
+    // app toca todo con él (lib/plataforma/reproductor.dart).
+    (function () {
+      var audio = window.meiziAudio = new Audio();
+      audio.preload = 'auto';
+      audio.setAttribute('playsinline', '');
+      var SILENCIO = 'data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
+      var eventos = ['touchend', 'pointerup', 'click', 'keydown'];
+      function listo() {
+        window.meiziAudioListo = true;
+        eventos.forEach(function (e) { window.removeEventListener(e, desbloquear, true); });
+      }
+      function desbloquear() {
+        if (window.meiziAudioListo) return;
+        // Si la app ya está tocando algo (el primer toque fue en una bocina), no se toca.
+        if (!audio.paused && audio.src && audio.src !== SILENCIO) { listo(); return; }
+        try {
+          audio.src = SILENCIO;
+          var p = audio.play();
+          if (p && p.then) {
+            p.then(function () {
+              if (audio.src === SILENCIO) audio.pause();
+              listo();
+            }, function () {});
+          } else {
+            listo();
+          }
+        } catch (e) {}
+        try {
+          if (window.speechSynthesis && window.SpeechSynthesisUtterance) {
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance(''));
+          }
+        } catch (e) {}
+      }
+      eventos.forEach(function (e) { window.addEventListener(e, desbloquear, true); });
+      // Que suene aunque el iPhone tenga puesto el modo silencio (Safari 17+).
+      try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+    })();
     // Funcionar sin internet (ver sw_hanzi.js).
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
