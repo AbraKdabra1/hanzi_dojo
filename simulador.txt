@@ -1,0 +1,91 @@
+Simulador: E952A9B0-CC78-435C-BF08-06AD47FE1076
+	Finished
+
+== Runtimes ==
+iOS 18.5 (18.5 - 22F77) - com.apple.CoreSimulator.SimRuntime.iOS-18-5
+iOS 18.6 (18.6 - 22G86) - com.apple.CoreSimulator.SimRuntime.iOS-18-6
+iOS 26.0 (26.0.1 - 23A8464) - com.apple.CoreSimulator.SimRuntime.iOS-26-0
+iOS 26.1 (26.1 - 23B86) - com.apple.CoreSimulator.SimRuntime.iOS-26-1
+iOS 26.2 (26.2 - 23C54) - com.apple.CoreSimulator.SimRuntime.iOS-26-2
+tvOS 18.5 (18.5 - 22L572) - com.apple.CoreSimulator.SimRuntime.tvOS-18-5
+tvOS 26.1 (26.1 - 23J579) - com.apple.CoreSimulator.SimRuntime.tvOS-26-1
+tvOS 26.2 (26.2 - 23K51) - com.apple.CoreSimulator.SimRuntime.tvOS-26-2
+watchOS 11.5 (11.5 - 22T572) - com.apple.CoreSimulator.SimRuntime.watchOS-11-5
+watchOS 26.1 (26.1 - 23S36) - com.apple.CoreSimulator.SimRuntime.watchOS-26-1
+watchOS 26.2 (26.2 - 23S303) - com.apple.CoreSimulator.SimRuntime.watchOS-26-2
+visionOS 2.3 (2.3 - 22N895) - com.apple.CoreSimulator.SimRuntime.xrOS-2-3
+visionOS 2.4 (2.4 - 22O237) - com.apple.CoreSimulator.SimRuntime.xrOS-2-4
+visionOS 2.5 (2.5 - 22O473) - com.apple.CoreSimulator.SimRuntime.xrOS-2-5
+visionOS 26.1 (26.1 - 23N47) - com.apple.CoreSimulator.SimRuntime.xrOS-26-1
+visionOS 26.2 (26.2 - 23N301) - com.apple.CoreSimulator.SimRuntime.xrOS-26-2
+── Intento 1 ──
+Resolving dependencies...
+Downloading packages...
+  archive 4.3.0 (4.5.2 available)
+  clock 1.1.2 (1.1.3 available)
+  code_assets 1.0.0 (2.1.0 available)
+  cupertino_icons 1.0.9 (2.0.0 available)
+  dev_build 1.1.8+3 (1.1.15 available)
+  glob 2.1.3 (2.2.0 available)
+  hooks 1.0.2 (2.2.0 available)
+  intl 0.20.2 (0.20.3 available)
+  matcher 0.12.19 (0.12.20 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.0 (1.19.0 available)
+  native_toolchain_c 0.17.6 (0.19.5 available)
+  objective_c 9.3.0 (9.6.2 available)
+  platform 3.1.6 (3.2.0 available)
+  process_run 1.3.3+1 (1.4.1 available)
+  pub_semver 2.2.0 (2.2.1 available)
+  sqflite 2.4.2 (2.4.4+2 available)
+  sqflite_android 2.4.2+3 (2.4.4+1 available)
+  sqflite_common 2.5.6 (2.5.14 available)
+  sqflite_common_ffi 2.4.0+3 (2.4.4 available)
+  sqflite_common_ffi_web 1.1.1 (1.2.0 available)
+  sqflite_darwin 2.4.2 (2.4.4+1 available)
+  sqflite_platform_interface 2.4.0 (2.4.2 available)
+  sqlite3 3.5.2 (3.7.1 available)
+  stack_trace 1.12.1 (1.12.2 available)
+  synchronized 3.4.0 (3.5.0 available)
+  test_api 0.7.11 (0.7.15 available)
+  vector_math 2.2.0 (2.4.3 available)
+  vm_service 15.0.2 (15.4.0 available)
+  yaml 3.1.3 (3.1.4 available)
+Got dependencies!
+30 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /Users/runner/work/hanzi_dojo/hanzi_dojo/integration_test/ios_test.dart
+The following plugins do not support Swift Package Manager for ios:
+  - flutter_tts
+This will become an error in a future version of Flutter. Please contact the plugin maintainers to request Swift Package Manager adoption.
+Running Xcode build...                                          
+Xcode build done.                                           152.1s
+00:00 +0: Meizi Hanzi en el simulador de iPhone
+CAPTURA: /Users/runner/work/hanzi_dojo/hanzi_dojo/build/capturas_ios/00_tutorial.png
+CAPTURA: /Users/runner/work/hanzi_dojo/hanzi_dojo/build/capturas_ios/00b_desde_cero.png
+CAPTURA: /Users/runner/work/hanzi_dojo/hanzi_dojo/build/capturas_ios/01_inicio.png
+CAPTURA: /Users/runner/work/hanzi_dojo/hanzi_dojo/build/capturas_ios/02_modo.png
+CAPTURA: /Users/runner/work/hanzi_dojo/hanzi_dojo/build/capturas_ios/03_niveles.png
+PASO leer assets/audio/silabas/ma1.opus…
+PASO leer assets/audio/silabas/ma1.opus: listo
+Asset assets/audio/silabas/ma1.opus: 1457 bytes
+PASO CAF assets/audio/silabas/ma1.opus…
+PASO CAF assets/audio/silabas/ma1.opus: listo
+CAF assets/audio/silabas/ma1.opus: 1437 bytes, cabecera "caff"
+PASO cargar assets/audio/silabas/ma1.opus…
+PASO cargar assets/audio/silabas/ma1.opus: listo
+Grabación assets/audio/silabas/ma1.opus: 0:00:00.495000
+PASO leer assets/audio/palabras/4e00-4e0b.opus…
+PASO leer assets/audio/palabras/4e00-4e0b.opus: listo
+Asset assets/audio/palabras/4e00-4e0b.opus: 1980 bytes
+PASO CAF assets/audio/palabras/4e00-4e0b.opus…
+PASO CAF assets/audio/palabras/4e00-4e0b.opus: listo
+CAF assets/audio/palabras/4e00-4e0b.opus: 1960 bytes, cabecera "caff"
+PASO cargar assets/audio/palabras/4e00-4e0b.opus…
+PASO cargar assets/audio/palabras/4e00-4e0b.opus: listo
+Grabación assets/audio/palabras/4e00-4e0b.opus: 0:00:00.715000
+PASO leer una oración…
+PASO leer una oración: listo
+Oración: 2963 ms, sonaron [(0, 1), (1, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 7)]
+00:29 +1: (tearDownAll)
+00:37 +1: All tests passed!
