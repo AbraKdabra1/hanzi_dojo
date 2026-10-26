@@ -1,8 +1,13 @@
 # ---------------------------------------------------------------------------
 # Lanzamiento de Meizi Hanzi
 #
-# Al subir una etiqueta de versión (git tag v2.1.0 && git push origin v2.1.0;
-# una beta, v2.1.0-beta.1, sale marcada como "pre-release"):
+# Se publica una versión de dos formas (una beta, v2.1.0-beta.1, sale marcada
+# como "pre-release"):
+#   · Con un commit: al llegar a la rama v2 un cambio de versión en
+#     pubspec.yaml (o de este archivo), si esa versión aún no está publicada.
+#     La etiqueta (v2.1.0) la crea el propio flujo.
+#   · Con una etiqueta: git tag v2.1.0 && git push origin v2.1.0.
+# En los dos casos:
 #   1. Arma android/key.properties con la llave de firma guardada en los
 #      secretos del repositorio (ver docs/publicar.md). Sin ellos, se detiene.
 #   2. Compila los APK de lanzamiento firmados: uno por arquitectura (más
@@ -14,20 +19,67 @@
 #      docs/ios.md).
 #
 # También se puede correr a mano (Actions → Lanzamiento → Run workflow): en
-# ese caso solo deja los APK como artefactos, sin publicar nada.
+# ese caso solo deja los APK como artefactos, sin publicar nada. Un commit a v2
+# cuya versión ya está publicada no hace nada.
 # ---------------------------------------------------------------------------
 name: Lanzamiento
 
 on:
   push:
     tags: ['v*']
+    branches: [v2]
+    # Solo para la rama (a las etiquetas no se les revisan las rutas).
+    paths: [pubspec.yaml, .github/workflows/lanzamiento.yml]
   workflow_dispatch:
 
 permissions:
   contents: write   # crear la versión y subir los APK
 
 jobs:
+  # ¿Qué versión es y hay que publicarla?
+  cual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      version: ${{ steps.cual.outputs.version }}
+      etiqueta: ${{ steps.cual.outputs.etiqueta }}
+      compilar: ${{ steps.cual.outputs.compilar }}
+      publicar: ${{ steps.cual.outputs.publicar }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Versión y si ya está publicada
+        id: cual
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(grep -E '^version:' pubspec.yaml | sed -E 's/version: *([0-9A-Za-z.-]+)\+([0-9]+).*/\1/')
+          ETIQUETA="v$VERSION"
+          COMPILAR=true
+          PUBLICAR=false
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            if [ "$GITHUB_REF_TYPE" = "tag" ] && [ "$GITHUB_REF_NAME" != "$ETIQUETA" ]; then
+              echo "::error::La etiqueta $GITHUB_REF_NAME no coincide con la versión de pubspec.yaml ($VERSION)"
+              exit 1
+            fi
+            if gh release view "$ETIQUETA" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+              echo "La versión $ETIQUETA ya está publicada: no hay nada que hacer."
+              COMPILAR=false
+            else
+              PUBLICAR=true
+            fi
+          fi
+          {
+            echo "version=$VERSION"
+            echo "etiqueta=$ETIQUETA"
+            echo "compilar=$COMPILAR"
+            echo "publicar=$PUBLICAR"
+          } >> "$GITHUB_OUTPUT"
+          echo "versión=$VERSION etiqueta=$ETIQUETA compilar=$COMPILAR publicar=$PUBLICAR"
+
   apk:
+    needs: cual
+    if: needs.cual.outputs.compilar == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -177,15 +229,17 @@ jobs:
           retention-days: 90
 
       - name: Publicar la versión en GitHub
-        if: github.ref_type == 'tag'
+        if: needs.cual.outputs.publicar == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.version.outputs.version }}
+          ETIQUETA: ${{ needs.cual.outputs.etiqueta }}
         run: |
           # Una versión con guion (2.1.0-beta.1) sale marcada como de prueba.
           PRUEBA=""
           case "$VERSION" in *-*) PRUEBA="--prerelease" ;; esac
-          gh release create "$GITHUB_REF_NAME" salida/*.apk salida/SHA256SUMS.txt \
+          # Si se publica con un commit, la etiqueta se crea aquí, en ese commit.
+          gh release create "$ETIQUETA" salida/*.apk salida/SHA256SUMS.txt --target "$GITHUB_SHA" \
             --title "Meizi Hanzi $VERSION" --notes-file notas.md $PRUEBA
 
       - name: Borrar la llave del equipo de GitHub
@@ -193,7 +247,7 @@ jobs:
         run: rm -f android/key.properties "$RUNNER_TEMP/hanzi_dojo_lanzamiento.jks"
 
   ipa:
-    needs: apk
+    needs: [cual, apk]
     runs-on: macos-15
     timeout-minutes: 45
     steps:
@@ -224,7 +278,8 @@ jobs:
           retention-days: 30
 
       - name: Agregar a la versión en GitHub
-        if: github.ref_type == 'tag'
+        if: needs.cual.outputs.publicar == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload "$GITHUB_REF_NAME" *.ipa --clobber
+          ETIQUETA: ${{ needs.cual.outputs.etiqueta }}
+        run: gh release upload "$ETIQUETA" *.ipa --clobber

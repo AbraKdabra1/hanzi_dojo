@@ -1,0 +1,1 @@
+Beta 7: en «Chino desde cero» todo carácter suena al tocarlo, 吗 ya no suena mā y hay una bandera para reportar errores de pronunciación, pinyin o escritura desde cada pantalla.

@@ -47,7 +47,10 @@ Después:
 3. Copia esas notas, en corto, a
    `fastlane/metadata/android/es-MX/changelogs/3.txt` (el número es el código
    de versión; también en `en-US`).
-4. Sube los cambios y crea la etiqueta:
+4. Sube los cambios a la rama `v2` (directo o juntando el PR). **Con eso se
+   publica**: al ver una versión nueva en `pubspec.yaml` que aún no está en
+   *Releases*, el flujo crea la etiqueta `v2.1.0` y la versión. Si prefieres,
+   también se puede publicar subiendo la etiqueta a mano:
 
    ```bash
    git tag v2.1.0
@@ -161,4 +164,4 @@ cambiar de plataforma basta con cambiar esa línea.
 - [ ] `CHANGELOG.md` y `fastlane/.../changelogs/<código>.txt`
 - [ ] CI en verde (análisis, pruebas, capturas, APK)
 - [ ] Probar en el teléfono el APK de perfil de CI
-- [ ] `git tag vX.Y.Z && git push origin vX.Y.Z`
+- [ ] Juntar a `v2` (se publica solo) o `git tag vX.Y.Z && git push origin vX.Y.Z`
