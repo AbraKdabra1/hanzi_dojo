@@ -1,7 +1,9 @@
 // «Chino desde cero»: qué lecciones se guardan como terminadas, la pregunta
 // de la primera vez (empezar desde cero u omitir), los candados del inicio y
 // su desbloqueo, dónde aparece en Ajustes, y que cada lección se recorre
-// completa (en pantalla chica y sin errores), con sonidos que la app sí trae.
+// completa (en pantalla chica y sin errores), con sonidos que la app sí trae:
+// todo carácter que se ve en una tarjeta suena con las grabaciones, en su tono.
+// La bandera de la barra abre el reporte con la lección y el paso ya puestos.
 //   flutter test test/desde_cero_test.dart
 
 import 'dart:io';
@@ -10,6 +12,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hanzi_dojo/datos/audio.dart';
 import 'package:hanzi_dojo/datos/base_datos.dart';
 import 'package:hanzi_dojo/datos/datos_app.dart';
 import 'package:hanzi_dojo/datos/desde_cero.dart';
@@ -22,6 +25,7 @@ import 'package:hanzi_dojo/screens/pantalla_biblioteca.dart';
 import 'package:hanzi_dojo/screens/pantalla_desde_cero.dart';
 import 'package:hanzi_dojo/screens/pantalla_inicio.dart';
 import 'package:hanzi_dojo/screens/pantalla_modo.dart';
+import 'package:hanzi_dojo/screens/pantalla_reporte.dart';
 import 'package:hanzi_dojo/widgets/boton_voz.dart';
 import 'package:hanzi_dojo/widgets/lienzo_escritura.dart';
 import 'package:hanzi_dojo/widgets/piezas_desde_cero.dart';
@@ -35,6 +39,26 @@ void main() {
   late BaseDatos base;
   late Repositorio repo;
   final silabas = File('assets/audio/silabas.txt').readAsLinesSync().where((l) => l.isNotEmpty).toSet();
+  final palabras = File('assets/audio/palabras.txt').readAsLinesSync().where((l) => l.isNotEmpty).toSet();
+  final lecturas = Audio.leerLecturas(File('assets/audio/lecturas.txt').readAsStringSync());
+
+  /// [escrito] suena entero con las grabaciones (aunque el teléfono no tenga
+  /// voz china, como los Huawei) y cada sílaba en su tono (吗 no suena mā).
+  /// Igual que piezas_desde_cero.dart: sin una sílaba por carácter ('xièxie'),
+  /// sin pinyin.
+  void suenaGrabado(String escrito, List<String> pinyin) {
+    final texto = formaCompleta[escrito] ?? escrito;
+    final conPinyin = pinyin.length == texto.runes.length;
+    final plan = Audio.planDeLectura(texto,
+        pinyin: conPinyin ? pinyin : null, palabras: palabras, silabas: silabas, lecturas: lecturas);
+    expect(plan.completo, isTrue, reason: '$escrito (${pinyin.join(' ')}) no tiene grabación');
+    expect(plan.grabaciones, lessThanOrEqualTo(2), reason: escrito);
+    if (!conPinyin) return;
+    for (final c in plan.clips.where((c) => c.ruta.contains('/silabas/'))) {
+      final clave = Audio.claveSilaba(pinyin[c.inicio])!;
+      expect(c.ruta, endsWith('${clave[clave.length - 1]}.opus'), reason: '$escrito: ${pinyin[c.inicio]} suena como $c');
+    }
+  }
 
   setUpAll(() {
     sqfliteFfiInit();
@@ -159,6 +183,29 @@ void main() {
             }
           }
         }
+        // Lo que se ve en las tarjetas suena al tocarlo.
+        for (final f in tester.widgetList<FichaHanzi>(find.byType(FichaHanzi))) {
+          suenaGrabado(f.texto, f.audio ?? f.pinyin.split(RegExp(r'\s+')));
+        }
+        for (final s in tester.widgetList<SumaHanzi>(find.byType(SumaHanzi))) {
+          for (final (parte, _, pinyin) in s.partes) {
+            suenaGrabado(parte, pinyin.split(RegExp(r'\s+')));
+          }
+          suenaGrabado(s.resultado.$1, s.resultado.$2.split(RegExp(r'\s+')));
+        }
+        for (final t in tester.widgetList<TablaReglas>(find.byType(TablaReglas))) {
+          for (final (ejemplo, pinyin, _, _) in t.filas) {
+            suenaGrabado(ejemplo, pinyin.split(RegExp(r'\s+')));
+          }
+        }
+        final aEscribir = [
+          for (final o in tester.widgetList<OrdenHanzi>(find.byType(OrdenHanzi))) o.caracter,
+          for (final e in tester.widgetList<EscribirHanzi>(find.byType(EscribirHanzi))) e.caracter,
+        ];
+        for (final c in aEscribir) {
+          final car = await tester.runAsync(() => repo.caracterConTrazos(c));
+          suenaGrabado(c, [car!.pinyin]);
+        }
         // Los caracteres para escribir traen sus trazos.
         for (final l in tester.widgetList<LienzoEscritura>(find.byType(LienzoEscritura))) {
           expect(l.medianas, isNotEmpty, reason: l.caracter);
@@ -170,6 +217,18 @@ void main() {
       await tester.pump(const Duration(seconds: 3)); // vencen los temporizadores de las animaciones
     });
   }
+
+  testWidgets('la bandera de la lección abre el reporte con la lección y el paso', (tester) async {
+    await mostrar(tester, const PantallaLeccion(indice: 1));
+    await tester.tap(find.text('Siguiente'));
+    await esperar(tester);
+    await tester.tap(find.byTooltip('Reportar un error'));
+    await esperar(tester);
+    final l = leccionesDesdeCero()[1];
+    expect(tester.widget<PantallaReporte>(find.byType(PantallaReporte)).donde,
+        'Chino desde cero · lección 2 «${l.titulo}» · paso 2: ${l.pasos[1].titulo}');
+    await tester.pump(const Duration(seconds: 3));
+  });
 
   testWidgets('la lista marca las terminadas y ofrece Estudiar al acabar', (tester) async {
     await tester.runAsync(() async {

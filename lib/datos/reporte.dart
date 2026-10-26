@@ -30,6 +30,7 @@ enum TipoReporte {
 const queEstaMalOpciones = [
   'Significado',
   'Pinyin',
+  'Pronunciación (audio)',
   'Ejemplo',
   'Orden o forma de los trazos',
   'Texto o traducción de un libro',

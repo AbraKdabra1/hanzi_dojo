@@ -15,6 +15,7 @@ import '../datos/datos_app.dart';
 import '../datos/frases.dart';
 import '../datos/repositorio_frases.dart';
 import '../tema.dart';
+import '../widgets/boton_reportar.dart';
 import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/ejercicio.dart';
@@ -249,6 +250,7 @@ class _TarjetaFrase extends StatelessWidget {
             Column(
               children: [
                 BotonVoz(texto: frase.chino, pinyin: frase.silabas),
+                BotonReportar(pequeno: true, donde: () => tr('Frase esencial: {0} ({1})', [frase.chino, frase.pinyin])),
                 if (progreso != null) ...[
                   const SizedBox(height: 10),
                   Icon(

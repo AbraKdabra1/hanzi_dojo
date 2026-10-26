@@ -22,6 +22,7 @@ import '../datos/datos_app.dart';
 import '../datos/desde_cero.dart';
 import '../idioma.dart';
 import '../tema.dart';
+import '../widgets/boton_reportar.dart';
 import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/fondo_tinta.dart';
@@ -71,10 +72,10 @@ List<Leccion> leccionesDesdeCero() => [
             titulo: tr('Las palabras se arman con caracteres'),
             texto: tr('Muchas palabras juntan dos caracteres, y a veces se adivina por qué. Toca el signo de interrogación.'),
             contenido: Column(children: [
-              SumaHanzi(partes: [('火', tr('fuego')), ('山', tr('montaña'))], resultado: ('火山', 'huǒ shān', tr('volcán'))),
+              SumaHanzi(partes: [('火', tr('fuego'), 'huǒ'), ('山', tr('montaña'), 'shān')], resultado: ('火山', 'huǒ shān', tr('volcán'))),
               const SizedBox(height: 14),
               SumaHanzi(
-                  partes: [('电', tr('electricidad')), ('脑', tr('cerebro'))],
+                  partes: [('电', tr('electricidad'), 'diàn'), ('脑', tr('cerebro'), 'nǎo')],
                   resultado: ('电脑', 'diàn nǎo', tr('computadora'))),
             ]),
           ),
@@ -120,20 +121,20 @@ List<Leccion> leccionesDesdeCero() => [
             titulo: tr('Dos ideas juntas, una idea nueva'),
             texto: tr('Otros juntan dos caracteres para formar una idea. Toca el signo de interrogación.'),
             contenido: Column(children: [
-              SumaHanzi(partes: [('亻', tr('persona')), ('木', tr('árbol'))], resultado: ('休', 'xiū', tr('descansar'))),
+              SumaHanzi(partes: [('亻', tr('persona'), 'rén'), ('木', tr('árbol'), 'mù')], resultado: ('休', 'xiū', tr('descansar'))),
               const SizedBox(height: 12),
-              SumaHanzi(partes: [('日', tr('sol')), ('月', tr('luna'))], resultado: ('明', 'míng', tr('brillante'))),
+              SumaHanzi(partes: [('日', tr('sol'), 'rì'), ('月', tr('luna'), 'yuè')], resultado: ('明', 'míng', tr('brillante'))),
               const SizedBox(height: 12),
-              SumaHanzi(partes: [('女', tr('mujer')), ('子', tr('hijo'))], resultado: ('好', 'hǎo', tr('bueno'))),
+              SumaHanzi(partes: [('女', tr('mujer'), 'nǚ'), ('子', tr('hijo'), 'zǐ')], resultado: ('好', 'hǎo', tr('bueno'))),
             ]),
           ),
           PasoLeccion(
             titulo: tr('Una parte da el significado y otra el sonido'),
             texto: tr('La mayoría de los caracteres (unos 3 de cada 4) se forman así: una parte dice de qué trata y otra cómo suena. 马 (mǎ) significa caballo, pero aquí solo presta su sonido.'),
             contenido: Column(children: [
-              SumaHanzi(partes: [('女', tr('mujer')), ('马', tr('suena «ma»'))], resultado: ('妈', 'mā', tr('mamá'))),
+              SumaHanzi(partes: [('女', tr('mujer'), 'nǚ'), ('马', tr('suena «ma»'), 'mǎ')], resultado: ('妈', 'mā', tr('mamá'))),
               const SizedBox(height: 12),
-              SumaHanzi(partes: [('口', tr('boca')), ('马', tr('suena «ma»'))], resultado: ('吗', 'ma', tr('¿…? (pregunta)'))),
+              SumaHanzi(partes: [('口', tr('boca'), 'kǒu'), ('马', tr('suena «ma»'), 'mǎ')], resultado: ('吗', 'ma', tr('¿…? (pregunta)'))),
             ]),
           ),
           PasoLeccion(
@@ -168,23 +169,23 @@ List<Leccion> leccionesDesdeCero() => [
             titulo: tr('Todo carácter se escribe con trazos'),
             texto: tr('Un trazo es lo que dibujas sin levantar el dedo. Hay pocos tipos; estos son los más comunes:'),
             contenido: TablaReglas(filas: [
-              ('一', tr('Horizontal'), tr('De izquierda a derecha →')),
-              ('十', tr('Vertical'), tr('De arriba hacia abajo ↓ (el segundo trazo)')),
-              ('人', tr('Diagonales'), tr('Una baja a la izquierda ↙ y otra a la derecha ↘')),
-              ('六', tr('Punto'), tr('Corto, hacia abajo y a la derecha (el de arriba)')),
-              ('口', tr('Quiebre'), tr('Cambia de dirección sin levantar el dedo (arriba y a la derecha)')),
-              ('小', tr('Gancho'), tr('Termina con un pequeño gancho (el del centro)')),
+              ('一', 'yī', tr('Horizontal'), tr('De izquierda a derecha →')),
+              ('十', 'shí', tr('Vertical'), tr('De arriba hacia abajo ↓ (el segundo trazo)')),
+              ('人', 'rén', tr('Diagonales'), tr('Una baja a la izquierda ↙ y otra a la derecha ↘')),
+              ('六', 'liù', tr('Punto'), tr('Corto, hacia abajo y a la derecha (el de arriba)')),
+              ('口', 'kǒu', tr('Quiebre'), tr('Cambia de dirección sin levantar el dedo (arriba y a la derecha)')),
+              ('小', 'xiǎo', tr('Gancho'), tr('Termina con un pequeño gancho (el del centro)')),
             ]),
           ),
           PasoLeccion(
             titulo: tr('El orden sí importa'),
             texto: tr('Los trazos tienen un orden fijo: así la escritura sale más rápida y bonita, y la app sabe qué trazo esperas. Las reglas principales:'),
             contenido: TablaReglas(filas: [
-              ('三', tr('Arriba antes que abajo'), tr('Los tres horizontales, de arriba hacia abajo')),
-              ('川', tr('Izquierda antes que derecha'), tr('Los tres trazos, de izquierda a derecha')),
-              ('十', tr('Horizontal antes que vertical'), tr('Cuando se cruzan')),
-              ('日', tr('De afuera hacia adentro'), tr('El marco primero; la base que lo cierra, al final')),
-              ('小', tr('El centro antes que los lados'), tr('Cuando el centro destaca')),
+              ('三', 'sān', tr('Arriba antes que abajo'), tr('Los tres horizontales, de arriba hacia abajo')),
+              ('川', 'chuān', tr('Izquierda antes que derecha'), tr('Los tres trazos, de izquierda a derecha')),
+              ('十', 'shí', tr('Horizontal antes que vertical'), tr('Cuando se cruzan')),
+              ('日', 'rì', tr('De afuera hacia adentro'), tr('El marco primero; la base que lo cierra, al final')),
+              ('小', 'xiǎo', tr('El centro antes que los lados'), tr('Cuando el centro destaca')),
             ]),
           ),
           PasoLeccion(
@@ -725,7 +726,16 @@ class _PantallaLeccionState extends State<PantallaLeccion> {
     return FondoTintaChina(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: BarraSuperior(titulo: leccion.titulo, subtitulo: tr('Paso {0} de {1}', [_paso + 1, total])),
+        appBar: BarraSuperior(
+          titulo: leccion.titulo,
+          subtitulo: tr('Paso {0} de {1}', [_paso + 1, total]),
+          acciones: [
+            BotonReportar(
+              donde: () => tr('Chino desde cero · lección {0} «{1}» · paso {2}: {3}',
+                  [widget.indice + 1, leccion.titulo, _paso + 1, leccion.pasos[_paso].titulo]),
+            ),
+          ],
+        ),
         body: SafeArea(
           top: false,
           child: Column(

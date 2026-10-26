@@ -18,6 +18,7 @@ import '../datos/modelos.dart';
 import '../datos/practica.dart';
 import '../datos/repositorio_practica.dart';
 import '../tema.dart';
+import '../widgets/boton_reportar.dart';
 import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/ejercicio.dart';
@@ -129,7 +130,17 @@ class _PantallaEscuchaState extends State<PantallaEscucha> {
   Widget build(BuildContext context) {
     return FondoTintaChina(
       child: Scaffold(
-        appBar: BarraSuperior(titulo: tr('Escucha'), subtitulo: nombreDeNivel(widget.nivel)),
+        appBar: BarraSuperior(
+          titulo: tr('Escucha'),
+          subtitulo: nombreDeNivel(widget.nivel),
+          acciones: [
+            BotonReportar(donde: () {
+              if (_indice >= _preguntas.length) return tr('Escucha · {0}', [nombreDeNivel(widget.nivel)]);
+              final p = _preguntas[_indice].objetivo;
+              return tr('Escucha · palabra {0} ({1}) · {2}', [p.palabra, p.pinyin, nombreDeNivel(widget.nivel)]);
+            }),
+          ],
+        ),
         body: SafeArea(top: false, child: _cuerpo(context)),
       ),
     );

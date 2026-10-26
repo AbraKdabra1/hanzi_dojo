@@ -19,6 +19,7 @@ import '../datos/datos_app.dart';
 import '../datos/frases.dart';
 import '../datos/repositorio_frases.dart';
 import '../tema.dart';
+import '../widgets/boton_reportar.dart';
 import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/ejercicio.dart';
@@ -165,6 +166,13 @@ class _PantallaEjercicioFrasesState extends State<PantallaEjercicioFrases> {
         appBar: BarraSuperior(
           titulo: _escuchando ? tr('Escuchar y elegir') : tr('Armar la frase'),
           subtitulo: widget.situacion?.nombre ?? tr('Frases esenciales'),
+          acciones: [
+            BotonReportar(
+              donde: () => _indice < _ronda.length
+                  ? tr('Frase esencial: {0} ({1})', [_ronda[_indice].chino, _ronda[_indice].pinyin])
+                  : tr('Frases esenciales'),
+            ),
+          ],
         ),
         body: SafeArea(top: false, child: _cuerpo(context)),
       ),

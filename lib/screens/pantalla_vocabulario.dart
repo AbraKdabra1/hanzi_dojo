@@ -20,6 +20,7 @@ import '../datos/practica.dart';
 import '../datos/repositorio_practica.dart';
 import '../datos/srs.dart';
 import '../tema.dart';
+import '../widgets/boton_reportar.dart';
 import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/ejercicio.dart';
@@ -124,6 +125,14 @@ class _PantallaVocabularioState extends State<PantallaVocabulario> {
           subtitulo: sesion == null || (sesion.nuevas + sesion.repasadas) == 0
               ? nombreDeNivel(widget.nivel)
               : tr('{0} repasadas · {1} nuevas', [sesion.repasadas, sesion.nuevas]),
+          acciones: [
+            BotonReportar(donde: () {
+              final p = _actual;
+              return p == null
+                  ? tr('Vocabulario · {0}', [nombreDeNivel(widget.nivel)])
+                  : tr('Vocabulario · palabra {0} ({1}) · {2}', [p.palabra, p.pinyin, nombreDeNivel(widget.nivel)]);
+            }),
+          ],
         ),
         body: SafeArea(top: false, child: _cuerpo(context)),
       ),

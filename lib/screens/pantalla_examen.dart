@@ -25,6 +25,7 @@ import '../datos/modelos.dart';
 import '../datos/repositorio_practica.dart';
 import '../idioma.dart';
 import '../tema.dart';
+import '../widgets/boton_reportar.dart';
 import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/ejercicio.dart';
@@ -224,6 +225,12 @@ class _PantallaExamenState extends State<PantallaExamen> {
                   ),
                 ),
               ),
+            BotonReportar(donde: () {
+              final titulo = widget.esUbicacion ? tr('Examen de ubicación') : tr('Simulacro {0}', [nombreDeNivel(widget.nivel!)]);
+              if (_indice >= _preguntas.length) return titulo;
+              final p = _preguntas[_indice].pregunta.objetivo;
+              return tr('{0} · pregunta {1}: {2} ({3})', [titulo, _indice + 1, p.palabra, p.pinyin]);
+            }),
           ],
         ),
         body: SafeArea(top: false, child: _cuerpo(context)),

@@ -4,14 +4,22 @@
 // Cada lección (screens/pantalla_desde_cero.dart) se arma con estas piezas,
 // para que se aprenda haciendo y no solo leyendo:
 //   FichaHanzi / FilaFichas   un carácter o palabra; al tocarlo suena.
-//   SumaHanzi                 parte + parte = ? (se descubre al tocar).
+//   SumaHanzi                 parte + parte = ? (se descubre al tocar; cada
+//                             parte también suena).
 //   PreguntaSimple            opción múltiple con explicación.
 //   TablaSonidos              sonidos del pinyin con su pista; al tocar suenan.
 //   AdivinaSonido             ¿cuál oíste? entre sílabas parecidas.
 //   DibujoTonos / AdivinaTono los cuatro tonos dibujados y ¿qué tono oíste?
-//   TablaReglas               una fila por trazo básico o por regla de orden.
-//   OrdenHanzi / EscribirHanzi el orden de trazos animado y escribir en el lienzo.
+//   TablaReglas               una fila por trazo básico o por regla de orden
+//                             (el ejemplo suena al tocar la fila).
+//   OrdenHanzi / EscribirHanzi el orden de trazos animado y escribir en el
+//                             lienzo; el carácter y su pinyin suenan al tocarlos,
+//                             y al terminar de escribirlo. Si la app marca mal un
+//                             trazo, «¿Ese trazo estaba bien?» lo anota.
 //   DatoGrande                un número que importa, con su explicación.
+//
+// Regla: todo carácter que se ve en una tarjeta suena al tocarlo
+// (test/desde_cero_test.dart revisa que tenga grabación y suene en su tono).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'dart:math' as math;
@@ -21,6 +29,7 @@ import 'package:flutter/material.dart';
 import '../datos/audio.dart';
 import '../datos/datos_app.dart';
 import '../datos/modelos.dart';
+import '../datos/resumen_beta.dart';
 import '../helpers/pinyin_entrada.dart';
 import '../helpers/pinyin_helper.dart';
 import '../helpers/sensaciones.dart';
@@ -37,6 +46,32 @@ Future<void> _sonar(String texto, List<String> pinyin) =>
 
 /// Toca una sílaba grabada ('ma1').
 Future<void> _sonarSilaba(String silaba) => Voz.tocar([Clip.silaba(silaba)]);
+
+/// Las formas de radical suenan como el carácter completo (亻 se dice rén).
+const formaCompleta = {'亻': '人', '氵': '水', '扌': '手', '讠': '言', '忄': '心', '饣': '食', '纟': '丝', '钅': '金', '艹': '草'};
+
+/// Toca un carácter que se ve en una tarjeta (o su forma completa, si es un
+/// radical).
+Future<void> sonarCaracter(String caracter, String pinyin) =>
+    _sonar(formaCompleta[caracter] ?? caracter, pinyin.split(RegExp(r'\s+')));
+
+/// «十 · shí 🔊»: el carácter con su pinyin; suena al tocarlo.
+class _LineaSonora extends StatelessWidget {
+  const _LineaSonora({required this.caracter, required this.pinyin});
+
+  final String caracter;
+  final String pinyin;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colores;
+    return TextButton.icon(
+      onPressed: () => sonarCaracter(caracter, pinyin),
+      icon: Icon(Icons.volume_up_outlined, size: 18, color: c.tinta),
+      label: Text('$caracter · $pinyin', style: TextStyle(fontSize: 16, color: c.tinta, fontWeight: FontWeight.w600)),
+    );
+  }
+}
 
 /// Un carácter o palabra; al tocarlo suena.
 class FichaHanzi extends StatelessWidget {
@@ -113,8 +148,8 @@ class FilaFichas extends StatelessWidget {
 class SumaHanzi extends StatefulWidget {
   const SumaHanzi({super.key, required this.partes, required this.resultado});
 
-  /// (carácter, qué aporta).
-  final List<(String, String)> partes;
+  /// (carácter, qué aporta, pinyin): cada parte suena al tocarla.
+  final List<(String, String, String)> partes;
 
   /// (carácter, pinyin, significado).
   final (String, String, String) resultado;
@@ -129,7 +164,8 @@ class _SumaHanziState extends State<SumaHanzi> {
   @override
   Widget build(BuildContext context) {
     final c = context.colores;
-    Widget pieza(String arriba, String abajo, {VoidCallback? alTocar, bool resaltada = false}) => TarjetaVidrio(
+    Widget pieza(String arriba, String abajo, {String? pinyin, VoidCallback? alTocar, bool resaltada = false}) =>
+        TarjetaVidrio(
           relleno: const EdgeInsets.fromLTRB(12, 8, 12, 8),
           colorBorde: resaltada ? c.tinta : null,
           onTap: alTocar,
@@ -137,6 +173,15 @@ class _SumaHanziState extends State<SumaHanzi> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(arriba, style: const TextStyle(fontSize: 34, height: 1.15)),
+              if (pinyin != null)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(pinyin, style: TextStyle(fontSize: 13, color: c.tinta, fontWeight: FontWeight.w600)),
+                    const SizedBox(width: 3),
+                    Icon(Icons.volume_up_outlined, size: 13, color: c.tenue),
+                  ],
+                ),
               Text(abajo, textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: c.suave)),
             ],
           ),
@@ -151,9 +196,9 @@ class _SumaHanziState extends State<SumaHanzi> {
       crossAxisAlignment: WrapCrossAlignment.center,
       runSpacing: 8,
       children: [
-        for (var i = 0; i < widget.partes.length; i++) ...[
+        for (final (i, (parte, aporta, pinyinParte)) in widget.partes.indexed) ...[
           if (i > 0) signo('+'),
-          pieza(widget.partes[i].$1, widget.partes[i].$2),
+          pieza(parte, aporta, pinyin: pinyinParte, alTocar: () => sonarCaracter(parte, pinyinParte)),
         ],
         signo('='),
         pieza(
@@ -601,21 +646,39 @@ class _AdivinaTonoState extends State<AdivinaTono> {
 class TablaReglas extends StatelessWidget {
   const TablaReglas({super.key, required this.filas});
 
-  final List<(String, String, String)> filas;
+  /// (ejemplo, su pinyin, título, explicación); el ejemplo suena al tocar.
+  final List<(String, String, String, String)> filas;
 
   @override
   Widget build(BuildContext context) {
     final c = context.colores;
     return Column(
       children: [
-        for (final (ejemplo, titulo, texto) in filas)
+        for (final (ejemplo, pinyin, titulo, texto) in filas)
           Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: TarjetaVidrio(
               relleno: const EdgeInsets.fromLTRB(14, 8, 14, 8),
+              onTap: () => sonarCaracter(ejemplo, pinyin),
               child: Row(
                 children: [
-                  SizedBox(width: 48, child: Text(ejemplo, textAlign: TextAlign.center, style: const TextStyle(fontSize: 30))),
+                  SizedBox(
+                    width: 52,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(ejemplo, textAlign: TextAlign.center, style: const TextStyle(fontSize: 30, height: 1.15)),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(pinyin, style: TextStyle(fontSize: 12, color: c.tinta, fontWeight: FontWeight.w600)),
+                            const SizedBox(width: 2),
+                            Icon(Icons.volume_up_outlined, size: 12, color: c.tenue),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -694,9 +757,15 @@ class OrdenHanzi extends StatelessWidget {
   @override
   Widget build(BuildContext context) => _ConTrazos(
         caracter: caracter,
-        constructor: (context, c) => SizedBox(
-          height: 240,
-          child: AnimacionTrazos(caracter: c.caracter, trazosSvg: c.trazosSvg, medianas: c.medianas),
+        constructor: (context, c) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: 240,
+              child: AnimacionTrazos(caracter: c.caracter, trazosSvg: c.trazosSvg, medianas: c.medianas),
+            ),
+            _LineaSonora(caracter: c.caracter, pinyin: c.pinyin),
+          ],
         ),
       );
 }
@@ -714,6 +783,21 @@ class EscribirHanzi extends StatefulWidget {
 class _EscribirHanziState extends State<EscribirHanzi> {
   bool _listo = false;
   Key _clave = UniqueKey();
+
+  /// El último trazo que la app marcó mal (para «¿Ese trazo estaba bien?»).
+  TrazoReportado? _rechazo;
+  bool _avisado = false;
+
+  Future<void> _avisarTrazo() async {
+    final trazo = _rechazo;
+    if (trazo == null || _avisado) return;
+    setState(() => _avisado = true);
+    final aviso = ScaffoldMessenger.of(context);
+    await DatosApp.de(context).reportarTrazo(trazo);
+    aviso.showSnackBar(SnackBar(
+      content: Text(tr('¡Gracias! Lo anotamos para revisarlo. Va en tu resumen (Ajustes → Enviar mi opinión).')),
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -744,11 +828,23 @@ class _EscribirHanziState extends State<EscribirHanzi> {
                   onCompletado: (_) {
                     Sensaciones.respuesta(true);
                     setState(() => _listo = true);
+                    sonarCaracter(car.caracter, car.pinyin);
                   },
+                  onTrazoRechazado: (indice, alReves, puntos) => setState(() {
+                    _rechazo = TrazoReportado(
+                      caracter: car.caracter,
+                      indice: indice,
+                      alReves: alReves,
+                      modoNovato: true,
+                      momento: DateTime.now(),
+                      puntos: TrazoReportado.simplificar(puntos),
+                    );
+                    _avisado = false;
+                  }),
                 ),
               ),
             ),
-            const SizedBox(height: 10),
+            _LineaSonora(caracter: car.caracter, pinyin: car.pinyin),
             if (_listo)
               Wrap(
                 alignment: WrapAlignment.center,
@@ -760,6 +856,7 @@ class _EscribirHanziState extends State<EscribirHanzi> {
                     onPressed: () => setState(() {
                       _listo = false;
                       _clave = UniqueKey();
+                      _rechazo = null;
                     }),
                     icon: const Icon(Icons.refresh, size: 18),
                     label: Text(tr('Otra vez')),
@@ -769,6 +866,13 @@ class _EscribirHanziState extends State<EscribirHanzi> {
             else
               Text(tr('Sigue la silueta. Si te equivocas, te muestra el trazo.'),
                   textAlign: TextAlign.center, style: TextStyle(fontSize: 13.5, color: c.suave)),
+            if (_rechazo != null && !_avisado)
+              TextButton.icon(
+                style: TextButton.styleFrom(foregroundColor: c.suave),
+                icon: const Icon(Icons.flag_outlined, size: 16),
+                label: Text(tr('¿Ese trazo estaba bien? Avísanos'), style: const TextStyle(fontSize: 13)),
+                onPressed: _avisarTrazo,
+              ),
           ],
         );
       }),
