@@ -1,0 +1,128 @@
+[chrome_android] 19:29:16 [consola debug] Injecting <script> tag. Using callback.
+[chrome_android] 19:29:17 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+[chrome_android] 19:29:17 [consola log] Arranque: carpeta de datos
+[chrome_android] 19:29:18 [consola log] Arranque: registro de errores
+[chrome_android] 19:29:18 [consola log] Arranque: base de datos
+[chrome_android] 19:29:22 [consola log] Arranque: ajustes
+[chrome_android] 19:29:23 [consola log] Arranque: dibujos del fondo
+[chrome_android] 19:29:23 [consola log] Arranque: listo
+[chrome_android] 19:29:23 [fuera del sitio] GET https://fonts.gstatic.com/s/notosanssymbols2/v24/I_uyMoGduATTei9eI8daxVHDyfisHr71-vrgfE71.woff2
+[chrome_android] 19:29:24 tutorial a los 7.5 s
+[chrome_android] 19:29:24 [consola warning] Could not find a set of Noto fonts to display all missing characters. Please add a font asset for the missing characters. See: https://docs.flutter.dev/cookbook/design/fonts
+[chrome_android] 19:29:26 captura 00_tutorial
+[chrome_android] 19:29:27 [fuera del sitio] GET https://fonts.gstatic.com/s/notocoloremoji/v32/Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabsE4tq3luCC7p-aXxcn.2.woff2
+[chrome_android] 19:29:27 [fuera del sitio] GET https://fonts.gstatic.com/s/notocoloremoji/v32/Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabsE4tq3luCC7p-aXxcn.9.woff2
+[chrome_android] 19:29:27 [fuera del sitio] GET https://fonts.gstatic.com/s/notocoloremoji/v32/Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabsE4tq3luCC7p-aXxcn.4.woff2
+[chrome_android] 19:29:30 captura 00b_desde_cero
+[chrome_android] 19:29:35 [consola debug] Injecting <script> tag. Using callback.
+[chrome_android] 19:29:35 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+[chrome_android] 19:29:35 [consola log] Arranque: carpeta de datos
+[chrome_android] 19:29:36 [consola log] Arranque: registro de errores
+[chrome_android] 19:29:36 [consola log] Arranque: base de datos
+[chrome_android] 19:29:36 [consola log] Arranque: ajustes
+[chrome_android] 19:29:37 [consola log] Arranque: dibujos del fondo
+[chrome_android] 19:29:37 [consola log] Arranque: listo
+[chrome_android] 19:29:37 primera vez: "Estudiar" a los 3.1 s
+[chrome_android] 19:29:37 [fuera del sitio] GET https://fonts.gstatic.com/s/notosanssymbols2/v24/I_uyMoGduATTei9eI8daxVHDyfisHr71-vrgfE71.woff2
+[chrome_android] 19:29:38 [consola warning] Could not find a set of Noto fonts to display all missing characters. Please add a font asset for the missing characters. See: https://docs.flutter.dev/cookbook/design/fonts
+[chrome_android] 19:29:41 captura 01_inicio
+[chrome_android] 19:29:42 guardado en IndexedDB: {"bloques":10546,"ms":390}
+[chrome_android] 19:29:45 captura 02_modo
+[chrome_android] 19:29:48 captura 03_niveles
+[chrome_android] 19:29:50 captura 04_hsk
+[chrome_android] 19:29:50 audio: Ogg Opus "probably", CAF Opus "", ma1 200 1457 bytes
+[chrome_android] 19:29:51 sonido: {"resultado":"true","sono":true,"desbloqueado":true,"archivo":"silabas/ma1.opus"}
+[chrome_android] 19:29:51 [consola debug] Injecting <script> tag. Using callback.
+[chrome_android] 19:29:52 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+[chrome_android] 19:29:52 [consola log] Arranque: carpeta de datos
+[chrome_android] 19:29:53 [consola log] Arranque: registro de errores
+[chrome_android] 19:29:53 [consola log] Arranque: base de datos
+[chrome_android] 19:29:54 [consola log] Arranque: ajustes
+[chrome_android] 19:29:54 [consola log] Arranque: dibujos del fondo
+[chrome_android] 19:29:54 [consola log] Arranque: listo
+[chrome_android] 19:29:55 segunda vez: "Estudiar" a los 3.4 s
+[chrome_android] 19:29:55 [fuera del sitio] GET https://fonts.gstatic.com/s/notosanssymbols2/v24/I_uyMoGduATTei9eI8daxVHDyfisHr71-vrgfE71.woff2
+[chrome_android] 19:29:55 [consola warning] Could not find a set of Noto fonts to display all missing characters. Please add a font asset for the missing characters. See: https://docs.flutter.dev/cookbook/design/fonts
+[chrome_android] 19:29:58 captura 05_segunda_vez
+[chrome_android] 19:30:02 [consola debug] Injecting <script> tag. Using callback.
+[chrome_android] 19:30:02 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+[chrome_android] 19:30:02 [consola log] Arranque: carpeta de datos
+[chrome_android] 19:30:03 [consola log] Arranque: registro de errores
+[chrome_android] 19:30:03 [consola log] Arranque: base de datos
+[chrome_android] 19:30:04 [consola log] Arranque: ajustes
+[chrome_android] 19:30:04 [consola log] Arranque: dibujos del fondo
+[chrome_android] 19:30:04 [consola log] Arranque: listo
+[chrome_android] 19:30:05 sin internet: "Estudiar" a los 3.3 s
+[chrome_android] 19:30:05 [fuera del sitio] GET https://fonts.gstatic.com/s/notosanssymbols2/v24/I_uyMoGduATTei9eI8daxVHDyfisHr71-vrgfE71.woff2
+[chrome_android] 19:30:05 [consola warning] Could not find a set of Noto fonts to display all missing characters. Please add a font asset for the missing characters. See: https://docs.flutter.dev/cookbook/design/fonts
+[chrome_android] 19:30:09 captura 06_sin_internet
+[chrome_android] 19:30:09 [fuera del sitio] GET https://api.github.com/repos/AbraKdabra1/hanzi_dojo/releases?per_page=10
+[chrome_android] 19:30:09 descarga: Versión 2.1.0-beta.6 · 62 MB → https://github.com/AbraKdabra1/hanzi_dojo/releases/download/v2.1.0-beta.6/Meizi_Hanzi_2.1.0-beta.6_arm64.apk
+[chrome_android] 19:30:09 descarga: plataforma android
+[chrome_android] 19:30:11 captura 07_descarga
+[chrome_android] 19:30:11 privacidad: Aviso de privacidad de Meizi Hanzi
+[chrome_android] 19:30:11 pasos completos: 7 de 7
+[safari_iphone] 19:30:12 [consola debug] Injecting <script> tag. Using callback.
+[safari_iphone] 19:30:12 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+[safari_iphone] 19:30:13 [consola log] Arranque: carpeta de datos
+[safari_iphone] 19:30:13 [consola log] Arranque: registro de errores
+[safari_iphone] 19:30:13 [consola log] Arranque: base de datos
+[safari_iphone] 19:30:15 [consola log] Arranque: ajustes
+[safari_iphone] 19:30:15 [consola log] Arranque: dibujos del fondo
+[safari_iphone] 19:30:15 [consola log] Arranque: listo
+[safari_iphone] 19:30:17 [fuera del sitio] GET https://fonts.gstatic.com/s/notosanssymbols2/v24/I_uyMoGduATTei9eI8daxVHDyfisHr71-vrgfE71.woff2
+[safari_iphone] 19:30:17 tutorial a los 5.9 s
+[safari_iphone] 19:30:18 [consola warning] Could not find a set of Noto fonts to display all missing characters. Please add a font asset for the missing characters. See: https://docs.flutter.dev/cookbook/design/fonts
+[safari_iphone] 19:30:19 captura 00_tutorial
+[safari_iphone] 19:30:19 [fuera del sitio] GET https://fonts.gstatic.com/s/notocoloremoji/v32/Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabsE4tq3luCC7p-aXxcn.2.woff2
+[safari_iphone] 19:30:19 [fuera del sitio] GET https://fonts.gstatic.com/s/notocoloremoji/v32/Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabsE4tq3luCC7p-aXxcn.9.woff2
+[safari_iphone] 19:30:20 [fuera del sitio] GET https://fonts.gstatic.com/s/notocoloremoji/v32/Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabsE4tq3luCC7p-aXxcn.4.woff2
+[safari_iphone] 19:30:23 captura 00b_desde_cero
+[safari_iphone] 19:30:28 [consola debug] Injecting <script> tag. Using callback.
+[safari_iphone] 19:30:28 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+[safari_iphone] 19:30:29 [consola log] Arranque: carpeta de datos
+[safari_iphone] 19:30:30 [consola log] Arranque: registro de errores
+[safari_iphone] 19:30:30 [consola log] Arranque: base de datos
+[safari_iphone] 19:30:30 [consola log] Arranque: ajustes
+[safari_iphone] 19:30:30 [consola log] Arranque: dibujos del fondo
+[safari_iphone] 19:30:30 [consola log] Arranque: listo
+[safari_iphone] 19:30:30 primera vez: "Estudiar" a los 2.0 s
+[safari_iphone] 19:30:30 [fuera del sitio] GET https://fonts.gstatic.com/s/notosanssymbols2/v24/I_uyMoGduATTei9eI8daxVHDyfisHr71-vrgfE71.woff2
+[safari_iphone] 19:30:30 [consola warning] Could not find a set of Noto fonts to display all missing characters. Please add a font asset for the missing characters. See: https://docs.flutter.dev/cookbook/design/fonts
+[safari_iphone] 19:30:33 captura 01_inicio
+[safari_iphone] 19:30:33 guardado en IndexedDB: {"bloques":10546,"ms":18}
+[safari_iphone] 19:30:36 captura 02_modo
+[safari_iphone] 19:30:39 captura 03_niveles
+[safari_iphone] 19:30:42 captura 04_hsk
+[safari_iphone] 19:30:42 audio: Ogg Opus "probably", CAF Opus "", ma1 200 1457 bytes
+[safari_iphone] 19:30:42 sonido: no se prueba en WebKit de Playwright (no toca Opus ni CAF)
+[safari_iphone] 19:30:42 [consola debug] Injecting <script> tag. Using callback.
+[safari_iphone] 19:30:42 [fuera del sitio] GET https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2
+[safari_iphone] 19:30:43 [consola log] Arranque: carpeta de datos
+[safari_iphone] 19:30:43 [consola log] Arranque: registro de errores
+[safari_iphone] 19:30:43 [consola log] Arranque: base de datos
+[safari_iphone] 19:30:43 [consola log] Arranque: ajustes
+[safari_iphone] 19:30:43 [consola log] Arranque: dibujos del fondo
+[safari_iphone] 19:30:43 [consola log] Arranque: listo
+[safari_iphone] 19:30:44 [fuera del sitio] GET https://fonts.gstatic.com/s/notosanssymbols2/v24/I_uyMoGduATTei9eI8daxVHDyfisHr71-vrgfE71.woff2
+[safari_iphone] 19:30:44 segunda vez: "Estudiar" a los 2.0 s
+[safari_iphone] 19:30:44 [consola warning] Could not find a set of Noto fonts to display all missing characters. Please add a font asset for the missing characters. See: https://docs.flutter.dev/cookbook/design/fonts
+[safari_iphone] 19:30:47 captura 05_segunda_vez
+[safari_iphone] 19:30:47 sin internet: no se prueba en WebKit de Playwright (sin service workers)
+[safari_iphone] 19:30:47 [fuera del sitio] GET https://api.github.com/repos/AbraKdabra1/hanzi_dojo/releases?per_page=10
+[safari_iphone] 19:30:48 descarga: Versión 2.1.0-beta.6 · 62 MB → https://github.com/AbraKdabra1/hanzi_dojo/releases/download/v2.1.0-beta.6/Meizi_Hanzi_2.1.0-beta.6_arm64.apk
+[safari_iphone] 19:30:48 descarga: plataforma ios
+[safari_iphone] 19:30:49 captura 07_descarga
+[safari_iphone] 19:30:49 privacidad: Aviso de privacidad de Meizi Hanzi
+[safari_iphone] 19:30:49 pasos completos: 7 de 7
+chrome_android · primera vez: 3.1 s
+chrome_android · base guardada: 10546 bloques, 0.4 s después de abrir
+chrome_android · audio: ogg="probably" caf=""
+chrome_android · segunda vez: 3.4 s
+chrome_android · sin internet: 3.3 s
+chrome_android · pasos completos: 7 de 7
+safari_iphone · primera vez: 2.0 s
+safari_iphone · base guardada: 10546 bloques, 0.0 s después de abrir
+safari_iphone · audio: ogg="probably" caf=""
+safari_iphone · segunda vez: 2.0 s
+safari_iphone · pasos completos: 7 de 7

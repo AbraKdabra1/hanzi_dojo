@@ -1,0 +1,11 @@
+chrome_android · primera vez: 3.1 s
+chrome_android · base guardada: 10546 bloques, 0.4 s después de abrir
+chrome_android · audio: ogg="probably" caf=""
+chrome_android · segunda vez: 3.4 s
+chrome_android · sin internet: 3.3 s
+chrome_android · pasos completos: 7 de 7
+safari_iphone · primera vez: 2.0 s
+safari_iphone · base guardada: 10546 bloques, 0.0 s después de abrir
+safari_iphone · audio: ogg="probably" caf=""
+safari_iphone · segunda vez: 2.0 s
+safari_iphone · pasos completos: 7 de 7
