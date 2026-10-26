@@ -1,0 +1,1 @@
+Beta 7: in "Chinese from zero" every character plays when tapped, 吗 no longer sounds like mā, and a flag on each screen lets you report pronunciation, pinyin or writing mistakes.

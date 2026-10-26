@@ -1,0 +1,211 @@
+clave: historias-de-chengyu
+titulo: 成语故事
+titulo_es: Historias de chengyu
+nivel: 3
+tipo: adaptado
+descripcion: Los chengyu son expresiones de cuatro caracteres que los chinos usan todos los días. Cada una guarda una historia de hace más de dos mil años: aquí están seis de las más conocidas.
+fuente: Fábulas de los filósofos de los periodos de Primaveras y Otoños y de los Reinos Combatientes: «Han Feizi», «Zhuangzi», «Estrategias de los Reinos Combatientes» y «Anales de Lü Buwei» (dominio público). Versión en chino graduado escrita para Meizi Hanzi.
+
+## 守株待兔
+titulo_es: Esperar conejos junto al tronco
+origen: «Han Feizi» (siglo III a. C.).
+palabras: 成语 = chengyu (expresión de cuatro caracteres); 兔子 = conejo; 撞 = chocar; 农民 = campesino
+
+很久以前，{宋国}有一个农民。他每天在地里种[zhòng]地，从早忙到晚，非常辛苦。
+> Hace mucho tiempo, en el reino de Song, vivía un campesino. Todos los días trabajaba su campo de la mañana a la noche; era muy duro.
+
+有一天，他正在地里干活，忽然看见一只兔子从远处跑了过来。
+> Un día, mientras trabajaba en el campo, de pronto vio un conejo que llegaba corriendo desde lejos.
+
+兔子跑得太快了，一下子撞到了地边的一棵树上，倒在地上，死了。
+> El conejo corría tan rápido que se estrelló contra un árbol al borde del campo, cayó al suelo y murió.
+
+农民高兴极了。他跑过去，拿起兔子，心里想："不用干活，就能得到一只兔子，这太好了！"
+> El campesino se puso contentísimo. Fue corriendo, recogió el conejo y pensó: «¡Conseguir un conejo sin trabajar! ¡Qué maravilla!».
+
+那天晚上，他吃了一顿很香的兔子肉。
+> Esa noche se comió una cena deliciosa de carne de conejo.
+
+第二天，他没有去种[zhòng]地，而是坐在那棵树下面，等着兔子再跑过来撞死。
+> Al día siguiente no fue a trabajar el campo: se sentó bajo aquel árbol a esperar que otro conejo viniera a estrellarse.
+
+他等了一天，没有兔子。等了两天，还是没有兔子。他想："明天一定会有兔子来的。"
+> Esperó un día y no llegó ningún conejo. Esperó dos días y tampoco. Pensó: «Mañana seguro vendrá alguno».
+
+就这样，他一天一天地[de]等下去。地里的草越长[zhǎng]越高，他种[zhòng]的菜都死了。
+> Así siguió esperando día tras día. La hierba del campo crecía cada vez más alta y las verduras que había sembrado se murieron.
+
+可是，再也没有兔子来撞树了。后来，这个农民成了宋国人的笑话。
+> Pero ningún otro conejo vino a chocar contra el árbol. Con el tiempo, el campesino se convirtió en el hazmerreír de la gente de Song.
+
+"守株待兔"这个成语，说的是那些不想努力、只想等着好事自己到来的人。
+> El chengyu «esperar conejos junto al tronco» se dice de quienes no quieren esforzarse y solo esperan que las cosas buenas les lleguen solas.
+
+## 画蛇添足
+titulo_es: Dibujarle patas a la serpiente
+origen: «Estrategias de los Reinos Combatientes» (siglo I a. C., con historias más antiguas).
+palabras: 蛇 = serpiente; 添 = añadir; 壶 = jarra; 比赛 = competencia
+
+很久以前，{楚国}有一个人请朋友们来家里喝酒。
+> Hace mucho tiempo, en el reino de Chu, un hombre invitó a sus amigos a beber vino a su casa.
+
+可是酒只有一壶，人却有好几个。几个人一起喝，不够；一个人喝，正好。
+> Pero solo había una jarra de vino y eran varios. Para todos juntos no alcanzaba; para uno solo, era justo.
+
+大家商量了一下，说："我们来比赛画蛇吧！谁先画好，这壶酒就是谁的。"
+> Lo platicaron y dijeron: «¡Hagamos una competencia de dibujar serpientes! El primero que termine se queda con la jarra».
+
+大家都在地上画了起来。有一个人画得最快，一会儿就画好了。
+> Todos se pusieron a dibujar en el suelo. Uno de ellos fue el más rápido y terminó enseguida.
+
+他拿起酒壶，正要喝，看到别人还在画，就得意地说："你们画得太慢了！我还能给蛇画上脚呢！"
+> Tomó la jarra y, cuando estaba a punto de beber, vio que los demás seguían dibujando y dijo, presumido: «¡Qué lentos son! ¡Todavía me da tiempo de dibujarle patas a la serpiente!».
+
+他一只手拿着酒壶，一只手给蛇画脚。可是他还没画完，另一个人已经把蛇画好了。
+> Con una mano sostenía la jarra y con la otra le dibujaba patas a la serpiente. Pero antes de que terminara, otro ya había acabado su serpiente.
+
+那个人把酒壶拿了过去，说："蛇本来是没有脚的。你给它画上脚，它就不是蛇了！"
+> Ese otro le quitó la jarra y dijo: «Las serpientes no tienen patas. Si le dibujas patas, ¡ya no es una serpiente!».
+
+说完，他就把酒喝了。给蛇画脚的人，只好在一边看着。
+> Dicho esto, se bebió el vino. El que le había dibujado patas a la serpiente solo pudo quedarse mirando.
+
+"画蛇添足"告诉我们：做事的时候，做了不需要做的事，反而会把好事变成坏事。
+> «Dibujarle patas a la serpiente» nos enseña que, al hacer algo, añadir lo que no hace falta puede convertir un acierto en un error.
+
+## 狐假虎威
+titulo_es: El zorro presume del poder del tigre
+origen: «Estrategias de los Reinos Combatientes».
+palabras: 狐狸 = zorro; 老虎 = tigre; 森林 = bosque; 天帝 = el Emperador del Cielo; 吓 = asustar
+
+森林里住着一只老虎。它是森林里最有力气的动物，大家都怕它。
+> En el bosque vivía un tigre. Era el animal más fuerte del bosque y todos le tenían miedo.
+
+一天，老虎饿了，出去找吃的。它抓到了一只狐狸。
+> Un día, el tigre tenía hambre y salió a buscar comida. Atrapó a un zorro.
+
+狐狸很害怕，可是它眼睛一转，就想出了一个办法。
+> El zorro estaba muy asustado, pero en un abrir y cerrar de ojos se le ocurrió una idea.
+
+它大声对老虎说："你不能吃我！天帝让我来管森林里所有的动物。你吃了我，天帝会非常生气的！"
+> Le dijo al tigre en voz alta: «¡No puedes comerme! El Emperador del Cielo me mandó a gobernar a todos los animales del bosque. ¡Si me comes, se va a enojar muchísimo!».
+
+老虎听了，有点儿不相信。
+> El tigre lo escuchó y no se lo creyó del todo.
+
+狐狸说："你要是不信，就跟在我后面走一走。你看看，动物们见了我，是不是都会跑！"
+> El zorro dijo: «Si no me crees, camina detrás de mí. ¡Ya verás cómo todos los animales huyen al verme!».
+
+老虎想了想，就跟在狐狸后面，走进了森林。
+> El tigre lo pensó y lo siguió hacia el bosque.
+
+森林里的小动物们看见狐狸后面跟着一只大老虎，都吓坏了，马上跑开了。
+> Los animalitos del bosque vieron que detrás del zorro venía un tigre enorme, se asustaron muchísimo y huyeron de inmediato.
+
+老虎看了，真的以为动物们怕的是狐狸，就放走了狐狸。
+> El tigre, al verlo, creyó de verdad que los animales le tenían miedo al zorro, y lo dejó ir.
+
+其实，动物们怕的不是狐狸，而是它后面的老虎。
+> En realidad, los animales no le temían al zorro, sino al tigre que venía detrás.
+
+"狐假虎威"说的是那些借别人的力量来吓人的人。
+> «El zorro presume del poder del tigre» se dice de quienes usan el poder de otro para intimidar a los demás.
+
+## 井底之蛙
+titulo_es: La rana en el fondo del pozo
+origen: «Zhuangzi» (siglo IV a. C.).
+palabras: 井 = pozo; 青蛙 = rana; 海龟 = tortuga de mar; 世界 = mundo
+
+有一口很老的井，井里住着一只青蛙。
+> Había un pozo muy viejo y en él vivía una rana.
+
+青蛙每天在井里跳来跳去，在水里游来游去，觉得非常快乐。
+> La rana saltaba de un lado a otro y nadaba de aquí para allá todo el día; se sentía muy feliz.
+
+它常常对自己说："我住的地方真大！世界上没有比这里更好的地方了。"
+> A menudo se decía: «¡Qué grande es mi casa! No hay en el mundo un lugar mejor que este».
+
+有一天，一只从东海来的大海龟，走到了井边。
+> Un día llegó a la orilla del pozo una gran tortuga que venía del mar del Este.
+
+青蛙高兴地对它说："你好，朋友！快下来玩吧！我这里有水，有泥，我想跳就跳，想游就游，多快乐呀！"
+> La rana le dijo, contenta: «¡Hola, amiga! ¡Baja a jugar! Aquí tengo agua y lodo; salto cuando quiero y nado cuando quiero. ¡Es lo más divertido!».
+
+海龟想下去看看，可是它的身体太大了，一只脚还没进去，就被卡住了。
+> La tortuga quiso bajar a ver, pero era demasiado grande: antes de meter siquiera una pata, se quedó atorada.
+
+海龟只好回到井边。它问青蛙："你见过大海吗？"
+> La tortuga tuvo que volver a la orilla. Le preguntó a la rana: «¿Has visto alguna vez el mar?».
+
+青蛙说："没有。大海有多大？"
+> La rana respondió: «No. ¿Qué tan grande es el mar?».
+
+海龟说："大海非常非常大，走一千里、一万里，也看不到它的边。下很多年的大雨，海水不会多一点儿；很多年不下雨，海水也不会少一点儿。住在大海里，那才是真的快乐！"
+> La tortuga dijo: «El mar es inmenso: aunque camines mil leguas, diez mil leguas, no le ves el final. Aunque llueva muchos años, no crece ni un poco; aunque pasen muchos años sin lluvia, no baja ni un poco. ¡Vivir en el mar sí es la verdadera felicidad!».
+
+青蛙听了，一句话也说不出来。原来，外面的世界这么大！
+> La rana lo escuchó y no pudo decir ni una palabra. ¡Así que el mundo de afuera era así de grande!
+
+"井底之蛙"说的是那些见得很少、却以为自己知道很多的人。
+> «La rana en el fondo del pozo» se dice de quienes han visto muy poco y aun así creen que saben mucho.
+
+## 亡羊补牢
+titulo_es: Reparar el corral después de perder la oveja
+origen: «Estrategias de los Reinos Combatientes».
+palabras: 羊 = oveja; 羊圈 = corral de ovejas; 狼 = lobo; 补 = reparar; 邻居 = vecino
+
+从前，有一个人养了很多羊。
+> Había una vez un hombre que criaba muchas ovejas.
+
+一天早上，他发现羊少了一只。原来，羊圈破了一个洞，晚上狼从洞里进来，吃了一只羊。
+> Una mañana descubrió que le faltaba una oveja. Resulta que el corral tenía un agujero: por la noche, un lobo había entrado por ahí y se había comido una.
+
+邻居对他说："快把羊圈补一补吧！"
+> Su vecino le dijo: «¡Repara pronto el corral!».
+
+他说："羊已经丢了，还补羊圈干什么？"
+> Él respondió: «La oveja ya se perdió, ¿para qué voy a reparar el corral?».
+
+第二天早上，他又发现羊少了一只。狼又从那个洞里进来了！
+> A la mañana siguiente, otra vez le faltaba una oveja. ¡El lobo había vuelto a entrar por el mismo agujero!
+
+这一次，他知道自己错了。他想："邻居说得对。现在补，还不晚。"
+> Esta vez entendió su error. Pensó: «El vecino tenía razón. Si lo reparo ahora, todavía no es tarde».
+
+他马上把羊圈补好了。从那以后，狼再也进不来了，他的羊也再没有少过。
+> Reparó el corral de inmediato. Desde entonces el lobo no pudo volver a entrar y no le volvió a faltar ninguna oveja.
+
+"亡羊补牢"告诉我们：出了问题以后，马上想办法改正，还来得及。
+> «Reparar el corral después de perder la oveja» nos enseña que, cuando algo sale mal, si lo corregimos enseguida todavía estamos a tiempo.
+
+## 刻舟求剑
+titulo_es: Marcar el barco para buscar la espada
+origen: «Anales de Lü Buwei» (siglo III a. C.).
+palabras: 剑 = espada; 刻 = grabar, marcar; 记号 = marca, señal; 变化 = cambio
+
+很久以前，楚国有一个人要过江。他坐在船上，身上带着一把很贵的剑。
+> Hace mucho tiempo, un hombre del reino de Chu tenía que cruzar un río. Iba en un barco y llevaba consigo una espada muy valiosa.
+
+船到了江中间，他一不小心，剑从船上掉进了水里。
+> Cuando el barco estaba a mitad del río, por un descuido, la espada se le cayó al agua.
+
+船上的人都说："快下去找吧！"
+> La gente del barco le dijo: «¡Lánzate rápido a buscarla!».
+
+他却一点儿也不急。他拿出一把小刀，在船边刻了一个记号。
+> Pero él no tenía ninguna prisa. Sacó un cuchillito e hizo una marca en el costado del barco.
+
+他说："我的剑是从这里掉下去的。等船停了，我从这里下去找，就能找到。"
+> Dijo: «Mi espada cayó por aquí. Cuando el barco se detenga, bajaré por este lugar a buscarla y la encontraré».
+
+船到了江的另一边，停了下来。他就从刻着记号的地方跳进水里，找他的剑。
+> El barco llegó a la otra orilla y se detuvo. Entonces él saltó al agua por el lugar marcado para buscar su espada.
+
+他找了很久，什么也没找到。
+> Buscó mucho tiempo y no encontró nada.
+
+船一直在往前走，剑却不会跟着船走。他在这里，怎么能找到剑呢？
+> El barco había seguido avanzando, pero la espada no se movió con él. ¿Cómo iba a encontrarla ahí?
+
+"刻舟求剑"说的是那些不知道事情会变化、还用老办法做事的人。
+> «Marcar el barco para buscar la espada» se dice de quienes no se dan cuenta de que las cosas cambian y siguen haciéndolas a la antigua.

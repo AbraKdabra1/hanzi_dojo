@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget de la pantalla de inicio (Habito.kt, WidgetHanzi): carácter del
+     día, su pinyin y significado, y lo que toca hoy. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_raiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_fondo"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/widget_titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/widget_titulo"
+        android:textColor="@color/widget_suave"
+        android:textSize="11sp" />
+
+    <TextView
+        android:id="@+id/widget_caracter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:text="汉"
+        android:textColor="@color/widget_tinta"
+        android:textSize="54sp" />
+
+    <TextView
+        android:id="@+id/widget_pinyin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="hàn"
+        android:textColor="@color/widget_acento"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/widget_significado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="2"
+        android:text="@string/widget_descripcion"
+        android:textColor="@color/widget_suave"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/widget_estado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="Meizi Hanzi"
+        android:textColor="@color/widget_tinta"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+</LinearLayout>

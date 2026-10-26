@@ -1,8 +1,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Recordatorio diario (Habito.kt): mostrar el aviso (Android 13+ lo
+         pregunta al activarlo) y volver a programarlo al reiniciar el teléfono. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Solo para el aviso de versión nueva (helpers/actualizaciones.dart): si
+         el usuario lo acepta, una vez al día se pregunta a GitHub cuál es la
+         versión más reciente. No se envía nada sobre el usuario. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
-        android:label="hanzi_what"
+        android:label="Meizi Hanzi"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -25,6 +36,38 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- Hábito (Habito.kt): recordatorio diario, widget y compartir imagen. -->
+        <receiver
+            android:name=".ReceptorRecordatorio"
+            android:exported="false" />
+        <!-- Carácter del día en la pantalla de bloqueo (CaracterDiario.kt). -->
+        <receiver
+            android:name=".ReceptorCaracterDia"
+            android:exported="false" />
+        <receiver
+            android:name=".ReceptorArranque"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".WidgetHanzi"
+            android:exported="false"
+            android:label="@string/widget_nombre">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_hanzi_info" />
+        </receiver>
+        <provider
+            android:name=".ProveedorArchivos"
+            android:authorities="${applicationId}.archivos"
+            android:exported="false"
+            android:grantUriPermissions="true" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
@@ -40,6 +83,11 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- Desde Android 11 la app solo "ve" el motor de texto a voz si lo
+             declara aquí; sin esto el botón de pronunciación no suena. -->
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE"/>
         </intent>
     </queries>
 </manifest>

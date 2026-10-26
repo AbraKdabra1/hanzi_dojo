@@ -1,8 +1,20 @@
-import 'dart:ui';
+// ─────────────────────────────────────────────────────────────────────────────
+// pantalla_modo.dart — ¿Cómo quieres estudiar?
+//
+// 1. Nivel de experiencia:
+//    Novato  → ves la silueta del carácter y, si te equivocas, una animación
+//              del trazo correcto.
+//    Experto → sin silueta ni animación: escribes de memoria (la pista roja
+//              del trazo correcto sí aparece al equivocarte).
+// 2. Qué estudiar: niveles HSK oficiales o radicales Kangxi y sus familias.
+// ─────────────────────────────────────────────────────────────────────────────
+
 import 'package:flutter/material.dart';
+import '../tema.dart';
 import '../widgets/fondo_tinta.dart';
 import 'pantalla_seleccion.dart';
 import 'pantalla_radicales.dart';
+import '../idioma.dart';
 
 class PantallaModo extends StatefulWidget {
   const PantallaModo({super.key});
@@ -17,8 +29,8 @@ class _PantallaModoState extends State<PantallaModo> {
   void _navegar(bool esRadical) {
     if (_modoNovato == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Primero elige tu nivel de experiencia'),
+        SnackBar(
+          content: Text(tr('Primero elige tu nivel de experiencia')),
           duration: Duration(seconds: 2),
           behavior: SnackBarBehavior.floating,
         ),
@@ -37,6 +49,9 @@ class _PantallaModoState extends State<PantallaModo> {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colores;
+    final azul = c.oscuro ? const Color(0xFF90CAF9) : const Color(0xFF1565C0);
+    final morado = c.oscuro ? const Color(0xFFCE93D8) : const Color(0xFF6A1B9A);
     return FondoTintaChina(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -44,19 +59,21 @@ class _PantallaModoState extends State<PantallaModo> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios,
-                color: Colors.black87, size: 20),
+            icon: Icon(Icons.arrow_back_ios, color: c.tinta, size: 20),
             onPressed: () => Navigator.pop(context),
           ),
-          title: const Text('¿Cómo quieres estudiar?',
-              style: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600)),
+          title: Text(tr('¿Cómo quieres estudiar?'),
+              style: TextStyle(color: c.tinta, fontSize: 16, fontWeight: FontWeight.w600)),
           centerTitle: true,
         ),
+        // Desplazable si no cabe (horizontal); si cabe, el Spacer empuja la nota abajo.
         body: SafeArea(
-          child: Padding(
+          child: LayoutBuilder(
+            builder: (context, restricciones) => SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: restricciones.maxHeight),
+                child: IntrinsicHeight(
+                  child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +81,7 @@ class _PantallaModoState extends State<PantallaModo> {
                 const SizedBox(height: 20),
 
                 // ── Selector de experiencia ──────────────────────────
-                const _Seccion(titulo: "Tu nivel de experiencia"),
+                _Seccion(titulo: tr('Tu nivel de experiencia')),
                 const SizedBox(height: 12),
                 Row(
                   children: [
@@ -72,8 +89,8 @@ class _PantallaModoState extends State<PantallaModo> {
                       child: _BotonSelector(
                         seleccionado: _modoNovato == true,
                         icono: Icons.school_rounded,
-                        titulo: "Soy novato",
-                        subtitulo: "Con guía de trazos",
+                        titulo: tr('Soy novato'),
+                        subtitulo: tr('Silueta y guía de trazos'),
                         onTap: () => setState(() => _modoNovato = true),
                       ),
                     ),
@@ -82,8 +99,8 @@ class _PantallaModoState extends State<PantallaModo> {
                       child: _BotonSelector(
                         seleccionado: _modoNovato == false,
                         icono: Icons.psychology_rounded,
-                        titulo: "Tengo experiencia",
-                        subtitulo: "Sin pistas de trazos",
+                        titulo: tr('Tengo experiencia'),
+                        subtitulo: tr('De memoria, sin silueta'),
                         onTap: () => setState(() => _modoNovato = false),
                       ),
                     ),
@@ -93,20 +110,20 @@ class _PantallaModoState extends State<PantallaModo> {
                 const SizedBox(height: 32),
 
                 // ── Selector de contenido ────────────────────────────
-                const _Seccion(titulo: "¿Qué quieres estudiar?"),
+                _Seccion(titulo: tr('¿Qué quieres estudiar?')),
                 const SizedBox(height: 12),
 
                 // Tarjeta HSK — colores azules fijos en hex
                 _TarjetaEstudio(
                   icono: "📚",
-                  titulo: "Niveles HSK",
+                  titulo: tr('Niveles HSK'),
                   subtitulo:
-                      "Vocabulario oficial del examen de chino estándar",
+                      tr('Los 3,000 caracteres de la lista oficial HSK 3.0'),
                   detalle: "HSK 1 → HSK 7-9",
-                  colorFondo:      const Color(0x0F1565C0),
-                  colorBorde:      const Color(0x4D1565C0), // azul 30%
-                  colorDetalleFondo: const Color(0x1A1565C0), // azul 10%
-                  colorDetalleTexto: const Color(0xFF1565C0),
+                  colorFondo: azul.withValues(alpha: 0.06),
+                  colorBorde: azul.withValues(alpha: 0.30),
+                  colorDetalleFondo: azul.withValues(alpha: 0.10),
+                  colorDetalleTexto: azul,
                   activo: _modoNovato != null,
                   onTap: () => _navegar(false),
                 ),
@@ -116,14 +133,14 @@ class _PantallaModoState extends State<PantallaModo> {
                 // Tarjeta Radicales — colores morados fijos en hex
                 _TarjetaEstudio(
                   icono: "🔑",
-                  titulo: "Radicales Kangxi",
+                  titulo: tr('Radicales Kangxi'),
                   subtitulo:
-                      "Los 214 componentes base de todos los caracteres chinos",
-                  detalle: "Orden por radical",
-                  colorFondo:      const Color(0x0F6A1B9A),
-                  colorBorde:      const Color(0x4D6A1B9A), // morado 30%
-                  colorDetalleFondo: const Color(0x1A6A1B9A), // morado 10%
-                  colorDetalleTexto: const Color(0xFF6A1B9A),
+                      tr('Los 214 radicales y la familia de caracteres de cada uno'),
+                  detalle: tr('Radical → familia'),
+                  colorFondo: morado.withValues(alpha: 0.06),
+                  colorBorde: morado.withValues(alpha: 0.30),
+                  colorDetalleFondo: morado.withValues(alpha: 0.10),
+                  colorDetalleTexto: morado,
                   activo: _modoNovato != null,
                   onTap: () => _navegar(true),
                 ),
@@ -132,20 +149,24 @@ class _PantallaModoState extends State<PantallaModo> {
 
                 // ── Nota informativa ─────────────────────────────────
                 if (_modoNovato == true)
-                  const _NotaInfo(
+                  _NotaInfo(
                     icono: Icons.lightbulb_outline,
                     texto:
-                        "Modo novato: verás una animación del trazo esperado cuando cometas un error.",
+                        tr('Modo novato: verás la silueta del carácter y una animación del trazo correcto cuando te equivoques.'),
                   ),
                 if (_modoNovato == false)
-                  const _NotaInfo(
+                  _NotaInfo(
                     icono: Icons.fitness_center,
                     texto:
-                        "Modo experto: sin pistas. Confías en tu memoria muscular.",
+                        tr('Modo experto: sin silueta. Escribes de memoria; solo al equivocarte ves en rojo el trazo que tocaba.'),
                   ),
 
                 const SizedBox(height: 24),
               ],
+            ),
+                  ),
+                ),
+              ),
             ),
           ),
         ),
@@ -156,6 +177,7 @@ class _PantallaModoState extends State<PantallaModo> {
 
 // ─── Widgets auxiliares ───────────────────────────────────────────────────────
 
+/// Título pequeño de sección.
 class _Seccion extends StatelessWidget {
   final String titulo;
   const _Seccion({required this.titulo});
@@ -166,11 +188,12 @@ class _Seccion extends StatelessWidget {
         style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: Colors.grey.shade500,
+            color: context.colores.tenue,
             letterSpacing: 0.8));
   }
 }
 
+/// Botón de "Soy novato" / "Tengo experiencia".
 class _BotonSelector extends StatelessWidget {
   final bool     seleccionado;
   final IconData icono;
@@ -188,45 +211,33 @@ class _BotonSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colores;
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: seleccionado
-              ? const Color(0xDE000000)  // black87
-              : const Color(0xB3FFFFFF), // white ~70%
+          color: seleccionado ? c.boton : c.tarjeta,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: seleccionado
-                ? const Color(0xDE000000)
-                : const Color(0xFFE0E0E0),
+            color: seleccionado ? c.boton : c.bordeLienzo,
             width: 1.5,
           ),
-          boxShadow: seleccionado
-              ? const [BoxShadow(color: Color(0x33000000), blurRadius: 12)]
-              : [],
+          boxShadow: seleccionado ? [BoxShadow(color: c.sombra, blurRadius: 12)] : [],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icono,
-                color: seleccionado ? Colors.white : Colors.grey.shade600,
-                size: 24),
+            Icon(icono, color: seleccionado ? c.textoBoton : c.tenue, size: 24),
             const SizedBox(height: 8),
             Text(titulo,
                 style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                    color: seleccionado ? Colors.white : Colors.black87)),
+                    fontWeight: FontWeight.w700, fontSize: 14, color: seleccionado ? c.textoBoton : c.tinta)),
             const SizedBox(height: 4),
             Text(subtitulo,
                 style: TextStyle(
-                    fontSize: 11,
-                    color: seleccionado
-                        ? const Color(0x99FFFFFF) // white60
-                        : Colors.grey.shade500)),
+                    fontSize: 11, color: seleccionado ? c.textoBoton.withValues(alpha: 0.6) : c.tenue)),
           ],
         ),
       ),
@@ -234,6 +245,7 @@ class _BotonSelector extends StatelessWidget {
   }
 }
 
+/// Tarjeta grande para elegir qué estudiar (HSK o radicales).
 class _TarjetaEstudio extends StatelessWidget {
   final String icono;
   final String titulo;
@@ -261,19 +273,17 @@ class _TarjetaEstudio extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colores;
     return GestureDetector(
       onTap: activo ? onTap : null,
       child: AnimatedOpacity(
         opacity: activo ? 1.0 : 0.4,
         duration: const Duration(milliseconds: 300),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(18),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-            child: Container(
+        // Sin BackdropFilter (desenfoque): ver widgets/tarjeta_vidrio.dart.
+        child: Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: colorFondo,
+                color: Color.alphaBlend(colorFondo, c.tarjeta),
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(color: colorBorde, width: 1.5),
               ),
@@ -290,10 +300,7 @@ class _TarjetaEstudio extends StatelessWidget {
                                 fontSize: 17,
                                 fontWeight: FontWeight.w700)),
                         const SizedBox(height: 4),
-                        Text(subtitulo,
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.grey.shade600)),
+                        Text(subtitulo, style: TextStyle(fontSize: 13, color: c.tenue)),
                         const SizedBox(height: 6),
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -311,18 +318,16 @@ class _TarjetaEstudio extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Icon(Icons.arrow_forward_ios,
-                      size: 14, color: Colors.grey.shade400),
+                  Icon(Icons.arrow_forward_ios, size: 14, color: c.tenue),
                 ],
               ),
             ),
-          ),
-        ),
       ),
     );
   }
 }
 
+/// Nota amarilla que explica el modo elegido.
 class _NotaInfo extends StatelessWidget {
   final IconData icono;
   final String   texto;
@@ -330,12 +335,13 @@ class _NotaInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final oscuro = context.colores.oscuro;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF8E1),   // amber.shade50
+        color: oscuro ? const Color(0x26FFB300) : const Color(0xFFFFF8E1), // ámbar suave
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFFFE082)), // amber.shade200
+        border: Border.all(color: oscuro ? const Color(0x4DFFB300) : const Color(0xFFFFE082)),
       ),
       child: Row(
         children: [
@@ -343,10 +349,8 @@ class _NotaInfo extends StatelessWidget {
           const SizedBox(width: 10),
           Expanded(
             child: Text(texto,
-                style: const TextStyle(
-                    fontSize: 13,
-                    color: Color(0xFFE65100),
-                    height: 1.4)),
+                style: TextStyle(
+                    fontSize: 13, color: oscuro ? const Color(0xFFFFCC80) : const Color(0xFFE65100), height: 1.4)),
           ),
         ],
       ),

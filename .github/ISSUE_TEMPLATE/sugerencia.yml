@@ -1,0 +1,20 @@
+name: Sugerencia
+description: Una idea para mejorar Meizi Hanzi.
+title: "[Sugerencia] "
+labels: ["sugerencia"]
+body:
+  - type: textarea
+    id: descripcion
+    attributes:
+      label: ¿Qué te gustaría?
+    validations:
+      required: true
+  - type: textarea
+    id: para_que
+    attributes:
+      label: ¿Para qué te serviría? (opcional)
+      description: Qué problema resuelve o qué te costaría menos trabajo.
+  - type: input
+    id: dispositivo
+    attributes:
+      label: Versión de la app (opcional)
