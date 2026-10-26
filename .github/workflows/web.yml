@@ -76,15 +76,32 @@ jobs:
         with:
           node-version: 22
 
+      # Aparte de las pruebas: a veces la descarga de los navegadores (o de sus
+      # paquetes del sistema) se cuelga. Cada intento tiene su tiempo, hay tres,
+      # y lo que pasó queda en instalar_navegadores.txt (rama ci-web).
+      - name: Instalar Chrome y Safari (Playwright)
+        id: instalar
+        if: steps.compilar.outcome == 'success'
+        continue-on-error: true
+        timeout-minutes: 18
+        run: |
+          timeout 180 npm install --no-save --no-audit --no-fund playwright > instalar_navegadores.txt 2>&1
+          for intento in 1 2 3; do
+            echo "== intento $intento ($(date -u +%H:%M:%S))" >> instalar_navegadores.txt
+            if timeout 300 npx playwright install --with-deps chromium webkit >> instalar_navegadores.txt 2>&1; then
+              echo "== listo ($(date -u +%H:%M:%S))" >> instalar_navegadores.txt
+              exit 0
+            fi
+          done
+          exit 1
+
       - name: Probar en Chrome y Safari
         id: navegadores
-        if: steps.compilar.outcome == 'success'
+        if: steps.instalar.outcome == 'success'
         continue-on-error: true
         timeout-minutes: 20
         run: |
           set -o pipefail
-          npm install --no-save --no-audit --no-fund playwright > /dev/null
-          npx playwright install --with-deps chromium webkit > /dev/null
           mkdir -p sitio && ln -sfn "$PWD/build/web" sitio/hanzi_dojo
           python3 - > servidor.txt 2>&1 <<'EOF' &
           import functools, http.server
@@ -115,6 +132,7 @@ jobs:
             echo "commit: $GITHUB_SHA"
             echo "rama: $GITHUB_REF_NAME"
             echo "compilar: ${{ steps.compilar.outcome }}"
+            echo "instalar_navegadores: ${{ steps.instalar.outcome }}"
             echo "navegadores: ${{ steps.navegadores.outcome }}"
           } > resumen.txt
           git init -q && git checkout -q -b ci
