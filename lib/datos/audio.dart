@@ -230,10 +230,20 @@ class Audio {
       // Carácter suelto: su propia grabación si en este texto se lee como
       // ella (misma voz que las palabras); si no, su sílaba según el pinyin
       // del texto; sin pinyin, la grabación del carácter (si la hay).
+      //
+      // Tono neutro: casi no hay sílabas grabadas en tono neutro, y la de
+      // reemplazo es la del tono 1 (吗 sonaba mā). Si el carácter tiene
+      // grabación propia, esa suena mejor: las partículas (吗, 的, 了, 吧, 着)
+      // están grabadas como se dicen, en tono neutro.
       caracteres++;
       final c = String.fromCharCode(r);
-      final propia = conPinyin && palabras.contains(c) && lecturas[c] == claveSilaba(pinyin[i]);
-      final silaba = conPinyin && !propia ? silabaDisponible(pinyin[i], silabas) : null;
+      final clave = conPinyin ? claveSilaba(pinyin[i]) : null;
+      var propia = conPinyin && palabras.contains(c) && lecturas[c] == clave;
+      var silaba = conPinyin && !propia ? silabaDisponible(pinyin[i], silabas) : null;
+      if (silaba != null && clave != null && clave.endsWith('5') && !silaba.endsWith('5') && palabras.contains(c)) {
+        propia = true;
+        silaba = null;
+      }
       if (propia) {
         clips.add(Clip.palabra(nombrePalabra(c), inicio: i, fin: i + 1));
         cubiertos++;

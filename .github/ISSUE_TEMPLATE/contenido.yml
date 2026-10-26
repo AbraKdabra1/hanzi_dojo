@@ -1,5 +1,5 @@
 name: Error en el contenido
-description: Un significado, pinyin, ejemplo, orden de trazos o texto de un libro que está mal.
+description: Un significado, pinyin, pronunciación, ejemplo, orden de trazos o texto de un libro que está mal.
 title: "[Contenido] "
 labels: ["contenido"]
 body:
@@ -12,7 +12,7 @@ body:
     id: donde
     attributes:
       label: ¿Dónde?
-      description: El carácter, o el libro y capítulo.
+      description: El carácter, la frase o la lección, o el libro y capítulo.
       placeholder: Carácter 好 (hǎo) · HSK 1   —   o   —   Libro «Mitos chinos», capítulo 2
     validations:
       required: true
@@ -20,7 +20,7 @@ body:
     id: que_esta_mal
     attributes:
       label: ¿Qué está mal?
-      placeholder: Significado / Pinyin / Ejemplo / Trazos / Texto o traducción de un libro / Otro
+      placeholder: Significado / Pinyin / Pronunciación (audio) / Ejemplo / Trazos / Texto o traducción de un libro / Otro
   - type: textarea
     id: descripcion
     attributes:

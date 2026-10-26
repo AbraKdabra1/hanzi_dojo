@@ -17,6 +17,7 @@ import '../datos/practica.dart';
 import '../datos/repositorio_practica.dart';
 import '../helpers/pinyin_entrada.dart';
 import '../tema.dart';
+import '../widgets/boton_reportar.dart';
 import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/ejercicio.dart';
@@ -134,7 +135,17 @@ class _PantallaPinyinState extends State<PantallaPinyin> {
   Widget build(BuildContext context) {
     return FondoTintaChina(
       child: Scaffold(
-        appBar: BarraSuperior(titulo: tr('Pinyin'), subtitulo: nombreDeNivel(widget.nivel)),
+        appBar: BarraSuperior(
+          titulo: tr('Pinyin'),
+          subtitulo: nombreDeNivel(widget.nivel),
+          acciones: [
+            BotonReportar(donde: () {
+              if (_indice >= _palabras.length) return tr('Pinyin · {0}', [nombreDeNivel(widget.nivel)]);
+              final p = _palabras[_indice];
+              return tr('Pinyin · palabra {0} ({1}) · {2}', [p.palabra, p.pinyin, nombreDeNivel(widget.nivel)]);
+            }),
+          ],
+        ),
         body: SafeArea(top: false, child: _cuerpo(context)),
       ),
     );

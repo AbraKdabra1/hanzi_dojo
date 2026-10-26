@@ -9,6 +9,12 @@ Primera versión pública.
 
 **Nuevo nombre: Meizi Hanzi · 梅字** (antes Hanzi Dojo). 梅 es el ciruelo de la rama del inicio y 字, el carácter que escribes. Se instala encima de la versión anterior sin perder nada; los respaldos `.hanzidojo` se siguen importando (los nuevos se guardan como `.meizi`).
 
+**Novedades de la beta 7**
+- **Chino desde cero suena completo**: las partes de cada «suma» (女 + 子 = 好), los ejemplos de las reglas del orden de trazos y los caracteres que se escriben ahora muestran su pinyin y suenan al tocarlos (los radicales, como 亻, con su carácter completo: rén). Al escribir uno, suena al terminarlo.
+- **吗 ya no suena mā**: las sílabas en tono neutro (吗, 的, 了, 吧…) casi no están grabadas y la app usaba la del tono 1. Ahora suena la grabación del propio carácter, dicha como se dice. Vale en toda la app.
+- **Reportar un error desde donde lo ves**: una bandera 🚩 en cada lección de Chino desde cero, en Frases esenciales (en cada frase y en sus ejercicios), Vocabulario, Escucha, Tonos, Pinyin y los simulacros. Abre el reporte con el «¿Dónde?» ya lleno (la lección y el paso, la frase, la palabra o la pregunta). Nuevo motivo: **Pronunciación (audio)**.
+- **«¿Ese trazo estaba bien?»** también al escribir en Chino desde cero: si la app marca mal un trazo que hiciste bien, avísalo con un toque.
+
 **Novedades de la beta 6**
 - **Audio en iPhone (versión web)**: las grabaciones ya suenan. Safari solo deja empezar un sonido dentro de un toque y la app tardaba un instante en preparar cada grabación, así que Safari la bloqueaba en silencio. Ahora el primer toque en cualquier parte de la app deja listo el reproductor (y la voz del navegador) y todo suena por él. En iPhone y en Safari de Mac las grabaciones van siempre en el formato de Apple (CAF).
 - **Audios completos**: cada vez que suena algo, la app agrega un silencio muy corto antes y después. Algunos teléfonos (varios Huawei, por ejemplo) se comían el inicio o cortaban el final de las grabaciones.

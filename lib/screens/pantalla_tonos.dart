@@ -25,6 +25,7 @@ import '../datos/practica.dart';
 import '../datos/repositorio_practica.dart';
 import '../helpers/pinyin_helper.dart';
 import '../tema.dart';
+import '../widgets/boton_reportar.dart';
 import '../widgets/boton_voz.dart';
 import '../widgets/comunes.dart';
 import '../widgets/ejercicio.dart';
@@ -198,7 +199,21 @@ class _PantallaTonosState extends State<PantallaTonos> {
   Widget build(BuildContext context) {
     return FondoTintaChina(
       child: Scaffold(
-        appBar: BarraSuperior(titulo: tr('Tonos'), subtitulo: nombreDeNivel(widget.nivel)),
+        appBar: BarraSuperior(
+          titulo: tr('Tonos'),
+          subtitulo: nombreDeNivel(widget.nivel),
+          acciones: [
+            BotonReportar(donde: () {
+              if (_indice >= _total) return tr('Tonos · {0}', [nombreDeNivel(widget.nivel)]);
+              if (_modo == _ModoTonos.silabas) {
+                final s = _silabas[_indice];
+                return tr('Tonos · sílaba {0} ({1}, {2})', [s.pinyin, s.caracter, s.archivo]);
+              }
+              final p = _palabras[_indice];
+              return tr('Tonos · palabra {0} ({1})', [p.palabra, p.pinyin]);
+            }),
+          ],
+        ),
         body: SafeArea(top: false, child: _cuerpo(context)),
       ),
     );

@@ -155,6 +155,21 @@ void main() {
       expect(plan.clips.map((c) => '$c').toList(), ['wen2.opus']);
     });
 
+    test('tono neutro sin sílaba grabada: la grabación del propio carácter', () {
+      // 吗 (ma, neutro): antes sonaba la sílaba ma1 (mā).
+      final plan = Audio.planDeLectura('好吗',
+          pinyin: const ['hǎo', 'ma'], palabras: const {'吗'}, silabas: const {'hao3', 'ma1'});
+      expect(plan.clips.map((c) => '$c').toList(), ['hao3.opus', '5417.opus']);
+      // Sin grabación propia, la del tono 1 sigue siendo mejor que nada.
+      final sinPropia =
+          Audio.planDeLectura('吗', pinyin: const ['ma'], palabras: const {}, silabas: const {'ma1'});
+      expect(sinPropia.clips.map((c) => '$c').toList(), ['ma1.opus']);
+      // Si el tono neutro sí está grabado, esa sílaba.
+      final grabado =
+          Audio.planDeLectura('吗', pinyin: const ['ma'], palabras: const {'吗'}, silabas: const {'ma5', 'ma1'});
+      expect(grabado.clips.map((c) => '$c').toList(), ['ma5.opus']);
+    });
+
     test('cada línea es un carácter grabado con una sola lectura', () {
       final l = Audio.leerLecturas(File('assets/audio/lecturas.txt').readAsStringSync());
       expect(l.length, greaterThan(1000));

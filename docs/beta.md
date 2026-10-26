@@ -85,6 +85,10 @@ El mismo enlace en Chrome, Edge o Safari. Se puede escribir con el mouse.
   cómo la usas (días, repasos, secciones, trazos que reportaste, errores), le
   agregas tu comentario y lo compartes por WhatsApp o correo con quien te
   invitó. Lo ves completo antes de mandarlo.
+- **¿Algo suena, se escribe o se traduce mal?** Toca la bandera 🚩 de esa
+  pantalla (lecciones de Chino desde cero, frases, vocabulario, escucha,
+  tonos, pinyin, simulacros). El reporte ya dice dónde estabas; tú solo dices
+  qué está mal (por ejemplo, «Pronunciación (audio)»).
 - **Un mensaje** a quien te invitó, con qué hacías, qué pasó y, si puedes, una
   captura de pantalla.
 - **Desde la app:** Ajustes → **Reportar un problema** (abre un formulario de

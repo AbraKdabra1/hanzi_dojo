@@ -1732,4 +1732,29 @@ const textosEn = <String, String>{
       'What you need to be able to say. {0} to review today.',
   'Lo que hay que saber decir: saludos, compras, comida, emergencias…':
       'What you need to be able to say: greetings, shopping, food, emergencies…',
+  // Bandera «Reportar un error» en cada ejercicio
+  'Chino desde cero · lección {0} «{1}» · paso {2}: {3}':
+      'Chinese from zero · lesson {0} "{1}" · step {2}: {3}',
+  'Frase esencial: {0} ({1})':
+      'Essential phrase: {0} ({1})',
+  'Vocabulario · {0}':
+      'Vocabulary · {0}',
+  'Vocabulario · palabra {0} ({1}) · {2}':
+      'Vocabulary · word {0} ({1}) · {2}',
+  'Escucha · {0}':
+      'Listening · {0}',
+  'Escucha · palabra {0} ({1}) · {2}':
+      'Listening · word {0} ({1}) · {2}',
+  'Tonos · {0}':
+      'Tones · {0}',
+  'Tonos · sílaba {0} ({1}, {2})':
+      'Tones · syllable {0} ({1}, {2})',
+  'Tonos · palabra {0} ({1})':
+      'Tones · word {0} ({1})',
+  'Pinyin · {0}':
+      'Pinyin · {0}',
+  'Pinyin · palabra {0} ({1}) · {2}':
+      'Pinyin · word {0} ({1}) · {2}',
+  '{0} · pregunta {1}: {2} ({3})':
+      '{0} · question {1}: {2} ({3})',
 };
