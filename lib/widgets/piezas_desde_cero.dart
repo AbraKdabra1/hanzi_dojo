@@ -668,13 +668,17 @@ class TablaReglas extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(ejemplo, textAlign: TextAlign.center, style: const TextStyle(fontSize: 30, height: 1.15)),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(pinyin, style: TextStyle(fontSize: 12, color: c.tinta, fontWeight: FontWeight.w600)),
-                            const SizedBox(width: 2),
-                            Icon(Icons.volume_up_outlined, size: 12, color: c.tenue),
-                          ],
+                        // «chuān 🔊» cabe en la columna; con letra grande se encoge.
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(pinyin, style: TextStyle(fontSize: 12, color: c.tinta, fontWeight: FontWeight.w600)),
+                              const SizedBox(width: 2),
+                              Icon(Icons.volume_up_outlined, size: 12, color: c.tenue),
+                            ],
+                          ),
                         ),
                       ],
                     ),
